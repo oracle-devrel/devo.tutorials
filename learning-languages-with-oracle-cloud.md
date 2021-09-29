@@ -1,6 +1,5 @@
 ---
 title: Build Your Own Language Translator on Oracle Cloud
-tags: [oci,full-stack,hardware]
 layout: single
 parent: tutorials
 sidebar: false
@@ -10,7 +9,7 @@ toc: true
 slug: learning-languages
 thumbnail: assets/the-whiteboard.jpg
 categories: [personal]
-tags: [oci,iot,apex,alwaysfree,architect,community]
+tags: [oci,iot,apex,always-free,architect,community]
 date: 2021-08-15 12:00
 ---
 
