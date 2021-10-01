@@ -1,10 +1,18 @@
 ---
 title: Get Started with your own LAMP stack application on OCI
 parent: tutorials
-tags: [data-management, front-end, mysql, oci, orm]
-thumbnail: assets/get-started-with-lamp-on-oci-Screenshot-from-2021-05-28-13-11-43.png
-date: 2021-09-30 01:00
-description: Build Move & Modernize Apps and Hybrid Solutions, DevOps and Automation on OCI.
+tags:
+- data-management
+- front-end
+- mysql
+- oci
+- orm
+thumbnail: assets/get-started-with-lamp-on-oci-Screenshot-from-2021-05-28-13-12-19.png
+date: 2021-10-01 09:18
+description: Build Move & Modernize Apps and Hybrid Solutions, DevOps and Automation
+  on OCI.
+categories:
+- cloudapps
 ---
 
 
