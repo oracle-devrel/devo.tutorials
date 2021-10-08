@@ -4,14 +4,21 @@ parent: tf-101
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/terraform-101.png
-date: 2021-09-28 08:15
+date: 2021-10-08 08:15
 description: Experience the power of Terraform through a short project.
 toc: true
 author: tim-clegg
 ---
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% slides %}
+{% img alignright assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 This short project will let you experience the power of Terraform.
+
+* Create some Terraform code files
+* Learn how to examine what Terraform proposes be done
+* Let Terraform create a VCN and Subnet
+* Organize your Terraform code
+* Get a taste of OCI Cloud Shell
 
 ## Prerequisites
 
@@ -33,7 +40,7 @@ Follow the step-by-step directions, to see how easy/fast it is, then in subseque
 > NOTE: All commands will be used within OCI Cloud Shell.  If you haven't opened it up yet, now's the time to [open your own Cloud Shell session](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm)!
 {:.notice}
 
-# Setup the OCI provider
+## Setup the OCI provider
 
 Create a new directory for this project:
 
@@ -73,6 +80,8 @@ The above tells Terraform that we want a VCN with a name of `tf-101`, using a CI
 > NOTE: To keep things simple, this example uses the tenancy (root) compartment, which is often times locked down in many tenancies.  If you're using a tenancy with limited permissions (one in which you cannot deploy to the root compartment), you'll need to put in your compartment OCID in place of the `var.tenancy_ocid` above.  Something like `compartment_id = "PUT_YOUR_COMPARTMENT_OCID_HERE"` should do the trick for now!
 {:.notice}
 
+## Set up a subnet
+
 Next we'll create a subnet within our VCN.  To do this, go ahead and add the following to a new file called `subnets.tf` (`nano subnets.tf`):
 
 ```terraform
@@ -99,6 +108,8 @@ variable "region" {
 }
 ```
 
+## Set up an output
+
 Now that our inputs are defined, let's go ahead and setup an output, which will be the status of the VCN.  To do this, modify `outputs.tf` (`nano outputs.tf`) and place the following in it:
 
 ```terraform
@@ -116,6 +127,8 @@ The OCI Cloud Shell session is prepopulated with lots of good values that make l
 declare -x TF_VAR_tenancy_ocid=`echo $OCI_TENANCY`
 declare -x TF_VAR_region=`echo $OCI_REGION`
 ```
+
+## Action!
 
 Now it's time to see this all work!  Initialize Terraform by running:
 
@@ -268,7 +281,11 @@ vcn_state = "AVAILABLE"
 $ 
 ```
 
-Wow, that was easy!  One command to setup multiple resources... terrific!  Since we're at the end of this short session, we want to clean up after ourselves.  Let's go ahead and remove the VCN and Subnet.  This could be multiple clicks on the OCI Console, however since we're using Terraform, one command is all we need to run:
+Wow, that was easy!  One command to set up multiple resources... terrific!  
+
+## Cleaning Up
+
+Since we're at the end of this short session, we want to clean up after ourselves.  Let's go ahead and remove the VCN and Subnet.  This could be multiple clicks on the OCI Console, however since we're using Terraform, one command is all we need to run:
 
 ```console
 $ terraform destroy
@@ -369,6 +386,8 @@ Destroy complete! Resources: 2 destroyed.
 $
 ```
 
+## Summary
+
 If this was your first time using Terraform, that was a *LOT* to take in!  It was worth it, as we got a lot done:
 
 * Created five (5) Terraform code files that defined our inputs, outputs and resources we want Terraform to manage
@@ -379,3 +398,4 @@ If this was your first time using Terraform, that was a *LOT* to take in!  It wa
 * Got a taste for how handy and easy it is to use the OCI Cloud Shell
 
 Hopefully this short tutorial gave you a glimpse into the basic flow around using Terraform and how powerful it can be.  This was a super simple example, but was a solid first start at using Terraform.  The [next lesson](3-understanding-terraform-basics.md) digs into some of the core concepts and components in a Terraform project.
+{% endslides %}
