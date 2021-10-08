@@ -4,7 +4,7 @@ parent: tf-101
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/terraform-101.png
-date: 2021-09-28 08:13
+date: 2021-09-28 08:15
 description: Experience the power of Terraform through a short project.
 toc: true
 author: tim-clegg

@@ -8,6 +8,7 @@ date: 2021-09-28 08:13
 description: Let's go through some of the foundational concepts you should understand when working with Terraform.
 toc: true
 author: tim-clegg
+published: false
 ---
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 

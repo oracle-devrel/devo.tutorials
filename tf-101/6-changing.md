@@ -8,6 +8,7 @@ date: 2021-09-30 20:22
 description: Time to make changes to our tutorial environment using Terraform.  But how?!
 toc: true
 author: tim-clegg
+published: false
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

@@ -18,9 +18,9 @@ This set of tutorials is for you!  Here's what we'll cover:
 
 1. [Why Infrastructure as Code?](1-why-iac)
 2. [Experiencing Terraform](2-experiencing-terraform)
-3. [Understanding the basics of Terraform](3-understanding-terraform-basics)
-4. [Terraform variables](4-variables)
-5. [Creating Resources with Terraform](5-creating)
-6. [Making changes using Terraform](6-changing)
-7. [Destroying resources with Terraform](7-destroying)
-8. [More Terraform Resources](8-resources)
+3. Understanding the basics of Terraform
+4. Terraform variables
+5. Creating Resources with Terraform
+6. Making changes using Terraform
+7. Destroying resources with Terraform
+8. More Terraform Resources

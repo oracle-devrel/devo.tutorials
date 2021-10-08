@@ -8,6 +8,7 @@ date: 2021-09-30 20:24
 description: A curated list of helpful resources for expanding your knowledge of Terraform.
 toc: true
 author: tim-clegg
+published: false
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
