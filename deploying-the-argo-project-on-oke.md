@@ -1,5 +1,5 @@
 ---
-title: Deploying the Argo CD on OKE
+title: Deploying the Argo CD on Oracle Container Engine for Kubernetes (OKE)
 parent: tutorials
 tags: [open-source, oke, kubernetes, terraform, devops]
 categories: [cloudapps, opensource]
