@@ -1,5 +1,5 @@
 ---
-title: Get Started with your own LAMP stack application on OCI
+title: Get Started with your own LAMP stack application on Oracle Cloud
 parent: tutorials
 tags:
 - data-management
@@ -13,6 +13,12 @@ description: Build Move & Modernize Apps and Hybrid Solutions, DevOps and Automa
   on OCI.
 categories:
 - cloudapps
+author: 
+  name: lefred
+  home: https://lefred.be/
+  linkedin: freddescamps
+  twitter: lefred
+  github: lefred
 ---
 
 
