@@ -13,7 +13,8 @@ tags: [oci,iot,apex,always-free,architect,community]
 date: 2021-08-15 12:00
 ---
 
-{% img assets/the-whiteboard.jpg "A whiteboard for learning the Japanese language." %}
+{% img alignright assets/the-whiteboard.jpg 400 400 "A whiteboard for learning the Japanese language." %}
+
 
 こんにちは！
 
@@ -43,7 +44,7 @@ Before starting out to build the solution, I had in mind the following goals:
 
 Here's what it looks like upon completion:
 
-{% img assets/the-final-product.jpg "The electronic flashcard powered by the Oracle Cloud" %}
+{% img aligncenter assets/the-final-product.jpg 500 500 "The electronic flashcard powered by the Oracle Cloud" %}
 
 All that in a weekend of fun!
 
