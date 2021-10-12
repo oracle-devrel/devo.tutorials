@@ -1,7 +1,7 @@
 ---
 title: Using remote states with Terraform
 parent: tf-201
-tags: [open-source, terraform, iac, devops]
+tags: [open-source, terraform, iac, devops, intermediate]
 categories: [iac, opensource]
 thumbnail: assets/terraform-201.png
 date: 2021-10-07 6:17
@@ -39,9 +39,13 @@ This is an ideal place to store your state, as it supports versioning (being abl
 1.	Create the Bucket in OCI Object Storage
 2.	Tell Terraform to use the Bucket
 
+Because you need to create the Bucket *before* you can use it in a Terraform project, you'll need to have two Terraform projects if you take this route:
+* One Terraform project to create the Bucket for the Terraform project
+* Another Terraform project to manage your other resources
+
 You could create the Bucket via the Console or CLI, however here’s how you might do it using Terraform.
 
-```
+```terraform
 data "oci_objectstorage_namespace" "this" {}
 
 resource "oci_objectstorage_bucket" "env1-tfstate" {
@@ -57,7 +61,7 @@ resource "oci_objectstorage_bucket" "env1-tfstate" {
 
 Whether you created the Bucket in the Console or via Terraform, here’s how to tell Terraform to use it:
 
-```
+```terraform
 terraform {
   backend "s3" {
     bucket = "env1-tfstate"

@@ -1,7 +1,7 @@
 ---
 title: Terraform Dependencies
 parent: tf-201
-tags: [open-source, terraform, iac, devops, beginner]
+tags: [open-source, terraform, iac, devops, intermediate]
 categories: [iac, opensource]
 thumbnail: assets/terraform-201.png
 date: 2021-10-05 10:51
@@ -11,16 +11,16 @@ author: tim-clegg
 ---
 {% img aligncenter assets/terraform-201.png 400 400 "Terraform 201" "Terraform 201 Tutorial Series" %}
 
-If you went through the [Terraform 101 tutorial series](/tutorials/tf-101), then you got a chance to see how intelligently Terraform behaved when it came time to destroy all of the resources in the project (the [Destroying resources with Terraform](/tutorials/tf-101/7-destroying.md) tutorial).  This is due to how Terraform automatically manages resource dependencies.  There are times when explicit resource dependencies need to be configured.  This tutorial takes a brief overview of how resource dependencies are managed in Terraform.
+If you went through the [Terraform 101 tutorial series](/tutorials/tf-101), then you got a chance to see how intelligently Terraform behaved when it came time to destroy all of the resources in the project (the [Destroying resources with Terraform](/tutorials/tf-101/7-destroying) tutorial).  This is due to how Terraform automatically manages resource dependencies.  There are times when explicit resource dependencies need to be configured.  This tutorial takes a brief overview of how resource dependencies are managed in Terraform.
 
-Make sure that to start with the code at the end of the [Destroying resources with Terraform](/tutorials/tf-101/7-destroying.md) tutorial.
+Make sure that to start with the code at the end of the [Destroying resources with Terraform](/tutorials/tf-101/7-destroying) tutorial.
 
 ## Implicit Dependencies
 As you define resources, Terraform automatically tracks resource dependencies.  A graph of the topology is maintained by Terraform, allowing Terraform to track dependencies and relationships between different resources.
 
-This was seen at work in the [Destroying resources with Terraform tutorial](/tutorials/tf-101/7-destroying.md), when the environment was entirely destroyed.  During this process Terraform chose to destroy all of the Subnets first, then destroy the VCN last.  Had Terraform tried to delete the VCN while the Subnets were still present, the process would've failed.
+This was seen at work in the [Destroying resources with Terraform tutorial](/tutorials/tf-101/7-destroying), when the environment was entirely destroyed.  During this process Terraform chose to destroy all of the Subnets first, then destroy the VCN last.  Had Terraform tried to delete the VCN while the Subnets were still present, the process would've failed.
 
-The reverse is true as an environment is provisioned.  See this at work by applying the environment that was destroyed in the [Terraform-101 series](/tutorials/tf-101/7-destroying.md):
+The reverse is true as an environment is provisioned.  See this at work by applying the environment that was destroyed in the [Terraform-101 series](/tutorials/tf-101/7-destroying):
 
 ```
 $ terraform apply 
@@ -48,6 +48,14 @@ oci_core_subnet.dev: Creation complete after 27s [id=ocid1.subnet.oc1.phx.<sanit
 Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
+> **NOTE:** If you're prompted to enter a value for the `region` or `tenancy_ocid` variables, it's likely that the environment variables (above) need to be set.  Each time you connect to your OCI Cloud Shell session, you'll need to set these, similar to the following:
+> ```console
+declare -x TF_VAR_tenancy_ocid=`echo $OCI_TENANCY`
+declare -x TF_VAR_region=`echo $OCI_REGION`
+```
+{:notice}
+
+
 The VCN was built *first*, then the Subnets were added.  This goes back to the fact that Terraform understands the relationship between these dependent resources.  It knows that the VCN must exist *before* the Subnets can be created.
 
 For many use-cases, this implicit dependency relationship mapping works just fine.  There are situations where Terraform might need some help... this is where explicit dependencies come into play.
@@ -57,7 +65,7 @@ The implicit dependency mapping works so well, you might be asking yourself why 
 
 For example, pretend that you have an OCI Object Storage Bucket that contains objects (files) that are used by a particular application.  This application is deployed and running on an OCI Compute instance.  Follow along by adding the following to your `main.tf` file:
 
-```
+```terraform
 # OSS Bucket
 data "oci_objectstorage_namespace" "this" {
 }
@@ -110,7 +118,7 @@ resource "oci_core_instance" "app" {
 > If you're wanting to use a specific Compartment, make sure to use that instead of `var.tenancy_ocid`.
 {:.notice}
 
-> **NOTE:** If you're using an Always Free OCI tenancy, you'll need to use a shape of `VM.Standard.E2.1.Micro` (instead of `VM.Standard.E3.Flex`) and get rid of the `shape_config` section.
+> **NOTE:** If you're using an Always Free OCI tenancy, you'll need to use a shape of `VM.Standard.E2.1.Micro` (instead of `VM.Standard.E3.Flex`) and get rid of the `shape_config` block.
 {:.notice}
 
 There's a few lines of code in there – some of which you don't need to get mired down with.  Some handy code best-practices (like retrieving the latest Compute image OCID programmatically, getting the name of the AD programmatically, etc.) are part of it, but don't get distracted or overwhelmed by it.  In short, Terraform is being asked to to create an OCI Object Storage Bucket for the application, then to create an OCI Compute instance.  The OCI Compute instance would presumably run the application, although in this example there's nothing actually installed on it (just pretend that it's being used in this way).
@@ -324,7 +332,7 @@ Destroy complete! Resources: 1 destroyed.
 
 Explicit dependencies need to be added to ensure the order-of-precedence for resource creation is correct.  Make the beginning of the `oci_core_instance.app` resource look like the following (notice the only addition is the `depends_on` line) in your `main.tf` file:
 
-```
+```terraform
 resource "oci_core_instance" "app" {
   depends_on = [oci_objectstorage_bucket.app]
   availability_domain = lookup(data.oci_identity_availability_domains.ads.availability_domains[0],"name")
@@ -522,7 +530,7 @@ Terraform recognized that to destroy the bucket, it must destroy the compute ins
 
 It's time to clean-up your code and delete the following lines from your `main.tf` file (you don't need the Bucket or compute instance any longer):
 
-```
+```terraform
 # OSS Bucket
 data "oci_objectstorage_namespace" "this" {
 }
@@ -575,4 +583,4 @@ resource "oci_core_instance" "app" {
 
 With the above lines deleted, the environment should be back to a single VCN and two Subnets.
 
-The [next tutorial](/tutorials/tf-201/2-remotes.md) will cover [Remote state in Terraform](/tutorials/tf-201/2-remotes.md).
+The [next tutorial](/tutorials/tf-201/2-remotes) will cover [Remote state in Terraform](/tutorials/tf-201/2-remotes).
