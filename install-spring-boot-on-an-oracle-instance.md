@@ -1,5 +1,5 @@
 ---
-title: Install Spring Boot on an Oracle Instance
+title: Install Spring Boot on an compute instance on Oracle Cloud
 parent: tutorials
 tags: [oci, java, always-free, back-end, spring]
 categories: [java, modernize]

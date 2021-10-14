@@ -30,7 +30,7 @@ We've strived to make the contribution process super simple!  Here it is the pro
     * `git commit -m "insert here your comments"`
     * `git push origin <BRANCH_NAME>`
 4. Create a Pull Request for your branch on GitHub by visiting your forked repo page.
-   * When you create the PR, make sure to check the "***Allow edits by maintainers***" option in the PR. This allows for easy, rapid modifications that our tech editors might provide.
+>When you create the PR, make sure to check the <ins>"***Allow edits by maintainers***"</ins> option in the PR. This allows for easy, rapid modifications that our tech editors might provide.
 5. After you submit the Pull Request, sit tight and look for any comments, edits, approvals or rejections!
 
 ### Cleanup / Align to the source repo
@@ -52,16 +52,16 @@ We don't have a staging environment right now. However if you want to see how th
 
 ---
 
-# What our tech editors do
+## What our tech editors do
 
 When a PR is received, our tech editors will usually refactor the content a bit, with the goal to make conveying your message as clearly as possible.  Here's the process they go through to do this:
 
-* `git remote add pr<PR #> git@github.com/<your GH username>/cool.devo.build.git`
-* `git fetch pr<PR #> main`
-* `git checkout -b pr<PR #> pr<PR #>/main`
+* `git remote add pr<PR #> git@github.com/<your GH username>/devo.tutorials.git`
+* `git fetch pr<PR #> <your BRANCH_NAME>`
+* `git checkout -b pr<PR #> pr<PR #>/<your BRANCH_NAME>`
 * Changes/edits are made
-* `git add *`
+* `git add .`
 * `git commit -m "Suggested edits for PR<PR #>"`
-* `git push -f pr<PR #> HEAD:main`
+* `git push -f pr<PR #> HEAD`
 
 After the above is completed, the edited version will be included in the PR, at which point it can be merged (while still retaining the history and flow of the content).
