@@ -128,7 +128,7 @@ and login with username admin and the retrieved password.
 
 Follow the rest of the instructions in [creating apps via UI](https://argoproj.github.io/argo-cd/getting_started/#creating-apps-via-ui). Once the application is created, click on 'Sync' and watch the application being deployed as Kubernetes works its way to creating the various resources (deployment, service, ReplicaSet, pods, etc).
 
-{% img aligncenter assets/argo-oke-ui.jpg 1024 557 Argo CD Screen %}
+{% img aligncenter assets/argo-oke-ui.png 1024 557 Argo CD Screen %}
 
 Once the application is deployed, take a moment to poke around the Argo UI and the Kubernetes resources. Select the guestbook-ui service and click 'Edit'. Change the service type from ClusterIP to LoadBalancer and then save. Once the OCI Load Balancer is provisioned, its public IP address appears. Awesome stuff. I pinch myself and make a quick check on OCI Console to verify the Load Balancer IP just to ensure I'm not imagining this. Nope, I'm not.
 
@@ -297,7 +297,7 @@ kubectl get svc
 
 Use you browser to access them:
 
-{% img alignright assets/argo-oke-blue.png 400 400 "Blue Rollout" %}
+{% img aligncenter assets/argo-oke-blue.png 400 400 "Blue Rollout" %}
 
 Both the active and preview will be blue. 
 
@@ -309,21 +309,21 @@ kubectl patch rollout rollout-bluegreen --type merge -p '{"spec": {"template": {
 
 And we can see effect immediately:
 
-{% img alignright assets/argo-oke-rollout-patch.png 400 400 "Patch Rollout" %}
+{% img aligncenter assets/argo-oke-rollout-patch.png 600 400 "Patch Rollout" %}
 
 And if we access the preview and active Load Balancers, we'll see the preview is green and active is still blue.
 
-{% img alignright assets/argo-oke-green.png 400 400 "Patch Rollout" %}
+{% img aligncenter assets/argo-oke-green.png 600 400 "Patch Rollout" %}
 
 Let's give the rollout a promotion. We can use command line as thus:
 
 ```console
-$ kubectl promote rollout-bluegreen
+  $ kubectl promote rollout-bluegreen
 ```
 
 or if you have Argo Rollouts Dashboard still open, you can use that too.
 
-{% img alignright assets/argo-oke-promoted.png.png 400 400 "Patch Rollout" %}
+{% img aligncenter assets/argo-oke-promoted.png 600 400 "Patch Rollout" %}
 
 If we now access both load balancers, they'll both show up as green. You can keep switching between them to simulate upgrading to newer versions of your application.
 
