@@ -4,7 +4,7 @@ parent: tutorials
 tags: [OCI, open-source, nodejs, front-end, kubernetes]
 thumbnail: assets/deploy-a-node-express-application-Node-K8s-diagram.png
 date: 2021-09-30 01:00
-description: How to deploy a Node Express applicaiton to a Kubernetes cluster on OCI.
+description: How to deploy a Node Express application to a Kubernetes cluster on OCI.
 ---
 {% slides %}
 In this tutorial, you use an Oracle Cloud Infrastructure account to set up a Kubernetes cluster. Then, you deploy a Node Express application to your cluster.
