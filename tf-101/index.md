@@ -6,6 +6,7 @@ description: Jumpstart your OCI management experience using IaC (specifically Te
 thumbnail: assets/terraform-101.png
 author: tim-clegg
 tags: [open-source, terraform, iac, devops, beginner]
+sort: asc
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
@@ -18,8 +19,8 @@ This set of tutorials is for you!  Here's what we'll cover:
 
 1. [Why Infrastructure as Code?](1-why-iac)
 2. [Experiencing Terraform](2-experiencing-terraform)
-3. Understanding the basics of Terraform
-4. Terraform variables
+3. [Understanding the basics of Terraform](3-understanding-terraform-basics)
+4. [Terraform variables](4-variables)
 5. Creating Resources with Terraform
 6. Making changes using Terraform
 7. Destroying resources with Terraform
