@@ -2,10 +2,11 @@
 title: How to Deploy Spark Standalone in Oracle Cloud (OCI)
 parent: tutorials
 tags: [oci, open-source, spark, java, data-science]
-thumbnail: RELATIVE_PATH_TO_THUMBNAIL_IMAGE
+thumbnail: assets/apache_spark.png
 date: 2021-09-30 01:00
 description: A short walkthrough of setting up Spark and Hadoop in your OCI environment.
 ---
+{% slides %}
 The following walk-through guides you through the steps needed to set up your environment to run Spark and Hadoop in Oracle Cloud Infrastructure.
 
 ## Prerequisites
@@ -28,12 +29,12 @@ The install is quite simple. It consists of setting up Java, installing Spark an
 
 Download the last version of JDK 1.8 because Hadoop 2.X is using this Java version.
 ```console
-    rpm -ivh /home/opc/jdk-8u271-linux-x64.rpm
+rpm -ivh /home/opc/jdk-8u271-linux-x64.rpm
 ```
 
 Check Java Version.
 ```console
-    java -version
+java -version
 ```
 
 ## Spark and Hadoop Setup
@@ -44,37 +45,37 @@ First, choose the version of Spark and Hadoop you want to install. Then, downloa
 
 ### Download Spark 2.4.5 for Hadoop 2.7
 ```console 
-    cd /home/opc
-    wget http://apache.uvigo.es/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz
+cd /home/opc
+wget http://apache.uvigo.es/spark/spark-2.4.5/spark-2.4.5-bin-hadoop2.7.tgz
 ```
 
 ### Download Spark 2.4.7 for Hadoop 2.7
 ```console
-    wget http://apache.uvigo.es/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz
+wget http://apache.uvigo.es/spark/spark-2.4.7/spark-2.4.7-bin-hadoop2.7.tgz
 ```
 
 ### Download Spark 3.1.1 for Hadoop 3.2
 ```console
-    wget http://apache.uvigo.es/spark/spark-3.1.1/spark-3.1.1-bin-hadoop3.2.tgz
+wget http://apache.uvigo.es/spark/spark-3.1.1/spark-3.1.1-bin-hadoop3.2.tgz
 ```
 
 ### Install the Spark and Hadoop Version
 
 Install the Spark and Hadoop Version choosen in the directory "/opt".
 ```console
-    sudo -i
-    cd /opt
-    tar -zxvf /home/opc/spark-2.4.5-bin-hadoop2.7.tgz
-    or 
-    tar -zxvf /home/opc/spark-2.4.7-bin-hadoop2.7.tgz
-    or
-    tar -zxvf /home/opc/spark-3.1.1-bin-hadoop3.2.tgz
+sudo -i
+cd /opt
+tar -zxvf /home/opc/spark-2.4.5-bin-hadoop2.7.tgz
+#or 
+tar -zxvf /home/opc/spark-2.4.7-bin-hadoop2.7.tgz
+#or
+tar -zxvf /home/opc/spark-3.1.1-bin-hadoop3.2.tgz
 ```
 
-## Install PYSPARK in PYTHON3 evnironment
+## Install PySpark in Python3 environment
 ```console 
-    /opt/Python-3.7.6/bin/pip3 install 'pyspark=2.4.7'
-    /opt/Python-3.7.6/bin/pip3 install findspark
+/opt/Python-3.7.6/bin/pip3 install 'pyspark=2.4.7'
+/opt/Python-3.7.6/bin/pip3 install findspark
 ```
 
 Next we shall create a virtual environment and enable it.
@@ -83,18 +84,18 @@ Next we shall create a virtual environment and enable it.
 
 Add to ".bashrc" for the user "opc" the following lines:
 ```console
-    # Add by %OP%
-    export PYTHONHOME=/opt/anaconda3
-    export PATH=$PYTHONHOME/bin:$PYTHONHOME/condabin:$PATH
+# Add by %OP%
+export PYTHONHOME=/opt/anaconda3
+export PATH=$PYTHONHOME/bin:$PYTHONHOME/condabin:$PATH
 
-    # SPARK ENV
-    #export JAVA_HOME=$(/usr/libexec/java_home)
-    export SPARK_HOME=/opt/spark-2.4.5-bin-hadoop2.7
-    export PATH=$SPARK_HOME/bin:$PATH
-    export PYSPARK_PYTHON=python3
+# SPARK ENV
+#export JAVA_HOME=$(/usr/libexec/java_home)
+export SPARK_HOME=/opt/spark-2.4.5-bin-hadoop2.7
+export PATH=$SPARK_HOME/bin:$PATH
+export PYSPARK_PYTHON=python3
 
-    export PYSPARK_DRIVER_PYTHON=jupyter
-    export PYSPARK_DRIVER_PYTHON_OPTS='notebook'
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS='notebook'
 ```
 
 ## Test your Spark and Hadoop Environment
@@ -105,3 +106,4 @@ And upload the next notebooks:
 
 * [Notebook test findspark](https://github.com/operard/oracle-cloud-tutorial/blob/main).
 * [Notebook test Pyspark](https://github.com/operard/oracle-cloud-tutorial/blob/main).
+{% endslides %}
