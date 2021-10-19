@@ -105,6 +105,7 @@ If you're running directly on a virtual machine and have a browser installed it 
 
 And upload the next notebooks:
 
-* [Notebook test findspark](https://github.com/operard/oracle-cloud-tutorial/blob/main).
-* [Notebook test Pyspark](https://github.com/operard/oracle-cloud-tutorial/blob/main).
+* [Notebook test findspark](https://github.com/operard/oracle-cloud-tutorial/blob/main/notebooks/Test_findSpark.ipynb).
+* [Notebook test Pyspark](https://github.com/operard/oracle-cloud-tutorial/blob/main/notebooks/Test%20PySpark.ipynb).
+* [Notebook test Pyspark with Mysql](https://github.com/operard/oracle-cloud-tutorial/blob/main/notebooks/Test_PySpark_Mysql.ipynb).
 {% endslides %}
