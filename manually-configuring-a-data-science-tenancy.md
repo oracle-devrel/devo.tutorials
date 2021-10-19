@@ -7,6 +7,7 @@ parent: tutorials
 thumbnail: assets/manually-configuring-a-data-science-tenancy-groups.png
 toc: true
 description: Configure your tenancy for Data Science and test creating a notebook session.
+author: olivier
 ---
 {% slides %}
 Learn how to get started configuring your tenancy for Data Science and test creating a notebook session.
