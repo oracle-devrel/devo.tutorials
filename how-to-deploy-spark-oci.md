@@ -5,7 +5,13 @@ tags: [oci, open-source, spark, java, data-science]
 thumbnail: assets/apache_spark.png
 date: 2021-09-30 01:00
 description: A short walkthrough of setting up Spark and Hadoop in your OCI environment.
-author: olivier
+author: 
+  name: operard
+  home: https://github.com/operard/
+  linkedin: olivier-perard
+  twitter: olivier_perard
+  github: operard
+  bio: |- Work to teach how to mix AI technologies with micro-services and parallelizable architectures
 ---
 {% slides %}
 The following walk-through guides you through the steps needed to set up your environment to run Spark and Hadoop in Oracle Cloud Infrastructure.
