@@ -19,7 +19,7 @@ Hence, spreading workloads accross multiple cloud providers is a common strategy
 
 Adopting a second generation infrastructure service (IaaS) like [Oracle Cloud Infrastructure (OCI)][oci_cloud] is an attractive alternative. Purpose-built hardware enables cloud providers to separate the orchestration layer from the hosts and allows cloud customers to build private data centers on pre-built infrastructure pools. Programming interfaces allow operators to build extensible service delivery platforms and service owners to modernize applications in incremental steps. The bare metal approach allows customers to run enterprise applications in a traditional way. Cloud orchestrators remain optional, and can be added as managed service, but even then the user remains in control over the infrastructure resources. 
 
-[<img alt="Global Presence" src="https://www.oracle.com/a/ocom/img/rc24-oci-region-map.png" title="Data Center Regions">][oci_regionmap]
+[![Data Center Regions](https://www.oracle.com/a/ocom/img/rc24-oci-region-map.png)][oci_regionmap]
 
 Oracle operates a fast-growing network of data centers to provide access to pre-built cloud infrastructure in more than 30 regions. In addition, Oracle builds private infrastructure pools on-demand, and offers to extend these pools with edge compute or database nodes. In every data center, dedicated compute and storage resources are isolated on a native layer three network. Orchestrators, including hypervisor, container, and network functions remain private by default - also in shared pools. Combining open-source orchestration technologies with cloud agnostic monitoring and management services allows operators to build a control center for hybrid cloud services. 
 
