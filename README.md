@@ -14,7 +14,7 @@ We've strived to make the contribution process super simple!  Here it is the pro
 2. Create the new branch and switch to it: `git checkout -b <BRANCH_NAME>`
 3. Do your implementation, then _stage_ and _commit_ it
    * `git add .`
-   * `git commit -m "insert here your comments"`
+   * `git commit -am "insert your comments here"`
 
 ### Submit a Pull Request (PR)
 
