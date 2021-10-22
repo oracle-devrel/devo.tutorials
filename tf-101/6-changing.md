@@ -1,14 +1,13 @@
 ---
 title: Making changes using Terraform
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner]
+tags: [open-source, terraform, iac, devops, beginner, get-started]
 categories: [iac, opensource]
 thumbnail: assets/terraform-101.png
 date: 2021-09-30 20:22
 description: Time to make changes to our tutorial environment using Terraform.  But how?!
 toc: true
 author: tim-clegg
-published: false
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
@@ -17,7 +16,7 @@ Most environments tend to change on a regular basis.  These changes can be easil
 
 ## Prerequisites
 
-It's assumed that you're building off of the environment built in the [Creating Resources with Terraform tutorial](5-creating.md).
+It's assumed that you're building off of the environment built in the [Creating Resources with Terraform tutorial](5-creating).
 
 ## Managing Change
 
@@ -43,9 +42,9 @@ By default, the Terraform state is stored in the `terraform.tfstate` file locate
 The actual OCI (or other environment) resources that are present (or missing).  While this isn't really part of the Terraform configuration, managing resources is the reason that Terraform is being used.  Each run, Terraform will check the current as-built state of the environment, comparing it against the Terraform State and the code that is provided, to determine what might need to take place to bring the actual environment configuration into alignment with the desired end-state configuration given in the Terraform code.
 
 ## Adding a Resource
-To start, let's add three new Subnets to the Virtual Cloud Network (VCN) that was created in the [previous tutorial](5-creating.md).  Add the following to your `main.tf` file:
+To start, let's add three new Subnets to the Virtual Cloud Network (VCN) that was created in the [previous tutorial](5-creating).  Add the following to your `main.tf` file:
 
-```
+```terraform
 resource "oci_core_subnet" "dev_1" {
   vcn_id                      = oci_core_vcn.tf_101.id
   cidr_block                  = "172.16.0.0/24"
@@ -77,11 +76,11 @@ resource "oci_core_subnet" "stage" {
 > **NOTE:** Make sure to use the compartment_id you wish to use.
 {:.notice}
 
-The above code adds three new subnets: one development Subnet, one testing Subnet and one staging Subnet.  Each of these is placed in the compartment specified, within the VCN that was created in the [previous tutorial](5-creating.md).  Each has a unique IPv4 CIDR block which falls within the broader VCN IPv4 CIDR block.  None of the subnets permits public IPs to be used (they're prohibited).
+The above code adds three new subnets: one development Subnet, one testing Subnet and, one staging Subnet.  Each of these is placed in the compartment specified, within the VCN that was created in the [previous tutorial](5-creating).  Each has a unique IPv4 CIDR block which falls within the broader VCN IPv4 CIDR block.  None of the subnets permits public IPs to be used (they're prohibited).
 
 Confirm that this will do what is intended by examining the Terraform plan:
 
-```
+```console
 $ terraform plan
 oci_core_vcn.tf_101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
 
@@ -179,7 +178,7 @@ The plus sign (+) next to the three subnets listed in the above output means tha
 
 Being satisfied with this plan, apply it (to implement it).
 
-```
+```console
 $ terraform apply
 oci_core_vcn.tf_101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
 
@@ -283,7 +282,7 @@ oci_core_subnet.dev_1: Creation complete after 12s [id=ocid1.subnet.oc1.phx.<san
 Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
 ```
 
-Voila!  Your VCN now has three subnets in it.  This was really easy to add OCI resources to the VCN: add to the Terraform code in `main.tf` and ask Terraform to apply it!
+Voila!  Your VCN now has three subnets in it.  This was a really easy way to add OCI resources to the VCN: add to the Terraform code in `main.tf` and ask Terraform to apply it!
 
 ## Modifying a Resource
 
@@ -293,7 +292,7 @@ Because Terraform uses Infrastructure-as-Code (IaC), this can be done with a few
 
 Modify the existing the `oci_core_subnet.dev_1` resource definition in your `main.tf` to match the following:
 
-```
+```terraform
 resource "oci_core_vcn" "tf_101" {
   dns_label             = "tf101"
   cidr_block            = "172.16.0.0/20"
@@ -322,7 +321,7 @@ resource "oci_core_subnet" "test" {
 
 Now look at the Terraform plan:
 
-```
+```console
 $ terraform plan
 oci_core_vcn.tf_101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
 oci_core_subnet.dev_1: Refreshing state... [id=ocid1.subnet.oc1.phx.<sanitized>]
@@ -393,7 +392,7 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-Oh, no - this looks catastrophic!  It looks like something has gone terribly awry!!!  Terraform wants to destroy the `dev_1` Subnet and create a new `dev` subnet.
+Oh, no --- it looks like something has gone terribly awry! Terraform wants to destroy the `dev_1` Subnet and create a new `dev` subnet.
 
 ### Why is a Resource Being Deleted-and-Re-Created?
 
@@ -404,11 +403,11 @@ There are two primary reasons why a resource might be destroyed and re-created:
 
 In OCI, many changes are non-disruptive, however there are some resource changes that might be disruptive.  Take for instance the dns_label attribute.  According to the [OCI provider documentation for the Subnet resource](https://registry.terraform.io/providers/hashicorp/oci/latest/docs/resources/core_subnet#dns_label), the dns_label cannot be changed.  This would mean that if you wanted to change it on an existing OCI Subnet, you could see this delete-and-re-create behavior.  Terraform is smart enough to know that if an attribute cannot be updated in-place, then it must delete and re-create the resource.
 
-The second situation occurs when you totally change the name of a resource in the Terraform code and don't ask Terraform to update the Terraform state.  From Terraform's perspective, it looks like you want to delete the old resource (that's present in the Terraform state, but does not exist in the code) and create a net-new resource (because your code refers to a resource that's non-existent in the Terraform state).
+The second situation occurs when you totally change the name of a resource in the Terraform code and don't ask Terraform to update the Terraform state.  From Terraform's perspective, it looks like you want to delete the old resource (which is present in the Terraform state, but does not exist in the code) and create a net-new resource (because your code refers to a resource that's non-existent in the Terraform state).
 
-This can be a common mistake and be troublesome, however it can be easily resolved.  Rename the resource name in the Terraform state from the old name to the new name.  Terraform will then move forward as expected.  Do this now with the `terraform state mv` command:
+This can be a common mistake and be troublesome, but it can be easily resolved.  Rename the resource name in the Terraform state from the old name to the new name.  Terraform will then move forward as expected.  Do this now with the `terraform state mv` command:
 
-```
+```console
 $ terraform state mv oci_core_subnet.dev_1 oci_core_subnet.dev
 Move "oci_core_subnet.dev_1" to "oci_core_subnet.dev"
 Successfully moved 1 object(s).
@@ -417,15 +416,14 @@ Successfully moved 1 object(s).
 The above command asks Terraform to rename (move) the old resource name to a new resource name in the Terraform State.  Take a look at the [Terraform documentation](https://www.terraform.io/docs/cli/commands/state/mv.html) for more information.
 
 > **NOTE:** When referencing resources in Terraform, the type of resource and its name must be used.  This is why in the above command, `oci_core_subnet.dev_1` was used instead of `dev_1`.
-> The same name may be used multiple times, so long as it's used for different types of resources.  For instance, an OCI Route Table called `dev_1` could also exist without problem (referenced as `oci_core_route_table.dev_1`).
-> When choosing names for your resources, it's unnecessary and wholly duplicative to include the type of resource in its name, because the resource type will always prefix the name, when referencing it.
-> For example, instead of using `oci_core_subnet.subnet_dev_1`, consider using `oci_core_subnet.dev_1`.
-> It's clearly visible that this is referencing a Subnet, however the second version is a lot shorter and easier to read!
+> The same name may be used multiple times, as long as it's used for different types of resources.  For instance, an OCI Route Table called `dev_1` could also exist without problem (referenced as `oci_core_route_table.dev_1`).
+> When choosing names for your resources, it's unnecessary (and a bad idea) to include the type of resource in its name, because the resource type will always prefix the name when referencing it.
+> For example, instead of using `oci_core_subnet.subnet_dev_1`, consider using `oci_core_subnet.dev_1`. It's clearly visible that this is referencing a Subnet, however the second version is a lot shorter and easier to read!
 {:.notice}
 
 Look at the Terraform plan again:
 
-```
+```console
 $ terraform plan
 oci_core_vcn.tf_101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
 oci_core_subnet.test: Refreshing state... [id=ocid1.subnet.oc1.phx.<sanitized>]
@@ -456,7 +454,7 @@ can't guarantee that exactly these actions will be performed if
 
 The tilde (`~`) indicates an in-place change, which is what is expected for the display_name.  Proceed with applying the change:
 
-```
+```console
 $ terraform apply
 
 # ...
@@ -486,4 +484,4 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 
 This tutorial took a slight detour, highlighting a scenario where a resource had to be renamed in the Terraform State to achieve the desired outcome.  Your OCI environment now has a VCN with three Subnets in it.
 
-We've had fun creating new OCI resources and then making modifications to the environment.  It's now time to clean things up.  We'll explore destroying resources in the [next lesson](7-destroying.md).
+We've had fun creating new OCI resources and then making modifications to the environment.  It's now time to clean things up.  We'll explore destroying resources in the [next lesson](7-destroying).
