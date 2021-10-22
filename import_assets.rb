@@ -30,4 +30,3 @@ ARGV.each do |f|
     f.puts content
   end
 end
-
