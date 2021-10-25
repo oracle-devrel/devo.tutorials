@@ -5,10 +5,10 @@ tags: [always-free, get-started, open-source, apache, php, ubuntu, nodejs, front
 thumbnail: assets/apache-php-ubuntu-Apache_Diagram.png
 date: 2021-10-21 01:00
 description: Using Free Tier OCI to install PHP and Apache on an Ubuntu Linux instance, then connecting the instance to the internet for further development.
-author: lefred
-    twitter: lefred
-    github: lefred
-    linkedin: lefred
+author: 
+  twitter: lefred
+  github: lefred
+  linkedin: lefred
 ---
 {% slides %}
 
