@@ -34,12 +34,18 @@ OCI is the exclusive home of Oracle Autonomous Database and its self-repairing, 
 [Gartner: Critical Capabilities for Operational Database Management Systems](https://www.oracle.com/database/gartner-dbms.html)  
 
 ### Reduce Costs and Enhance Performance
+Oracle Cloud Infrastructure is built for enterprises seeking higher performance, lower costs, and easier cloud migration for their existing on-premises applications, and better price-performance for cloud native workloads. Read how customers have moved from AWS to Oracle Cloud Infrastructure, substantially reducing their costs and enhancing their compute platform performance.  
 
+[Compare against AWS](https://www.oracle.com/cloud/economics/)  
+[Read Gartners perspective on Oracles public cloud](https://www.oracle.com/cloud/gartner-oci.html)
 
+### Easily migrate enterprise apps
 Oracle Cloud Infrastructure is built for enterprises seeking higher performance, lower costs, and easier cloud migration for their existing on-premises applications, and better price-performance for cloud-native workloads. Read how customers have moved from AWS to Oracle Cloud Infrastructure, substantially reducing their costs and enhancing their compute platform performance: [compare against AWS](https://www.oracle.com/cloud/economics/) and [read Gartners perspective on Oracle's public cloud](https://www.oracle.com/cloud/gartner-oci.html).
 
+[Learn why Oracle apps run best on OCI](https://www.oracle.com/cloud/migrate-applications-to-oracle-cloud/)   
 ### Easily Migrate Enterprise Apps
 
+### Best support for hybrid architecture
 Traditional, on-premises workloads that enterprises rely on to run their business are easier to migrate to Oracle Cloud. Designed to deliver bare-metal compute services, network traffic isolation, and the only service-level guarantees for performance, Oracle Cloud enables rapid migration and faster time to innovation. Build new value around migrated applications faster with Autonomous Database, data science tools, and our cloud native development tools.
 
 - [Learn why Oracle apps run best on OCI](https://www.oracle.com/cloud/migrate-applications-to-oracle-cloud/)
