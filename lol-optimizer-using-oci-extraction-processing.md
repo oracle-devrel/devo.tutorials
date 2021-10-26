@@ -94,6 +94,7 @@ def get_top_players(region, queue, connection):
 	}
 
 ```
+
 In this screenshot, I create a set of request URLs to get challenger, grandmaster, and master players. I want to get all players in all available servers, as well as all queue types. So I will focus on getting data from Solo Queue (where a player can only play together or with a duo partner, and the remainder of the team is composed of random teammates) and Flex Queue (where teams of up to 5 people can be built). 
 
 In order to expand my initial dataset I firstly considered getting all players above Master’s ELO, but as my dataset grew, I had enough active players, so after a while I decided to only consider new challenger players as an addition to my player collection.
@@ -123,7 +124,9 @@ for x in request_urls:
 		continue
 
 	print('Total users obtained in region {} and queue {}: {}'.format(region, queue, len(total_users_to_insert)))
+
 ```
+
 In this code, I make the requests using the requests Python library, and process the outputs by parsing the response into JSON and traversing through the JSON object.
 
 ```python
@@ -132,18 +135,22 @@ soda = connection.getSodaDatabase()
 
 # this will open an existing collection, if the name is already in use
 collection_summoner = soda.createCollection('summoner')
+
 ```
+
 Finally, the last step is to insert this information in the database. I used an Autonomous JSON Database for this, since I didn’t want to bother with processing JSON objects too much. If you have experience with both relational and non-relational databases, you probably know it’s very complex to work with JSON objects and store them in a relational database schema. It’s much better to use a non-relational approach for this. I also didn’t want to bother with database performance, so that’s why I chose Oracle’s Autonomous JSON DB. (It’s very convenient in this case because it was really easy to setup and you can configure some visualizations in the future for your data which are publicly available through a URL. I definitely recommend checking out the advantages of the Autonomous JSON Database in more detail [here](https://blogs.oracle.com/jsondb/autonomous-json-database).
 
 In order to use Oracle’s Autonomous JSON DB, we use the SODA protocol (Simple Oracle Document Access). To find out more and to read about the library I used for this step above, visit [this user guide](https://cx-oracle.readthedocs.io/en/latest/user_guide/soda.html).
 
 
 The connection parameters for the database have been established in a config.yaml file with the following structure:
+
  ```yaml
  riot_api_key: apikey_123123123
  db:
  	username: myuser
  	password: mypw
+
  ```
 
 In order to use this database’s username and password in the code, information for the Data Source Name needs to be passed. Connecting to the Autonomous JSON database requires three things: the username, password, and DSN, which contains the URL and port of the database to connect to. To find out more about how to get your Python code to run and be able to connect into your own Autonomous JSON database, please refer to the [official documentation for the cx_Oracle library](https://cx-oracle.readthedocs.io/en/latest/user_guide/connection_handling.html).
@@ -164,10 +171,13 @@ for x in total_users_to_insert:
 		print('Summoner {} already inserted'.format(x['summonerName']))
 		continue
 	print('Inserted new summoner: {} in region {}, queue {}'.format(x['summonerName'], region, queue))
+
 ```
+
 Here I inserted the player’s data into a collection called summoner. 
 
 This collection will store all the players’ identifying information. Note that in order to unequivocally identify a player or _summoner_ as we will call them from now on, a summoner name is not enough. Why? Because players can change their summoner name in the Riot Games store, so storing their username would not guarantee the access to their data permanently. Therefore, to identify users, we make an additional API call to get the PUUID (Personal UUID) for all players so that in case these users change username, we will still be able to use their PUUIDs to get additional information about them.
+
 ```json
 {
     "tier": "CHALLENGER",
@@ -185,7 +195,9 @@ This collection will store all the players’ identifying information. Note that
     "summonerName": "Qats",
     "leaguePoints": 922
 }
+
 ```
+
 This is an example of data obtained for a European challenger player and their associated data. We can store this information efficiently in the _summoner_ collection with a schema like this:
 
 ![Summoner Schema](assets/summoner_schema.png)
@@ -200,7 +212,9 @@ After looking into the API a bit more, I found an endpoint which extracts the la
 {
     "match_id": "BR1_2133968346"
 }
+
 ```
+
 So, we insert only these match IDs for further processing into an auxiliary collection called _match_. 
 
 ## Where is this going?
@@ -210,7 +224,9 @@ Now that we have our match IDs downloaded into our match collection, we need to 
 - Each team’s compositions
 - Each team’s bans
 - The outcome of the game (win or loss)
-- Additionally, we can also calculate the outcome of each one of the matchups. For example, calculate whether the player in middle lane lost their own matchup against the enemy middle laner, and so on. This can also be useful to create another ML model, which will consider individual matchups and make predictions to help out in the individual component of a match.
+- Additionally, we can also calculate the outcome of each one of the matchups.
+
+    For example, calculate whether the player in middle lane lost their own matchup against the enemy middle laner, and so on. This can also be useful to create another ML model, which will consider individual matchups and make predictions to help out in the individual component of a match.
 
 In the end, we would like to feed a player’s champion into the model, and the model will give us the best possible choices (either for the ally or enemy team). So, we would tell the model something like: “I want to know the best synergy to pick together with X champion and I also want to know their worst matchups.” 
 
