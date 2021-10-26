@@ -8,9 +8,17 @@ author: adrian-png
 toc: true
 slug: learning-languages
 thumbnail: assets/the-whiteboard.jpg
-categories: [personal]
-tags: [oci,iot,apex,always-free,architect,community]
+categories:
+- personal
+tags:
+- oci
+- iot
+- apex
+- always-free
+- architect
+- community
 date: 2021-08-15 12:00
+redirect_from: "/collections/tutorials/learning-languages-with-oracle-cloud/"
 ---
 
 {% img alignright assets/the-whiteboard.jpg 400 400 "A whiteboard for learning the Japanese language." %}

@@ -1,13 +1,21 @@
 ---
 title: Manually configuring Data Science service on Oracle Cloud Infrastructure
-tags: [oci,data-science,nodejs,javascript,typescript]
-categories: [am-ml]
+tags:
+- oci
+- data-science
+- nodejs
+- javascript
+- typescript
+categories:
+- am-ml
 date: 2021-09-22 12:00
 parent: tutorials
 thumbnail: assets/manually-configuring-a-data-science-tenancy-groups.png
 toc: true
-description: Configure your tenancy for Data Science and test creating a notebook session.
+description: Configure your tenancy for Data Science and test creating a notebook
+  session.
 author: olivier
+redirect_from: "/collections/tutorials/manually-configuring-a-data-science-tenancy/"
 ---
 {% slides %}
 Learn how to get started configuring your tenancy for Data Science and test creating a notebook session.

@@ -1,14 +1,22 @@
 ---
 title: Terraform variables
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-10-14 12:00
 description: Learn about how variables are used in Terraform.
 toc: true
 author: tim-clegg
 published: true
+redirect_from: "/collections/tutorials/4-variables/"
 ---
 {% slides %}
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

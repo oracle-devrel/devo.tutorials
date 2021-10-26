@@ -1,13 +1,22 @@
 ---
 title: Understanding the basics of Terraform
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-10-14 08:13
-description: Let's go through some of the foundational concepts you should understand when working with Terraform.
+description: Let's go through some of the foundational concepts you should understand
+  when working with Terraform.
 author: tim-clegg
 published: true
+redirect_from: "/collections/tutorials/3-understanding-terraform-basics/"
 ---
 {% slides %}
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

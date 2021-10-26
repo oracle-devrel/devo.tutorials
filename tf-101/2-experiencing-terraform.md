@@ -1,13 +1,21 @@
 ---
 title: Experiencing Terraform
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-10-08 08:15
 description: Experience the power of Terraform through a short project.
 toc: true
 author: tim-clegg
+redirect_from: "/collections/tutorials/2-experiencing-terraform/"
 ---
 {% slides %}
 {% img alignright assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

@@ -1,12 +1,22 @@
 ---
 title: Install Spring Boot on an compute instance on Oracle Cloud
 parent: tutorials
-tags: [oci, java, always-free, back-end, spring]
-categories: [java, modernize]
+tags:
+- oci
+- java
+- always-free
+- back-end
+- spring
+categories:
+- java
+- modernize
 thumbnail: assets/install-spring-boot-on-an-oracle-instance-Spring_Diagram.png
 date: 2021-09-20 15:30
-description: Use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux compute instance, install a Spring Boot application, set up a virtual network, and access your new app from the internet.
-modified: 2021-09-22 18:10:56 -0500
+description: Use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle
+  Linux compute instance, install a Spring Boot application, set up a virtual network,
+  and access your new app from the internet.
+modified: 2021-09-22 18:10
+redirect_from: "/collections/tutorials/install-spring-boot-on-an-oracle-instance/"
 ---
 {% slides %}
 

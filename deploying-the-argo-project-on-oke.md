@@ -1,20 +1,28 @@
 ---
 title: Deploying the Argo CD on Oracle Container Engine for Kubernetes (OKE)
 parent: tutorials
-tags: [open-source, oke, kubernetes, terraform, devops]
-categories: [cloudapps, opensource]
+tags:
+- open-source
+- oke
+- kubernetes
+- terraform
+- devops
+categories:
+- cloudapps
+- opensource
 thumbnail: assets/argo-icon-color-800.png
 date: 2021-09-22 15:30
 description: How to deploy the Argo CD on an OKE cluster.
 toc: true
-author: 
+author:
   name: Ali Mukadam
   home: https://lmukadam.medium.com
   bio: |-
-       Technical Director, Asia Pacific Center of Excellence.
+    Technical Director, Asia Pacific Center of Excellence.
 
-       For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
+    For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
   linkedin: https://www.linkedin.com/in/alimukadam/
+redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 ---
 {% img alignright assets/argo-icon-color-800.png 400 400 "ARGO Logo" %}
 

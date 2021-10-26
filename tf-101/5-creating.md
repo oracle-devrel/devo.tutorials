@@ -1,13 +1,22 @@
 ---
 title: Creating Resources with Terraform
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner, get-started]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+- get-started
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-09-30 17:50
 description: How to create resources using Terraform.
 toc: true
 author: tim-clegg
+redirect_from: "/collections/tutorials/5-creating/"
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

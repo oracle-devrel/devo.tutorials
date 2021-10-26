@@ -1,14 +1,22 @@
 ---
 title: More Terraform Resources
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-09-30 20:24
 description: A curated list of helpful resources for expanding your knowledge of Terraform.
 toc: true
 author: tim-clegg
 published: false
+redirect_from: "/collections/tutorials/8-resources/"
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

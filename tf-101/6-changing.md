@@ -1,13 +1,23 @@
 ---
 title: Making changes using Terraform
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner, get-started]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+- get-started
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-09-30 20:22
-description: Time to make changes to our tutorial environment using Terraform.  But how?!
+description: Time to make changes to our tutorial environment using Terraform.  But
+  how?!
 toc: true
 author: tim-clegg
+redirect_from: "/collections/tutorials/6-changing/"
 ---
 
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

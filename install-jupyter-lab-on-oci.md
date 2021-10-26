@@ -1,10 +1,20 @@
 ---
 title: Install Jupyter Lab in OCI
 parent: tutorials
-tags: [oci, get-started, jupyter, python, data-science, machine-learning, open-source]
-categories: [ai-ml]
-description: This tutorial will guide you through setting up your environment to run Jupyter Lab on Oracle Cloud Infrastructure.
+tags:
+- oci
+- get-started
+- jupyter
+- python
+- data-science
+- machine-learning
+- open-source
+categories:
+- ai-ml
+description: This tutorial will guide you through setting up your environment to run
+  Jupyter Lab on Oracle Cloud Infrastructure.
 date: 2021-10-07 14:27
+redirect_from: "/collections/tutorials/install-jupyter-lab-on-oci/"
 ---
 {% slides %}
 

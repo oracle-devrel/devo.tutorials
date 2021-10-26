@@ -13,12 +13,13 @@ description: Build Move & Modernize Apps and Hybrid Solutions, DevOps and Automa
   on OCI.
 categories:
 - cloudapps
-author: 
+author:
   name: lefred
   home: https://lefred.be/
   linkedin: freddescamps
   twitter: lefred
   github: lefred
+redirect_from: "/collections/tutorials/get-started-with-lamp-on-oci/"
 ---
 
 

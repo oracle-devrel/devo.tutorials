@@ -1,10 +1,17 @@
 ---
 title: How to Deploy a Python Flask Application in a Kubernetes cluster
 parent: tutorials
-tags: [oci, open-source, kubernetes, flask-cloud-shell, python]
+tags:
+- oci
+- open-source
+- kubernetes
+- flask-cloud-shell
+- python
 thumbnail: assets/flask-shell-diagram.png
 date: 2021-10-11 01:00
-description: Setting up a Kubernetes cluster using Oracle Cloud, and deploying a Python application with Flask framework using Cloud Shell.
+description: Setting up a Kubernetes cluster using Oracle Cloud, and deploying a Python
+  application with Flask framework using Cloud Shell.
+redirect_from: "/collections/tutorials/deploy-flask-app-cloud-shell/"
 ---
 {% slides %}
 

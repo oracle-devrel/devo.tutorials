@@ -1,11 +1,17 @@
 ---
 title: How to Deploy Spark Standalone in Oracle Cloud (OCI)
 parent: tutorials
-tags: [oci, open-source, spark, java, data-science]
+tags:
+- oci
+- open-source
+- spark
+- java
+- data-science
 thumbnail: assets/apache_spark.png
 date: 2021-09-30 01:00
 description: A short walkthrough of setting up Spark and Hadoop in your OCI environment.
 author: olivier
+redirect_from: "/collections/tutorials/how-to-deploy-spark-oci/"
 ---
 {% slides %}
 The following walk-through guides you through the steps needed to set up your environment to run Spark and Hadoop in Oracle Cloud Infrastructure.

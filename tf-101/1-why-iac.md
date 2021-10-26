@@ -1,13 +1,22 @@
 ---
 title: Why Infrastructure as Code?
 parent: tf-101
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/terraform-101.png
 date: 2021-09-28 08:13
-description: Heard about Infrastructure as Code (IaC) but not sure what it's about or why you should care?  This tutorial's for you!
+description: Heard about Infrastructure as Code (IaC) but not sure what it's about
+  or why you should care?  This tutorial's for you!
 toc: true
 author: tim-clegg
+redirect_from: "/collections/tutorials/1-why-iac/"
 ---
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
