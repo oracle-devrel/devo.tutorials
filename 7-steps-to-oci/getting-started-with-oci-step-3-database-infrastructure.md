@@ -8,12 +8,13 @@ date: 2021-10-18 20:00:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
+draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 # Autonomous Database - Shared
 
-Oracle Cloud Infrastructure's Autonomous Database is a fully managed, preconfigured database environment with four workload types available, which are: Autonomous Transaction Processing, Autonomous Data Warehouse, Oracle APEX Application Development, and Autonomous JSON Database. You do not need to configure or manage any hardware or install any software. After provisioning, you can scale the number of CPU cores or the storage capacity of the database at any time without impacting availability or performance. Autonomous Database handles creating the database, and the following maintenance tasks:
+Oracle Cloud Infrastructure's Autonomous Database is a fully managed, preconfigured database environment with four workload types available, which are: Autonomous Transaction Processing, Autonomous Data Warehouse, Oracle APEX Application Development, and Autonomous JSON Database. You do not need to configure or manage any hardware or install any software. After provisioning, you can scale the number of CPU cores or the storage capacity of the database at any time without impacting availability or performance. Autonomous Database handles creating the database, and the following maintenance tasks:
 
 - Backing up the database
 - Patching the database
@@ -25,7 +26,7 @@ Oracle Cloud Infrastructure's Autonomous Database is a fully managed, preconfi
 **DWH**: Built for decision support and data warehouse workloads. Offers fast queries over large volumes of data.
 
 **JSON**: Built for JSON-centric application development. Offers developer-friendly document APIs and native JSON storage.
-Autonomous JSON Database is Oracle Autonomous Transaction Processing, but specialized for developing NoSQL-style applications that use JavaScript Object Notation (JSON) documents.
+Autonomous JSON Database is Oracle Autonomous Transaction Processing, but specialized for developing NoSQL-style applications that use JavaScript Object Notation (JSON) documents.
 
 **ATP**: Built for transactional workloads. Offers high concurrency for short-running queries and transactions.
 
@@ -94,7 +95,7 @@ DIAGRAM PLACEHOLDER
 1. Plan stack
 1. Apply stack
 
-## Validate 
+## Validate
 
 1. Access database
 1. (Optional) Access APEX
@@ -106,13 +107,13 @@ DIAGRAM PLACEHOLDER
 
 <!--- Links -->
 [home]:       index
-[intro]:      step1-intro
-[provider]:   step1-provider
-[base]:       step2-base
-[db-infra]:   step3-dbinfra
-[app-infra]:  step4-appinfra
-[workload]:   step5-workload
-[governance]: step6-governance
+[intro]:      getting-started-with-oci-intro.md
+[provider]:   getting-started-with-oci-step-1-provider
+[base]:       getting-started-with-oci-step-2-base
+[db-infra]:   getting-started-with-oci-step-3-database-infrastructure
+[app-infra]:  getting-started-with-oci-step-4-app-infrastructure
+[workload]:   getting-started-with-oci-step-5-workload-deployment
+[governance]: getting-started-with-oci-step-6-governance
 [vizualize]:  step7-vizualize
 
 [learn_doc_iam]:        https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Concepts/overview.htm

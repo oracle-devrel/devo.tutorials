@@ -4,10 +4,11 @@ parent: ocloud-7steps
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-18 20:00:00
-description: You want to astart with OCI and do not know how - here is a short summary what OCI is all about it
+date: 2021-10-26 12:00:00
+description: Want to start with OCI and don't know how? Here's a quick look at what OCI is all about.
 toc: true
 author: kubemen
+date: 2021-10-26 08:00
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -74,21 +75,21 @@ This introduction targets future operation engineers is structured as follows.
 * [Governance][governance]
 * [Vizualizer][vizualize]
 
-<!--EDIT-->
+Cloud operations engineering is a relatively new field which extends the scope of IT service management (ITSM). It represents an important step towards more agility and flexibility in service operation. The concept of "Infrastructure as Code" replaces runbook tools and has become an enabler of self-service delivery --- even for complex solution architectures. Operators empower service owners and developers to add, change or delete infrastructure on demand with deployment templates for logical resources. Service consumers gain flexibility to provision virtual infrastructure, while resource operators remain in control of the physical infrastructure. 
 
-Cloud operations engineering is a relatively new field extending the scope of IT service management (ITSM). It represents an important step towards more agility and flexibility in service operation. The concept of "Infrastructure as Code" replaces runbook tools and has become an enabler for self-service delivery - even for complex solution architectures. Operators empower service owners and developers to add, change or delete infrastructure on demand with deployment templates for logical resources. Service consumers gain flexibility to provision virtual infrastructure while resource operators remain in control of the physical infrastructure. This repository aims to provide a path for IT Organizations introducing cloud engineering. We starts with a short introduction about Infrastructure as Code, show how to define logical resources for application and database services and end with as an example how to consolidate infrastructure and application services in a self-service catalogue. We build on the official [Oracle Cloud Architect training][oci_training], that prepares administrators for the [Oracle Architect Associate exam][oci_certification], but aim to extend the [Learning Path][oci_learning], with tool recommendations and code examples for cloud engineers.
+This series aims to provide a path for IT organizations introducing cloud engineering. We starts with a short introduction of Infrastructure as Code (IaC), show how to define logical resources for application and database services, and end with an example showing how to consolidate infrastructure and application services in a self-service catalogue. We'll build on the official [Oracle Cloud Architect training][oci_training] --- which prepares administrators for the [Oracle Architect Associate exam][oci_certification] --- but extend the [Learning Path][oci_learning] with tool recommendations and code examples for cloud engineers.
 
-[< home][home] | [+][intro] | [provider >][provider] 
+Next up, [automating OCI with Terraform][provider].
 
 <!--- Links -->
 [home]:       index
-[intro]:      step1-intro
-[provider]:   step1-provider
-[base]:       step2-base
-[db-infra]:   step3-dbinfra
-[app-infra]:  step4-appinfra
-[workload]:   step5-workload
-[governance]: step6-governance
+[intro]:      getting-started-with-oci-intro.md
+[provider]:   getting-started-with-oci-step-1-provider
+[base]:       getting-started-with-oci-step-2-base
+[db-infra]:   getting-started-with-oci-step-3-database-infrastructure
+[app-infra]:  getting-started-with-oci-step-4-app-infrastructure
+[workload]:   getting-started-with-oci-step-5-workload-deployment
+[governance]: getting-started-with-oci-step-6-governance
 [vizualize]:  step7-vizualize
 
 [oci_certification]: https://www.oracle.com/cloud/iaas/training/architect-associate.html

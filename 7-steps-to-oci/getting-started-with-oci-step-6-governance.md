@@ -8,6 +8,7 @@ date: 2021-10-18 20:00:00
 description: Introduction to Governance as part of the OCLOUD framework
 toc: true
 author: kubemen
+draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -399,13 +400,13 @@ Main Features
 
 <!--- Links -->
 [home]:       index
-[intro]:      step1-intro
-[provider]:   step1-provider
-[base]:       step2-base
-[db-infra]:   step3-dbinfra
-[app-infra]:  step4-appinfra
-[workload]:   step5-workload
-[governance]: step6-governance
+[intro]:      getting-started-with-oci-intro.md
+[provider]:   getting-started-with-oci-step-1-provider
+[base]:       getting-started-with-oci-step-2-base
+[db-infra]:   getting-started-with-oci-step-3-database-infrastructure
+[app-infra]:  getting-started-with-oci-step-4-app-infrastructure
+[workload]:   getting-started-with-oci-step-5-workload-deployment
+[governance]: getting-started-with-oci-step-6-governance
 [vizualize]:  step7-vizualize
 
 [cost_3steps1]:                 https://blogs.oracle.com/cloud-infrastructure/post/enforced-budgets-on-oci-using-functions-and-quotas

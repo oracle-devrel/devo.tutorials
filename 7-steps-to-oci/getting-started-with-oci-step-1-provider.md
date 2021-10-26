@@ -4,23 +4,50 @@ parent: ocloud-7steps
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-18 20:00:00
+date: 2021-10-26 19:00:00
 description: You want to know how you can automate tasks on OCI - here you can find a short deep dive into automation with Terraform
 toc: true
 author: kubemen
+date: 2021-10-26 10:00
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-Introducing Oracle Cloud Infrastructure for service delivery allows operators to represent physical and virtual infrastructure in the form of code. System administrators ensure server uptime and service levels, responding to infrastructure monitoring alerts and resolving incidents programmatically. Adopting ["Infrastructure as Code" (IaC)][tf_intro] helps operators to connect events and state changes with automated provisioning processes. While requesting a resource from a cloud provider is a matter of opening the console, providing input values, and launching the server, addressing functional and non-functional requirements of an IT operation during the launch process is more complex. Provisioning plans help to determine the correct framework, reflect the operational and management tools and configuring resources according to security and compliance regulations. In OCI we rely on [Terraform][tf_main] to automate provisioning processes. The widely adopted open source tool allows engineers to translate "declarative" syntax written in [JSON][tf_json] or [Hashicorp's Configuration Language (HCL)][tf_hcl] into API calls. 
+Introducing Oracle Cloud Infrastructure for service delivery allows operators to represent physical and virtual infrastructure in the form of code. System administrators ensure server uptime and service levels, responding to infrastructure monitoring alerts and resolving incidents programmatically. Adopting ["Infrastructure as Code" (IaC)][tf_intro] helps operators to connect events and state changes with automated provisioning processes. 
+
+While requesting a resource from a cloud provider is a matter of opening the console, providing input values, and launching the server, addressing functional and non-functional requirements of an IT operation during the launch process is more complex. Provisioning plans help to determine the correct framework, reflect the operational and management tools, and configure resources according to security and compliance regulations. In OCI, we rely on [Terraform][tf_main] to automate provisioning processes. The widely-adopted, open-source tool allows engineers to translate "declarative" syntax written in [JSON][tf_json] or [Hashicorp's Configuration Language (HCL)][tf_hcl] into API calls. 
 
 ## Getting Started
-Terraform is orchestrator agnostic. The exection environment is dynamically extended with [hypervisor specific interfaces][tf_provider] when needed. Terraform templates compromise the physical infrastructure, network functions and orchestrators for distributed systems. Topology templates compromise configuration scripts that intiate service deployments upon the successful creation of a resource. Terraform’s [local-exec][tf_local-exec] and [remote-exec][tf_remote-exec] blocks run configuration scripts that install software components for service instances. Operators combine application code and/or binaries with virtualization and an orchestration environment of their choice into comprehensive build plans. The process of provisioning infrastructure is merged with the continuous integration and deployment chain for application code. Combinging Terraform with OCI, enterprise IT departments benefit from:
 
-**Increased flexibility and agility in operation** - Relying on automated deployment allows to centralize topology management in code repositories. While Terraform is creating resources, state is maintained. This helps to prevent confusion amongst engineering teams. The desired state for all resources is compared to the current state and the delta defines the provisioning sequence for the requested changes. This allows operators to launch virtual data center in more than 30 locations and rely on a single script source to maintain company-wide security and compliance standards. 
+Terraform is orchestrator agnostic. The execution environment is dynamically extended with [hypervisor-specific interfaces][tf_provider] when needed. 
 
-**Integrated cloud services** - Database and application infrastructure is separated in OCI. The terraform service provider combines deployment scripts for database services with provisioning scripts for applications relying open source orchestrators and commercial hypervisors like Kubernetes and VMWare vSphere. Engineers merge cloud-native services and traditional enterprise applications into comprehensive deployment templates. Combing Oracle's orchestrator agnostic approach for the applications stack with separate infrastructure for multi-model databases on a native layer three network, service owners modernize existing applications incrementally and adopt cloud native services in digestable steps, avoiding to rewrite entire applications before migrating to a managed infrastrcuture stack.
+- Terraform templates comprise the physical infrastructure, network functions and orchestrators for distributed systems. 
+- Topology templates comprise configuration scripts that intiate service deployments upon the successful creation of a resource. 
+- Terraform’s [local-exec][tf_local-exec] and [remote-exec][tf_remote-exec] blocks run configuration scripts that install software components for service instances. 
+- Operators combine application code and/or binaries with virtualization and an orchestration environment of their choice into comprehensive build plans. 
 
-**Shadow IT prevention** - Terraform separates code and execution environments and allows to maintain security and cost control, while enabling self-service application deployments. Defining resources in code allows to define launch parameter and user credentials programmitically, take in- and external dependencies during the provisioning process into account and define the sequence of resources that are deployed. Engineers describe a target topology and terraform determines the steps required to create a resource automatically. Leveraging flags, like the region argument, modules are exectuted different regions and availability- and/or security-domains. This allows to define modules that represent services in a self-service portal, with admin expertise and configuration dependencies reflected in the predefined deployment process. 
+The process of provisioning infrastructure is merged with the continuous integration and deployment chain for application code. Combinging Terraform with OCI, enterprise IT departments benefit from:
+
+- **Increased flexibility and agility in operation**
+
+    Relying on automated deployment allows you to centralize topology management in code repositories. While Terraform is creating resources, state is maintained. This helps to prevent confusion among engineering teams. The desired state for all resources is compared to the current state and the delta defines the provisioning sequence for the requested changes. 
+
+    This allows operators to launch virtual data center in more than 30 locations and rely on a single script source to maintain company-wide security and compliance standards. 
+
+- **Integrated cloud services**
+
+    Database and application infrastructure is separated in OCI. The terraform service provider combines deployment scripts for database services with provisioning scripts for applications relying on open source orchestrators and commercial hypervisors like Kubernetes and VMWare vSphere. 
+
+    Engineers merge cloud-native services and traditional enterprise applications into comprehensive deployment templates. Combining Oracle's orchestrator-agnostic approach for the applications stack with separate infrastructure for multi-model databases on a native layer three network, service owners modernize existing applications incrementally and adopt cloud native services in digestable steps. Doing so, they avoid rewriting entire applications before migrating to a managed infrastrcuture stack.
+
+- **Shadow IT prevention**
+
+    Terraform separates code and execution environments and allows you to maintain security and cost-control while enabling self-service application deployments. 
+
+    Defining resources in code allows you to define launch parameters and user credentials programmitically, take dependencies during the provisioning process into account, and define the sequence of resources that are deployed. 
+
+    Engineers describe a target topology and terraform determines the steps required to create a resource automatically. Leveraging flags like the region argument, modules are exectuted in different regions and availability/security domains. This allows modules to be defined which represent services in a self-service portal, with admin expertise and configuration dependencies reflected in the predefined deployment process.
+
+<!--EDIT-->
 
 We refer to resources that are programmatically defined as [custom or logical resources][ref_logical]. The learning curve, adding to orchestrator-specific service provider to the OCI core services is not very steep, because syntax patterns that are used to code infrastructure on orchestrators remain the same.   
 
@@ -299,18 +326,17 @@ After an initial *apply*, we use the `terraform output -json` command and parse 
 terraform output -json | jq '[{provider: {oci: .providers.value[]}}]' > p && mv ./p ../provider.tf.json
 ```
 
-
-[< intro][intro] | [+][home] | [base >][base] 
+Next up, the [Service Delivery Framework][base].
 
 <!--- Links -->
 [home]:       index
-[intro]:      step1-intro
-[provider]:   step1-provider
-[base]:       step2-base
-[db-infra]:   step3-dbinfra
-[app-infra]:  step4-appinfra
-[workload]:   step5-workload
-[governance]: step6-governance
+[intro]:      getting-started-with-oci-intro.md
+[provider]:   getting-started-with-oci-step-1-provider
+[base]:       getting-started-with-oci-step-2-base
+[db-infra]:   getting-started-with-oci-step-3-database-infrastructure
+[app-infra]:  getting-started-with-oci-step-4-app-infrastructure
+[workload]:   getting-started-with-oci-step-5-workload-deployment
+[governance]: getting-started-with-oci-step-6-governance
 [vizualize]:  step7-vizualize
 
 [oci_certification]: https://www.oracle.com/cloud/iaas/training/architect-associate.html

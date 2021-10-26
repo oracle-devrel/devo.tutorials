@@ -1,15 +1,15 @@
 ---
-title: Service Delivery Framwork
+title: Service Delivery Framework
 parent: ocloud-7steps
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-18 20:00:00
+date: 2021-10-26 20:00:00
 description: How to deploy a landing zone in OCI
 toc: true
 author: kubemen
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% img alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 Oracle Cloud Infrastructure (OCI) is a programable data center, providing dedicated infrastructure in more than 30 locations world wide. The [share-nothing design][ref_sna] allows IT operators to launch [private clouds][ref_nist] on demand and enables enterprises to adopt managed services into an existing operation. This framework is inspired by the [CIS landing zone][oci_landing] and helps ITIL oriented organizations to build and launch private or public cloud services.
 
@@ -762,17 +762,17 @@ output "user_details" {
 
 The template will return the user details including the UI password. Passwords will be generated and shown at the `terraform apply` stage. When we use the `terraform output` command terraform will not return the passwords. The complete [template][code_user] is stored in the code directory.
 
-[< provider][provider] | [+][home] | [db-infra >][db-infra] 
+[Bookmark this series][home] and check back soon for Database Infrastructure in Step 3.
 
 <!--- Links -->
 [home]:       index
-[intro]:      step1-intro
-[provider]:   step1-provider
-[base]:       step2-base
-[db-infra]:   step3-dbinfra
-[app-infra]:  step4-appinfra
-[workload]:   step5-workload
-[governance]: step6-governance
+[intro]:      getting-started-with-oci-intro.md
+[provider]:   getting-started-with-oci-step-1-provider
+[base]:       getting-started-with-oci-step-2-base
+[db-infra]:   getting-started-with-oci-step-3-database-infrastructure
+[app-infra]:  getting-started-with-oci-step-4-app-infrastructure
+[workload]:   getting-started-with-oci-step-5-workload-deployment
+[governance]: getting-started-with-oci-step-6-governance
 [vizualize]:  step7-vizualize
 
 [learn_doc_iam]:        https://docs.cloud.oracle.com/en-us/iaas/Content/Identity/Concepts/overview.htm

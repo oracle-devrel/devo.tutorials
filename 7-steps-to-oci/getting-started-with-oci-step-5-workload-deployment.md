@@ -8,6 +8,7 @@ date: 2021-10-18 20:00:00
 description: How to deploy and configure your code on the OCLOUD framework landing zone
 toc: true
 author: kubemen
+draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -120,7 +121,7 @@ Following are the knife-oci plugin commands available.
 How to setup the knife-oci plugin can be found here: https://medium.com/oracledevs/using-oracles-chef-plugin-to-provision-resource-in-oracle-cloud-infrastructure-5891100e20ab  
 OCI documentation for chef is available here: [chef_plugin]
 
-### **Helm** 
+### **Helm**
 Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.  
 Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.  
 
@@ -362,13 +363,13 @@ service/oss-kafka-connect-service   LoadBalancer   10.96.114.200   129.159.74.13
 
 <!--- Links -->
 [home]:       index
-[intro]:      step1-intro
-[provider]:   step1-provider
-[base]:       step2-base
-[db-infra]:   step3-dbinfra
-[app-infra]:  step4-appinfra
-[workload]:   step5-workload
-[governance]: step6-governance
+[intro]:      getting-started-with-oci-intro.md
+[provider]:   getting-started-with-oci-step-1-provider
+[base]:       getting-started-with-oci-step-2-base
+[db-infra]:   getting-started-with-oci-step-3-database-infrastructure
+[app-infra]:  getting-started-with-oci-step-4-app-infrastructure
+[workload]:   getting-started-with-oci-step-5-workload-deployment
+[governance]: getting-started-with-oci-step-6-governance
 [vizualize]:  step7-vizualize
 
 [ansible_collection]:                       https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/ansible.htm
