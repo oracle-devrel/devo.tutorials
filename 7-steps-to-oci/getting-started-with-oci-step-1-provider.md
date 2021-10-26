@@ -59,7 +59,7 @@ A fast way to start, is obtaining an Oracle Cloud Infrastructure account by **si
 
 After obtaining an account we log into the web console and start the [Cloud Shell][oci_cloudshell] with |*>_*| button. The cloud shell launches in the region that is active in the cloud console. For the initial setup the home region of a tenant should be selected. Executing deployment plans, Terraform depends on the directory structure to identify files that belong to a plan.
 
-```
+```console
 mkdir ~/project
 ```
 
