@@ -19,12 +19,11 @@ author:
   linkedin: freddescamps
   twitter: lefred
   github: lefred
-draft: true
 ---
 
-We already saw how easy it’s to deploy solutions on OCI using Terraform and Resource Manager’s Stack. I’ve published several resources available on [this page](https://lefred.be/deploy-to-oci/).
+It's easy to deploy solutions on OCI (Oracle Cloud Infrastructure) using Terraform and Resource Manager’s Stack. I’ve published several resources available on [this page](https://lefred.be/deploy-to-oci/).
 
-Today we will see how easy it’s to deploy Apache Superset on OCI using MySQL Data Service.
+Today we will see how easy it is to deploy Apache Superset on OCI using MySQL Data Service.
 
 Apache Superset is an open source BI, Reporting, Charting tool that competes with Tableau, Looker, etc.  For a list of companies that have deployed Superset, see [this page](https://github.com/apache/superset/blob/master/RESOURCES/INTHEWILD.md).
 
@@ -32,7 +31,7 @@ Superset is loaded with options that make it easy for users of all skill sets to
 
 For a gallery of available charts, [go here](https://superset.apache.org/gallery).
 
-MySQL can be used as backend to store the needed information related to the platform (users, settings, dashboards, …) , this represents 55 tables. MySQL can also be used as source for the data visualization.
+MySQL can be used as a backend to store the needed information related to the platform (users, settings, dashboards, …) , this represents 55 tables. MySQL can also be used as source for the data visualization.
 
 ## Preparation
 
@@ -48,11 +47,11 @@ If you use the Red Pill (by clicking on the image above), you will redirected to
 
 You need to accept the Oracle Terms of Use and then the stack’s configuration will be loaded.
 
-Check is you are in the desired compartment and you can click on Next:
+Check that you are in the desired compartment and then click Next:
 
 {% img aligncenter assets/mds_superset/02.webp %}
 
-You are then redirected to the second screen, the variables configuration one. Some variables are mandatory and self explanatory:
+You will be redirected to the second screen, for variables configuration. Some variables are mandatory and self explanatory:
 
 {% img aligncenter assets/mds_superset/03.webp %}
 
@@ -72,7 +71,7 @@ When you have performed all the selection you need, you can continue the process
 
 ## Deployment
 
-The deployment will start, with the sample data load, this takes approximately 30 minutes…
+The deployment will start, with the sample data load, and this takes approximately 30 minutes…
 
 {% img aligncenter assets/mds_superset/07.webp %}
 
@@ -98,9 +97,9 @@ To reach the Apache Superset we just deployed, we paste the superset_public_ip�
 
 {% img aligncenter assets/mds_superset/13.webp %}
 
-Tadaaaam ! Apache Superset is available and working on OCI with MySQL Database Service.
+Congratulations! Apache Superset is available and working on OCI with MySQL Database Service.
 
-If you want to connect to another MDS instance that you would use as data source for some visualization graphs, you need to be able to reach it (usually on the same VCN’s subnet or having routing between different VCN’s) and you must use the following syntax as the MySQL Connector installed is mysql-connector-python:
+If you want to connect to another MDS instance that you would use as a data source for some visualization graphs, you will need to be able to reach it (usually on the same VCN’s subnet or having routing between different VCN’s) and you must use the following syntax, as the MySQL Connector installed is mysql-connector-python:
 
 ```
 mysql+mysqlconnector://<login>:<password>@<mds IP>:3306/<schema_name>
@@ -116,9 +115,8 @@ mysql+mysqlconnector://<login>:<password>@<mds IP>:3306/<schema_name>
 
 ## Conclusion
 
-Using OCI’s Resource Manager Stack (or Terraform) is very easy to deploy Apache Superset on OCI using MySQL Database Service (MDS) as backend.
+Using OCI’s Resource Manager Stack (or Terraform) it is very easy to deploy Apache Superset on OCI using MySQL Database Service (MDS) as a backend.
 
-In few minutes you have an Open Source Data Visualization solution that you can use with your MySQL Database Service instances.
+In a few minutes you have an Open Source Data Visualization solution that you can use with your MySQL Database Service instances.
 
-Enjoy OCI, MySQL and MySQL Database Service !
-
+Enjoy OCI, MySQL and MySQL Database Service!
