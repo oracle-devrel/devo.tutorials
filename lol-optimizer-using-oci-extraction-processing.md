@@ -3,7 +3,7 @@ title: League of Legends Optimizer—Data Extraction and Processing
 parent: tutorials
 tags: [api, gaming, oci, always-free, python]
 categories: [cloudapps]
-thumbnail: assets/summoner_schema.png.png
+thumbnail: assets/summoner_schema.png
 date: 2021-10-26 12:56
 description: Can OCI be used to make League of Legends even better? Ignacio Martínez walks you through configuring an ML and data-based approach to to this best selling game.
 author:
