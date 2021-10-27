@@ -7,6 +7,7 @@ thumbnail: assets/landing-zone.png
 author: kubemen
 tags: [open-source, terraform, iac, devops, beginner]
 sort: asc
+color: purple
 ---
 
 {% img aligncenter assets/landing_zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}

@@ -1,6 +1,6 @@
 ---
 title: Automating OCI with Terraform
-parent: ocloud-7steps
+parent: [tutorials,ocloud-7steps]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
