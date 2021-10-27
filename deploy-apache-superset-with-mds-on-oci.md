@@ -19,6 +19,7 @@ author:
   linkedin: freddescamps
   twitter: lefred
   github: lefred
+draft: true
 ---
 
 We already saw how easy it’s to deploy solutions on OCI using Terraform and Resource Manager’s Stack. I’ve published several resources available on [this page](https://lefred.be/deploy-to-oci/).
