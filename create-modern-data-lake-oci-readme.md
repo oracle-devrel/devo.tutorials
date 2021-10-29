@@ -1,8 +1,8 @@
 ---
 title: Deploy a modern data lake on OCI
+parent: [tutorials]
 description: Using Terraform to create a data lake on Oracle Cloud Infrastructure. 
 thumbnail: assets/datalakeocichart_4481-9331b237844018b1.png
-sort: desc
 author: Ali Mukadam
 tags: [kubernetis, devops, terraform, oci]
 category: clouddev
@@ -10,7 +10,7 @@ date: 2021-10-29 12:00
 ---
 This repo is under active development.  Building open source software is a community effort.  We're excited to engage with the community building this.
 
-![OCI Datalake Architecture] {% img aligncenter assets/datalakeocichart_4481-9331b237844018b1.png "OCI Datalake Architecture Overview" %}
+{% img aligncenter assets/datalakeocichart_4481-9331b237844018b1.png "OCI Datalake Architecture Overview" %}
 
 ## Resource Manager Deployment
 
@@ -75,6 +75,6 @@ $ terraform destroy -var-file=config.tfvars
 
 2. Upload the `master.zip` and provide a name and description for the stack
 
-    ![Create Stack] {% img aligncenter assets/datalakeoci_4a6e6eb3_bbfb_d66353a189bc.png "Create Stack Dialog" %}()
+    {% img aligncenter assets/datalakeoci_4a6e6eb3_bbfb_d66353a189bc.png "Create Stack Dialog" %}()
 
 3. Configure the Stack. The UI will present the variables to the user dynamically, based on their selections. 
