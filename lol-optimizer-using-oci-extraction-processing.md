@@ -1,14 +1,13 @@
 ---
 title: League of Legends Optimizer—Data Extraction and Processing
+bio: A natural born programmer who started in tech as a hobby and then it became more serious. His purpose is to help the world grow through new technologies.
 parent: tutorials
 tags: [api, gaming, oci, always-free, python]
 categories: [cloudapps]
 thumbnail: assets/summoner_schema.png
 date: 2021-10-26 12:56
 description: Can OCI be used to make League of Legends even better? Ignacio Martínez walks you through configuring an ML and data-based approach to to this best selling game.
-author:
-  name: Ignacio Martínez
-  linkedin: ignacio-g-martinez
+author: ignacio-martinez
 ---
 
 ## Introduction
@@ -250,6 +249,7 @@ I have published my datasets into Kaggle for everyone to use, in case you don't 
 Stay tuned for the next articles!
 
 ## License
+
 Copyright (c) 2021 Oracle and/or its affiliates.
 
 Licensed under the Universal Permissive License (UPL), Version 1.0.

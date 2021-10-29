@@ -12,7 +12,7 @@ categories:
 thumbnail: assets/sql-dolphin.png
 date: 2021-10-26 16:48
 description: Recently, Oracle added a Bastion Service to OCI. This tutorial walks you through using this service with OCI Cloud Shell.
-author: Frederic Descamps
+author: lefred
 ---
 
 Recently, Oracle added a Bastion Service to OCI. And you may also have noticed that the OCI Dashboard offers you the possibility to use a browser based terminal: Cloud Shell.
@@ -25,7 +25,7 @@ We need the MySQL DB System’s IP:
 
 So in this example, the MDS Instance we want to connect to has 10.0.0.99 as IP.
 
- ## Bastion Service
+## Bastion Service
 
 Now we will create a new Bastion Service that will allow us to create a SSH Tunnel to our MySQL DB System.
 
@@ -46,7 +46,6 @@ If you don't like to use 0.0.0.0/0, you need to add the public IP used by Cloud 
 ````
 fdescamp@cloudshell:~ (us-ashburn-1)$ curl ifconfig.me
 1XX.XXX.XXX.XXX
-
 ````
 
 Now that the Bastion is created, I need to create ta session that will be used to create the SSH Tunnel to MDS.
@@ -63,9 +62,8 @@ This will open the Cloud Shell in the browser, the first time it takes some time
 
 In the Cloud Shell, we can now create the SSH Key we need using the following command:
 
-````
+````console
 $ ssh-keygen -t rsa
-
 ````
 
 This is how it looks like and as you can see the public key we need will be stored in `~/.ssh/id_rsa.pub`:
@@ -76,7 +74,7 @@ This is how it looks like and as you can see the public key we need will be stor
 
 As we have now all we need to create the Bastion Session for the SSH Tunnel, we can go back to the Bastion we created earlier and create a new session:
 
-![Create a new Bastion sessoin](assets/create-new-bastion-session.png)
+![Create a new Bastion session](assets/create-new-bastion-session.png)
 
 We need to choose the **SSH port forwarding session** as Type, add the MySQL Database System’s IP and paste the SSH Public Key.
 
@@ -90,7 +88,9 @@ If you click on the 3 vertical dots, you can view or copy the ssh command we nee
 
 `-i <privateKey>` is not really required as we only have one single key for the moment. Also, the error message “bind: Cannot assign requested address” is not a problem. This message only displays because because the Cloud Shell tries to bind on ipv6 too. If you want to avoid it, just add -4 between ssh and -i like this: 
 
-`ssh -4 -i`
+```console
+ssh -4 -i
+```
 
 Note the "&" at the end of the ssh command.
 
