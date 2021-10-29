@@ -8,7 +8,7 @@ date: 2021-10-26 19:00:00
 description: You want to know how you can automate tasks on OCI - here you can find a short deep dive into automation with Terraform
 toc: true
 author: kubemen
-date: 2021-10-26 10:00
+date: 2021-10-29 08:00
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

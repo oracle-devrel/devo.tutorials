@@ -8,7 +8,7 @@ date: 2021-10-26 12:00:00
 description: Want to start with OCI and don't know how? Here's a quick look at what OCI is all about.
 toc: true
 author: kubemen
-date: 2021-10-26 08:00
+date: 2021-10-29 06:00
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

@@ -4,7 +4,7 @@ parent: [tutorials,ocloud-7steps]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-26 20:00:00
+date: 2021-10-29 11:00:00
 description: How to deploy a landing zone in OCI
 toc: true
 author: kubemen
