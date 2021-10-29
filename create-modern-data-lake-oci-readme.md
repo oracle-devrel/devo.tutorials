@@ -21,7 +21,6 @@ This Quick Start uses [OCI Resource Manager](https://docs.cloud.oracle.com/iaas/
 After logging into the console you'll be taken through the same steps described
 in the **Deploy** section below.
 
-
 Note, if you use this template to create another repo you'll need to change the link for the button to point at your repo.
 
 ## Local Development
@@ -75,6 +74,6 @@ $ terraform destroy -var-file=config.tfvars
 
 2. Upload the `master.zip` and provide a name and description for the stack
 
-    {% img aligncenter assets/datalakeoci_4a6e6eb3_bbfb_d66353a189bc.png "Create Stack Dialog" %}()
+    {% img aligncenter assets/datalakeoci_4a6e6eb3_bbfb_d66353a189bc.png "Create Stack Dialog" %}
 
 3. Configure the Stack. The UI will present the variables to the user dynamically, based on their selections. 
