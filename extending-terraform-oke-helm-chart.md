@@ -1,12 +1,9 @@
 ---
-layout: collection
 title: Extending Terraform OKE with a helm chart
-description: Deploying a redis cluster to OKE using helm charts. 
-thumbnail: RELATIVE_PATH_TO_THUMBNAIL_IMAGE
-sort: desc
-author: Ali Mukadam
-tags: Kubernetes, DevOps, Terraform
-date: 2021-10-28
+parent: [tutorials]
+tags: [kubernetes, devops, terraform]
+date: 2021-10-28 12:00
+description: Extend a sample repo with your own extensions to make reusable provisioning scripts.
 ---
 {% slides %}
 When designing the [Terraform OKE](https://github.com/oracle/sample-oke-for-terraform) provisioning scripts, one of the things we wanted to do is making it reusable. That means extending the base sample repo and add in your own extensions.
