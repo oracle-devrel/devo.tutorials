@@ -14,6 +14,7 @@ thumbnail:
 date: 2021-10-28 17:03
 description: MDS (MySQL Database Service) and Moodle are a perfect match for OCI. In this tutorial, you'll learn how to deploy this popular learning management system with OCI.
 author: lucas-jellema
+published: false
 ---
 
 The article shows a custom Docker container image based on a community container image for headless chrome and Playwright with a custom Node application that interacts with the Google Translate web ui; the Project Fn hotwrap utility is added to this image to provide the bridge from the OCI FaaS serverless function framework based on Project Fn to the custom Node application. This approach can be used for any Playwright scenario and also for other custom Docker container images not related to Playwright.
