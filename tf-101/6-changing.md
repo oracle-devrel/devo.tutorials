@@ -1,6 +1,7 @@
 ---
 title: Making changes using Terraform
-parent: tf-101
+parent: [tutorials, tf-101]
+sidebar: series
 tags:
 - open-source
 - terraform
@@ -19,7 +20,7 @@ toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/6-changing/"
 ---
-
+{% slides %}
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 Most environments tend to change on a regular basis.  These changes can be easily managed in a reliable, scalable way using Terraform.  Let's try this out now.
@@ -495,3 +496,4 @@ Apply complete! Resources: 0 added, 1 changed, 0 destroyed.
 This tutorial took a slight detour, highlighting a scenario where a resource had to be renamed in the Terraform State to achieve the desired outcome.  Your OCI environment now has a VCN with three Subnets in it.
 
 We've had fun creating new OCI resources and then making modifications to the environment.  It's now time to clean things up.  We'll explore destroying resources in the [next lesson](7-destroying).
+{% endslides %}

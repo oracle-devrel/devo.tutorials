@@ -1,6 +1,7 @@
 ---
 title: More Terraform Resources
-parent: tf-101
+parent: [tutorials, tf-101]
+sidebar: series
 tags:
 - open-source
 - terraform
@@ -11,11 +12,10 @@ categories:
 - iac
 - opensource
 thumbnail: assets/terraform-101.png
-date: 2021-09-30 20:24
+date: 2021-11-01 09:02
 description: A curated list of helpful resources for expanding your knowledge of Terraform.
 toc: true
 author: tim-clegg
-published: false
 redirect_from: "/collections/tutorials/8-resources/"
 ---
 
@@ -26,22 +26,25 @@ I hope that you've found this tutorial series helpful and worth your time.  Terr
 Before parting ways, there are several resources that I've curated with the hope that it'll help expand your skills and experience around using Terraform with OCI.  Without further ado:
 
 ## Terraform Modules
-We've not had a chance to talk about modules, however they're a great way to really extend and scale Terraform.  Here are just a few places to look for OCI Terraform modules:
+
+We haven't had a chance to talk about modules, but they're a great way to extend and scale Terraform.  Here are a few places to look for OCI Terraform modules:
 
 * [HashiCorp Terraform Module Registry](https://registry.terraform.io/browse/modules?provider=oci)
-* [https://github.com/oracle-devrel](https://github.com/oracle-devrel)
-* [https://github.com/oracle-terraform-modules/](https://github.com/oracle-terraform-modules/)
-* [https://github.com/oracle-quickstart](https://github.com/oracle-quickstart)
+* [github.com/oracle-devrel](https://github.com/oracle-devrel)
+* [github.com/oracle-terraform-modules/](https://github.com/oracle-terraform-modules/)
+* [github.com/oracle-quickstart](https://github.com/oracle-quickstart)
 
 ## Terraform Projects
-There are many Terraform projects for many common applications that are waiting for you to deploy:
+
+There are Terraform projects for many common applications just waiting for you to deploy:
 
 * [Oracle Architecture Center](https://www.oracle.com/cloud/architecture-center/)
-* [https://github.com/oracle-devrel](https://github.com/oracle-devrel)
-* [https://github.com/oracle-quickstart](https://github.com/oracle-quickstart)
+* [github.com/oracle-devrel](https://github.com/oracle-devrel)
+* [github.com/oracle-quickstart](https://github.com/oracle-quickstart)
 
 ## Terraform Documentation
-There is a plethora of great documentation on the [terraform.io](https://terraform.io) site.  Be sure to check it out and go through a lot of the documentation and learning guides!
+
+There's a plethora of great documentation on the [terraform.io](https://terraform.io) site.  Be sure to check it out and go through the documentation and learning guides!
 
 For OCI-specific documentation, check out:
 

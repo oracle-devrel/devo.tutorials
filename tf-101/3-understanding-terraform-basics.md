@@ -1,6 +1,7 @@
 ---
-title: Understanding the basics of Terraform
-parent: tf-101
+title: Understanding The Basics Of Terraform
+parent: [tutorials, tf-101]
+sidebar: series
 tags:
 - open-source
 - terraform

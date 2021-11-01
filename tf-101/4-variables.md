@@ -1,6 +1,7 @@
 ---
-title: Terraform variables
-parent: tf-101
+title: Terraform Variables
+parent: [tutorials, tf-101]
+sidebar: series
 tags:
 - open-source
 - terraform
