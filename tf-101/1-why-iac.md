@@ -1,6 +1,7 @@
 ---
 title: Why Infrastructure as Code?
-parent: tf-101
+parent: [tutorials, tf-101]
+sidebar: series
 tags:
 - open-source
 - terraform

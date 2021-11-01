@@ -1,6 +1,7 @@
 ---
 title: Creating Resources with Terraform
-parent: tf-101
+parent: [tutorials, tf-101]
+sidebar: series
 tags:
 - open-source
 - terraform
@@ -18,7 +19,7 @@ toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/5-creating/"
 ---
-
+{% slides %}
 {% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 The next few lessons in this tutorial will take you through an adventure where resources are created, modified, and then finally destroyed using Terraform.  While you got a little taste for this in the [Experiencing Terraform lesson](2-experiencing-terraform.md), we'll cover the topics in greater detail here, pointing out more details along the way.
@@ -407,10 +408,11 @@ It caught the problem and returned back a meaningful message!  Notice how the pl
 
 You've had a chance to look at how to create new OCI resources with Terraform.  Next up you’ll learn about how to modify OCI infrastructure using Terraform.
 
-## Helpful Resources
+### Helpful Resources
 
 - [Terraform OCI Provider Documentation](https://registry.terraform.io/providers/hashicorp/oci/latest/docs)
 - [Official OCI Terraform Documentation](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraform.htm)
 - [Terraform Registry – OCI Modules](https://registry.terraform.io/browse/modules?provider=oci)
 - [Oracle (Terraform) Quick Start](https://github.com/oracle-quickstart/)
 - [Oracle Terraform Modules (GitHub)](https://github.com/oracle-terraform-modules/)
+{% endslides %}

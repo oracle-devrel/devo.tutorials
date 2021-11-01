@@ -23,5 +23,5 @@ This set of tutorials is for you!  Here's what we'll cover:
 4. [Terraform variables](4-variables)
 5. [Creating Resources with Terraform](5-creating)
 6. [Making changes using Terraform](6-changing)
-7. Destroying resources with Terraform
-8. More Terraform Resources
+7. [Destroying resources with Terraform](7-destroying)
+8. [More Terraform Resources](8-resources)
