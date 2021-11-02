@@ -8,8 +8,6 @@ tags: [kubernetis, devops, terraform, oci]
 category: clouddev
 date: 2021-10-29 12:00
 ---
-This repo is under active development.  Building open source software is a community effort.  We're excited to engage with the community building this.
-
 {% img aligncenter assets/datalakeocichart_4481-9331b237844018b1.png "OCI Datalake Architecture Overview" %}
 
 ## Resource Manager Deployment
