@@ -31,7 +31,7 @@ So let’s see how we can create them with OKE.
 ## Creating Load Balancer Shapes
 First, let’s see what load balancer shapes are available in our tenancy.
 
-```sh
+```console
 $ oci lb shape list --compartment-id ocid1.compartment.oc1..   
  "data": [                                                                                                                                                                                   
     {                                                                                                                                                                                         
@@ -61,33 +61,33 @@ As you can see, all the shapes are available. I could use a simple service to ha
 ### Creating and Updating a Load Blanacer with an Ingress Controller
 Let's first add an ingress controller:
 
-```sh
+```console
 $ helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
 $ helm repo update
 $ helm install nginx ingress-nginx/ingress-nginx
 ```
 By default, this will create a load balancer with a of shape 100 Mbps:
 
-```sh
+```console
 $ oci lb load-balancer get --load-balancer-id ocid1.loadbalancer...."shape-name": "100Mbps",...
 ```
 
 Let’s say we want to change the shape to 400 Mbps. We can do this with a load balancer annotation and a helm upgrade:
 
-```sh
+```console
 $ helm upgrade nginx ingress-nginx/ingress-nginx \
 $ --set controller.service.annotations."service\.beta\.kubernetes\.io/oci-load-balancer-shape"="400Mbps"
 ```
 
 If you want to avoid the horrible escapes and `\`, use the `values.yaml` file provided by the chart. All you would need to do is traverse to the annotations section and add the following:
 
-```sh
+```console
 $ service.beta.kubernetes.io/oci-load-balancer-shape: "400Mbps"$ 
 ```
 
 After the upgrade is done, we can check on the shape again as before. We can see it’s now been upgraded to 400 Mbps:
 
-```sh
+```console
 ...
 $ "shape-name": "400Mbps",
 ...
@@ -97,14 +97,14 @@ Now, let’s say we want to create one with the flexible shape and want to take 
 
 When we check on the shape, we see the following:
 
-```sh
+```console
 $ helm upgrade nginx ingress-nginx/ingress-nginx --set 
 $ controller.service.annotations."service\.beta\.kubernetes\.io/oci-load-balancer-shape"="flexible" --set 
 ```
 
 We can also dynamically change the bandwidth:
 
-```sh
+```console
 $ helm upgrade nginx ingress-nginx/ingress-nginx --set controller.service.annotations."service\.beta\.kubernetes\.$ io/oci-load-balancer-shape"="flexible" --set controller.service.annotations."service\.beta\.kubernetes\.io/ 
 $ oci-load-balancer-shape-flex-min"=10 --set controller.service.annotations."service\.beta\.kubernetes\.io/
 $ oci-load-balancer-shape-flex-max"=500      
@@ -113,7 +113,7 @@ $ "shape-name": "flexible",
 
 Now when we check the shape, we can see the changes reflected:
 
-```sh
+```console
 $ "shape-details": {                                                                                                                                                                        
       "maximum-bandwidth-in-mbps": 500,                                                                                                                                                       
       "minimum-bandwidth-in-mbps": 10                                                                                                                                                         
