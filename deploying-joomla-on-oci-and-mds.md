@@ -20,7 +20,7 @@ The easiest way to deploy [Joomla!](https://www.joomla.org/) on Oracle Cloud Inf
 
 Let’s see how easy it is to deploy such solution.
 
-If you don’t already have an OCI account, you can [get started for free]({{ site.urls.always_free }}.
+If you don’t already have an OCI account, you can [get started for free]({{ site.urls.always_free }}).
 
 The easiest way to deploy all the required resources (vcn, subnets, gateways, compute and MySQL instances, security lists, …) is to use a stack for Resource Manager. It consists in Terraform modules and information to easily deploy the architecture on OCI.
 
