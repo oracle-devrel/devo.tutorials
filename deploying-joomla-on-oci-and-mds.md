@@ -18,9 +18,9 @@ author: frederic-descamps
 
 The easiest way to deploy [Joomla!](https://www.joomla.org/) on Oracle Cloud Infrastructure and MySQL Database Service, is to use OCI Resource Manager’s stack.
 
-Let’s see how easy it’s to deploy such solution.
+Let’s see how easy it is to deploy such solution.
 
-If you don’t already have an OCI account, you can get a Free Tier account at https://oracle.com/mysql
+If you don’t already have an OCI account, you can [get started for free]({{ site.urls.always_free }}).
 
 The easiest way to deploy all the required resources (vcn, subnets, gateways, compute and MySQL instances, security lists, …) is to use a stack for Resource Manager. It consists in Terraform modules and information to easily deploy the architecture on OCI.
 
