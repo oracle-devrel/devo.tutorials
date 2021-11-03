@@ -1,10 +1,8 @@
 ---
-layout: collection
 title: Call a Function using API Gateway
 categories: [clouddev, cloudapps, enterprise]
 description: Using Oracle functions to process data via an Oracle API Gateway, and creating a python function to extract HTTP information.
 thumbnail: assets/call-a-func-oracle-funcs-api-gtw-diagram.png
-sort: desc
 tags: [python, apigateway, oci]
 parent: tutorials
 date: 2021-11-5 12:01
@@ -68,9 +66,9 @@ To successfully perform this tutorial, you must have the following:
 
 **Oracle Cloud Shell**
 
-  * If you use Cloud Shell, the preceding list of software is already installed.
+* If you use Cloud Shell, the preceding list of software is already installed.
 
-## 1. Gather Required Information
+## Gather Required Information
 
 Collect all the information you need to complete the tutorial. Copy the following information into your notepad.
 
@@ -110,7 +108,7 @@ Ensure you have the following information written down for the tutorial.
 
     Open the navigation menu and click **Networking**, and then click **Virtual Cloud Networks**. From the list of networks, select your VCN.
 
-## 2. Perform Required Configuration
+## Perform Required Configuration
 
 Perform all the configuration you need for the tutorial.
 
@@ -245,7 +243,7 @@ You have created a policy to allow API Gateway to use Functions.
 
     Returns: `{"message": "Hello Bob"}`
 
-## 3. Create an API Gateway
+## Create an API Gateway
 
 To call your function, create an API Gateway.
 
@@ -304,35 +302,35 @@ With your API Gateway and deployment created, you can now test you installation.
 You have connected your API Gateway to a boiler plate Python function. Next, you update your Python function to display information passed in an HTTP request.
 
   
-## 4. Update Function to Access HTTP and Function Data
+## Update Function to Access HTTP and Function Data
 
 Next, modify the boiler plate Python function to access the runtime context and display HTTP information.
 
 ### Review Starting Python Code
 
 If you look at the boiler plate function, your Python function looks something like this.
-```console
-    import io
-    import json
-    import logging
+```python
+import io
+import json
+import logging
+
+from fdk import response
+
+
+def handler(ctx, data: io.BytesIO = None):
+    name = "World"
+    try:
+        body = json.loads(data.getvalue())
+        name = body.get("name")
+    except (Exception, ValueError) as ex:
+        logging.getLogger().info('error parsing json payload: ' + str(ex))
     
-    from fdk import response
-    
-    
-    def handler(ctx, data: io.BytesIO = None):
-        name = "World"
-        try:
-            body = json.loads(data.getvalue())
-            name = body.get("name")
-        except (Exception, ValueError) as ex:
-            logging.getLogger().info('error parsing json payload: ' + str(ex))
-        
-        logging.getLogger().info("Inside Python Hello World function")
-        return response.Response(
-           ctx, response_data=json.dumps(
-               {"message": "Hello {0}".format(name)}),
-           headers={"Content-Type": "application/json"}
-        )
+    logging.getLogger().info("Inside Python Hello World function")
+    return response.Response(
+       ctx, response_data=json.dumps(
+           {"message": "Hello {0}".format(name)}),
+       headers={"Content-Type": "application/json"}
+    )
 ```
 
 Using this code as a starting point, the sections that follow convert the function into a Python function that returns HTTP and configuration data.
@@ -344,19 +342,19 @@ First, update the function for required packages.
 1. Update the `requirements.txt` file for the `oci` package.
 
     ```console
-        fdk
-        oci 
+    fdk
+    oci 
     ```                   
                     
 
 2. Update the `import` statements in `func.py` for required packages for the HTTP features: 
 
-    ```console
-        import io
-        import json
-        import oci
-        import logging
-        from urllib.parse import urlparse, parse_qs
+    ```python
+    import io
+    import json
+    import oci
+    import logging
+    from urllib.parse import urlparse, parse_qs
     ```                    
 
     The `oci` package is required for some of the context requests. The `urlparse, parse_qs` packages are used for parsing.
@@ -365,68 +363,68 @@ First, update the function for required packages.
 
 First, remove the main body of the function. The `response` method and related code are added back as we go.
 
-```console
-    import io
-    import json
-    import oci
-    import logging
-    from urllib.parse import urlparse, parse_qs  
-                    
-    from fdk import response
-    
-    def handler(ctx, data: io.BytesIO = None): 
+```python
+import io
+import json
+import oci
+import logging
+from urllib.parse import urlparse, parse_qs  
+                
+from fdk import response
+
+def handler(ctx, data: io.BytesIO = None): 
 ```               
 
 Next add code to display HTTP information in the response. Here is the code with comments following.
 
-```console
-    import io
-    import json
-    import oci
-    import logging
-    from urllib.parse import urlparse, parse_qs  
-                    
-    from fdk import response
+```python
+import io
+import json
+import oci
+import logging
+from urllib.parse import urlparse, parse_qs  
+                
+from fdk import response
+
+def handler(ctx, data: io.BytesIO = None):
+    logging.getLogger().info("HTTP function start")
     
-    def handler(ctx, data: io.BytesIO = None):
-        logging.getLogger().info("HTTP function start")
-        
-        resp = {}
-        
-        # retrieving the request headers
-        headers = ctx.Headers()
-        logging.getLogger().info("Headers: " + json.dumps(headers))
-        resp["Headers"] = headers
-        
-        # retrieving the request body, e.g. {"key1":"value"}
-        try:
-            requestbody_str = data.getvalue().decode('UTF-8')
-            if requestbody_str:
-                resp["Request body"] = json.loads(requestbody_str)
-            else:
-                resp["Request body"] = {}
-        except Exception as ex:
-            print('ERROR: The request body is not JSON', ex, flush=True)
-            raise
-        
-        # retrieving the request URL, e.g. "/v1/http-info"
-        requesturl = ctx.RequestURL()
-        logging.getLogger().info("Request URL: " + json.dumps(requesturl))
-        resp["Request URL"] = requesturl
-        
-        # retrieving query string from the request URL, e.g. {"param1":["value"]}
-        parsed_url = urlparse(requesturl)
-        resp["Query String"] = parse_qs(parsed_url.query)
-        logging.getLogger().info("Query string: " + json.dumps(resp["Query String"]))
-        
-        # retrieving the request method, e.g. "POST", "GET"...
-        method = ctx.Method()
-        if method:
-            logging.getLogger().info("Request Method: " + method)
-        resp["Request Method"] = method
+    resp = {}
+    
+    # retrieving the request headers
+    headers = ctx.Headers()
+    logging.getLogger().info("Headers: " + json.dumps(headers))
+    resp["Headers"] = headers
+    
+    # retrieving the request body, e.g. {"key1":"value"}
+    try:
+        requestbody_str = data.getvalue().decode('UTF-8')
+        if requestbody_str:
+            resp["Request body"] = json.loads(requestbody_str)
         else:
-            logging.getLogger().info("No Request Method")
-            resp["Request Method"] = None
+            resp["Request body"] = {}
+    except Exception as ex:
+        print('ERROR: The request body is not JSON', ex, flush=True)
+        raise
+    
+    # retrieving the request URL, e.g. "/v1/http-info"
+    requesturl = ctx.RequestURL()
+    logging.getLogger().info("Request URL: " + json.dumps(requesturl))
+    resp["Request URL"] = requesturl
+    
+    # retrieving query string from the request URL, e.g. {"param1":["value"]}
+    parsed_url = urlparse(requesturl)
+    resp["Query String"] = parse_qs(parsed_url.query)
+    logging.getLogger().info("Query string: " + json.dumps(resp["Query String"]))
+    
+    # retrieving the request method, e.g. "POST", "GET"...
+    method = ctx.Method()
+    if method:
+        logging.getLogger().info("Request Method: " + method)
+    resp["Request Method"] = method
+    else:
+        logging.getLogger().info("No Request Method")
+        resp["Request Method"] = None
 ```
 
 * The `handler` function receives system information about the current request through the `ctx` and `data` parameters.
@@ -438,42 +436,42 @@ Next add code to display HTTP information in the response. Here is the code with
 
 Next, retrieve Oracle Functions related data from the context and then return a response. Comments follow.
 
-```console
-        # retrieving the function configuration
-        resp["Configuration"] = dict(ctx.Config())
-        logging.getLogger().info("Configuration: " + json.dumps(resp["Configuration"]))
-        
-        # retrieving the Application ID, e.g. "ocid1.fnapp.oc1.phx.aaaaxxxx"
-        appid = ctx.AppID()
-        logging.getLogger().info("AppID: " + appid)
-        resp["AppID"] = appid
-        
-        # retrieving the Function ID, e.g. "ocid1.fnfunc.oc1.phx.aaaaxxxxx"
-        fnid = ctx.FnID()
-        logging.getLogger().info("FnID: " + fnid)
-        resp["FnID"] = fnid
-        
-        # retrieving the Function call ID, e.g. "01E9FE6JBW1BT0C68ZJ003KR1Q"
-        callid = ctx.CallID()
-        logging.getLogger().info("CallID: " + callid)
-        resp["CallID"] = callid
-        
-        # retrieving the Function format, e.g. "http-stream"
-        fnformat = ctx.Format()
-        logging.getLogger().info("Format: " + fnformat)
-        resp["Format"] = fnformat
-        
-        # retrieving the Function deadline, e.g. "2020-05-29T05:24:46Z"
-        deadline = ctx.Deadline()
-        logging.getLogger().info("Deadline: " + deadline)
-        resp["Deadline"] = deadline
-        
-        logging.getLogger().info("function handler end")
-        return response.Response(
-            ctx, 
-            response_data=json.dumps(resp),
-            headers={"Content-Type": "application/json"}
-        )
+```python
+# retrieving the function configuration
+resp["Configuration"] = dict(ctx.Config())
+logging.getLogger().info("Configuration: " + json.dumps(resp["Configuration"]))
+
+# retrieving the Application ID, e.g. "ocid1.fnapp.oc1.phx.aaaaxxxx"
+appid = ctx.AppID()
+logging.getLogger().info("AppID: " + appid)
+resp["AppID"] = appid
+
+# retrieving the Function ID, e.g. "ocid1.fnfunc.oc1.phx.aaaaxxxxx"
+fnid = ctx.FnID()
+logging.getLogger().info("FnID: " + fnid)
+resp["FnID"] = fnid
+
+# retrieving the Function call ID, e.g. "01E9FE6JBW1BT0C68ZJ003KR1Q"
+callid = ctx.CallID()
+logging.getLogger().info("CallID: " + callid)
+resp["CallID"] = callid
+
+# retrieving the Function format, e.g. "http-stream"
+fnformat = ctx.Format()
+logging.getLogger().info("Format: " + fnformat)
+resp["Format"] = fnformat
+
+# retrieving the Function deadline, e.g. "2020-05-29T05:24:46Z"
+deadline = ctx.Deadline()
+logging.getLogger().info("Deadline: " + deadline)
+resp["Deadline"] = deadline
+
+logging.getLogger().info("function handler end")
+return response.Response(
+    ctx, 
+    response_data=json.dumps(resp),
+    headers={"Content-Type": "application/json"}
+)
 ```
 
 Notice all the Functions-related data is retrieved from the `ctx` object including: `AppID`, `FnID`, and`Format`.
@@ -482,90 +480,90 @@ Notice all the Functions-related data is retrieved from the `ctx` object includi
 
 Here is the final function code.
 
-```console
-    import io
-    import json
-    import oci
-    import logging
-    from urllib.parse import urlparse, parse_qs
+```python
+import io
+import json
+import oci
+import logging
+from urllib.parse import urlparse, parse_qs
+
+from fdk import response
+
+def handler(ctx, data: io.BytesIO = None):
+    logging.getLogger().info("HTTP function start")
     
-    from fdk import response
+    resp = {}
     
-    def handler(ctx, data: io.BytesIO = None):
-        logging.getLogger().info("HTTP function start")
-        
-        resp = {}
-        
-        # retrieving the request headers
-        headers = ctx.Headers()
-        logging.getLogger().info("Headers: " + json.dumps(headers))
-        resp["Headers"] = headers
-        
-        # retrieving the request body, e.g. {"key1":"value"}
-        try:
-            requestbody_str = data.getvalue().decode('UTF-8')
-            if requestbody_str:
-                resp["Request body"] = json.loads(requestbody_str)
-            else:
-                resp["Request body"] = {}
-        except Exception as ex:
-            print('ERROR: The request body is not JSON', ex, flush=True)
-            raise
-        
-        # retrieving the request URL, e.g. "/v1/http-info"
-        requesturl = ctx.RequestURL()
-        logging.getLogger().info("Request URL: " + json.dumps(requesturl))
-        resp["Request URL"] = requesturl
-        
-        # retrieving query string from the request URL, e.g. {"param1":["value"]}
-        parsed_url = urlparse(requesturl)
-        resp["Query String"] = parse_qs(parsed_url.query)
-        logging.getLogger().info("Query string: " + json.dumps(resp["Query String"]))
-        
-        # retrieving the request method, e.g. "POST", "GET"...
-        method = ctx.Method()
-        if method:
-            logging.getLogger().info("Request Method: " + method)
-            resp["Request Method"] = method
+    # retrieving the request headers
+    headers = ctx.Headers()
+    logging.getLogger().info("Headers: " + json.dumps(headers))
+    resp["Headers"] = headers
+    
+    # retrieving the request body, e.g. {"key1":"value"}
+    try:
+        requestbody_str = data.getvalue().decode('UTF-8')
+        if requestbody_str:
+            resp["Request body"] = json.loads(requestbody_str)
         else:
-            logging.getLogger().info("No Request Method")
-            resp["Request Method"] = None
-        
-        # retrieving the function configuration
-        resp["Configuration"] = dict(ctx.Config())
-        logging.getLogger().info("Configuration: " + json.dumps(resp["Configuration"]))
-        
-        # retrieving the Application ID, e.g. "ocid1.fnapp.oc1.phx.aaaaxxxx"
-        appid = ctx.AppID()
-        logging.getLogger().info("AppID: " + appid)
-        resp["AppID"] = appid
-        
-        # retrieving the Function ID, e.g. "ocid1.fnfunc.oc1.phx.aaaaxxxxx"
-        fnid = ctx.FnID()
-        logging.getLogger().info("FnID: " + fnid)
-        resp["FnID"] = fnid
-        
-        # retrieving the Function call ID, e.g. "01E9FE6JBW1BT0C68ZJ003KR1Q"
-        callid = ctx.CallID()
-        logging.getLogger().info("CallID: " + callid)
-        resp["CallID"] = callid
-        
-        # retrieving the Function format, e.g. "http-stream"
-        fnformat = ctx.Format()
-        logging.getLogger().info("Format: " + fnformat)
-        resp["Format"] = fnformat
-        
-        # retrieving the Function deadline, e.g. "2020-05-29T05:24:46Z"
-        deadline = ctx.Deadline()
-        logging.getLogger().info("Deadline: " + deadline)
-        resp["Deadline"] = deadline
-        
-        logging.getLogger().info("function handler end")
-        return response.Response(
-            ctx, 
-            response_data=json.dumps(resp),
-            headers={"Content-Type": "application/json"}
-        )
+            resp["Request body"] = {}
+    except Exception as ex:
+        print('ERROR: The request body is not JSON', ex, flush=True)
+        raise
+    
+    # retrieving the request URL, e.g. "/v1/http-info"
+    requesturl = ctx.RequestURL()
+    logging.getLogger().info("Request URL: " + json.dumps(requesturl))
+    resp["Request URL"] = requesturl
+    
+    # retrieving query string from the request URL, e.g. {"param1":["value"]}
+    parsed_url = urlparse(requesturl)
+    resp["Query String"] = parse_qs(parsed_url.query)
+    logging.getLogger().info("Query string: " + json.dumps(resp["Query String"]))
+    
+    # retrieving the request method, e.g. "POST", "GET"...
+    method = ctx.Method()
+    if method:
+        logging.getLogger().info("Request Method: " + method)
+        resp["Request Method"] = method
+    else:
+        logging.getLogger().info("No Request Method")
+        resp["Request Method"] = None
+    
+    # retrieving the function configuration
+    resp["Configuration"] = dict(ctx.Config())
+    logging.getLogger().info("Configuration: " + json.dumps(resp["Configuration"]))
+    
+    # retrieving the Application ID, e.g. "ocid1.fnapp.oc1.phx.aaaaxxxx"
+    appid = ctx.AppID()
+    logging.getLogger().info("AppID: " + appid)
+    resp["AppID"] = appid
+    
+    # retrieving the Function ID, e.g. "ocid1.fnfunc.oc1.phx.aaaaxxxxx"
+    fnid = ctx.FnID()
+    logging.getLogger().info("FnID: " + fnid)
+    resp["FnID"] = fnid
+    
+    # retrieving the Function call ID, e.g. "01E9FE6JBW1BT0C68ZJ003KR1Q"
+    callid = ctx.CallID()
+    logging.getLogger().info("CallID: " + callid)
+    resp["CallID"] = callid
+    
+    # retrieving the Function format, e.g. "http-stream"
+    fnformat = ctx.Format()
+    logging.getLogger().info("Format: " + fnformat)
+    resp["Format"] = fnformat
+    
+    # retrieving the Function deadline, e.g. "2020-05-29T05:24:46Z"
+    deadline = ctx.Deadline()
+    logging.getLogger().info("Deadline: " + deadline)
+    resp["Deadline"] = deadline
+    
+    logging.getLogger().info("function handler end")
+    return response.Response(
+        ctx, 
+        response_data=json.dumps(resp),
+        headers={"Content-Type": "application/json"}
+    )
 ```       
 
 You are now ready to retest you function and see the results.
@@ -585,84 +583,84 @@ For more information, see [Fn Project's tutorial on runtime context](https://fnp
 2. Invoke the function to ensure that the function is working.
 3. Run your script again. To get formatted JSON output, use the `jq` utility which is included with the cloud shell. If you are using the CLI, install `jq` on your local machine. 
     ```console
-        gtw01.sh | jq
+    gtw01.sh | jq
     ```
 
     The data returned is similar to:
 
     ```console
-        {
-            "Headers": {
-            "host": [
-            "localhost",
-            "ctr6kqbjpza5tjnzafaqpqif5i.apigateway.us-phoenix-1.oci.customer-oci.com"
-            ],
-            "user-agent": [
-            "lua-resty-http/0.14 (Lua) ngx_lua/10015",
-            "curl/7.64.1"
-            ],
-            "transfer-encoding": "chunked",
-            "content-type": [
-            "application/octet-stream",
-            "application/octet-stream"
-            ],
-            "date": "Thu, 10 Dec 2020 01:35:43 GMT",
-            "fn-call-id": "01ES54MAKK1BT0H50ZJ00NGX00",
-            "fn-deadline": "2020-12-10T01:36:13Z",
-            "accept": "*/*",
-            "cdn-loop": "iQPgvPk4HZ74L-PRJqYw7A",
-            "forwarded": "for=73.34.74.159",
-            "x-forwarded-for": "73.34.74.159",
-            "x-real-ip": "73.34.74.159",
-            "fn-http-method": "GET",
-            "fn-http-request-url": "/v1/http-info",
-            "fn-intent": "httprequest",
-            "fn-invoke-type": "sync",
-            "oci-subject-id": "ocid1.apigateway.oc1.phx.0000000000000000000000000000000000000000000000000000",
-            "oci-subject-tenancy-id": "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "oci-subject-type": "resource",
-            "opc-request-id": "/A79EAB4A240E93EB226366B190A494BC/01ES54MAK21BT0H50ZJ00NGWZZ",
-            "x-content-sha256": "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
-            "accept-encoding": "gzip"
-            },
-            "Configuration": {
-            "PATH": "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-            "HOSTNAME": "7747cc436a14",
-            "FN_LISTENER": "unix:/tmp/iofs/lsnr.sock",
-            "FN_CPUS": "125m",
-            "FN_LOGFRAME_NAME": "01ES54E5RN00000000000001JF",
-            "FN_LOGFRAME_HDR": "Opc-Request-Id",
-            "FN_FORMAT": "http-stream",
-            "DB-NAME": "your-db-name",
-            "DB-USER": "your-user-name",
-            "FN_APP_ID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "FN_FN_ID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "FN_MEMORY": "256",
-            "FN_TYPE": "sync",
-            "OCI_RESOURCE_PRINCIPAL_RPST": "/.oci-credentials/rpst",
-            "OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM": "/.oci-credentials/private.pem",
-            "OCI_RESOURCE_PRINCIPAL_VERSION": "2.2",
-            "OCI_RESOURCE_PRINCIPAL_REGION": "us-phoenix-1",
-            "OCI_REGION_METADATA": "{\"realmDomainComponent\":\"oraclecloud.com\",\"realmKey\":\"oc1\",\"regionIdentifier\":\"us-phoenix-1\",\"regionKey\":\"PHX\"}",
-            "LANG": "C.UTF-8",
-            "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
-            "PYTHON_VERSION": "3.8.5",
-            "PYTHON_PIP_VERSION": "20.2.2",
-            "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/5578af97f8b2b466f4cdbebe18a3ba2d48ad1434/get-pip.py",
-            "PYTHON_GET_PIP_SHA256": "d4d62a0850fe0c2e6325b2cc20d818c580563de5a2038f917e3cb0e25280b4d1",
-            "PYTHONPATH": "/function:/python",
-            "HOME": "/home/fn"
-            },
-            "Request body": {},
-            "Request URL": "/v1/http-info",
-            "Query String": {},
-            "Request Method": "GET",
-            "AppID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "FnID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "CallID": "01ES54MAKK1BT0H50ZJ00NGX00",
-            "Format": "http-stream",
-            "Deadline": "2020-12-10T01:36:13Z"
-        }
+    {
+        "Headers": {
+        "host": [
+        "localhost",
+        "ctr6kqbjpza5tjnzafaqpqif5i.apigateway.us-phoenix-1.oci.customer-oci.com"
+        ],
+        "user-agent": [
+        "lua-resty-http/0.14 (Lua) ngx_lua/10015",
+        "curl/7.64.1"
+        ],
+        "transfer-encoding": "chunked",
+        "content-type": [
+        "application/octet-stream",
+        "application/octet-stream"
+        ],
+        "date": "Thu, 10 Dec 2020 01:35:43 GMT",
+        "fn-call-id": "01ES54MAKK1BT0H50ZJ00NGX00",
+        "fn-deadline": "2020-12-10T01:36:13Z",
+        "accept": "*/*",
+        "cdn-loop": "iQPgvPk4HZ74L-PRJqYw7A",
+        "forwarded": "for=73.34.74.159",
+        "x-forwarded-for": "73.34.74.159",
+        "x-real-ip": "73.34.74.159",
+        "fn-http-method": "GET",
+        "fn-http-request-url": "/v1/http-info",
+        "fn-intent": "httprequest",
+        "fn-invoke-type": "sync",
+        "oci-subject-id": "ocid1.apigateway.oc1.phx.0000000000000000000000000000000000000000000000000000",
+        "oci-subject-tenancy-id": "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "oci-subject-type": "resource",
+        "opc-request-id": "/A79EAB4A240E93EB226366B190A494BC/01ES54MAK21BT0H50ZJ00NGWZZ",
+        "x-content-sha256": "47DEQpj8HBSa+/TImW+5JCeuQeRkm5NMpJWZG3hSuFU=",
+        "accept-encoding": "gzip"
+        },
+        "Configuration": {
+        "PATH": "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "HOSTNAME": "7747cc436a14",
+        "FN_LISTENER": "unix:/tmp/iofs/lsnr.sock",
+        "FN_CPUS": "125m",
+        "FN_LOGFRAME_NAME": "01ES54E5RN00000000000001JF",
+        "FN_LOGFRAME_HDR": "Opc-Request-Id",
+        "FN_FORMAT": "http-stream",
+        "DB-NAME": "your-db-name",
+        "DB-USER": "your-user-name",
+        "FN_APP_ID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "FN_FN_ID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "FN_MEMORY": "256",
+        "FN_TYPE": "sync",
+        "OCI_RESOURCE_PRINCIPAL_RPST": "/.oci-credentials/rpst",
+        "OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM": "/.oci-credentials/private.pem",
+        "OCI_RESOURCE_PRINCIPAL_VERSION": "2.2",
+        "OCI_RESOURCE_PRINCIPAL_REGION": "us-phoenix-1",
+        "OCI_REGION_METADATA": "{\"realmDomainComponent\":\"oraclecloud.com\",\"realmKey\":\"oc1\",\"regionIdentifier\":\"us-phoenix-1\",\"regionKey\":\"PHX\"}",
+        "LANG": "C.UTF-8",
+        "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
+        "PYTHON_VERSION": "3.8.5",
+        "PYTHON_PIP_VERSION": "20.2.2",
+        "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/5578af97f8b2b466f4cdbebe18a3ba2d48ad1434/get-pip.py",
+        "PYTHON_GET_PIP_SHA256": "d4d62a0850fe0c2e6325b2cc20d818c580563de5a2038f917e3cb0e25280b4d1",
+        "PYTHONPATH": "/function:/python",
+        "HOME": "/home/fn"
+        },
+        "Request body": {},
+        "Request URL": "/v1/http-info",
+        "Query String": {},
+        "Request Method": "GET",
+        "AppID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "FnID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "CallID": "01ES54MAKK1BT0H50ZJ00NGX00",
+        "Format": "http-stream",
+        "Deadline": "2020-12-10T01:36:13Z"
+    }
     ```
 
     Notice all the Functions data returned in the second half of the response including: `AppID`, `FnID`, and `Format`. In addition, in the `Configuration` section you see the Functions-generated environment variables like `FN_FORMAT` and the configuration variables: `DB-NAME` and `DB-USER`.
@@ -670,89 +668,89 @@ For more information, see [Fn Project's tutorial on runtime context](https://fnp
 4. Update your script to pass headers and `POST` data to the script. 
 
     ```console
-        /bin/bash
-        curl -X POST --header "X-MyHeader1: headerValue" -d '{"key1":"value"}' https://aaaaa.apigateway.us-ashburn-X.oci.customer-oic.com/v1/http-info
+    /bin/bash
+    curl -X POST --header "X-MyHeader1: headerValue" -d '{"key1":"value"}' https://aaaaa.apigateway.us-ashburn-X.oci.customer-oic.com/v1/http-info
     ```
 
     The output from the script looks similar to:
 
     ```console
-        {
-            "Headers": {
-            "host": [
-            "localhost",
-            "ctr6kqbjpza5tjnzafaqpqif5i.apigateway.us-phoenix-1.oci.customer-oci.com"
-            ],
-            "user-agent": [
-            "lua-resty-http/0.14 (Lua) ngx_lua/10015",
-            "curl/7.64.1"
-            ],
-            "transfer-encoding": "chunked",
-            "content-type": [
-            "application/x-www-form-urlencoded",
-            "application/x-www-form-urlencoded"
-            ],
-            "date": "Thu, 10 Dec 2020 17:05:14 GMT",
-            "fn-call-id": "000000000000000000000000000",
-            "fn-deadline": "2020-12-10T17:05:44Z",
-            "accept": "*/*",
-            "cdn-loop": "iQPgvPk4HZ74L-PRJqYw7A",
-            "content-length": "16",
-            "forwarded": "for=73.34.74.159",
-            "x-forwarded-for": "73.34.74.159",
-            "x-myheader1": "headerValue",
-            "x-real-ip": "73.34.74.159",
-            "fn-http-method": "POST",
-            "fn-http-request-url": "/v1/http-info",
-            "fn-intent": "httprequest",
-            "fn-invoke-type": "sync",
-            "oci-subject-id": "ocid1.apigateway.oc1.phx.0000000000000000000000000000000000000000000000000000",
-            "oci-subject-tenancy-id": "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "oci-subject-type": "resource",
-            "opc-request-id": "/32DE93ED4A72B932E62460362A24DA40/01ES6STAH91BT0G48ZJ00J07ZT",
-            "x-content-sha256": "xMAO2Qww/EVSr1CsSxtHsZu9VicSjb2EMvMmDMjZcVA=",
-            "accept-encoding": "gzip"
-            },
-            "Configuration": {
-            "PATH": "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
-            "HOSTNAME": "1afb03686740",
-            "FN_LISTENER": "unix:/tmp/iofs/lsnr.sock",
-            "FN_CPUS": "125m",
-            "FN_APP_ID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "FN_FN_ID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "FN_MEMORY": "256",
-            "FN_TYPE": "sync",
-            "FN_FORMAT": "http-stream",
-            "DB-NAME": "your-db-name",
-            "DB-USER": "your-user-name",
-            "FN_LOGFRAME_NAME": "01ES6SSJY600000000000000BF",
-            "FN_LOGFRAME_HDR": "Opc-Request-Id",
-            "OCI_RESOURCE_PRINCIPAL_RPST": "/.oci-credentials/rpst",
-            "OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM": "/.oci-credentials/private.pem",
-            "OCI_RESOURCE_PRINCIPAL_VERSION": "2.2",
-            "OCI_RESOURCE_PRINCIPAL_REGION": "us-phoenix-1",
-            "OCI_REGION_METADATA": "{\"realmDomainComponent\":\"oraclecloud.com\",\"realmKey\":\"oc1\",\"regionIdentifier\":\"us-phoenix-1\",\"regionKey\":\"PHX\"}",
-            "LANG": "C.UTF-8",
-            "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
-            "PYTHON_VERSION": "3.8.5",
-            "PYTHON_PIP_VERSION": "20.2.2",
-            "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/5578af97f8b2b466f4cdbebe18a3ba2d48ad1434/get-pip.py",
-            "PYTHON_GET_PIP_SHA256": "d4d62a0850fe0c2e6325b2cc20d818c580563de5a2038f917e3cb0e25280b4d1",
-            "PYTHONPATH": "/function:/python",
-            "HOME": "/home/fn"
-            },
-            "Request body": {
-            "key1": "value"
-            },
-            "Request URL": "/v1/http-info",
-            "Query String": {},
-            "Request Method": "POST",
-            "AppID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "FnID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
-            "CallID": "000000000000000000000000000",
-            "Format": "http-stream",
-            "Deadline": "2020-12-10T17:05:44Z"
-        }
+    {
+        "Headers": {
+        "host": [
+        "localhost",
+        "ctr6kqbjpza5tjnzafaqpqif5i.apigateway.us-phoenix-1.oci.customer-oci.com"
+        ],
+        "user-agent": [
+        "lua-resty-http/0.14 (Lua) ngx_lua/10015",
+        "curl/7.64.1"
+        ],
+        "transfer-encoding": "chunked",
+        "content-type": [
+        "application/x-www-form-urlencoded",
+        "application/x-www-form-urlencoded"
+        ],
+        "date": "Thu, 10 Dec 2020 17:05:14 GMT",
+        "fn-call-id": "000000000000000000000000000",
+        "fn-deadline": "2020-12-10T17:05:44Z",
+        "accept": "*/*",
+        "cdn-loop": "iQPgvPk4HZ74L-PRJqYw7A",
+        "content-length": "16",
+        "forwarded": "for=73.34.74.159",
+        "x-forwarded-for": "73.34.74.159",
+        "x-myheader1": "headerValue",
+        "x-real-ip": "73.34.74.159",
+        "fn-http-method": "POST",
+        "fn-http-request-url": "/v1/http-info",
+        "fn-intent": "httprequest",
+        "fn-invoke-type": "sync",
+        "oci-subject-id": "ocid1.apigateway.oc1.phx.0000000000000000000000000000000000000000000000000000",
+        "oci-subject-tenancy-id": "ocid1.tenancy.oc1..aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "oci-subject-type": "resource",
+        "opc-request-id": "/32DE93ED4A72B932E62460362A24DA40/01ES6STAH91BT0G48ZJ00J07ZT",
+        "x-content-sha256": "xMAO2Qww/EVSr1CsSxtHsZu9VicSjb2EMvMmDMjZcVA=",
+        "accept-encoding": "gzip"
+        },
+        "Configuration": {
+        "PATH": "/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+        "HOSTNAME": "1afb03686740",
+        "FN_LISTENER": "unix:/tmp/iofs/lsnr.sock",
+        "FN_CPUS": "125m",
+        "FN_APP_ID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "FN_FN_ID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "FN_MEMORY": "256",
+        "FN_TYPE": "sync",
+        "FN_FORMAT": "http-stream",
+        "DB-NAME": "your-db-name",
+        "DB-USER": "your-user-name",
+        "FN_LOGFRAME_NAME": "01ES6SSJY600000000000000BF",
+        "FN_LOGFRAME_HDR": "Opc-Request-Id",
+        "OCI_RESOURCE_PRINCIPAL_RPST": "/.oci-credentials/rpst",
+        "OCI_RESOURCE_PRINCIPAL_PRIVATE_PEM": "/.oci-credentials/private.pem",
+        "OCI_RESOURCE_PRINCIPAL_VERSION": "2.2",
+        "OCI_RESOURCE_PRINCIPAL_REGION": "us-phoenix-1",
+        "OCI_REGION_METADATA": "{\"realmDomainComponent\":\"oraclecloud.com\",\"realmKey\":\"oc1\",\"regionIdentifier\":\"us-phoenix-1\",\"regionKey\":\"PHX\"}",
+        "LANG": "C.UTF-8",
+        "GPG_KEY": "E3FF2839C048B25C084DEBE9B26995E310250568",
+        "PYTHON_VERSION": "3.8.5",
+        "PYTHON_PIP_VERSION": "20.2.2",
+        "PYTHON_GET_PIP_URL": "https://github.com/pypa/get-pip/raw/5578af97f8b2b466f4cdbebe18a3ba2d48ad1434/get-pip.py",
+        "PYTHON_GET_PIP_SHA256": "d4d62a0850fe0c2e6325b2cc20d818c580563de5a2038f917e3cb0e25280b4d1",
+        "PYTHONPATH": "/function:/python",
+        "HOME": "/home/fn"
+        },
+        "Request body": {
+        "key1": "value"
+        },
+        "Request URL": "/v1/http-info",
+        "Query String": {},
+        "Request Method": "POST",
+        "AppID": "ocid1.fnapp.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "FnID": "ocid1.fnfunc.oc1.phx.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+        "CallID": "000000000000000000000000000",
+        "Format": "http-stream",
+        "Deadline": "2020-12-10T17:05:44Z"
+    }
     ```
 
     Note the header data and the request body data. The key/value JSON data is listed under the "Request Body" section. You can download the complete source code for the function from the [Oracle Function Samples site here](https://github.com/oracle/oracle-functions-samples/tree/master/samples/oci-apigw-display-httprequest-info-python).
