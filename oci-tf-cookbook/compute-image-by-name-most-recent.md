@@ -26,7 +26,7 @@ resource "oci_core_instance" "my_compute" {
   ...
   
   source_details {
-    source_id = data.oci_core_images.latest_ol8.images.images[0].id
+    source_id = data.oci_core_images.latest_ol8.images[0].id
     source_type = "image"
   }
   
@@ -40,7 +40,7 @@ To make this a bit cleaner, a local could be defined:
 
 ```
 locals {
-  latest_ol8_image_id = data.oci_core_images.latest_ol8.images.images[0].id
+  latest_ol8_image_id = data.oci_core_images.latest_ol8.images[0].id
 }
 ```
 
