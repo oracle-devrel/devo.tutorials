@@ -16,7 +16,8 @@ author:
 ---
 # An Installation Guide for OCI Monitoring
 
-> **Note:** This is an experimental environment. Feel free to try it out, extend it, and have fun with it! {:.notice}
+> **Note:** This is an experimental environment. Feel free to try it out, extend it, and have fun with it!
+{:.notice}
 
 This walkthrough helps you install a basic OCI monitoring solution with these components based on Ansible in Oracle Linux 8. The setup is tested for:
 
@@ -180,15 +181,15 @@ $ --statements '[ "allow group oci_group_readonly to inspect all-resources on te
 
 1. Add API key.
 
-    ![OCI API Key 01](assets/oci-monitoring-api-key.png)
+    {% img assets/oci-monitoring-api-key.png "OCI API Key 01" %}
 
 2. Download the created private key in PEM format.
 
-    ![OCI API Key 02](assets/oci-monitoring-add-api-key.png)
+    {% img assets/oci-monitoring-add-api-key.png "OCI API Key 02" %}
 
 3. Copy the configuration file preview, the values are used for Steampipe OCI configuration.
 
-    ![OCI API Key 03](assets/oci-monitoring-config-file-prev.png)
+    {% img assets/oci-monitoring-config-file-prev.png "OCI API Key 03" %}
 
 ## Steampipe
 
@@ -272,7 +273,7 @@ According the Python script, new data is loaded in Prometheus Push Gateway to po
 
 Checkout this example for Protheus Gateway where data is loaded by jobs `oci_blockvolume_ / _oci_compute`.
 
-![OCI Prometheus Push Gateway 01](assets/oci-monitoring-pushgateway.png)
+{% img assets/oci-monitoring-pushgateway.png "OCI Prometheus Push Gateway 01" %}
 
 ## Grafana
 
@@ -284,13 +285,16 @@ Grafana is reachable by address `your-machine-ip:3000`.
 The Prometheus data source and a basic dashboard are deployed during the Grafana Docker setup process. Here's an example for dasboard _OCI Demo - eu-zurich-1_:
 
 Prometheus data source:
-![OCI Grafana 01](assets/oci-monitoring-grafana.png)
+
+{% img assets/oci-monitoring-grafana.png "OCI Grafana 01" %}
 
 Sample dashboard OCI Demo:
-![OCI Grafana 02](assets/oci-monitoring-grafana-demo.png)
+
+{% img assets/oci-monitoring-grafana-demo.png "OCI Grafana 02" %}
 
 Here you can see the pushed metric from the Python script by name:
-![OCI Grafana 03](assets/oci-monitoring-grafana-metrics-browser.png)
+
+{% img assets/oci-monitoring-grafana-metrics-browser.png "OCI Grafana Key 03" %}
 
 ## Troubleshooting
 
