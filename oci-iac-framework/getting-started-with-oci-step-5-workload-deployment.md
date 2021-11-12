@@ -1,6 +1,6 @@
 ---
 title: Workload Deployment
-parent: [tutorials,ocloud-7steps]
+parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
@@ -8,7 +8,7 @@ date: 2021-10-18 20:00:00
 description: How to deploy and configure your code on the OCLOUD framework landing zone
 toc: true
 author: kubemen
-draft: false
+draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

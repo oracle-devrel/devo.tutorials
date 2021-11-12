@@ -1,14 +1,13 @@
 ---
 title: Application Infrastructure
-parent: [tutorials,ocloud-7steps]
+parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-18 20:00:00
+date: 2021-11-12 13:00:00
 description: How to deploy application infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
-published: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -70,7 +69,7 @@ While public cloud providers offer these instance types as products, in OCI we d
 
 When the cluster is ready, the ```.kube/config``` file (which contains the network details like the Kubernetes Cluster's API endpoint's IP address and the authorization certificate) can be downloaded to a client using the following OCI Command Line Interface (OCI CLI) command:
 
-```
+```console
 oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.eu-frankfurt-1.aaaaathekubernetesclusterocidlqs27a --file $HOME/.kube/config --region eu-frankfurt-1 --token-version 2.0.0 
 export KUBECONFIG=$HOME/.kube/config
 ```
@@ -79,7 +78,7 @@ The Terraform stack creates also an Kubernetes Cluster along with a worker node 
 
 Then, the client can e.g apply **kubectl** to inspect, create and destroy Kubernetes artifacts:
 
-```
+```console
 $ kubectl get nodes,pods
 NAME               STATUS   ROLES   AGE     VERSION
 node/10.0.10.166   Ready    node    7h11m   v1.19.7
@@ -108,7 +107,7 @@ The complete network topology along with the compute instances, load balancers a
 
 After the Terraform stack has beeen successfully applied, you should see the following Kubernetes artifacts (e.g. by using the cloud shell):
 
-```
+```console
 $ kubectl get pods,deployments,replicasets,services --namespace nginx
 NAME                         READY   STATUS    RESTARTS   AGE
 pod/nginx-5c48f8956d-84456   1/1     Running   0          41m
