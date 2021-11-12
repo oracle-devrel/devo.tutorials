@@ -1,6 +1,7 @@
 ---
 title: Database Infrastructure
-parent: [tutorials,ocloud-7steps]
+parent: [tutorials,oci-iac-framework]
+redirect_from: "/tutorials/7-steps-to-oci/getting-started-with-oci-step-3-database-infrastructure"
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
