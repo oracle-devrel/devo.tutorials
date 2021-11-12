@@ -11,7 +11,7 @@ categories:
 - cloudapps
 - opensource
 thumbnail: assets/verrazzano-logo.png
-date: 2021-01-02 15:30
+date: 2021-11-12 09:11
 description: How to deploy Verrazzano an OKE cluster.
 toc: true
 author:
@@ -106,13 +106,14 @@ kubectl wait \
 ```
 
 ## Accessing Verrazzano
-In order to access Verrazzano, you need to get the console URL: https://verrazzano.io/docs/operations/:
+
+In order to access Verrazzano, you need to get the console URL:
 
 ```
 $ kubectl get vz -o yaml
 ```
 
-You will get a list of URLs printed. For example, my Verrazzano console URL is https://verrazzano.default.168.138.102.88.nip.io
+You will get a list of URLs printed. For example, my Verrazzano console URL is `https://verrazzano.default.168.138.102.88.nip.io`.
 
 Access this url in your browser and you will be prompted to login:
 
@@ -193,6 +194,7 @@ This should return you the following:
 ```
 
 ## Observability
+
 Now, that we’ve got our application running and accessible, we want to also look at its logs and metrics. Verrazzano has got you covered in the form of the ELK stack for logging and the combination of Prometheus and Grafana for metrics and performance monitoring.
 
 Let’s look at Grafana first. On the main page of the Verrazzano console, you will see a link to Grafana. You can use the same combination of username and password you used to log into Grafana. Once logged in, click on "Home" and select the "Helidon Monitoring Dashboard":
@@ -219,7 +221,8 @@ Once logged in, you will land on the cluster page and you will see an Explorer b
 
 {% img aligncenter assets/verrazzano-rancher.png 1024 557 Rancher %}
 
-Summary
+## Summary
+
 Verrazzano packs a nice set of capabilities that helps you with the operational side of of Kubernetes. From monitoring to logging and security, there is a lot productivity that a Kubernetes or an application administrator can gain.
 
 I hope you find this article helpful. In future, we will explore other features of Verrazzano, including multi-cluster deployment and network security among others.
