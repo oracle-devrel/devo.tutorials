@@ -27,7 +27,7 @@ While public cloud providers offer these instance types as products, in OCI we d
     - You can deploy a bare metal host, install the hypervisor and deploy the VMs on top of it. Here, you are responsible for the VMs and the hypervisor layer as well as the Operating System (O/S) of the bare metal host. You will have full root access to the O/S of the bare metal server and it will be inside a Virtual Cloud Network (VCN) that you own.
     - You can deploy a Dedicated VM Host and deploy the VMs on top of it. This is the approach that we use here: You can use Terraform to fully deploy both the Dedicated VM Host as well as the VMs on top of it. Each VM will be instantiated with its own Virtual Network Interface Card (VNIC) which can be individually placed into VCNs and subnets that you own. The Dedicated VM Host itself will be in full control by Oracle, you won't have any O/S access to it and the Dedicated VM Host won't be placed in any VCN.
 
-    You can use tools like **Packer** to first build a custom image with all applications and data you need on your VMs before applying Terraform to instatiate the VMs. The ```cloud-init``` option of Terraform gives the opportunity to apply a shell script on the instantiated VMs to add indivdual data or installations immediately after the instantiation. 
+    You can use tools like **Packer** to first build a custom image with all applications and data you need on your VMs before applying Terraform to instatiate the VMs. The `cloud-init` option of Terraform gives the opportunity to apply a shell script on the instantiated VMs to add indivdual data or installations immediately after the instantiation. 
 
     Here, the shell script is added as a base64-encoded attribute to the resource definition of the instance. Through metadata key-value pairs, Terraform can pass parameters to the instance that can be used inside the cloud-init shell script to parameterize the actual shell execution.
 
@@ -38,24 +38,31 @@ While public cloud providers offer these instance types as products, in OCI we d
     OCI has the following artifacts to create this scenario, which can be fully deployed by Terraform:
 
     - An Instance Configuration that acts as the blueprint for the pool of secondary workloads VMs. Here you define 
-          - A Custom Image that should be used (can be built using **Packer** and you can use ```cloud-init``` provider for further work).
+          - A Custom Image that should be used (can be built using **Packer** and you can use `cloud-init` provider for further work).
           - The Shape of the pool instances (e.g. *VM.Standard2.1* which means a 1 OCPU Intel X7 VM with network-attached storage).
           - The public part of the **ssh** key pair to access the O/S of the instance.
-    - The Instance Pool object refers to an Instance Configuration and adds information about in which Availability Domain as well as in which subnet the instance pool's instances' VNICs should be placed. Furthermore you define how many VMs should be started. You can add a load balancer to the instance pool definition in a way that any created instances inside the pool will be part of this load balancer's backend set, so that incoming requests are forwarded to the instance pool instances e.g. in a round-robin-manner. Load balancers also support cookie-badsed session stickyness in case this is needed by stateful applications running in the instance pool instances.
-    - The Autoscaling Configuration refers to an Instance Pool and adds policies on when new instances should be automatically added and when instances should be removed. You define the incremental and decremental step size (numbers of instances to be added or removed when a scale-in or scale-out event occurs) as well as the minimum and maximum total number of instances. Two autoscaling policies are supported:
-          - Schedule-based Autoscaling: Here the scaling-out and scaling-in rules are defined based on fixed schedules similar to definitions in cron jobs. This is feasible, if regular workload peaks are to be expected like loading data into a Data Warehouse or providing Analytic reporting at certain times during a day, week or month.
-          - Metrics-based Autoscaling: Here the scaling-out and scaling-in rules are based on overall instance pool metrics that the instances report using agents to the Cloud Control. OCI allows the following metrics to be used here:
-               - CPU Utilization (in percent)
-               - Memory Utilization (in percent)
-          - In the Autoscaling Configuration you define the percent threshold value above which the pool will scale out (add an instance or instances if the maximum number is not yet reached) and the percent threshold value underneath which the pool will scale in (terminate an instance or instances if the minimum number is not yet reached).
 
-    In the scenario, we trigger a 100% CPU utilization process in each new instance pool instance upon instance creation (using ```cloud-init``` that lasts for a number of minutes that the user can define as part of the Terraform stack definition as a variable. So we can optionally demonstrate the scaling-in and scaling-out according to an CPU-utilization based auto-scaling policy.
+    - The Instance Pool object refers to an Instance Configuration and adds information about in which Availability Domain as well as in which subnet the instance pool's instances' VNICs should be placed. Furthermore you define how many VMs should be started. You can add a load balancer to the instance pool definition in a way that any created instances inside the pool will be part of this load balancer's backend set, so that incoming requests are forwarded to the instance pool instances e.g. in a round-robin-manner. Load balancers also support cookie-badsed session stickyness in case this is needed by stateful applications running in the instance pool instances.
+
+    - The Autoscaling Configuration refers to an Instance Pool and adds policies on when new instances should be automatically added and when instances should be removed. You define the incremental and decremental step size (numbers of instances to be added or removed when a scale-in or scale-out event occurs) as well as the minimum and maximum total number of instances. Two autoscaling policies are supported:
+
+      - Schedule-based Autoscaling: Here the scaling-out and scaling-in rules are defined based on fixed schedules similar to definitions in cron jobs. This is feasible, if regular workload peaks are to be expected like loading data into a Data Warehouse or providing Analytic reporting at certain times during a day, week or month.
+
+      - Metrics-based Autoscaling: Here the scaling-out and scaling-in rules are based on overall instance pool metrics that the instances report using agents to the Cloud Control. OCI allows the following metrics to be used here:
+
+           - CPU Utilization (in percent)
+           - Memory Utilization (in percent)
+
+      - In the Autoscaling Configuration you define the percent threshold value above which the pool will scale out (add an instance or instances if the maximum number is not yet reached) and the percent threshold value underneath which the pool will scale in (terminate an instance or instances if the minimum number is not yet reached).
+
+    In the scenario, we trigger a 100% CPU utilization process in each new instance pool instance upon instance creation (using `cloud-init` that lasts for a number of minutes that the user can define as part of the Terraform stack definition as a variable. So we can optionally demonstrate the scaling-in and scaling-out according to an CPU-utilization based auto-scaling policy.
 
     Further, we deploy an httpd server along with a static page (showing a timestamp for the instance creation) on each instance pool instance. This stateless "application" is exposed to the public internet by a load balancer, so you can see the round-robin-fashioned forwarding of requests to the instance pool instances by reloading the page in the browser. The corresponding public load balancer endpoint is displayed a part of the Terraform out parameters. In this stack, the load balancer exposes the "application" with https, using a self-signed certificate that is also created inside the Terraform stack.
 
 3. The **Container model** is the preferred cloud model for stateless applications like Functions. OCI offers a fully managed **Kubernetes** Cluster, the OCI Container Engine (OKE). Again, this can be fully deployed using Terraform. 
 
-    OKE consists of: 
+    OKE consists of:
+
      - The Kubernetes Cluster which provides the Kubernetes API endpoint as well as the Scheduler and Controller Manager. These components are fully managed by Oracle and visible to the customer only using the Kubernetes API (e.g. by using **kubectl** or by deploying *Helm* charts). The customer doesn't have O/S access to this instance and also doesn't have to pay for it. This component is free of charge.
      - The Kubernetes Node Pool that contains the worker nodes. The customer has full root access using *ssh* and has to pay for these VMs. The charges are the regular charges for Linux VMs of the respective shapes -- there is no surcharge for their role being a Kubernetes worker node.
      - further elements are added and terminated according to Kubernetes deployments. E.g. when deploying a Load Balancer service to a Kubernetes cluster like
@@ -67,14 +74,14 @@ While public cloud providers offer these instance types as products, in OCI we d
      
      An OCI Load Balancer is automatically deployed and configured with the worker nodes in its backend set.
 
-When the cluster is ready, the ```.kube/config``` file (which contains the network details like the Kubernetes Cluster's API endpoint's IP address and the authorization certificate) can be downloaded to a client using the following OCI Command Line Interface (OCI CLI) command:
+When the cluster is ready, the `.kube/config` file (which contains the network details like the Kubernetes Cluster's API endpoint's IP address and the authorization certificate) can be downloaded to a client using the following OCI Command Line Interface (OCI CLI) command:
 
 ```console
 oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.eu-frankfurt-1.aaaaathekubernetesclusterocidlqs27a --file $HOME/.kube/config --region eu-frankfurt-1 --token-version 2.0.0 
 export KUBECONFIG=$HOME/.kube/config
 ```
 
-The Terraform stack creates also an Kubernetes Cluster along with a worker node pool, the contents of the ```.kube/config```file can be directly taken by a corresponding parameter of the Terraform Output.
+The Terraform stack creates also an Kubernetes Cluster along with a worker node pool, the contents of the `.kube/config` file can be directly taken by a corresponding parameter of the Terraform Output.
 
 Then, the client can e.g apply **kubectl** to inspect, create and destroy Kubernetes artifacts:
 
@@ -91,15 +98,15 @@ pod/myapplication-588cf6ff66-q4228   1/1     Running   0          6h15m
 
 OCI also offers a registry service (the OCI registry, OCIR) where container images can be stored and retrieved to be deployed to the Kubernetes cluster. OCIR allows registries both being publicly available (free access to anyone) or privately (downloading images prerequisites presenting a SWIFT-compliant API Key, a so called **OCI Auth Token** that is created individually for each OCI User).
 
-Besides deploying Kubernetes artifacts like pods, deployments, services, replicasets etc. using a **kubectl** client, Terraform provides a Kubernetes provider in order to deploy these artifacts as part of the terraform apply process. The ```okeServiceDeployment.tf``` shows the steps to take here:
+Besides deploying Kubernetes artifacts like pods, deployments, services, replicasets etc. using a **kubectl** client, Terraform provides a Kubernetes provider in order to deploy these artifacts as part of the terraform apply process. The `okeServiceDeployment.tf` shows the steps to take here:
 
 1. Get the OKE Cluster's config file and extract the CA certificate as well as the OCI CLI command (along with the necessary arguments) to create an ExecCredential. This OCI CLI command is executed, so Terraform can authenticate to the Kubernetes API endpoint for further operations.
 2. Create a new namespace in Kubernetes.
-3. Define further resources like ```kubernetes_service```to deploy artifacts. Kubernetes artifacts are defined by yaml documents and those Terraform resources basically reformat these yaml documents to the HashiCorp Configuration Language (HCL) format.
+3. Define further resources like `kubernetes_service` to deploy artifacts. Kubernetes artifacts are defined by yaml documents and those Terraform resources basically reformat these yaml documents to the HashiCorp Configuration Language (HCL) format.
 
 In this example stack, we deploy a standard NGINX server to the new generated Kubernetes Cluster. We take the standard NGINX image from the official Docker registry, but you can also deploy your own pods from docker images that are stored e.g. in the OCI registry (OCIR).
 
-We deploy this NGINX server as a ```kubernetes_service```with "Load Balancer" as the type using Terraform. The advantage of using Terraform instead of a local **kubectl** client for deploying Kubernetes services is, that those services are also being deleted when destroying the Terraform stack. This is important because deploying a Kubernetes service with "Load Balancer" as type means that an OCI Load Balancer with the Kubernetes deployment of pods in its backend is created outside of the Kubernetes Cluster. So you need to delete the Kubernetes service first when destroying the Terraform stack in order to properly remove this load balancer.
+We deploy this NGINX server as a `kubernetes_service` with "Load Balancer" as the type using Terraform. The advantage of using Terraform instead of a local **kubectl** client for deploying Kubernetes services is, that those services are also being deleted when destroying the Terraform stack. This is important because deploying a Kubernetes service with "Load Balancer" as type means that an OCI Load Balancer with the Kubernetes deployment of pods in its backend is created outside of the Kubernetes Cluster. So you need to delete the Kubernetes service first when destroying the Terraform stack in order to properly remove this load balancer.
 
 The complete network topology along with the compute instances, load balancers and Kubernetes resources that will be created by running this stack can be seen in this picture below:
 

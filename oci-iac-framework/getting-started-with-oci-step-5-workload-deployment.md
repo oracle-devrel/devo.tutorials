@@ -145,7 +145,7 @@ Details about Third-party Provider Versions for ORM can be found here: https://d
 
 In order to get the needed information about the Kubernetes cluster it is needed to get the content of the Kubernetes cluster which has been deployed.
 This can be achieved for the Kubernetes and Helm provider in the following way:
- ```
+```
 # Gets kubeconfig
 data "oci_containerengine_cluster_kube_config" "oke_cluster_kube_config" {
   cluster_id = oci_containerengine_cluster.oke_cluster.id
@@ -189,7 +189,7 @@ provider "helm" {
   }
 }
 
- ```
+```
 
 It is recommended as best practice to seperate Kubernetes by service into logical entities called *namespaces*.  
 Information about namespaces can be found [here.] (https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
