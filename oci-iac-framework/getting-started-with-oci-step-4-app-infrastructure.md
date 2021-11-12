@@ -8,7 +8,7 @@ date: 2021-10-18 20:00:00
 description: How to deploy application infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
-published: false
+published: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

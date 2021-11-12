@@ -88,11 +88,6 @@ In case of a ADB with private endpoints, deploy a Landing Zone whose VCN is used
 1. connection_urls
 
 
-## Architecture Diagram
-
-DIAGRAM PLACEHOLDER
-<!--Need this image-->
-
 ## Usage
 
 1. Login to your tenancy

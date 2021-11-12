@@ -8,7 +8,7 @@ date: 2021-10-18 20:00:00
 description: Introduction to Governance as part of the OCLOUD framework
 toc: true
 author: kubemen
-draft: true
+draft: false
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
