@@ -1,7 +1,6 @@
 ---
 title: Governance
 parent: [tutorials,oci-iac-framework]
-redirect_from: "/tutorials/7-steps-to-oci/getting-started-with-oci-step-6-governance"
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
@@ -13,7 +12,7 @@ draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-**Table of Content**
+**Table of Contents**
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
 
 - [Governance](#governance)
@@ -28,7 +27,7 @@ draft: true
 	- [Unified Billing](#unified-billing)
 	- [Invoices](#invoices)
 	- [Payment Methods](#payment-methods)
-- [manage Cloud cost effectively (more advanced)](#manage-cloud-cost-effectively-more-advanced)
+- [Manage Cloud cost effectively (more advanced)](#manage-cloud-cost-effectively-more-advanced)
 	- [Optimization](#optimization)
 	- [Extensibility](#extensibility)
 	- [Modern Cloud Economics](#modern-cloud-economics)
@@ -37,19 +36,23 @@ draft: true
 
 ---
 # Compartments
-It is one importment item in the beginning to think about how you can organize your tenants. Oracle Cloud Infrastructure with the key feature in building up a virtual DC in an tenancy has introduced compartments to have a proper organisational structure how you can organise your infrastructure and the concept of policies per compartments for a proper role and permission concept.  
+An important item to think about in the beginning is how you will organize your tenants. Oracle Cloud Infrastructure offers a key feature in building up a virtual PC with a tenancy, and has introduced compartments to have a proper organizational structure so you can organize your infrastructure and use policies per compartments for a proper role and permission concept.  
 
-When you first start working with Oracle Cloud Infrastructure, you need to think carefully about how you want to use compartments to organize and isolate your cloud resources. Compartments are fundamental to that process. Most resources can be moved between compartments. However, it's important to think through your compartment design for your organization up front, before implementing anything.   
+When you first start working with Oracle Cloud Infrastructure, you need to think carefully about how you want to use compartments to organize and isolate your cloud resources. Compartments are fundamental to that process. Most resources can be moved between compartments. However, it's important to think through the compartment design for your organization up front, before implementing anything.
+
 Compartments are tenancy-wide, across regions. When you create a compartment, it is available in every region that your tenancy is subscribed to. You can get a cross-region view of your resources in a specific compartment with the tenancy explorer.
-After creating a compartment, you need to write at least one policy  for it, otherwise no one can access it (except administrators or users who have permissions set at the tenancy level). When creating a compartment inside another compartment (up to six-levels of sub-compartments are supported), the compartment inherits access permissions from compartments higher up its hierarchy.  
-When you create an access policy, you need to specify which compartment to attach it to. This controls who can later modify or delete the policy. Depending on how you've designed your compartment hierarchy, you might attach it to the tenancy, a parent, or to the specific compartment itself.  
+
+After creating a compartment, you need to write at least one policy for it, otherwise no one can access it (except administrators or users who have permissions set at the tenancy level). When creating a compartment inside another compartment (up to six-levels of sub-compartments are supported), the compartment inherits access permissions from compartments higher up its hierarchy.
+
+When you create an access policy, you need to specify which compartment to attach it to. This controls who can later modify or delete the policy. Depending on how you've designed your compartment hierarchy, you might attach it to the tenancy, a parent, or to the specific compartment itself.
+
 To place a new resource in a compartment, you simply specify that compartment when creating the resource (the compartment is one of the required pieces of information to create a resource). Keep in mind that most IAM resources reside in the tenancy (this includes users, groups, compartments, and any policies attached to the tenancy) and can't be created in or managed from a specific compartment.  
 
-The structure of compartment varies in most cases by the organisational structure of the company. Well established and huge companies have in many cases centralized services like a security or a network compartment. Smaller and younger companies could have a leaner and less complex setup and are organised by projects without central entities which are responsible for certain elements in the infrastructure.  
+The structure of compartment varies in most cases by the organizational structure of the company. Well-established and large companies have, in many cases, centralized services like a security or a network compartment. Smaller and newer companies could have a leaner and less complex setup and are organized by projects without central entities which are responsible for certain elements in the infrastructure.  
 
-The flexibility and the features by OCI in using compartments to organise and isolate cloud resources gives you the ability to build up your organisation or a desired new setup of your tenancy to fulfill your requirement in the organisation of your elements.  
+The flexibility and the features by OCI in using compartments to organize and isolate cloud resources gives you the ability to build up your organization, or a desired new setup of your tenancy to fulfill your requirement in the organization of your elements.  
 
-We are supporting a both centralized and federated application DevOps models. Most common model are dedicated DevOps team aligned with a single workload. In case of smaller workloads or COTS or 3rd party application a single AppDevOps team is responsible for workload operation. Independent of the model every DevOps team manages several workload staging environments (DEV, UAT, PROD) deployed to individual landing zones/subscriptions. Each landing zone has a set of RBAC permissions managed with OCI IAM provided by the Platform SecOps team.
+We are supporting both centralized and federated application DevOps models. Most common models are dedicated DevOps teams aligned with a single workload. In the case of smaller workloads or COTS or 3rd party application, a single AppDevOps team is responsible for workload operation. Independent of this model every DevOps team manages several workload staging environments (DEV, UAT, PROD) deployed to individual landing zones/subscriptions. Each landing zone has a set of RBAC permissions managed with OCI IAM provided by the Platform SecOps team.
 
 When the base is handed over to the DevOps team, the team is end-to-end responsible for the workload. They can independently operate within the security guardrails provided by the platform team. If dependency on central teams or functions are discovered, it is highly recommended to review the process and eliminated as soon as possible to unblock DevOps teams.
 
@@ -60,12 +63,12 @@ department-based setup:
 {% img assets/OCI-central-mgmt-functional_compartments.png "department-based setup" %}
 Both setups are just examples and will require a discovery workshop with the customer to build the compartment structure based on his requirements.
 
-The landing zone - as part of the base setup in step 2 - is intented to provided an initial setup as blueprint for a classical 3-tier web-application where each layer is logically seperated for each department with centralized management of IAM, network and security.
+The landing zone - as part of the base setup in step 2 - is intented to provided an initial setup as blueprint for a classical 3-tier web-application where each layer is logically seperated for each department with centralized management of IAM, network, and security.
 
 
 # Cloud Costs
 
-It is key to have a clear view on cloud cost. [Foundations: OCI Pricing and Billing][cost_course1] and [Billing and Cost Management][cost_course2] allow you to improve control and visibility over your cloud budgets, usage and spend.
+It is key to have a clear view on cloud cost. [Foundations: OCI Pricing and Billing][cost_course1] and [Billing and Cost Management][cost_course2] allow you to improve control and visibility over your cloud budgets, usage, and spend.
 
 This document gives you some guidance how to manage Cloud cost effectively. You will be alerted based on your own business rules and are able to individually break down all your cloud usage.
 See Jenet (Cloud cost controller) in our 4 minutes [Introduction to Oracle Cloud Infrastructure Cost Management video][cost_video1] to get an initial idea of effective cloud cost management.
@@ -73,17 +76,17 @@ See Jenet (Cloud cost controller) in our 4 minutes [Introduction to Oracle Cloud
 
 {% img assets/jenet.jpg "Jenet is doing Cost Management" %}
 
-In our example Jenet ist responsible for Cost Management. This consist of:
-- Manage Coud Budgets
+In our example Jenet ist responsible for Cost Management. This consists of:
+- Manage Cloud Budgets
 - Stay on top of cloud spend
 - Analyze usage for cost optimization
 
-To do so Oracle provide Jenet Enterprise-grade Controls for Cost Management.
+To do so Oracle provides Jenet Enterprise-grade Controls for Cost Management.
 
 {% img assets/enterprise.grade.controls.jpg "Enterprise-grade Controls for Cost Management" %}
 
 
-OCI provide you a comprehensive set of tools out of the box to manage Cloud cost effectively.
+OCI provides you a comprehensive set of tools out of the box to manage Cloud cost effectively.
 
 # Manage Cloud cost effectively (out of the box)
 
@@ -127,9 +130,9 @@ Source: [Enforced budgets on OCI using functions and quotas][cost_3steps1]
 - Monthly Costs
 
 To use Cost Analysis, the following policy statement is required:
-~~~
+```
 Allow group <group_name> to read usage-report in tenancy
-~~~
+```
 
 {% img assets/visibility.jpg 45% "Visibility" %}
 {% img assets/visibility.1.jpg 45% "Export Usage Report" %}
@@ -140,10 +143,10 @@ A cost report is a comma-separated value (CSV) file that is similar to a usage r
 A usage report is a comma-separated value (CSV) file that can be used to get a detailed breakdown of resources in Oracle Cloud Infrastructure for audit or invoice reconciliation.
 
 To use cost and usage reports, the following policy statement is required:
-~~~
+```
 define tenancy usage-report as ocid1.tenancy.oc1..aaaaaaaaned4fkpkisbwjlr56u7cj63lf3wffbilvqknstgtvzub7vhqkggq
 endorse group <group> to read objects in tenancy usage-report
-~~~
+```
 
 For more information, see [Cost and Usage Reports Overview][cost_doku_usage_report]
 
@@ -159,16 +162,16 @@ Wir stellen hier für Sie eine Abbildung der Standardkontenrahmen SKR 03, SKR 04
 
 Um die dafür notwendigen Namespaces zu **verwalten** benötigen Sie folgende Berechtigungen
 
-~~~
+```
 Allow group GroupA to use tag-namespaces in tenancy
-~~~
+```
 
 
 Um die dafür notwendigen Namespaces **auszuwerten** benötigen Sie folgende Berechtigungen
 
-~~~
+```
 Allow group GroupA to read tag-namespaces in tenancy
-~~~
+```
 
 
 
@@ -200,7 +203,7 @@ Mapping Standardkontenrahmen zu Namespaces
 
 Implementierungsbeispiel:
 
-~~~
+```
 resource "oci_identity_tag_namespace" "skr03_tag_namespace" {
 # Required
 #------------------------------------------------------------
@@ -226,7 +229,7 @@ defined_tags = {"SKR03.8995" = "Aktivierte Eigenleistungen zur Erstellung von se
 defined_tags = {"SKR03.9"    = "Vortrags- und statistische Konten"                                                                     }
 is_retired   = false
 }
-~~~
+```
 
 **Standardkontenrahmen SKR 04**
 
@@ -257,7 +260,7 @@ Mapping Standardkontenrahmen zu Namespaces
 
 Implementierungsbeispiel:
 
-~~~
+```
 resource "oci_identity_tag_namespace" "skr04_tag_namespace" {
 # Required
 #------------------------------------------------------------
@@ -284,7 +287,7 @@ defined_tags = {"SKR04.7"    = "Weitere Erträge und Aufwendungen (Erfolg: Aufwa
 defined_tags = {"SKR04.9"    = "Vortrags- und statistische Konten (Bestand: Rechnungsabgrenzung usw.)"                                 }
 is_retired   = false
 }
-~~~
+```
 
 
 
@@ -298,16 +301,17 @@ Two types of tenancies are involved when sharing a subscription in the Console:
 
 Notable benefits of sharing a subscription includes:
 
-- Sharing a single commitment helps to avoid cost overages and allows consolidating your billing.
+- Sharing a single commitment helps to avoid cost overages and allows you to consolidate your billing.
 - Enabling multi-tenancy cost management. You can analyze, report, and monitor across all linked tenancies. The parent tenancy has the ability to analyze and report across each of your tenancies through Cost Analysis and Cost and usage reports, and you can receive alerts through Budgets.
 - Isolation of data. Customers with strict data isolation requirements can use a multi-tenancy strategy to continue restricting resources across their tenancies.
 
 The remainder of this topic provides an overview of how to share your subscription between tenancies, and provides best practices on how to isolate workloads, in order to help you determine if you should use a single-tenancy or multi-tenancy strategy. You can unify billing across multiple tenancies by sharing your subscription between tenancies.
 To use subscription sharing, the following policy statements are required:
-~~~
+```
 Allow group linkUsers to use organizations-family in tenancy
 Allow group linkAdmins to manage organizations-family in tenancy
-~~~
+```
+
 For more information, see [Unified Billing Overview][cost_doku_unified_billing].
 
 
@@ -333,7 +337,7 @@ For questions or any additional information, please contact [cloud_invoicing_us@
 The Payment Method section of the Oracle Cloud Infrastructure Console allows you to easily manage how you pay for your Oracle Cloud Infrastructure usage. For more information, see [Changing Your Payment Method][cost_doku_payment].
 
 
-# manage Cloud cost effectively (more advanced)
+# Manage Cloud cost effectively (more advanced)
 
 ## Optimization
 {% img assets/optimization.jpg 45% "Optimization" %}
@@ -378,7 +382,7 @@ Main Features
 ## Modern Cloud Economics
 
  [Unlocking business value of cloud for enterprise workloads][cost_economics]. A C-Suite’s guide to build and execute the Enterprise Cloud Strategy that delivers cloud’s full business value potential.
- Commercial  principles  enable  enterprises  to  continuously  leverage  the  optimal  commercial  frameworks  of  cloud service  provider,  based  on  the  changing  usage  profiles  and  deployment  requirements,  thereby  de-risking unexpected cost overruns as well as maximizing the combined financial productivity of on-premise licenses, annual license support and cloud subscription. The principles are the following:
+ Commercial principles enable enterprises to continuously leverage the optimal commercial frameworks of cloud service  provider, based on the changing usage profiles and deployment requirements, thereby de-risking unexpected cost overruns as well as maximizing the combined financial productivity of on-premise licenses, annual license support, and cloud subscription. The principles are the following:
  - Delink  data  and  network  linear  usage  from  cost
  - Avoid service deployment lock-in
  - Re-purpose on-premise spend to acquire future cloud capabilities
@@ -388,7 +392,7 @@ Main Features
 
 **OCI enablers for Commercial principles**
 
- OCI  offers  a  range  of  commercial  enablers  to  optimize  rate,  de-risk  cost  overruns  and  maximize  financial productivity across the investments in Oracle on-premise licenses and cloud subscriptions.  The key enablers are:
+ OCI offers a range of commercial enablers to optimize rate, de-risk cost overruns and maximize financial productivity across the investments in Oracle on-premise licenses and cloud subscriptions. The key enablers are:
  - Best price performance guarantee
  - Avoid service deployment lock-in
  - Re-purpose on-premise spend to acquire future cloud capabilities
