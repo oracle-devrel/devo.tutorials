@@ -15,7 +15,8 @@ author:
   github: martinberger-ch
 ---
 # An Installation Guide for OCI Monitoring
-**Note:** This is an experimental environment. Feel free to try it out, extend it, and have fun with it!
+
+> **Note:** This is an experimental environment. Feel free to try it out, extend it, and have fun with it! {:.notice}
 
 This walkthrough helps you install a basic OCI monitoring solution with these components based on Ansible in Oracle Linux 8. The setup is tested for:
 
