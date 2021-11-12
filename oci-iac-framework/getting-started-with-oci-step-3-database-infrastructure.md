@@ -1,7 +1,6 @@
 ---
 title: Database Infrastructure
-parent: [tutorials,oci-iac-framework]
-redirect_from: "/tutorials/7-steps-to-oci/getting-started-with-oci-step-3-database-infrastructure"
+parent: [tutorials,ocloud-7steps]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
@@ -9,13 +8,20 @@ date: 2021-10-18 20:00:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
-published: false
+published: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 # Autonomous Database - Shared
 
-Oracle Cloud Infrastructure's Autonomous Database is a fully managed, preconfigured database environment with four workload types available, which are: Autonomous Transaction Processing, Autonomous Data Warehouse, Oracle APEX Application Development, and Autonomous JSON Database. You do not need to configure or manage any hardware or install any software. After provisioning, you can scale the number of CPU cores or the storage capacity of the database at any time without impacting availability or performance. Autonomous Database handles creating the database, and the following maintenance tasks:
+Oracle Cloud Infrastructure's Autonomous Database is a fully managed, preconfigured database environment with four workload types available:
+
+- Autonomous Transaction Processing 
+- Autonomous Data Warehouse 
+- Oracle APEX Application Development 
+- Autonomous JSON Database 
+
+You don't need to configure or manage any hardware or install any software. After provisioning, you can scale the number of CPU cores or storage capacity of the database at any time without impacting availability or performance. Autonomous Database handles creating the database, and the following maintenance tasks:
 
 - Backing up the database
 - Patching the database
@@ -26,8 +32,7 @@ Oracle Cloud Infrastructure's Autonomous Database is a fully managed, preconfigu
 
 **DWH**: Built for decision support and data warehouse workloads. Offers fast queries over large volumes of data.
 
-**JSON**: Built for JSON-centric application development. Offers developer-friendly document APIs and native JSON storage.
-Autonomous JSON Database is Oracle Autonomous Transaction Processing, but specialized for developing NoSQL-style applications that use JavaScript Object Notation (JSON) documents.
+**JSON**: Built for JSON-centric application development. Offers developer-friendly document APIs and native JSON storage. Note that Autonomous JSON Database is Oracle Autonomous Transaction Processing, but specialized for developing NoSQL-style applications that use JavaScript Object Notation (JSON) documents.
 
 **ATP**: Built for transactional workloads. Offers high concurrency for short-running queries and transactions.
 
@@ -37,10 +42,10 @@ This module enables you to quickly equip your tenancy with a [Oracle Cloud Infra
 
 ## Prerequistes
 
-1. In case of a ADB with private endpoints, deploy a Landing Zone whose VCN is used to create a private subnet.
+In case of a ADB with private endpoints, deploy a Landing Zone whose VCN is used to create a private subnet.
 
 
-## Mandetory Steps
+## Mandatory Steps
 
 1. Create DB **Compartment**
 1. Create Database **User Groups**
@@ -58,7 +63,7 @@ This module enables you to quickly equip your tenancy with a [Oracle Cloud Infra
 ## Optional Steps
 
 1. Select **Private Endpoint** Option
-1. Create **private Subnet**
+1. Create **Private Subnet**
 1. Create **Network Security Group**
 1. Enter Database **Display Name**, defaults to ...
 
@@ -86,6 +91,7 @@ This module enables you to quickly equip your tenancy with a [Oracle Cloud Infra
 ## Architecture Diagram
 
 DIAGRAM PLACEHOLDER
+<!--Need this image-->
 
 ## Usage
 

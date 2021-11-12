@@ -1,7 +1,6 @@
 ---
 title: Workload Deployment
-parent: [tutorials,oci-iac-framework]
-redirect_from: "/tutorials/7-steps-to-oci/getting-started-with-oci-step-5-workload-deployment"
+parent: [tutorials,ocloud-7steps]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
@@ -13,48 +12,53 @@ draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-Best Practise from Oracle for Workload on OCI is to use the concept of an operator host to install and maintain the service application and configuration for the workload.   
-As the varity of applications and its needed configuration ways varies the aim of this step is to dig a bit deeper in the concept of the operator host and which configuration and automation tools can be used on OCI to deploy your workload.  
+Best practice from Oracle for workload on OCI is to use the concept of an operator host to install and maintain the service application and configuration for the workload. 
+
+As the number of applications and needed configurations varies, the goal of this step is to dig a bit deeper in the concept of the operator host and which configuration and automation tools can be used on OCI to deploy your workload.  
 
 ## Operator Host
 The aim of the operator host is:
-1. performing post-provisioning tasks with any automation tools which requires a local installation
-2. provide administrators access without the need to upload api authentication keys (instance_principal)  
+1. Performing post-provisioning tasks with any automation tools which requires a local installation.
+2. Provide administrators access without the need to upload api authentication keys (instance_principal).  
 
 ### Access to Operator Host
-As described in the base section OCI provides the ability to use a bastion service for a controlled and secure access to ressources in your tenancy.  
-The operator host concept leverages this service and provides administrators and application host a quick and secure mechanism to access a system which can run scripts or any automation tool for maintaining and operating the services.
+As described in the base section, OCI provides the ability to use a bastion service for a controlled and secure access to ressources in your tenancy. 
+
+The operator host concept leverages this service, providing administrators and application hosts a quick and secure mechanism to access a system which can run scripts or any automation tool for maintaining and operating the services.
 
 ## OCI Tool Support for automation & configuration management
-The use of Terraform is mostly in defining the infrastructure to host the applications for the service. Terraform itself is not naturally designed to do certain application installation or configuration tasks.   
-Oracle is not recommending to use any of the described tools as the right way to go for customers or prospects - instead Oracle is describing how to use the most commons tools on the market in combination with Terraform to provide and guide customers with best practises. It is up to the customer and its requirement to define which is the tool combination for their individual workload which fullfils best the requirements.
+The use of Terraform is mostly in defining the infrastructure to host the applications for the service. Terraform itself is not naturally designed to do certain application installation or configuration tasks. 
 
-There is a bunch of tools outside which can be used to automate the workload deployment. Terraform is focussed on IaC and has it strength in provisioning infrastructure resources there is potentially a need to use further tools to install, configure and manage applications on top of the infrastracture.
+Oracle is not recommending to use any of the described tools as the right way to go for customers or prospects - instead Oracle is describing how to use the most commons tools on the market in combination with Terraform to provide and guide customers with best practices. It is up to the customer and their requirements to define which is the tool combination for their individual workload and which best fulfills their needs.
 
-We will focus in this session to talk about how to use the most common tools with Ansible, Puppet and Chef and provides the link how they can be used.  
-The focus of this session is on cloud-native and we will show you in a demo how you can leverage helm charts to deploy workload via the Oracle Resource Manager onto an OKE cluster which has been deployed in the previous session.
+There are a number of external tools which can be used to automate the workload deployment. Terraform is focussed on IaC and has it strength in provisioning infrastructure resources there is potentially a need to use further tools to install, configure and manage applications on top of the infrastracture.
+
+We will focus in this session on how to use the most common tools like Ansible, Puppet, and Chef, and we will show how they can be used.
+
+The focus of this session is on cloud-native, thus we will show you in a demo how you can leverage helm charts to deploy workload via the Oracle Resource Manager onto an OKE cluster which has been deployed in the previous session.
 
 ### **Ansible**
-OCI support the use of Ansibles modules to automate cloud infrastructure provisioning and configuration, orchestrating of complex operation process, and deployment and update of your software assets.  
+OCI supports the use of Ansibles modules to automate cloud infrastructure provisioning and configuration, orchestrating of complex operation process, and deployment and update of your software assets.  
 {% img assets/ansible.png "Ansible" %}
 
-The OCI Ansible collection supports Ansible Tower and AWX. For more information on how to set up the collection with Ansible Tower, refer to the [ansible_blogpost]. To install the free version of Ansible Tower (AWX) on an OCI Compute instance, you can use [ansible solution on GitHub] and the following [ansible example playbooks]  
-a complete example how you can use Ansible to deploy Kubernetes, Istio and an example service can be found here: https://blog.kube-mesh.io/single-click-deployment-of-oke-istio-mushop-using-ansible-from-oci-cloud-shell/  
+The OCI Ansible collection supports Ansible Tower and AWX. For more information on how to set up the collection with Ansible Tower, refer to the [ansible_blogpost]. To install the free version of Ansible Tower (AWX) on an OCI Compute instance, you can use [ansible solution on GitHub] and the following [ansible example playbooks]
+
+A complete example how you can use Ansible to deploy Kubernetes, Istio and an example service can be found here: https://blog.kube-mesh.io/single-click-deployment-of-oke-istio-mushop-using-ansible-from-oci-cloud-shell/  
 Link: [ansible_collection]
 
 ### **Puppet**
-While many organizations today use Terraform to provision Oracle cloud resources, when it comes to ongoing management of resources, a solution for continuous integration should be considered. That’s where Puppet can help. With Puppet you can:  
+While many organizations are using Terraform to provision Oracle cloud resources, a solution for continuous integration should be considered when it comes to ongoing management of resources. That’s where Puppet can help. With Puppet you can:  
 - Integrate cloud resources into your existing infrastructure, and manage everything with one tool.  
 - Use existing [puppet_hiera] data to configure parts of your OCI infrastructure.  
 - Have a tighter integration between OCI configuration in general and the configuration management on your systems.  
 
-The oci_config module extends the Puppet language to contain types needed to create and manage the lifecycle of objects within your Oracle Cloud Infrastructure. Although this is traditionally the domain of Terraform scripts, being able to manage these objects with Puppet, has proven to be a big plus for many customers. For example:
-- Your organization is already using Puppet and not terraform. Introducing a new tool into your organization might be more then you want or need. In these cases, Puppet, in combination with this module, is a great help.
+The oci_config module extends the Puppet language to contain types needed to create and manage the lifecycle of objects within your Oracle Cloud Infrastructure. Although this is traditionally the domain of Terraform scripts, being able to manage these objects with Puppet has proven to be a big plus for many customers. For example:
+- Your organization is already using Puppet and not Terraform. Introducing a new tool into your organization might be more then you want or need. In these cases, Puppet, in combination with this module, is a great help.
 - You want to use existing hiera data to configure parts of your OCI infrastructure. In this case, using this module is great. It integrates with all of the existing hieradata, just like your other Puppet code.
-- You need tighter integration between OCI configuration in general and the configuration management on your systems. Again, this module is for you. It is regular Puppet so you can use all of the rich puppet features like exported resources to integrate all of your configuration settings both ion the cloud level as well as on the machines.
+- You need tighter integration between OCI configuration in general and the configuration management on your systems. Again, this module is for you. It is regular Puppet so you can use all of the rich Puppet features like exported resources to integrate all of your configuration settings both on the cloud level as well as on the machines.
 
-*puppet example code:*  
-configuration of using a tenant: 
+**Puppet example code:**  
+Configuration of using a tenant: 
 ```
 $ puppet apply /software/tenant_setup.pp
 Notice: Compiled catalog for oci in environment production in 0.09 seconds
@@ -65,7 +69,7 @@ Notice: /Stage[main]/Main/Oci_tenant[enterprisemodules]/tenancy_ocid: defined 't
 Notice: /Stage[main]/Main/Oci_tenant[enterprisemodules]/user_ocid: defined 'user_ocid' as 'ocid1.user.oc1..xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx'
 Notice: Applied catalog in 0.02 seconds
 ```
-first inspection:
+First inspection:
 ```
 $ puppet resource oci_identity_compartment
 bash-4.2# puppet resource oci_identity_compartment
@@ -91,7 +95,7 @@ oci_identity_compartment { 'your_tenant (root)/test_compartment_1':
   time_created    => '2020-01-23T15:42:35+00:00',
 }
 ```
-*(available via https://www.enterprisemodules.com/blog/2020/02/getting-to-know-oracle-cloud-with-puppet-part-1/)*
+*(available via [this link] (https://www.enterprisemodules.com/blog/2020/02/getting-to-know-oracle-cloud-with-puppet-part-1/))*
 
 
 **Learn more**  
@@ -101,16 +105,20 @@ oci_identity_compartment { 'your_tenant (root)/test_compartment_1':
 Link by Puppet: [puppet_blog]
 
 ### **Chef**
-Chef is a powerful automation platform that transforms infrastructure into code. Whether you’re operating in the cloud, on-premises, or in a hybrid environment, Chef automates how infrastructure is configured, deployed, and managed across your network, no matter its size.  
+Chef is a powerful automation platform that transforms infrastructure into code. Whether you’re operating in the cloud, on-premises, or in a hybrid environment, Chef automates how infrastructure is configured, deployed, and managed across your network, no matter its size.
+
 This diagram shows how you develop, test, and deploy your Chef code  
 {% img assets/chef.png "Chef" %}
 *(Image Courtesy https://docs.chef.io/platform_overview.html)*
 *Chef Plugin for OCI*
-The knife-oci plugin allows users to interact with Oracle Cloud Infrastructure through chef knife.  
-The home page for the project is [here](https://docs.us-phoenix-1.oraclecloud.com/Content/API/SDKDocs/knifeplugin.htm). Plugin can be downloaded from [this](https://github.com/oracle/knife-oci/releases) location.   
+
+The **knife-oci** plugin allows users to interact with Oracle Cloud Infrastructure through chef knife.
+
+The home page for the project is [here](https://docs.us-phoenix-1.oraclecloud.com/Content/API/SDKDocs/knifeplugin.htm). Plugin can be downloaded from [this](https://github.com/oracle/knife-oci/releases) location.
+
 Following are the knife-oci plugin commands available.
 - Launch an OCI instance and bootstrap it as a Chef node: *knife oci server create*
-- List OCI compartments. *knife oci compartment list*
+- List OCI compartments: *knife oci compartment list*
 - Delete an OCI instance: *knife oci server delete*
 - List OCI instances in a given compartment. Note: All instances in the compartment are returned, not only those that are Chef nodes: *knife oci server list*
 - List the images in a compartment: *knife oci image list*
@@ -126,16 +134,16 @@ OCI documentation for chef is available here: [chef_plugin]
 Helm helps you manage Kubernetes applications — Helm Charts help you define, install, and upgrade even the most complex Kubernetes application.  
 Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.  
 
-The advantage of using helm for the deployment of applications on top of Kubernetes are:
+The advantages of using Helm for the deployment of applications on top of Kubernetes are:
 - Manage Complexity
 - Easy Updates
 - Simple Sharing
 - Rollbacks
 
-The Oracle Resource Manager (ORM) supports the terraform provider for helm and can be easily used in combination with the terraform kubernetes providers.  
+The Oracle Resource Manager (ORM) supports the Terraform provider for Helm and can be easily used in combination with the Terraform Kubernetes providers.  
 Details about Third-party Provider Versions for ORM can be found here: https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/providers.htm  
 
-In order to get the needed information about the kubernetes cluster it is needed to get the content of the Kubernetes cluster which has been deployed.
+In order to get the needed information about the Kubernetes cluster it is needed to get the content of the Kubernetes cluster which has been deployed.
 This can be achieved for the Kubernetes and Helm provider in the following way:
  ```
 # Gets kubeconfig
@@ -183,11 +191,11 @@ provider "helm" {
 
  ```
 
-It is recommended as best practise to seperate Kubernetes by service into logical entities called *namespaces*.  
-Information about namespaces can be found here: https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/
+It is recommended as best practice to seperate Kubernetes by service into logical entities called *namespaces*.  
+Information about namespaces can be found [here.] (https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/)
 
 The following code snippet in terraform creates a namespace:
-```
+```terraform
 resource "kubernetes_namespace" "<service>_namespace" {
   metadata {
     name = "<service>"
@@ -195,11 +203,13 @@ resource "kubernetes_namespace" "<service>_namespace" {
   depends_on = [oci_containerengine_node_pool.oke_node_pool]
 }
 ```
-As we need to have a working kubernetes up and ready with available worker nodes it is recommended to check and wait until the worker nodes has been deployed in a previous step of Terraform.
 
-The next step wuld be to deploy your kubernetes application with a helm release in the previously created namespace.
-This can be achieved in storing your helm files in a sub-directory of your terraform environment, *e.g. helm_charts and reference to your charts in your terraform code as follows:  
-```
+As we need to have a working Kubernetes up and ready with available worker nodes it is recommended to check and wait until the worker nodes has been deployed in a previous step of Terraform.
+
+The next step would be to deploy your Kubernetes application with a helm release in the previously created namespace.
+
+This can be achieved in storing your Helm files in a sub-directory of your Terraform environment, e.g. *helm_charts* and reference to your charts in your Terraform code as follows:  
+```terraform
 resource "helm_release" "<application_1>" {
   depends_on = [oci_containerengine_node_pool.oke_node_pool]
   name       = "<application_1>"
@@ -209,8 +219,8 @@ resource "helm_release" "<application_1>" {
   timeout    = 300
 }
 ```
-it is as well possible to deploy multiple applications for your service in repeating the code fragment as follows:
-```
+It is as well possible to deploy multiple applications for your service in repeating the code fragment as follows:
+```terraform
 resource "helm_release" "<application_2>" {
   depends_on = [oci_containerengine_node_pool.oke_node_pool]
   name       = "<application_2>"
@@ -220,13 +230,13 @@ resource "helm_release" "<application_2>" {
   timeout    = 300
 }
 ```
-Best practise is to set a timeout to give helm a maximum time until the deployment has to be finished.  
-As the helm provider is not capable to identify if the kubernetes deployment has been finished before we are adding a `depends_on` section to make sure that the kubernetes cluster is up and running before deploying.
+Best practice is to set a timeout to give Helm a maximum time until the deployment has to be finished.  
+As the Helm provider is not capable to identify if the Kubernetes deployment has been finished before we are adding a `depends_on` section to make sure that the Kubernetes cluster is up and running before deploying.
 
 ## Demonstration of a Helm deployment
-To demonstrate how it is possible to use the ORM to deploy workload on Kubernetes cluster we will show case an example use case in deploying a helm release of an hivemq cluster and an kafka connector in one namespace.
+To demonstrate how it is possible to use the ORM to deploy workload on Kubernetes cluster we will show case an example use case in deploying a Helm release of an hivemq cluster and an kafka connector in one namespace.
 
-the target setup will look as follows:  
+The target setup will look as follows:  
 {% img assets/demo.png "Demo Setup" %}
 
 We are using the following generic code which can be used independent of the IaaS or Kubernetes stack:
@@ -333,9 +343,12 @@ output "hivemq_mqtt_load_balancer_ip_address" {
   value = [data.kubernetes_service.hivemq_mqtt.load_balancer_ingress[0].ip]
 }
 ```
-When you are comparing the code with the example it is easy to see that the content itself is not really changed.
-We have only addded some output - in this case - the IP addresses of the loadbalancers - which will be automaticly deployed by the helm chart.
-Furthermore we have added a 120 second timeout as the loadbalancers will be deployed kubernetes directly which terraform is not able to see.
+
+When you are comparing the code with the example it's easy to see that the content itself hasn't really changed.
+
+We have only addded some output - in this case the IP addresses of the loadbalancers - which will be automaticly deployed by the Helm chart.
+
+Furthermore, we have added a 120 second timeout as the loadbalancers will be deployed Kubernetes directly which Terraform is not able to see.
 
 The overall output via kubectl looks likes follows:
 ```
