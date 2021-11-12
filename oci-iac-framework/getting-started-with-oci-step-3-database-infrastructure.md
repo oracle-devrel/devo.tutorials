@@ -8,6 +8,7 @@ date: 2021-11-12 12:00:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
+draft: true
 ---
 {% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
