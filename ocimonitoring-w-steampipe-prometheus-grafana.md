@@ -60,20 +60,20 @@ Installed components by Ansible roles:
 As user root:
 
 ```console
-$ yum -y install yum-utils
-$ yum -y install oracle-epel-release-el8
-$ yum-config-manager --enable ol8_developer_EPEL
-$ yum -y install ansible git
+yum -y install yum-utils
+yum -y install oracle-epel-release-el8
+yum-config-manager --enable ol8_developer_EPEL
+yum -y install ansible git
 ```
 
 ### Software Installation OL8 Oracle Cloud Infrastructure
 As user opc:
 
 ```console
-$ sudo dnf upgrade
-$ sudo dnf -y install oracle-epel-release-el8
-$ sudo dnf config-manager --enable ol8_developer_EPEL
-$ sudo dnf -y install ansible git
+sudo dnf upgrade
+sudo dnf -y install oracle-epel-release-el8
+sudo dnf config-manager --enable ol8_developer_EPEL
+sudo dnf -y install ansible git
 ```
 
 ### Ansible SSH Configuration for Oracle Cloud Infrastructure
@@ -84,7 +84,8 @@ $ sudo dnf -y install ansible git
 ```console
 [all:vars]
 ansible_ssh_private_key_file=/home/opc/.ssh/<your_ssh_key_file_name_here>
-$monitoring]
+
+[monitoring]
 <your_oci_compute_private_instance_here> ansible_user=opc ansible_python_interpreter="/usr/bin/env python3"
 ```
 
@@ -102,7 +103,7 @@ $monitoring]
 As OS user root, verify that all Docker containers are running:
 
 ```console
-$ docker ps
+docker ps
 CONTAINER ID   IMAGE              COMMAND                  CREATED             STATUS             PORTS                    NAMES
 f7f2e137f4a1   prom/pushgateway   "/bin/pushgateway"       About an hour ago   Up About an hour   0.0.0.0:9091->9091/tcp   pushgateway
 c6ecc72065c9   prom/prometheus    "/bin/prometheus --c…"   About an hour ago   Up About an hour   0.0.0.0:9090->9090/tcp   prometheus
@@ -128,9 +129,10 @@ Take care that owner and group of the OCI configuration file is OS user `steampi
 Example:
 
 ```console
-$ pwd
+pwd
 /home/steampipe/.oci
-$ ll
+
+ll
 total 8
 -rw-r--r--. 1 steampipe steampipe  307 Aug  9 09:01 config
 -rw-r--r--. 1 steampipe steampipe 1730 Aug  9 09:01 jurasuedfuss-20210809.pem
@@ -139,8 +141,8 @@ total 8
 Restart Docker container for Steampipe:
 
 ```console
-$ docker stop steampipe
-$ docker start steampipe
+docker stop steampipe
+docker start steampipe
 ```
 
 ## How to create the user for OCI access - based on OCI CLI
@@ -150,13 +152,13 @@ Here we create an OCI user for monitoring. An existing OCI CLI setup for an tena
 ### Create User
 
 ```console
-$ oci iam user create --name oci_user_readonly --description "OCI User with inspect all-resources." 
+oci iam user create --name oci_user_readonly --description "OCI User with inspect all-resources." 
 ```
 
 ### Create Group
 
 ```console
-$ oci iam group create --name oci_group_readonly --description "OCI Group with inspect all-resources."
+oci iam group create --name oci_group_readonly --description "OCI Group with inspect all-resources."
 ```
 
 ### Add User to Group
@@ -200,7 +202,7 @@ To filter your regions, just edit the file `/home/steampipe/config/oci.spc`.
 For example:
 
 ```console
-$ connection "oci_tenant_kestenholz" {
+connection "oci_tenant_kestenholz" {
   plugin                = "oci"
   config_file_profile   = "DEFAULT"          # Name of the profile
   config_path           = "~/.oci/config"    # Path to config file
@@ -211,7 +213,7 @@ $ connection "oci_tenant_kestenholz" {
 Here are some commands to verify if Steampipe is working as expected. Execute as OS user root:
 
 ```console
-$ # docker exec -it steampipe steampipe plugin list
+# docker exec -it steampipe steampipe plugin list
 +--------------------------------------------+---------+-----------------------+
 | Name                                       | Version | Connections           |
 +--------------------------------------------+---------+-----------------------+
@@ -220,7 +222,7 @@ $ # docker exec -it steampipe steampipe plugin list
 ```
 
 ```console
-$ # docker exec -it steampipe steampipe query "select display_name,shape,region from oci_core_instance where lifecycle_state='RUNNING';"
+# docker exec -it steampipe steampipe query "select display_name,shape,region from oci_core_instance where lifecycle_state='RUNNING';"
 +-----------------------------------+------------------------+----------------+
 | display_name                      | shape                  | region         |
 +-----------------------------------+------------------------+----------------+
@@ -230,7 +232,7 @@ $ # docker exec -it steampipe steampipe query "select display_name,shape,region 
 ```
 
 ```console
-$ # docker exec -it steampipe steampipe query "select key,title,status from oci_region where is_home_region=true;"
+# docker exec -it steampipe steampipe query "select key,title,status from oci_region where is_home_region=true;"
 +-----+----------------+--------+
 | key | title          | status |
 +-----+----------------+--------+
@@ -252,19 +254,19 @@ Attention: You'll need to restart the Docker container before executing Python3 
 Manual execution and upload of the query result:
 
 ```console
-$ python3 pgsql-query-ci-running-zurich.py
-$ python3 pgsql-query-bv-zurich.py
+python3 pgsql-query-ci-running-zurich.py
+python3 pgsql-query-bv-zurich.py
 ```
 
 ```console
-$ Something went wrong: no connection config loaded for connection 'oci'
+Something went wrong: no connection config loaded for connection 'oci'
 ```
 
 Restarting Steampipe as OS user root:
 
 ```console
-$ docker stop steampipe
-$ docker start steampipe
+docker stop steampipe
+docker start steampipe
 ```
 
 ## Prometheus Push Gateway
@@ -303,7 +305,7 @@ Here you can see the pushed metric from the Python script by name:
 To verify if Steampipe is running properly:
 
 ```console
-$ docker logs steampipe
+docker logs steampipe
 ```
 
 ### Steampipe Access Logs
