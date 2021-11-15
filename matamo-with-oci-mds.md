@@ -45,7 +45,7 @@ We can then enter the public IP in a browser and finish the installation:
 
 ![Matamo dashboard with a halfway-finished progress bar](assets/matamo-progress-bar.webp)
 
-t’s important to use the right connector/adapter: MYSQLI.
+It’s important to use the right connector/adapter: `MYSQLI`.
 
 Then we follow the wizard and enter the required information.
 
