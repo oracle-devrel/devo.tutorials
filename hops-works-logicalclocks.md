@@ -36,7 +36,7 @@ By default, OEL7 runs Python 3. The first step is to install `virtualenv` and `p
 Virtualenv enables us to create isolated sandpits to develop Python applications without running into module or library conflicts. It's very simple to install.
 
 ```console
-$ sudo pip3.6 install virtualenv
+sudo pip3.6 install virtualenv
 ```
 
 Next, we can create a virtual environment and enable it.
@@ -44,9 +44,9 @@ Next, we can create a virtual environment and enable it.
 #### Create a myvirtualenv Environment
 
 ```console
-$ virtualenv -p /usr/bin/python3 myvirtualenv
-$ # Activate the env
-$ source myvirtualenv/bin/activate
+virtualenv -p /usr/bin/python3 myvirtualenv
+# Activate the env
+source myvirtualenv/bin/activate
 ```
 
 #### Check the List of Python Libraries in Your Environment
@@ -54,58 +54,58 @@ $ source myvirtualenv/bin/activate
 Running the following command will show what Python models we have installed at this point.
 
 ```console
-$ (myvirtualenv) [opc@lab1 ~]$ pip3 list
-$ Package    Version
+(myvirtualenv) [opc@lab1 ~]$ pip3 list
+Package    Version
 ---------- -------
-$ pip        21.1.3
-$ setuptools 57.1.0
-$ wheel      0.36.2
-$ WARNING: You are using pip version 21.1.3; however, version 21.2.1 is available.
-$ You should consider upgrading via the '/home/opc/myvirtualenv/bin/python -m pip install --upgrade pip' command.
+pip        21.1.3
+setuptools 57.1.0
+wheel      0.36.2
+WARNING: You are using pip version 21.1.3; however, version 21.2.1 is available.
+You should consider upgrading via the '/home/opc/myvirtualenv/bin/python -m pip install --upgrade pip' command.
 ```
 
 #### Upgrade Your pip Environment
 
 ```console
-$ /home/opc/myvirtualenv/bin/python -m pip install --upgrade pip
+/home/opc/myvirtualenv/bin/python -m pip install --upgrade pip
 ```
 ### Jupyterlab Setup
 
 ```console
-$ pip3 install jupyterlab
+pip3 install jupyterlab
 ```
 
 #### Install Python Libraries for Machine Learning or an ETL Process
 
 ```console
-$ pip install pandas
-$ pip install pandarallel
-$ pip install dask
-$ pip install seaborn
-$ pip install matplotlib
-$ pip install plotly
+pip install pandas
+pip install pandarallel
+pip install dask
+pip install seaborn
+pip install matplotlib
+pip install plotly
 
-$ pip install -lxml==4.6.3
-$ pip install selenium
-$ pip install beautifulsoup4
+pip install -lxml==4.6.3
+pip install selenium
+pip install beautifulsoup4
 
-$ pip install scikit-learn
+pip install scikit-learn
 ```
 
 #### Install Other Python Libraries for Kafka Access and WEB Server Access
 
 ```console
-$ pip install kafka-python (v2.0.0)
-$ pip install Flask
-$ pip install gunicorn
+pip install kafka-python (v2.0.0)
+pip install Flask
+pip install gunicorn
 ```
 
 #### Install Extensions for Jupyterlab Environment
 
 ```console
-$ pip install jupyter_contrib_nbextensions
-$ jupyter contrib nbextension install --user
-$ jupyter nbextension enable execute_time/ExecuteTime
+pip install jupyter_contrib_nbextensions
+jupyter contrib nbextension install --user
+jupyter nbextension enable execute_time/ExecuteTime
 ```
 
 ## Configure Jupyterlab Like the OEL7 Linux Service
@@ -113,7 +113,7 @@ $ jupyter nbextension enable execute_time/ExecuteTime
 Create a script to automatically instantiate and reboot Jupyterlab with "opc" user.
 
 ```console
-$ vi /home/opc/launchjupyterlab.sh
+vi /home/opc/launchjupyterlab.sh
 ```
 
 ### Script for launchjupyterlab.sh
@@ -121,64 +121,64 @@ $ vi /home/opc/launchjupyterlab.sh
 Using virtualenv, you can launch Jupyterlab in a specific port (for example: 8001) and listen on a public IP.
 
 ```console
-$ #!/bin/bash
+#!/bin/bash
 
 # Activate myvirtualenv Environment
-$ source myvirtualenv/bin/activate
+source myvirtualenv/bin/activate
 
-$ cd /home/opc
+cd /home/opc
 
-$ if [ "$1" = "start" ]
-$ then
-$ nohup jupyter-lab --ip=0.0.0.0 --port=8001 > ./nohup.log 2>&1 &
+if [ "$1" = "start" ]
+then
+nohup jupyter-lab --ip=0.0.0.0 --port=8001 > ./nohup.log 2>&1 &
 echo $! > /home/opc/jupyter.pid
-$ else
+else
 kill $(cat /home/opc/jupyter.pid)
-$ fi
+fi
 ```
 
 We must put the script in executable mode in order to be executed from jupyterlab service.
 
 ```console
-$ chmod 777 /home/opc/launchjupyterlab.sh
+chmod 777 /home/opc/launchjupyterlab.sh
 ```
 
 ### Connect to Root User
 
 ```console
-$ sudo -i
+sudo -i
 ```
 
 ### Create Script to Start, Stop "jupyterlab"
 
 ```console
-$ vi /etc/systemd/system/jupyterlab.service
+vi /etc/systemd/system/jupyterlab.service
 ```
 
 
 ### Launch "opc" User with "launchjupyterlab.sh"
 
 ```console
-$ [Unit]
-$ Description=Service to start jupyterlab for opc
-$ Documentation=
-$ [Service]
-$ User=opc
-$ Group=opc
-$ Type=forking
-$ WorkingDirectory=/home/opc
-$ ExecStart=/home/opc/launchjupyterlab.sh start
-$ ExecStop=/home/opc/launchjupyterlab.sh stop
-$ [Install]
-$ WantedBy=multi-user.target
+[Unit]
+Description=Service to start jupyterlab for opc
+Documentation=
+[Service]
+User=opc
+Group=opc
+Type=forking
+WorkingDirectory=/home/opc
+ExecStart=/home/opc/launchjupyterlab.sh start
+ExecStop=/home/opc/launchjupyterlab.sh stop
+[Install]
+WantedBy=multi-user.target
 ```
 
 ### Test Jupyterlab Service
 
 ```console
-$ systemctl start jupyterlab
-$ systemctl status jupyterlab
-$ systemctl enable jupyterlab
+systemctl start jupyterlab
+systemctl status jupyterlab
+systemctl enable jupyterlab
 ```
 
 ## Reboot for a Final Check
@@ -188,10 +188,10 @@ Now you must reboot your machine to check if the jupyterlab script is enabled by
 You must open port 8001 to your virtual machine VM 2.1 in order to access using your public IP.
 
 ```console
-$ firewall-cmd  --permanent --zone=public --list-ports
-$ firewall-cmd --get-active-zones
-$ firewall-cmd --permanent --zone=public --add-port=8001/tcp
-$ firewall-cmd --reload
+firewall-cmd  --permanent --zone=public --list-ports
+firewall-cmd --get-active-zones
+firewall-cmd --permanent --zone=public --add-port=8001/tcp
+firewall-cmd --reload
 ```
 
 If you're running directly on a virtual machine and have a browser installed, it should take you directly into the jupyter environment. Connect to "http://xxx.xxx.xxx.xxx:8001/".
