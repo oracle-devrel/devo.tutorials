@@ -8,6 +8,7 @@ tags:
 - analytics
 personas:
 - backend
+thumbnail: assets/microsoft-sql-diagram.webp
 date: 2021-11-07 11:11
 description: This tutorial walks you through the process for exporting data from Microsoft SQL Server and then importing it into MySQL Database Service in OCI.
 author:
