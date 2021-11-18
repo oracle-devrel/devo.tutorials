@@ -11,7 +11,7 @@ date: 2021-11-18 11:11
 description: Matamo, an alternative to Google Analytics, is becoming increasingly popular. This walkthrough shows you how to use this powerful tool with MySQL Database Service and Oracle Cloud Infrastructure.
 author: frederic-descamps
 ---
-[Matomo](https://matomo.org/) is a Google Analytics alternative for tracking metrics on your websites. If you follow my blog, you know how easy it is to deploy popular Open Source web solutions like WordPress, Joomla!, Drupal, Moodle, and Magento on Oracle Cloud Infrastructure (OCI). If this is not yet the case for you, please check out this page: [deploy on OCI](https://matomo.org/). <!-- WHAT SHOULD THIS "deploy on OCI" LINK ACTUALLY GO TO -->
+[Matomo](https://matomo.org/) is a Google Analytics alternative for tracking metrics on your websites. If you follow my blog, you know how easy it is to deploy popular Open Source web solutions like WordPress, Joomla!, Drupal, Moodle, and Magento on Oracle Cloud Infrastructure (OCI).
 
 All these solutions are using MySQL Database Service to store their data.
 
@@ -19,7 +19,7 @@ I’ve recently added a [new stack](https://github.com/lefred/oci-matomo-mds) to
 
 For this example, I deployed WordPress using the following stack: [oci-wordpress-mds](https://github.com/lefred/oci-wordpress-mds).
 
-The first step is to deploy [Matomo on OCI](https://www.oracle.com/cloud/sign-in.html?redirect_uri=https%3A%2F%2Fcloud.oracle.com%2Fresourcemanager%2Fstacks%2Fcreate%3FzipUrl%3Dhttps%3A%2F%2Fgithub.com%2Flefred%2Foci-matomo-mds%2Freleases%2Fdownload%2Fv1.0.0%2Fstack_matomo_mds.zip). <!-- Is this crazy redirected URL necessary? -->
+The first step is to [deploy Matomo on OCI](https://www.oracle.com/cloud/sign-in.html?redirect_uri=https%3A%2F%2Fcloud.oracle.com%2Fresourcemanager%2Fstacks%2Fcreate%3FzipUrl%3Dhttps%3A%2F%2Fgithub.com%2Flefred%2Foci-matomo-mds%2Freleases%2Fdownload%2Fv1.0.0%2Fstack_matomo_mds.zip).
 
 In the second screen of the Stack’s wizard, we specify that we want to use an existing infrastructure. This way we won’t need to recreate our VCN, subnets, security lists, Internet Gateway, etc. --- we want share what we've already deployed for WordPress:
 
