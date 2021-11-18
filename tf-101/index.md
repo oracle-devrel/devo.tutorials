@@ -9,7 +9,7 @@ tags: [open-source, terraform, iac, devops, beginner]
 sort: asc
 ---
 
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 Difficulty: Beginner
 

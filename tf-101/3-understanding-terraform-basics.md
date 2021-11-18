@@ -20,7 +20,7 @@ published: true
 redirect_from: "/collections/tutorials/3-understanding-terraform-basics/"
 ---
 {% slides %}
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 In our [first lesson](1-why-iac), we covered why you should care about IaC.  We also touched on just a few of the many tools in this space.  Finally, we've decided to narrow our focus down to Terraform.  The [last lesson](2-experiencing-terraform) took you through a really quick and simple scenario using Terraform.  It was short but powerful, and hopefully helped you understand a bit of why Terraform (and IaC) is so cool.  This lesson will take you through some of the basic concepts you should know to effectively work with Terraform.
 

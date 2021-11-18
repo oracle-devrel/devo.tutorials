@@ -21,7 +21,7 @@ date: 2021-08-15 12:00
 redirect_from: "/collections/tutorials/learning-languages-with-oracle-cloud/"
 ---
 
-{% img alignright assets/the-whiteboard.jpg 400 400 "A whiteboard for learning the Japanese language." %}
+{% imgx alignright assets/the-whiteboard.jpg 400 400 "A whiteboard for learning the Japanese language." %}
 
 
 こんにちは！
@@ -52,7 +52,7 @@ Before starting out to build the solution, I had in mind the following goals:
 
 Here's what it looks like upon completion:
 
-{% img aligncenter assets/the-final-product.jpg 500 500 "The electronic flashcard powered by the Oracle Cloud" %}
+{% imgx aligncenter assets/the-final-product.jpg 500 500 "The electronic flashcard powered by the Oracle Cloud" %}
 
 All that in a weekend of fun!
 
@@ -92,23 +92,23 @@ To enter the words into the repository, I will only need a page listing all the 
 1. In the spreadsheet, all I need to do is fill the three columns with starter data and the column names in the first row, and then save it as a CSV file.
 1. Next, from the APEX App Builder, click on the *Create* button to create a new application.
 
-    {% img assets/spreadsheet-data.jpg "Sample spreadsheet with data" %}
+    {% imgx assets/spreadsheet-data.jpg "Sample spreadsheet with data" %}
 1. Select the *From a File* option. We will use the spreadsheet as the starting point.
 
-    {% img assets/apex-create-application.png "Start the application creation workflow" %}
+    {% imgx assets/apex-create-application.png "Start the application creation workflow" %}
 1. Drag and drop the CSV file containing the seed data.
 
-    {% img assets/apex-drop-file.png "Drag and drop files to initiate the data import process." %}
+    {% imgx assets/apex-drop-file.png "Drag and drop files to initiate the data import process." %}
 1. Enter a suitable name for your data and then click the *Configure* button.
 
-    {% img assets/apex-name-table.png "Provide a table name for storing the data." %}
+    {% imgx assets/apex-name-table.png "Provide a table name for storing the data." %}
 1. In this modal dialog, you can make any customizations to the database table that you are about to create, for example, the data type, the column name etc. Click *Save Changes* to save any customizations that you make.
 
-    {% img assets/apex-configure-import.png "Fine-tune the data import process." %}
+    {% imgx assets/apex-configure-import.png "Fine-tune the data import process." %}
 1. When returned to the *Load Data* page, click the button *Load Data* to proceed with the import. The number of rows imported should tally with contents of the CSV file. If so, click *Create Application* for the final step.
 1. In the next screen, you will have the opportunity to fine tune some settings before the application is created. You will notice that APEX has already added a few starting pages like the *Faceted Search* (if you are keen to know more, I wrote a more in-depth discussion on this topic [here](https://fuzziebrain.com/content/id/1917/)) and *Interactive Report* page. You may also introduce addition prefabricated features and change the *Authentication Scheme*. When you are done, click the *Create Application* button and the APEX engine will generate the application as defined.
 
-    {% img assets/apex-create-application-final.png "Create the application with the imported data." %}
+    {% imgx assets/apex-create-application-final.png "Create the application with the imported data." %}
 
 Once the application has been created, you will be returned to the App Builder with the new application open. Simply click the *Run Application* button to launch the application. APEX has security built-in and you will be required to login in order to use the application. Both authentication and authorization rules can be defined declaratively and usually does not require much coding. For example, APEX supports [OAuth2](https://oauth.net/2/) and you may choose to use this by creating and specifying a new Authentication Scheme called *Social Sign-In*. In my case, I chose to use Google accounts with a simple authorization rule that checks my email address before allowing access. If you like to learn more about setting up OAuth2 please see these articles on working with [Google](https://fuzziebrain.com/content/id/1709/) and [Azure AD](https://fuzziebrain.com/content/id/1908/).
 
@@ -116,10 +116,10 @@ In under an hour, you should have a functional web application that lets you:
 
 1. List the words contained in the new table.
 
-    {% img assets/apex-interactive-report.png "List of words displayed with an Interactive Report in APEX." %}
+    {% imgx assets/apex-interactive-report.png "List of words displayed with an Interactive Report in APEX." %}
 1. Create, modify or delete entries.
 
-    {% img assets/apex-form-modal.png "A modal form for editing the data records." %}
+    {% imgx assets/apex-form-modal.png "A modal form for editing the data records." %}
 
 The default application user interface theme is also responsive and will be usable on mobile devices as well.
 
@@ -132,10 +132,10 @@ Oracle REST Data Services (ORDS) is a platform that would facilitate the creatio
 
 1. Start by accessing the *RESTful Services* module in APEX:
 
-    {% img assets/rest-start.jpg "Launch the RESTful Services module in APEX." %}
+    {% imgx assets/rest-start.jpg "Launch the RESTful Services module in APEX." %}
 1. On the left pane, select the *Modules* node and then when the page loads, click the *Create Module* button on the top-right:
 
-    {% img assets/rest-create-module-01.png "Click the *Create Module* button to begin." %}
+    {% imgx assets/rest-create-module-01.png "Click the *Create Module* button to begin." %}
 1. Enter the following details about the new module:
 
     **Module Name:** word  
@@ -143,26 +143,26 @@ Oracle REST Data Services (ORDS) is a platform that would facilitate the creatio
 
     Leave the remaining fields with their default values and then click the *Create Module* button to continue.
 
-    {% img assets/rest-create-module-02.png "Enter the details for creating the module." %}
+    {% imgx assets/rest-create-module-02.png "Enter the details for creating the module." %}
 1. Once created, scroll down and then on the left, click the *Create Template* button:
 
-    {% img assets/rest-create-template-01.png "Next, create a Template" %}
+    {% imgx assets/rest-create-template-01.png "Next, create a Template" %}
 1. Provide the following details about the template:
 
     **URI Template:** random  
 
     Leave the remaining fields with their default values and then click the *Create Template* button to continue.
 
-    {% img assets/rest-create-template-02.png "Enter the details for creating the template." %}
+    {% imgx assets/rest-create-template-02.png "Enter the details for creating the template." %}
 1. Scroll down again and then click the *Create Handler* button to create a *GET* handler for the template.
 
-    {% img assets/rest-create-handler-01.png "Create a *GET* handler for the new template." %}
+    {% imgx assets/rest-create-handler-01.png "Create a *GET* handler for the new template." %}
 1. Ensure the following options are selected:
 
     **Method:** GET  
     **Source Type:** Collection Query
 
-    {% img assets/rest-create-handler-02.png "" %}
+    {% imgx assets/rest-create-handler-02.png "" %}
 
     In the *Source* field, enter the following SQL statement to perform a simple random selection of a single row:
 
@@ -182,7 +182,7 @@ Oracle REST Data Services (ORDS) is a platform that would facilitate the creatio
 
 1. Once the web service has been created, simply click the "Copy" button (underlined in red) to obtain the web service URL:
 
-    {% img assets/rest-end.png "Copy the web service URL." %}
+    {% imgx assets/rest-end.png "Copy the web service URL." %}
 
 If you have access to a Bash shell and both *curl* and *json_pp* are available, run the following command to test the web service:
 ```bash
@@ -244,7 +244,7 @@ With the M5Paper, I have a choice of using either [Arduino](https://arduino.cc) 
 
 As with many ESP32-based products, the M5Paper supports both Arduino and MicroPython. M5Stack also provides their UIFlow firmware, which is based on MicroPython. It contains APIs that make working with compatible sensor products, and is easily programmable with their graphical Integrated Development Environment (IDE). Developers can choose to program the device using either the [Blockly](https://developers.google.com/blockly) interface, or straight up MicroPython.
 
-{% img assets/uiflow.png "UIFlow makes programming M5Stack products easy." %}
+{% imgx assets/uiflow.png "UIFlow makes programming M5Stack products easy." %}
 
 At the time of writing, the alpha version of the IDE supports and is certainly a great option to consider. Like APEX, it is designed for rapid application development!
 
@@ -254,24 +254,24 @@ While I like the "RADiness" of Blockly, I eventually decided to go with Arduino 
 
 Begin by downloading the latest the Arduino IDE from their [website](https://www.arduino.cc) and installing it on your computer.
 
-{% img assets/arduino-user-interface.png "The Arduino IDE user interface." %}
+{% imgx assets/arduino-user-interface.png "The Arduino IDE user interface." %}
 
 Besides writing code, the next two most commonly performed actions will involve these two buttons:
 
-{% img assets/arduino-buttons.png "Arduino buttons to compile and upload the code to the device" %}
+{% imgx assets/arduino-buttons.png "Arduino buttons to compile and upload the code to the device" %}
 
 The button with the tick mark on the left is to compile and verify the code, while the button on the right with the right pointing arrow, both compiles and uploads the code to the connected device. However, before you can upload the code, the following configuration is required.
 
 1. First, we need to add the board descriptions and required libraries to the Arduino IDE. Under the *File* menu, select the *Preferences* item, and then click the button next to the text field labelled *Additional Boards Manager URLS*. Enter the URL [https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/arduino/package_m5stack_index.json](https://m5stack.oss-cn-shenzhen.aliyuncs.com/resource/arduino/package_m5stack_index.json) and then click *OK*.
 
-    {% img assets/arduino-boards-manager-urls.png "Add the board manager URL from M5Stack." %}
+    {% imgx assets/arduino-boards-manager-urls.png "Add the board manager URL from M5Stack." %}
 1. Return to the main window and then go the *Boards Manager* utility. You will find this under the *Tools* menu and when you place your mouse cursor over the currently selected *Board*, you will see an additional item called *Board Manager*. Launch the Board Manager and then search the term "m5stack". Install the *M5Stack* board by *M5Stack official*.
-    {% img assets/arduino-boards-add-m5stack.png "Add the M5Stack boards to the Arduino IDE." %}
+    {% imgx assets/arduino-boards-add-m5stack.png "Add the M5Stack boards to the Arduino IDE." %}
 1. To work with JSON, we will also need a third-party library called [ArduinoJson](https://arduinojson.org/). We can install this using the *Library Manager* that can be accessed from under the *Tools* menu (the item is actually called *Manage Libraries...*).
 
-    {% img assets/arduino-library-install.png "Install the ArduinoJson library using the Library Manager." %}
+    {% imgx assets/arduino-library-install.png "Install the ArduinoJson library using the Library Manager." %}
 1. Finally, select the *M5Paper* board. The preset parameter values should work, but you **must** select the communications port that is assigned to the device when connected *via* USB.
-    {% img assets/arduino-boards-select.png "Select the appropriate board to begin." %}
+    {% imgx assets/arduino-boards-select.png "Select the appropriate board to begin." %}
 
 > **Note**
 >

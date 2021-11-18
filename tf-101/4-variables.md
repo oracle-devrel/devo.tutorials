@@ -20,7 +20,7 @@ published: true
 redirect_from: "/collections/tutorials/4-variables/"
 ---
 {% slides %}
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 This lesson will take a deeper look at Terraform variabales.  You've already had a little bit of exposure to them in the [Experiencing Terraform](2-experiencing-terraform) tutorial, as well as a brief summary in the [Understanding Terraform Concepts](3-understanding-terraform) tutorial.  Let's dive in and take a deeper look at what these are and how they're used.
 

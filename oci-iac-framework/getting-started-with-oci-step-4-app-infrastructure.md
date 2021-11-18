@@ -10,7 +10,7 @@ toc: true
 author: kubemen
 draft: true
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 
 Oracle Cloud Infrastructure (OCI) allows different deployment models to be applied within a shared network and deployed using the same Infrastructure-as-Code methods. When setting up our operation, we distinguish between core and orchestration service API. Core services represent the physical infrastructure in our data center, and orchestration services refer to software that runs outside the core service portfolio, interacts with the application code and manipulates the behavior of virtual instances. Application developers and service operators need to delineate the following four infrastructure deplyment models when designing a multi-server architecture:
@@ -22,7 +22,7 @@ Oracle Cloud Infrastructure (OCI) allows different deployment models to be appli
 
 While public cloud providers offer these instance types as products, in OCI we define logical resources — including the repective orchestrator. We can rely on managed services for open source orchestrators, or choose commercial third-party offerings. Either way, we invoke an orchestrator, writing modules for the resource manager. Here we will focus on these three different models:
 
-{% img aligncenter assets/host_node_container.png "Overview of Host, Node and Container Deployment Models in OCI" %}
+{% imgx aligncenter assets/host_node_container.png "Overview of Host, Node and Container Deployment Models in OCI" %}
 
 1. The **Host model** is the one most known from on-premise environments: On a dedicated physical machine, Virtual Machines (VMs) can be deployed that run stateless or stateful applications. OCI offers both ways here: 
     - You can deploy a bare metal host, install the hypervisor and deploy the VMs on top of it. Here, you are responsible for the VMs and the hypervisor layer as well as the Operating System (O/S) of the bare metal host. You will have full root access to the O/S of the bare metal server and it will be inside a Virtual Cloud Network (VCN) that you own.
@@ -111,7 +111,7 @@ We deploy this NGINX server as a `kubernetes_service` with "Load Balancer" as th
 
 The complete network topology along with the compute instances, load balancers and Kubernetes resources that will be created by running this stack can be seen in this picture below:
 
-{% img assets/network_topology_app_stack.png "Network topology of the app stack" %}
+{% imgx assets/network_topology_app_stack.png "Network topology of the app stack" %}
 
 After the Terraform stack has beeen successfully applied, you should see the following Kubernetes artifacts (e.g. by using the cloud shell):
 

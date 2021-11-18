@@ -37,65 +37,65 @@ MySQL can be used as a backend to store the needed information related to the pl
 
 The easiest way to install Apache Superset on OCI is to click this button:
 
-[{% img aligncenter assets/mds_superset/deploy_on_oci.svg %}](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/lefred/oci-superset-mds/releases/download/v1.0.0/stack_superset_mds.zip)
+[{% imgx aligncenter assets/mds_superset/deploy_on_oci.svg %}](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/lefred/oci-superset-mds/releases/download/v1.0.0/stack_superset_mds.zip)
 
 You can also use the Terraform modules available on [this GitHub repo](https://github.com/lefred/oci-superset-mds).
 
 If you use the Red Pill (by clicking on the image above), you will redirected to OCI’s Dashboard Resource Manager Stack:
 
-{% img aligncenter assets/mds_superset/01.webp %}
+{% imgx aligncenter assets/mds_superset/01.webp %}
 
 You need to accept the Oracle Terms of Use and then the stack’s configuration will be loaded.
 
 Check that you are in the desired compartment and then click Next:
 
-{% img aligncenter assets/mds_superset/02.webp %}
+{% imgx aligncenter assets/mds_superset/02.webp %}
 
 You will be redirected to the second screen, for variables configuration. Some variables are mandatory and self explanatory:
 
-{% img aligncenter assets/mds_superset/03.webp %}
+{% imgx aligncenter assets/mds_superset/03.webp %}
 
 You also have the possibility to choose HA for MySQL DB instance, to load superset sample data (the deployment is then longer) and the Shape Selection. If you plan to use HeatWave on that instance, I recommend you to directly choose a HeatWave compatible Shape (default):
 
-{% img aligncenter assets/mds_superset/04.webp %}
+{% imgx aligncenter assets/mds_superset/04.webp %}
 
 If you already have a VNC and/or a MDS instance you want to use, you can also use the existing OCI infrastructure you have previously deployed:
 
-{% img aligncenter assets/mds_superset/05.webp %}
+{% imgx aligncenter assets/mds_superset/05.webp %}
 
 You need the OCIDs of all the existing resources.
 
 When you have performed all the selection you need, you can continue the process… Usually default should be good, you only require to add the MDS admin’s password and if this is the first Apache Superset deployment, I also recommend to load the sample data.
 
-{% img aligncenter assets/mds_superset/06.webp %}
+{% imgx aligncenter assets/mds_superset/06.webp %}
 
 ## Deployment
 
 The deployment will start, with the sample data load, and this takes approximately 30 minutes…
 
-{% img aligncenter assets/mds_superset/07.webp %}
+{% imgx aligncenter assets/mds_superset/07.webp %}
 
 When ready, the status will change:
 
-{% img aligncenter assets/mds_superset/08.webp %}
+{% imgx aligncenter assets/mds_superset/08.webp %}
 
 At the end of the logs section we already have the output variables we need to use to join our deployment:
 
-{% img aligncenter assets/mds_superset/09.webp %}
+{% imgx aligncenter assets/mds_superset/09.webp %}
 
 And we can retrieve that info in the Outputs section too:
 
-{% img aligncenter assets/mds_superset/10.webp %}
+{% imgx aligncenter assets/mds_superset/10.webp %}
 
 ## Apache Superset
 
 To reach the Apache Superset we just deployed, we paste the superset_public_ip‘s value on a browser and we use the superset_admin_username and superset_admin_password to connect:
 
-{% img aligncenter assets/mds_superset/11.webp %}
+{% imgx aligncenter assets/mds_superset/11.webp %}
 
-{% img aligncenter assets/mds_superset/12.webp %}
+{% imgx aligncenter assets/mds_superset/12.webp %}
 
-{% img aligncenter assets/mds_superset/13.webp %}
+{% imgx aligncenter assets/mds_superset/13.webp %}
 
 Congratulations! Apache Superset is available and working on OCI with MySQL Database Service.
 
@@ -105,13 +105,13 @@ If you want to connect to another MDS instance that you would use as a data sour
 mysql+mysqlconnector://<login>:<password>@<mds IP>:3306/<schema_name>
 ```
 
-{% img aligncenter assets/mds_superset/14.webp %}
+{% imgx aligncenter assets/mds_superset/14.webp %}
 
-{% img aligncenter assets/mds_superset/15.webp %}
+{% imgx aligncenter assets/mds_superset/15.webp %}
 
-{% img aligncenter assets/mds_superset/16.webp %}
+{% imgx aligncenter assets/mds_superset/16.webp %}
 
-{% img aligncenter assets/mds_superset/17.webp %}
+{% imgx aligncenter assets/mds_superset/17.webp %}
 
 ## Conclusion
 

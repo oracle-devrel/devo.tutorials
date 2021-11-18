@@ -11,7 +11,7 @@ sort: asc
 color: purple
 ---
 
-{% img aligncenter assets/landing-zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}
 
 
 **Difficulty:** Beginner

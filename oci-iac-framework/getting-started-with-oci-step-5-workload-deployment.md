@@ -10,7 +10,7 @@ toc: true
 author: kubemen
 draft: true
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 Best practice from Oracle for workload on OCI is to use the concept of an operator host to install and maintain the service application and configuration for the workload. 
 
@@ -39,7 +39,7 @@ The focus of this session is on cloud-native, thus we will show you in a demo ho
 
 ### **Ansible**
 OCI supports the use of Ansibles modules to automate cloud infrastructure provisioning and configuration, orchestrating of complex operation process, and deployment and update of your software assets.  
-{% img assets/ansible.png "Ansible" %}
+{% imgx assets/ansible.png "Ansible" %}
 
 The OCI Ansible collection supports Ansible Tower and AWX. For more information on how to set up the collection with Ansible Tower, refer to the [ansible_blogpost]. To install the free version of Ansible Tower (AWX) on an OCI Compute instance, you can use [ansible solution on GitHub] and the following [ansible example playbooks]
 
@@ -108,7 +108,7 @@ Link by Puppet: [puppet_blog]
 Chef is a powerful automation platform that transforms infrastructure into code. Whether you’re operating in the cloud, on-premises, or in a hybrid environment, Chef automates how infrastructure is configured, deployed, and managed across your network, no matter its size.
 
 This diagram shows how you develop, test, and deploy your Chef code  
-{% img assets/chef.png "Chef" %}
+{% imgx assets/chef.png "Chef" %}
 *(Image Courtesy https://docs.chef.io/platform_overview.html)*
 *Chef Plugin for OCI*
 
@@ -237,7 +237,7 @@ As the Helm provider is not capable to identify if the Kubernetes deployment has
 To demonstrate how it is possible to use the ORM to deploy workload on Kubernetes cluster we will show case an example use case in deploying a Helm release of an hivemq cluster and an kafka connector in one namespace.
 
 The target setup will look as follows:  
-{% img assets/demo.png "Demo Setup" %}
+{% imgx assets/demo.png "Demo Setup" %}
 
 We are using the following generic code which can be used independent of the IaaS or Kubernetes stack:
 ```

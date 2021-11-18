@@ -11,7 +11,7 @@ toc: true
 author: kubemen
 date: 2021-10-29 06:00
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 Over the last two decades, Cloud Computing has revolutionized the technological landscape, allowing companies to rent infrastructure instead of building rapidly-obsolescing hardware on-site. During this time, the architectual approach that combines infrastructure orchestration and application code into cloud services has evolved. 
 

@@ -45,7 +45,7 @@ Installed components by Ansible roles:
 
 ## How it works
 
-{% img assets/oci-monitoring-architecture.png "Architecture" "Architecture Overview" %}
+{% imgx assets/oci-monitoring-architecture.png "Architecture" "Architecture Overview" %}
 
 1. Execute the Python script
 2. Steampipe gathers the information from Oracle Cloud Infrastructure
@@ -196,15 +196,15 @@ $ oci iam policy create \
 
 1. Add your API key
 
-    {% img assets/oci-monitoring-api-key.png "OCI API Key 01" %}
+    {% imgx assets/oci-monitoring-api-key.png "OCI API Key 01" %}
 
 2. Download the created private key in PEM format
 
-    {% img assets/oci-monitoring-add-api-key.png "OCI API Key 02" %}
+    {% imgx assets/oci-monitoring-add-api-key.png "OCI API Key 02" %}
 
 3. Copy the configuration file preview. The values are used for the Steampipe OCI configuration
 
-    {% img assets/oci-monitoring-config-file-prev.png "OCI API Key 03" %}
+    {% imgx assets/oci-monitoring-config-file-prev.png "OCI API Key 03" %}
 
 ## Steampipe
 
@@ -291,7 +291,7 @@ According to the Python script, new data is loaded in Prometheus Push Gateway to
 
 Checkout this example for the Protheus Gateway where data is loaded by jobs `oci_blockvolume_ / _oci_compute`.
 
-{% img assets/oci-monitoring-pushgateway.png "OCI Prometheus Push Gateway 01" %}
+{% imgx assets/oci-monitoring-pushgateway.png "OCI Prometheus Push Gateway 01" %}
 
 ## Grafana
 
@@ -302,13 +302,13 @@ Grafana is reachable by address `your-machine-ip:3000`.
 
 The Prometheus data source and a basic dashboard are deployed during the Grafana Docker setup process. Here's an example for dasboard __OCI Demo - eu-zurich-1__:
 
-{% img assets/oci-monitoring-grafana.png "Prometheus data source" "Prometheus data source" %}
+{% imgx assets/oci-monitoring-grafana.png "Prometheus data source" "Prometheus data source" %}
 
-{% img assets/oci-monitoring-grafana-demo.png "Sample dashboard OCI Demo" "Sample dashboard OCI Demo" %}
+{% imgx assets/oci-monitoring-grafana-demo.png "Sample dashboard OCI Demo" "Sample dashboard OCI Demo" %}
 
 Here you can see the pushed metric from the Python script by name:
 
-{% img assets/oci-monitoring-grafana-metrics-browser.png "Metric from Python script" %}
+{% imgx assets/oci-monitoring-grafana-metrics-browser.png "Metric from Python script" %}
 
 ## Troubleshooting
 

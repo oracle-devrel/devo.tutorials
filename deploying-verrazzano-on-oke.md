@@ -24,7 +24,7 @@ author:
   linkedin: https://www.linkedin.com/in/alimukadam/
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 ---
-{% img alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
+{% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
 Oracle recently released [Verrazzano](https://verrazzano.io/), an "end-to-end container platform to deploy cloud native and traditional applications in multi-cloud and hybrid environments." If that’s a lot to take in, it’s because Verrazzano, (v8o for short) packs a lot. In this post, we will explore deploying Verrazzano on [OKE (Oracle Container Engine)](https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top).
 
@@ -117,7 +117,7 @@ You will get a list of URLs printed. For example, my Verrazzano console URL is `
 
 Access this url in your browser and you will be prompted to login:
 
-{% img aligncenter assets/verrazzano-login.png 1024 557 Verrazzano Login Screen %}
+{% imgx aligncenter assets/verrazzano-login.png 1024 557 Verrazzano Login Screen %}
 
 The username is `verrazzano` and you can obtain the password by issuing the following command:
 
@@ -130,7 +130,7 @@ kubectl get secret \
 
 You should now be able to access the Verrazzano console:
 
-{% img aligncenter assets/verrazzano-console.png 1024 557 Verrazzano Console %}
+{% imgx aligncenter assets/verrazzano-console.png 1024 557 Verrazzano Console %}
 
 ### Deploy an application to Verrazzano
 
@@ -199,12 +199,12 @@ Now, that we’ve got our application running and accessible, we want to also lo
 
 Let’s look at Grafana first. On the main page of the Verrazzano console, you will see a link to Grafana. You can use the same combination of username and password you used to log into Grafana. Once logged in, click on "Home" and select the "Helidon Monitoring Dashboard":
 
-{% img aligncenter assets/verrazzano-grafana.png 1024 557 Grafana %}
+{% imgx aligncenter assets/verrazzano-grafana.png 1024 557 Grafana %}
 
 
 Similarly, access the Kibana dashboard and click on Visualize icon in the left menu. You will be prompted to create an index pattern. Select the verrazzano* and follow the wizard to add the index pattern. Search for hello-helidon and you should be able to see the following:
 
-{% img aligncenter assets/verrazzano-kibana.png 1024 557 Kibana %}
+{% imgx aligncenter assets/verrazzano-kibana.png 1024 557 Kibana %}
 
 From here, you can create your own visualizations and dashboards.
 
@@ -219,7 +219,7 @@ kubectl get secret \
 
 Once logged in, you will land on the cluster page and you will see an Explorer button. Click on it and you will be able to view your Kubernetes cluster:
 
-{% img aligncenter assets/verrazzano-rancher.png 1024 557 Rancher %}
+{% imgx aligncenter assets/verrazzano-rancher.png 1024 557 Rancher %}
 
 ## Summary
 

@@ -24,7 +24,7 @@ author:
   linkedin: https://www.linkedin.com/in/alimukadam/
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 ---
-{% img alignright assets/argo-icon-color-800.png 400 400 "ARGO Logo" %}
+{% imgx alignright assets/argo-icon-color-800.png 400 400 "ARGO Logo" %}
 
 
 I was quite thrilled to learn that the [Argo Project](https://argoproj.github.io/) was [accepted as incubator-level](https://www.cncf.io/blog/2020/04/07/toc-welcomes-argo-into-the-cncf-incubator/) project in CNCF's stack.
@@ -132,11 +132,11 @@ $ kubectl get pods -n argocd -l app.kubernetes.io/name=argocd-server -o name | c
 
 and login with username admin and the retrieved password.
 
-{% img aligncenter assets/argo-oke-login-1024.jpg 1024 557 Argo Login Screen %}
+{% imgx aligncenter assets/argo-oke-login-1024.jpg 1024 557 Argo Login Screen %}
 
 Follow the rest of the instructions in [creating apps via UI](https://argoproj.github.io/argo-cd/getting_started/#creating-apps-via-ui). Once the application is created, click on 'Sync' and watch the application being deployed as Kubernetes works its way to creating the various resources (deployment, service, ReplicaSet, pods, etc).
 
-{% img aligncenter assets/argo-oke-ui.png 1024 557 Argo CD Screen %}
+{% imgx aligncenter assets/argo-oke-ui.png 1024 557 Argo CD Screen %}
 
 Once the application is deployed, take a moment to poke around the Argo UI and the Kubernetes resources. Select the guestbook-ui service and click 'Edit'. Change the service type from ClusterIP to LoadBalancer and then save. Once the OCI Load Balancer is provisioned, its public IP address appears. Awesome stuff. I pinch myself and make a quick check on OCI Console to verify the Load Balancer IP just to ensure I'm not imagining this. Nope, I'm not.
 
@@ -295,7 +295,7 @@ kubectl argo rollouts dashboard
 
 And use the browser to access the Rollout dashboards:
 
-{% img alignright assets/argo-oke-dhasboard.png 400 400 "ARGO Rollout Dashboard" %}
+{% imgx alignright assets/argo-oke-dhasboard.png 400 400 "ARGO Rollout Dashboard" %}
 
 Finally, since we deployed both services as `type=LoadBalancer`, we will have 2 Load Balancers. You can look up their respective public IP addresses in the OCI console or use kubectl to look them up in the EXTERNAL-IP column when you run:
 
@@ -305,7 +305,7 @@ kubectl get svc
 
 Use you browser to access them:
 
-{% img aligncenter assets/argo-oke-blue.png 400 400 "Blue Rollout" %}
+{% imgx aligncenter assets/argo-oke-blue.png 400 400 "Blue Rollout" %}
 
 Both the active and preview will be blue. 
 
@@ -317,11 +317,11 @@ kubectl patch rollout rollout-bluegreen --type merge -p '{"spec": {"template": {
 
 And we can see effect immediately:
 
-{% img aligncenter assets/argo-oke-rollout-patch.png 600 400 "Patch Rollout" %}
+{% imgx aligncenter assets/argo-oke-rollout-patch.png 600 400 "Patch Rollout" %}
 
 And if we access the preview and active Load Balancers, we'll see the preview is green and active is still blue.
 
-{% img aligncenter assets/argo-oke-green.png 600 400 "Patch Rollout" %}
+{% imgx aligncenter assets/argo-oke-green.png 600 400 "Patch Rollout" %}
 
 Let's give the rollout a promotion. We can use command line as thus:
 
@@ -331,7 +331,7 @@ Let's give the rollout a promotion. We can use command line as thus:
 
 or if you have Argo Rollouts Dashboard still open, you can use that too.
 
-{% img aligncenter assets/argo-oke-promoted.png 600 400 "Patch Rollout" %}
+{% imgx aligncenter assets/argo-oke-promoted.png 600 400 "Patch Rollout" %}
 
 If we now access both load balancers, they'll both show up as green. You can keep switching between them to simulate upgrading to newer versions of your application.
 

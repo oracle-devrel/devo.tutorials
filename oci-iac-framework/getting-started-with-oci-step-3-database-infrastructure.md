@@ -10,7 +10,7 @@ toc: true
 author: kubemen
 draft: true
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 # Autonomous Database - Shared
 

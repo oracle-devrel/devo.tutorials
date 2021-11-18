@@ -19,7 +19,7 @@ toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/1-why-iac/"
 ---
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 Terraform.  Infrastructure-as-Code (IaC).  Automation.  DevOps.  DevSecOps.  So many buzz words are floating around... what's the big deal anyway?  There are lots of different ways to manage IT resources and cloud infrastructure.  What makes Terraform so great?  Why should you care about IaC?  IaC might not be for everyone, but it is for *almost* everyone.
 

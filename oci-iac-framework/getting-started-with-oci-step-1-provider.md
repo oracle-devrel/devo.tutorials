@@ -11,7 +11,7 @@ toc: true
 author: kubemen
 date: 2021-10-29 08:00
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 Introducing Oracle Cloud Infrastructure for service delivery allows operators to represent physical and virtual infrastructure in the form of code. System administrators ensure server uptime and service levels, responding to infrastructure monitoring alerts and resolving incidents programmatically. Adopting ["Infrastructure as Code" (IaC)][tf_intro] helps operators to connect events and state changes with automated provisioning processes. 
 
@@ -56,7 +56,7 @@ We refer to resources that are programmatically defined as [custom or logical re
 
 A fast way to start, is obtaining an Oracle Cloud Infrastructure account by **signing up for the [Free Tier][oci_freetier]**. Because Oracle assigns dedicated resources to every user, new registrations can be prevented by a lack of resources in a specific region. Select a different region for the registration usually helps to overcome the hurdle.
 
-{% img aligncenter assets/cloud_shell.png "OCI Free Tier" %}
+{% imgx aligncenter assets/cloud_shell.png "OCI Free Tier" %}
 
 After obtaining an account we log into the web console and start the [Cloud Shell][oci_cloudshell] with |*>_*| button. The cloud shell launches in the region that is active in the cloud console. For the initial setup the home region of a tenant should be selected. Executing deployment plans, Terraform depends on the directory structure to identify files that belong to a plan.
 
@@ -88,7 +88,7 @@ Terraform uses a configuration language called HashiCorp Configuration Language 
 Infrastructure components are defined, adopting an input-output model. [Input parameter][Input] are passed to a build plan, resources definitions describe the provision process and [output parameters][Output] return the results. 
 
 
-{% img aligncenter assets/iomodel.png "HCL Syntax" %}
+{% imgx aligncenter assets/iomodel.png "HCL Syntax" %}
 
 
 This principle can be explained using a simple "Hello World" example. First we define an input variable. The input block, contains type constraints as arguments for interpretation. Simple [types][tf_types] are `string`, `number` and `bool`, complex types are `list` and `object`. The resource block remains empty for now, because we do not aim to provision any resources. The output block returns the execution results. Referring to an output variable instructs Terraform to execute the referenced block, the sequence inside the code is actaully not relevant. 
@@ -216,7 +216,7 @@ The `oci_identity_tenancy` block in setting.tf delivers the home-region key that
 
 Executing a build plan is reflected in a sequence of terraform commands to validates block definitions, to quantify and to provision the required resources. The steps in the Terraform workflow are closely related to the lifecycle of resources on cloud platforms. These steps are orchestrator-agnostic, the commands are valid to create, update, and destroy resources on any given orchestrator.
 
-{% img aligncenter assets/workflow.png "Initial Command Sequence" %}
+{% imgx aligncenter assets/workflow.png "Initial Command Sequence" %}
 
 Before executing terraform commands, we validate the HCL and JSON syntax. `Terraform validate` is a parser that checks the synthax structure for obvious errors. 
 

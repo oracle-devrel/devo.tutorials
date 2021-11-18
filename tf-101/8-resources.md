@@ -19,7 +19,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/8-resources/"
 ---
 
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 I hope that you've found this tutorial series helpful and worth your time.  Terraform is powerful and can make managing your cloud environments easy and efficient.  While our time together has been great, we've only had time to scratch the surface!
 

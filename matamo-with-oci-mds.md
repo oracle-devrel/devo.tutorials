@@ -23,21 +23,21 @@ The first step is to [deploy Matomo on OCI](https://www.oracle.com/cloud/sign-in
 
 In the second screen of the Stack’s wizard, we specify that we want to use an existing infrastructure. This way we won’t need to recreate our VCN, subnets, security lists, Internet Gateway, etc. --- we want share what we've already deployed for WordPress:
 
-{% img assets/matamo-existing-infrastructure.webp "OCI panel where you can toggle whether or not to use existing infrastructure" "OCI panel" %}
+{% imgx assets/matamo-existing-infrastructure.webp "OCI panel where you can toggle whether or not to use existing infrastructure" "OCI panel" %}
 
 As you can see for the majority of the input fields, we need to provide the OCID. These can be found on the OCI’s dashboard. For example the OCID for the MySQL Database can be found here:
 
-{% img assets/matamo-ocid-commandwebp.webp "OCI dashboard with callouts highlighting the Copy OCID command" "OCI dashboard" %}
+{% imgx assets/matamo-ocid-commandwebp.webp "OCI dashboard with callouts highlighting the Copy OCID command" "OCI dashboard" %}
 
 We do this for every resources we want to reuse.
 
 Then we create an apply job for the stack and when done we can get the public IP and other necessary information in the output section:
 
-{% img assets/matamo-output-info.webp "The Outputs page in OCI, where you can find IP address, username, and other information" "Outputs page" %}
+{% imgx assets/matamo-output-info.webp "The Outputs page in OCI, where you can find IP address, username, and other information" "Outputs page" %}
 
 We can then enter the public IP in a browser and finish the installation:
 
-{% img assets/matamo-progress-bar.webp "Matamo dashboard with a halfway-finished progress bar" "Matamo dashboard" %}
+{% imgx assets/matamo-progress-bar.webp "Matamo dashboard with a halfway-finished progress bar" "Matamo dashboard" %}
 
 It’s important to use the right connector/adapter: **MYSQLI**.
 
@@ -45,18 +45,18 @@ Then we follow the wizard and enter the required information.
 
 When done, we can add our WordPress in Matomo to start tracking it. The first step is the retrieve its name (in our case, its public IP as I don’t use DNS):
 
-{% img assets/matamo-wordpress-public-ip.webp "WordPress public IP is available to be copied from the OCI dashboard" "WordPress public IP" %}
+{% imgx assets/matamo-wordpress-public-ip.webp "WordPress public IP is available to be copied from the OCI dashboard" "WordPress public IP" %}
 
 Once added in Matomo, we can retrieve the javascript code used to track our website:
 
-{% img assets/matamo-js-tracking-code.webp "JS tracking code" "JS tracking code" %}
+{% imgx assets/matamo-js-tracking-code.webp "JS tracking code" "JS tracking code" %}
 
 We copy that code and we go into the admin dashboard of our WordPress site to modify the theme and add the previous code in the header file:
 
-{% img assets/matamo-wp-editor.webp "WordPress theme editor dashboard" "WordPress theme editor dashboard" %}
+{% imgx assets/matamo-wp-editor.webp "WordPress theme editor dashboard" "WordPress theme editor dashboard" %}
 
-{% img assets/matamo-wordpress-js-paste.webp "JS code pasted into WordPress editor" "JS Code" %}
+{% imgx assets/matamo-wordpress-js-paste.webp "JS code pasted into WordPress editor" "JS Code" %}
 
 And this is all we needed to be able to get analytics of our website we deployed on OCI.
 
-{% img assets/matamo-dash-final-code.webp "Matomo dashboard" "Matomo dashboard" %}
+{% imgx assets/matamo-dash-final-code.webp "Matomo dashboard" "Matomo dashboard" %}

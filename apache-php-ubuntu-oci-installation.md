@@ -36,7 +36,7 @@ Key tasks include how to:
 
 Here is a simplified diagram of the setup for your Linux VM.
 
-![] ![]({% img aligncenter assets/apache-php-ubuntu-Apache_Diagram.png 1200 578 "" "Within OCI is the Compute VM, connected to the VCN, connected to the Internet" %})
+![] ![]({% imgx aligncenter assets/apache-php-ubuntu-Apache_Diagram.png 1200 578 "" "Within OCI is the Compute VM, connected to the VCN, connected to the Internet" %})
 
 For additional information, see:
 
@@ -84,7 +84,7 @@ The wizard does several things when installing the instance:
 
 To get started installing your instance with the **Create a VM Instance** wizard, follow these steps:
 
-1. From the main landing page, select **Create a VM Instance** wizard. ![]({% img aligncenter assets/apache-php-ubuntu-01action-menu.png 1200 423 "" "Quick Actions in the VM Instance Wizard, choose Create a VM Instance" %}) 
+1. From the main landing page, select **Create a VM Instance** wizard. ![]({% imgx aligncenter assets/apache-php-ubuntu-01action-menu.png 1200 423 "" "Quick Actions in the VM Instance Wizard, choose Create a VM Instance" %}) 
 
     The **Create Compute Instance** page is displayed. It has a section for **Placement**, Image and shape, **Networking**, **Add SSH keys**, and **Boot volume**.
 
@@ -255,7 +255,7 @@ To install and set up Apache and PHP, perform the following steps:
 
 9. You can now test your server.
 
-    You can test your server from the command line with `curl localhost`. Or, you can connect your browser to your public IP address assigned to your instance: **http://`<x.x.x.x>`**. The page looks similar to: ![]({% img aligncenter assets/apache-php-ubuntu-06apache-ubun.png 1200 444 "" "Default Apache2 Ubuntu welcome page" %})
+    You can test your server from the command line with `curl localhost`. Or, you can connect your browser to your public IP address assigned to your instance: **http://`<x.x.x.x>`**. The page looks similar to: ![]({% imgx aligncenter assets/apache-php-ubuntu-06apache-ubun.png 1200 444 "" "Default Apache2 Ubuntu welcome page" %})
 
 10. Install PHP 7 with the following commands.
 
@@ -290,7 +290,7 @@ To install and set up Apache and PHP, perform the following steps:
 
     The browser produces a listing of PHP configuration on your instance similar to the following. 
 
-    ![]({% img aligncenter assets/apache-php-ubuntu-07php.png 1200 942 "" "PHP configuration information screen" %})
+    ![]({% imgx aligncenter assets/apache-php-ubuntu-07php.png 1200 942 "" "PHP configuration information screen" %})
 
     > **Note:** After you are done testing, remove **info.php** from your system.
     {:.notice}

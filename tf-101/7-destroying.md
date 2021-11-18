@@ -19,7 +19,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/7-destroying/"
 ---
 {% slides %}
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 So far we've had some fun creating and changing OCI resources.  Our tutorial is coming to a close, so it's time to remove the resources we've added and clean-up after ourselves.  Terraform makes this amazingly easy.  Let's explore this now.
 

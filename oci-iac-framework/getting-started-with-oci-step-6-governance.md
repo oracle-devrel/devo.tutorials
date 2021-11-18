@@ -10,7 +10,7 @@ toc: true
 author: kubemen
 draft: true
 ---
-{% img aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 **Table of Contents**
 <!-- TOC depthFrom:1 depthTo:6 withLinks:1 updateOnSave:1 orderedList:0 -->
@@ -57,10 +57,10 @@ We are supporting both centralized and federated application DevOps models. Most
 When the base is handed over to the DevOps team, the team is end-to-end responsible for the workload. They can independently operate within the security guardrails provided by the platform team. If dependency on central teams or functions are discovered, it is highly recommended to review the process and eliminated as soon as possible to unblock DevOps teams.
 
 project-based setup:  
-{% img assets/OCI-central-mgmt-per_project.png "project-based setup" %}
+{% imgx assets/OCI-central-mgmt-per_project.png "project-based setup" %}
 
 department-based setup:  
-{% img assets/OCI-central-mgmt-functional_compartments.png "department-based setup" %}
+{% imgx assets/OCI-central-mgmt-functional_compartments.png "department-based setup" %}
 Both setups are just examples and will require a discovery workshop with the customer to build the compartment structure based on his requirements.
 
 The landing zone - as part of the base setup in step 2 - is intented to provided an initial setup as blueprint for a classical 3-tier web-application where each layer is logically seperated for each department with centralized management of IAM, network, and security.
@@ -74,7 +74,7 @@ This document gives you some guidance how to manage Cloud cost effectively. You 
 See Jenet (Cloud cost controller) in our 4 minutes [Introduction to Oracle Cloud Infrastructure Cost Management video][cost_video1] to get an initial idea of effective cloud cost management.
 
 
-{% img assets/jenet.jpg "Jenet is doing Cost Management" %}
+{% imgx assets/jenet.jpg "Jenet is doing Cost Management" %}
 
 In our example Jenet ist responsible for Cost Management. This consists of:
 - Manage Cloud Budgets
@@ -83,7 +83,7 @@ In our example Jenet ist responsible for Cost Management. This consists of:
 
 To do so Oracle provides Jenet Enterprise-grade Controls for Cost Management.
 
-{% img assets/enterprise.grade.controls.jpg "Enterprise-grade Controls for Cost Management" %}
+{% imgx assets/enterprise.grade.controls.jpg "Enterprise-grade Controls for Cost Management" %}
 
 
 OCI provides you a comprehensive set of tools out of the box to manage Cloud cost effectively.
@@ -94,13 +94,13 @@ OCI provides you a comprehensive set of tools out of the box to manage Cloud cos
 
 ## Predictability and Control
 
-{% img assets/predictability.jpg 45% "Predictability" %}
-{% img assets/predictability.1.jpg 45% "Allocate Budgets" %}
+{% imgx assets/predictability.jpg 45% "Predictability" %}
+{% imgx assets/predictability.1.jpg 45% "Allocate Budgets" %}
 
 Budgets are set on cost-tracking tags or on compartments (including the root compartment) to track all spending in that cost-tracking tag or for that compartment and its children. Budgets can be used to set thresholds for your Oracle Cloud Infrastructure spending. You can set alerts on your budget to let you know when you might exceed your budget, and you can view all of your budgets and spending from one single place in the Oracle Cloud Infrastructure console.
 
-{% img assets/control.jpg 45% "Control" %}
-{% img assets/control.1.jpg 45% "Set Treshholds" %}
+{% imgx assets/control.jpg 45% "Control" %}
+{% imgx assets/control.1.jpg 45% "Set Treshholds" %}
 
 See [Budgets Overview][cost_doku_budgets] for more information.
 
@@ -108,7 +108,7 @@ Budgets help you track your Oracle Cloud Infrastructure (OCI) spending. They mon
 
 You can also use the integration with Events service to trigger functions that create quotas resulting in budgets with hard limits.
 
-{% img assets/3steps.png ""You can create and enforced budget in three easy steps" %}
+{% imgx assets/3steps.png ""You can create and enforced budget in three easy steps" %}
 
 - Create a budget and alert
 - Create a function
@@ -134,8 +134,8 @@ To use Cost Analysis, the following policy statement is required:
 Allow group <group_name> to read usage-report in tenancy
 ```
 
-{% img assets/visibility.jpg 45% "Visibility" %}
-{% img assets/visibility.1.jpg 45% "Export Usage Report" %}
+{% imgx assets/visibility.jpg 45% "Visibility" %}
+{% imgx assets/visibility.1.jpg 45% "Export Usage Report" %}
 
 
 A cost report is a comma-separated value (CSV) file that is similar to a usage report, but also includes cost columns. The report can be used to obtain a breakdown of your invoice line items at resource-level granularity. As a result, you can optimize your Oracle Cloud Infrastructure spending, and make more informed cloud spending decisions.
@@ -340,8 +340,8 @@ The Payment Method section of the Oracle Cloud Infrastructure Console allows you
 # Manage Cloud cost effectively (more advanced)
 
 ## Optimization
-{% img assets/optimization.jpg 45% "Optimization" %}
-{% img assets/optimization.1.jpg 45% "Optimization" %}
+{% imgx assets/optimization.jpg 45% "Optimization" %}
+{% imgx assets/optimization.1.jpg 45% "Optimization" %}
 
 If you’re using any cloud, you might regularly ask yourself questions like, “Why is the bill so high this month?” or “What would it actually cost to move this application to the cloud?” If so, this blog is for you. Today, I aim to make you familiar with the practices you need to control and predict your cost without compromising your performance.
 
@@ -361,7 +361,7 @@ Whether you’re part of the finance department in charge of controlling the bud
 You find more details to do this in [10 effective ways to save cost in the cloud][cost_optimization2].
 
 ## Extensibility
-{% img assets/extensibility.jpg 45% "Extensibility" %}
+{% imgx assets/extensibility.jpg 45% "Extensibility" %}
 
 [Oracle Cloud Infrastructure Usage and Cost Reports to Autonomous Database Tool usage2adw][cost_usage2adw]
 
@@ -387,7 +387,7 @@ Main Features
  - Avoid service deployment lock-in
  - Re-purpose on-premise spend to acquire future cloud capabilities
 
-{% img assets/economics.jpg 80% "Modern Cloud Economics Enablers of Oracle Cloud Infrastructure (OCI)" %}
+{% imgx assets/economics.jpg 80% "Modern Cloud Economics Enablers of Oracle Cloud Infrastructure (OCI)" %}
 
 
 **OCI enablers for Commercial principles**

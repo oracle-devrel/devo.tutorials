@@ -20,7 +20,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/5-creating/"
 ---
 {% slides %}
-{% img aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
+{% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
 The next few lessons in this tutorial will take you through an adventure where resources are created, modified, and then finally destroyed using Terraform.  While you got a little taste for this in the [Experiencing Terraform lesson](2-experiencing-terraform.md), we'll cover the topics in greater detail here, pointing out more details along the way.
 

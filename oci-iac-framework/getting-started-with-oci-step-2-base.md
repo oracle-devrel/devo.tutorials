@@ -10,7 +10,7 @@ description: How to deploy a landing zone in OCI
 toc: true
 author: kubemen
 ---
-{% img alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 Oracle Cloud Infrastructure (OCI) is a programable data center, providing dedicated infrastructure in more than 30 locations world wide. The [share-nothing design][ref_sna] allows IT operators to launch [private clouds][ref_nist] on demand and enables enterprises to adopt managed services into an existing operation. This framework is inspired by the [CIS landing zone][oci_landing] and helps ITIL oriented organizations to build and launch private or public cloud services.
 
@@ -35,7 +35,7 @@ We employ [Infrastructure as Code][ref_iac] to combine dedicated resources with 
 
 In the background we build on a modular code structure that uses terraform modules to employ OCI resources and services. Templates for a predefined network topology and isolated database infrastructure extend the application oriented DevOps processes with customized resources. 
 
-{% img aligncenter assets/taxonomy.png "Base Configuration Taxonomy" %}
+{% imgx aligncenter assets/taxonomy.png "Base Configuration Taxonomy" %}
 
 Using declarative templates, provides operators with the flexibility to adjust their service delivery platform with evolving requirements. Global input parameters help to maintain readability of the code and avoid [repeating definitions][ref_dry]. We use the `~/project/default.tfvars` file to define global input parameter for an entire project. 
 
@@ -156,11 +156,11 @@ output "ad_names"  { value = sort(data.template_file.ad_names.*.rendered) } # Li
 
 Before provisioning any compute or storage resources we need to setup a basic network. Therefore we start with the compartment for network operation. One of the unique features of OCI is the [virtual layer 2 network][oci_l2] design. Compared to the common network overlays in public clouds, this design provides the necessary control to create isolated data center on a shared infrastructure pool. Packet encapsulation shields private traffic on a shared network backbone to the extend of defining overlapping IP ranges. This allows for a multi-tenant design on the infrastructure layer, and prevents developers and operators to rely complex procedures building and maintaining multi-tenant applications. The following diagram exemplifies the topology in a multi data centre region. 
 
-{% img assets/topology.png "Physical Network Topology" %}
+{% imgx assets/topology.png "Physical Network Topology" %}
 
 A Virtual Cloud Network (VCN) contains a private ["Classless Inter-Domain Routing (CIDR)"][ref_cidr] and can be extend with publically addressable IP adresses.
 
-{% img assets/segmentation.png "Network Segmentation" %}
+{% imgx assets/segmentation.png "Network Segmentation" %}
 
 Even though we need to distinguish the physical topology of single- and multi-data centre regions, the logical network layer remains the same, because the data center are connected through a close network and packet forwarding relys on [host routing mechanisms][ref_hostrouting]. Regional subnets enable operators to launch multi-data center networks for both, private and public cloud services. Beside the CIDR the VCN definition contains the Dynamic Routing Gateway (DRG) as IP peer and host for network functions like Internet Connectivity, Network Address Translation (NAT) or Private-Public Service Communication.
 
@@ -313,7 +313,7 @@ output "nat_route_id"   { value = module.vcn.nat_route_id }
 
 Compartments denote a demarcation for administrator domains in OCI. A compartment membership determines the privilige to add, change or delete resources. For define our compartment structure with the [ITIL][itil_web] model in mind. The first compartment defines the working environment for [service operators][itil_operation] and enables processes like incident or problem management. While ITIL distinguishes between [technical management services][itil_technical] and [application management services][itil_application], we rely on Infrastructure as a Servce and separate network- and database-manager in distinct compartments. On the application layer we distinguish between application management and application development. The later compromises platform services and allows to define an own code chain, meanwhile application managers receive the necessary rights to deploy and manage binaries. The definitions are captured in the `~/starter/operation.tf` template. 
 
-{% img assets/itil_cloud.png "Cloud Operating Model" %}
+{% imgx assets/itil_cloud.png "Cloud Operating Model" %}
 
 First, we create a set of roles with priviledged access to operation data and tools. Cloud operators that make sure that services are delivered effectively and efficiently. This includes fulfilling of user requests, resolving service failures, fixing problems, as well as carrying out routine operational tasks. These roles get provisiones in form of groups. Group policies allow to define the different administrator roles on a granular level. Initially we stick to four groups: a cloud account adminstrator, security manager, user manager and "readonly" e.g. for auditors. In HCL we use a [complex variable type][tf_type], a map, to describe the different roles.
 
