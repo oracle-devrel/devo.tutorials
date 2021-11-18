@@ -18,7 +18,7 @@ This time we will use something extra (sure, for fun, but also because it’s pr
 
 The process will be to export the data directly to OCI Object Storage from the MS SQL Server. Afterwards, we'll import it to MySQL Database Service using the MySQL Shell `importTable()` utility, reading directly from the Object Storage Bucket.
 
-{% img assets/microsoft-sql-diagram.webp "MySQL Database Service using MySQL Shell importTable" "MySQL Database Service using MySQL Shell importTable" %}
+{% imgx assets/microsoft-sql-diagram.webp "MySQL Database Service using MySQL Shell importTable" "MySQL Database Service using MySQL Shell importTable" %}
 
 For this exercise, we will use the BikeStores sample database.
 
@@ -62,11 +62,11 @@ We have then two remaining options for Linux users like me:
 
 From Azure Data Studio, you can get the table definition using **Script as Create**:
 
-{% img assets/microsoft-azure-script-create.webp "Azure Data Studio screenshot with dropdown including the script as create option" "Azure Data Studio screenshot with dropdown including the script as create option" %}
+{% imgx assets/microsoft-azure-script-create.webp "Azure Data Studio screenshot with dropdown including the script as create option" "Azure Data Studio screenshot with dropdown including the script as create option" %}
 
 And then we get the selected table’s creation statement:
 
-{% img assets/microsoft-sql-statement.webp "VS Code open with a SQL file containing the table creation statement" "VS Code open with a SQL file containing the table creation statement" %}
+{% imgx assets/microsoft-sql-statement.webp "VS Code open with a SQL file containing the table creation statement" "VS Code open with a SQL file containing the table creation statement" %}
 
 As in the previous post (mentioned at the beginning of this article), some minor changes will be required for MySQL.
 
@@ -143,13 +143,13 @@ $ sudo yum install -y s3fs-fuse
 
 We create a bucket on OCI’s Dashboard:
 
-{% img assets/microsoft-create-bucket-modal.webp "OCI Create Bucket panel with a fields for the bucket's name and tag information" "OCI Create Bucket panel with a fields for the bucket's name and tag information" %}
+{% imgx assets/microsoft-create-bucket-modal.webp "OCI Create Bucket panel with a field for the bucket name and tag information" "OCI Create Bucket panel with a field for the bucket name and tag information" %}
 
 We need to create an `ACCESS_KEY_ID` and a `SECRET_ACCESS_KEY`:
 
-{% img assets/microsoft-settings-keys.png "Find the Secret Keys menu in OCI's User Settings" "Find the Secret Keys menu in OCI's User Settings" %}
+{% imgx assets/microsoft-settings-keys.png "Find the Secret Keys menu in OCI's User Settings" "Find the Secret Keys menu in OCI's User Settings" %}
 
-{% img assets/microsoft-secret-keys.webp "The Generate Customer Keys button displayed with OCI's Resources panel displayed" "The Generate Customer Keys button displayed with OCI's Resources panel displayed" %}
+{% imgx assets/microsoft-secret-keys.webp "The Generate Customer Keys button displayed with OCI's Resources panel displayed" "The Generate Customer Keys button displayed with OCI's Resources panel displayed" %}
 
 We copy these keys on one single line separated with a colon in a file, for example ~/.passwd-ocifs.
 
@@ -181,13 +181,13 @@ total 512
 
 We can directly see it in OCI’s Dashboard too:
 
-{% img assets/microsoft-csv-in-dashboard.webp "categories.csv now in the OCI dashboard" "categories.csv now in the OCI dashboard" %}
+{% imgx assets/microsoft-csv-in-dashboard.webp "categories.csv now in the OCI dashboard" "categories.csv now in the OCI dashboard" %}
 
 We do the exact same process for all the tables we want to import to MySQL Database Service.
 
 You can, of course, also use the GUI to export to CSV and import those CVS files using MySQL Shell directly without using Object Storage:
 
-{% img assets/microsoft-import-csv.webp "VS Code with SQL command to import CSV tables" "VS Code with SQL command to import CSV tables" %}
+{% imgx assets/microsoft-import-csv.webp "VS Code with SQL command to import CSV tables" "VS Code with SQL command to import CSV tables" %}
 
 ## Importing Data
 
@@ -195,29 +195,29 @@ As usual, we will use MySQL Shell to import in MDS the data that has been genera
 
 We start by creating the database and the tables if this is not yet done:
 
-{% img assets/microsoft-create-db-tables.webp "Command line to create database tables" "Command line to create database tables" %}
+{% imgx assets/microsoft-create-db-tables.webp "Command line to create database tables" "Command line to create database tables" %}
 
 Don’t forget that if you need an OCI config file on the compute instance, you can create it from the OCI Dashboard for your user (Identity -> User -> User Details):
 
-{% img assets/microsoft-keys-resources.webp "OCI dashboard with callout highlighting the 'Add API Keys' button" "OCI dashboard with callout highlighting the 'Add API Keys' button" %}
+{% imgx assets/microsoft-keys-resources.webp "OCI dashboard with callout highlighting the 'Add API Keys' button" "OCI dashboard with callout highlighting the 'Add API Keys' button" %}
 
 You'll need to download the keys if you generate them, and then copy the content of the config in `~/.oci/config` and set the private key's location and filename:
 
-{% img assets/microsoft-config-file.webp "OCI configuration file preview" "OCI configuration file preview" %}
+{% imgx assets/microsoft-config-file.webp "OCI configuration file preview" "OCI configuration file preview" %}
 
 After that, you're ready to import each table using MySQL Shell:
 
-{% img assets/microsoft-sql-import-statements.webp "Import MySQL Shell table statements" "Import MySQL Shell table statements" %}
+{% imgx assets/microsoft-sql-import-statements.webp "Import MySQL Shell table statements" "Import MySQL Shell table statements" %}
 
 We can see that the data is now present in MySQL:
 
-{% img assets/microsoft-sqltable-in-terminal.webp "Shell with database table displayed" "Shell with database table displayed" %}
+{% imgx assets/microsoft-sqltable-in-terminal.webp "Shell with database table displayed" "Shell with database table displayed" %}
 
 Repeat the same operation for each table you want to load into MySQL Database Service.
 
 In case you haven't used `sqlcmd` and Object Storage and prefer the use of the GUI to generate the CSV files, you can import them like this:
 
-{% img assets/microsoft-obj-storage-table.webp "Terminal with alternative file import statement from the above visual" "Terminal with alternative file import statement from the above visual" %}
+{% imgx assets/microsoft-obj-storage-table.webp "Terminal with alternative file import statement from the above visual" "Terminal with alternative file import statement from the above visual" %}
 
 ## Conclusion
 
