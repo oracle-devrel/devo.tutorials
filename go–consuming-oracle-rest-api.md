@@ -1,30 +1,31 @@
 ---
 title: GoLang–Consuming Oracle REST API from an Oracle Cloud Database 
-parent: tutorials
+parent: [tutorials]
 toc: true
 tags: 
   - oci
-languages: 
   - go
-personas:
-  - backend
-date: 2021-11-03 19:42
+  - back-end
+  - machine-learning
+categories: [ai-ml]
+date: 2021-11-18 19:42
 description: Brendan Tierney shares a method to call an in-database machine learning model and then process the data it returns using GoLang.
-author: Brendan Tierney
+author: 
+    name: Brendan Tierney
 ---
-Does anyone write code to access data in a database anymore (and by code I mean SQL)?  The answer to this question is ‘It depends’, just like everything in IT.
+Does anyone write code to access data in a database anymore (and by code I mean SQL)?  The answer to this question is "it depends," just like everything in IT.
 
-Using REST APIs is very common for accessing processing data with a database. From using an API to retrieve data, to using a slightly different API to insert data, and using other typical REST functions to perform your typical CRUD operations, REST APIs allow developers to focus on writing efficient applications in a particular application instead of having to swap between their programming language and SQL. 
+Using REST APIs is very common for accessing and processing data with a database. For things like using an API to retrieve data, using a slightly different API to insert data, or using other typical REST functions to perform your typical CRUD operations, REST APIs allow developers to focus on writing efficient applications in a particular application instead of having to swap between their programming language and SQL. 
 
-In latter cases, most developers are not experts with SQL or know how to work efficiently with the data. Therefore, leave the SQL and procedural coding to those who are good at that, and then expose the data and their code using REST APIs. The end result is efficient SQL and database coding, in addition to efficient application coding. This is a win-win for everyone.
+In the latter cases, most developers are not experts with SQL and don't necessarily know how to work efficiently with the data. Therefore, leave the SQL and procedural coding to those who are good at that, and then expose the data and their code using REST APIs. The end result is efficient SQL and database coding, in addition to efficient application coding. This is a win-win for everyone.
 
-I’ve written before about creating REST APIs in an Oracle Cloud Database (DBaaS and Autonomous). In these writings, I’ve shown how to use the in-database machine learning features and to use REST APIs to create an interface to machine learning models. These models can be used to score new data, making a machine learning prediction. The data being used for the prediction doesn’t have to exist in the database, instead, the database is being used as a machine learning scoring engine, accessed using a REST API.
+I’ve written before about creating REST APIs in an Oracle Cloud Database (DBaaS and Autonomous). In these writings I’ve shown how to use the in-database machine learning features, and how to use REST APIs to create an interface to machine learning models. These models can be used to score new data to make a machine learning prediction. The data being used for the prediction doesn’t have to exist in the database --- instead, the database is being used as a machine learning scoring engine, accessed using a REST API.
 
 [Check out an article I wrote about this and creating a REST API for an in-database machine learning model, for Oracle Magazine.](https://blogs.oracle.com/oraclemagazine/post/rest-enabling-oracle-machine-learning-models)
 
 In that article, I showed how easy it was to use the in-database machine model using Python.
 
-Python has a huge fan and user base, but it can underperform, as it is an interrupted language. Don’t get me wrong—lots of work has gone into making Python more efficient. But in some scenarios, it just isn’t fast enough. In some scenarios, people will switch to languages which execute quicker, like C, C++, Java, and GoLang.
+Python has a huge fan and user base, but it can underperform as it's an interrupted language. Don’t get me wrong --- lots of work has gone into making Python more efficient. But in some scenarios, it just isn’t fast enough. In some scenarios, people will switch to languages which execute quicker, such as C, C++, Java, and GoLang.
 
 Here is the GoLang code to call the in-database machine learning model and process the returned data.
 

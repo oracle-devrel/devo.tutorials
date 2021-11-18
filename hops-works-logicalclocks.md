@@ -8,14 +8,12 @@ tags:
 date: 2021-11-18 09:45
 categories: [cloudapps]
 description: This walk-through will guide you through setting up your environment to run HopsWorks with OCI.
-author:
-    name: Olivier Francois Xavier Perard
-    github: operard
+author: olivier
 ---
 {% slides %}
 In this walk-through you'll configure your environment to run HopsWorks in Oracle Cloud Infrastructure.
 
-## Prerequisites
+### Prerequisites
 
 * VM 2.1 with Oracle Linux 7.9 (OEL7) has been deployed in Oracle Cloud Infrastructure (OCI)
 * Oracle Linux 7.9 uses `pip3.6` by default
