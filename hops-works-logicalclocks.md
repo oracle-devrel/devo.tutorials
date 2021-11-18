@@ -5,21 +5,22 @@ tags:
 - feature-store
 - open-source
 - machine-learning
-date: 2021-11-03 01:00
+date: 2021-11-18 09:45
 categories: [cloudapps]
-description: This walk-through guides you through setting up your environment to run HopsWorks with OCI.
+description: This walk-through will guide you through setting up your environment to run HopsWorks with OCI.
 author:
     name: Olivier Francois Xavier Perard
     github: operard
 ---
-This walk-through helps you configure your environment to run HopsWorks in Oracle Cloud Infrastructure.
+{% slides %}
+In this walk-through you'll configure your environment to run HopsWorks in Oracle Cloud Infrastructure.
 
 ## Prerequisites
 
 * VM 2.1 with Oracle Linux 7.9 (OEL7) has been deployed in Oracle Cloud Infrastructure (OCI)
 * Oracle Linux 7.9 uses `pip3.6` by default
 * Python 3.6 or higher is installed
-* You have access to root either directly or using `sudo`. By default in OCI, you are connected like an "opc" user with sudo privilege.
+* You have access to root either directly or using `sudo`. In OCI you are connected as user `opc` with sudo privilege by default
 
 ## Jupyterlab Installation
 
@@ -33,10 +34,10 @@ By default, OEL7 runs Python 3. The first step is to install `virtualenv` and `p
 
 #### Install virtualenv
 
-Virtualenv enables us to create isolated sandpits to develop Python applications without running into module or library conflicts. It's very simple to install.
+Virtualenv enables us to create isolated sandpits to develop Python applications without running into module or library conflicts. It's simple to install.
 
 ```console
-sudo pip3.6 install virtualenv
+$ sudo pip3.6 install virtualenv
 ```
 
 Next, we can create a virtual environment and enable it.
@@ -44,9 +45,9 @@ Next, we can create a virtual environment and enable it.
 #### Create a myvirtualenv Environment
 
 ```console
-virtualenv -p /usr/bin/python3 myvirtualenv
+$ virtualenv -p /usr/bin/python3 myvirtualenv
 # Activate the env
-source myvirtualenv/bin/activate
+$ source myvirtualenv/bin/activate
 ```
 
 #### Check the List of Python Libraries in Your Environment
@@ -54,7 +55,7 @@ source myvirtualenv/bin/activate
 Running the following command will show what Python models we have installed at this point.
 
 ```console
-(myvirtualenv) [opc@lab1 ~]$ pip3 list
+$ pip3 list
 Package    Version
 ---------- -------
 pip        21.1.3
@@ -67,60 +68,58 @@ You should consider upgrading via the '/home/opc/myvirtualenv/bin/python -m pip 
 #### Upgrade Your pip Environment
 
 ```console
-/home/opc/myvirtualenv/bin/python -m pip install --upgrade pip
+$ /home/opc/myvirtualenv/bin/python -m pip install --upgrade pip
 ```
 ### Jupyterlab Setup
 
 ```console
-pip3 install jupyterlab
+$ pip3 install jupyterlab
 ```
 
 #### Install Python Libraries for Machine Learning or an ETL Process
 
 ```console
-pip install pandas
-pip install pandarallel
-pip install dask
-pip install seaborn
-pip install matplotlib
-pip install plotly
-
-pip install -lxml==4.6.3
-pip install selenium
-pip install beautifulsoup4
-
-pip install scikit-learn
+$ pip install pandas
+$ pip install pandarallel
+$ pip install dask
+$ pip install seaborn
+$ pip install matplotlib
+$ pip install plotly
+$ pip install -lxml==4.6.3
+$ pip install selenium
+$ pip install beautifulsoup4
+$ pip install scikit-learn
 ```
 
 #### Install Other Python Libraries for Kafka Access and WEB Server Access
 
 ```console
-pip install kafka-python (v2.0.0)
-pip install Flask
-pip install gunicorn
+$ pip install kafka-python (v2.0.0)
+$ pip install Flask
+$ pip install gunicorn
 ```
 
 #### Install Extensions for Jupyterlab Environment
 
 ```console
-pip install jupyter_contrib_nbextensions
-jupyter contrib nbextension install --user
-jupyter nbextension enable execute_time/ExecuteTime
+$ pip install jupyter_contrib_nbextensions
+$ jupyter contrib nbextension install --user
+$ jupyter nbextension enable execute_time/ExecuteTime
 ```
 
 ## Configure Jupyterlab Like the OEL7 Linux Service
 
-Create a script to automatically instantiate and reboot Jupyterlab with "opc" user.
+Create a script to automatically instantiate and reboot Jupyterlab with `opc` user.
 
 ```console
-vi /home/opc/launchjupyterlab.sh
+$ vi /home/opc/launchjupyterlab.sh
 ```
 
 ### Script for launchjupyterlab.sh
 
-Using virtualenv, you can launch Jupyterlab in a specific port (for example: 8001) and listen on a public IP.
+Using virtualenv, you can launch Jupyterlab on a specific port (for example: 8001) and listen on a public IP.
 
-```console
+```bash
 #!/bin/bash
 
 # Activate myvirtualenv Environment
@@ -128,31 +127,30 @@ source myvirtualenv/bin/activate
 
 cd /home/opc
 
-if [ "$1" = "start" ]
-then
-nohup jupyter-lab --ip=0.0.0.0 --port=8001 > ./nohup.log 2>&1 &
-echo $! > /home/opc/jupyter.pid
+if [ "$1" = "start" ]; then
+    nohup jupyter-lab --ip=0.0.0.0 --port=8001 > ./nohup.log 2>&1 &
+    echo $! > /home/opc/jupyter.pid
 else
-kill $(cat /home/opc/jupyter.pid)
+    kill $(cat /home/opc/jupyter.pid)
 fi
 ```
 
-We must put the script in executable mode in order to be executed from jupyterlab service.
+We need to make the script executable so it can be run from the jupyterlab service.
 
 ```console
-chmod 777 /home/opc/launchjupyterlab.sh
+$ chmod 777 /home/opc/launchjupyterlab.sh
 ```
 
 ### Connect to Root User
 
 ```console
-sudo -i
+$ sudo -i
 ```
 
 ### Create Script to Start, Stop "jupyterlab"
 
 ```console
-vi /etc/systemd/system/jupyterlab.service
+$ vi /etc/systemd/system/jupyterlab.service
 ```
 
 
@@ -176,24 +174,25 @@ WantedBy=multi-user.target
 ### Test Jupyterlab Service
 
 ```console
-systemctl start jupyterlab
-systemctl status jupyterlab
-systemctl enable jupyterlab
+$ systemctl start jupyterlab
+$ systemctl status jupyterlab
+$ systemctl enable jupyterlab
 ```
 
 ## Reboot for a Final Check
 
-Now you must reboot your machine to check if the jupyterlab script is enabled by default on port 8001.
+Now reboot your machine to check if the jupyterlab script is enabled by default on port 8001.
 
-You must open port 8001 to your virtual machine VM 2.1 in order to access using your public IP.
+You need to open port 8001 to your virtual machine VM 2.1 in order to access using your public IP.
 
 ```console
-firewall-cmd  --permanent --zone=public --list-ports
-firewall-cmd --get-active-zones
-firewall-cmd --permanent --zone=public --add-port=8001/tcp
-firewall-cmd --reload
+$ firewall-cmd  --permanent --zone=public --list-ports
+$ firewall-cmd --get-active-zones
+$ firewall-cmd --permanent --zone=public --add-port=8001/tcp
+$ firewall-cmd --reload
 ```
 
 If you're running directly on a virtual machine and have a browser installed, it should take you directly into the jupyter environment. Connect to "http://xxx.xxx.xxx.xxx:8001/".
   
 You should see the next Python web environment "Jupyterlab."
+{% endslides %}
