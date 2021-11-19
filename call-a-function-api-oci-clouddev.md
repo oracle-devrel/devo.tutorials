@@ -1,5 +1,4 @@
 ---
-layout: collection
 title: Call a Function using API Gateway
 categories: [clouddev, cloudapps, enterprise]
 description: Using Oracle functions to process data via an Oracle API Gateway, and creating a python function to extract HTTP information.
@@ -8,7 +7,6 @@ sort: desc
 tags: [python, apigateway, oci]
 parent: tutorials
 date: 2021-11-20 12:01
-
 ---
 {% slides %}
 In this tutorial, you will use Oracle Functions to process data passed from an Oracle API Gateway. You will create a Python function that uses the runtime context to extract HTTP information passed in a request.
@@ -22,7 +20,8 @@ Key tasks include how to:
 * Deploy and test your function.
 * Create an API Gateway for your function
 * Call your function from the internet using your API Gateway.
-{% img assets/call-a-func-oracle-funcs-api-gtw-diagram.png 1200 675 "Cloud diagram" "Oracle Cloud Infrastructure Diagram showing a function executing on the service, the API gateway getting the request and returning the function, with registry in tenancy and VCN within the tenancy allowing access to the Internet" %}(https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/functions/func-api-gtw/images/)
+
+{% img assets/call-a-func-oracle-funcs-api-gtw-diagram.png 1200 675 "Cloud diagram" "Oracle Cloud Infrastructure Diagram showing a function executing on the service, the API gateway getting the request and returning the function, with registry in tenancy and VCN within the tenancy allowing access to the Internet" %}
 
 For additional information, see:
 
@@ -56,14 +55,13 @@ To successfully perform this tutorial, you must have the following:
 * Python 3.6+ and pip3.
 * Docker Engine: A Linux computer or Linux VM. See [Docker engine requirements](https://docs.docker.com/engine/install/) for versions, and distros supported.
 * Docker Desktop: Available for MacOS or Windows 10. 
-    * Windows 10: Windows 10 update 2004 with WSL 2 and Ubuntu or other distro installed. 
-        * See [Windows Subsystem for Linux Installation Guide for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10).
+    * Windows 10: Windows 10 update 2004 with WSL 2 and Ubuntu or other distro installed. (see [Windows Subsystem for Linux Installation Guide for Windows 10](https://docs.microsoft.com/en-us/windows/wsl/install-win10))
         * [Install Docker Desktop for Windows 10.](https://docs.docker.com/docker-for-windows/install/)
 
-    > **Note:** Docker includes special Linux support for WSL 2 on Windows 10 update 2004.
-    {:.notice}
+        > **Note:** Docker includes special Linux support for WSL 2 on Windows 10 update 2004.
+        {:.notice}
 
-    * MacOS: See [Install Docker Desktop for MacOS.](https://docs.docker.com/docker-for-mac/install/)
+    + MacOS: See [Install Docker Desktop for MacOS.](https://docs.docker.com/docker-for-mac/install/)
 
 
 **Oracle Cloud Shell**
