@@ -20,10 +20,7 @@ Key tasks include how to:
 * Deploy and test your function.
 * Create an API Gateway for your function
 * Call your function from the internet using your API Gateway.
-<<<<<<< HEAD
 
-=======
->>>>>>> Image added, fixes made
 {% img assets/call-a-func-oracle-funcs-api-gtw-diagram.png 1200 675 "Cloud diagram" "Oracle Cloud Infrastructure Diagram showing a function executing on the service, the API gateway getting the request and returning the function, with registry in tenancy and VCN within the tenancy allowing access to the Internet" %}
 
 For additional information, see:
