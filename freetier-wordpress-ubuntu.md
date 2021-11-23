@@ -1,13 +1,11 @@
 ---
 title: Free Tier: Install WordPress on an Ubuntu Instance
-parent: tutorials
+parent: [tutorials]
 toc: true
-tags:
-- ubuntu
-categories:
-- modernize
+tags: [ubuntu, backend]
+categories: [modernize]
 thumbnail: assets/modernize-healthcare-ambulance.jpeg
-date: 2021-11-17 10:11
+date: 2021-11-24 9:45
 description: This tutorial guides you through configuring WordPress on your Ubuntu OCI instance.
 author: Docs @ Oracle
 ---
@@ -21,9 +19,9 @@ In this tutorial, use an Oracle Cloud Infrastructure Free Tier account to set up
 * Configure Apache, PHP 7, MySQL, and WordPress on your VM.
 * Connect to your instance from the internet.
 
-Here is a simplified diagram of the setup for your Linux VM.
+Here's a simplified diagram of the setup for your Linux VM.
 
-![OCI Apache network diagram](assets/wordpress-apache-diagram.png)
+{% img assets/wordpress-apache-diagram.png "OCI Apache network diagram" %}
 
 For additional information, see:
 
@@ -66,14 +64,16 @@ The wizard does several things when installing the instance:
 
 * Creates and installs a compute instance running Ubuntu Linux.
 * Creates a VCN with the required subnet and components needed to connect your Ubuntu Linux instance to the internet.
-* Creates an `ssh` key pair you use to connect to your instan
+* Creates an `ssh` key pair you use to connect to your instance
 
 ### Review Installation Steps
 
 To get started installing your instance with the Create a VM Instance wizard, follow these steps:
 
 1. From the main landing page, select Create a VM Instance wizard. 
-![Screenshot of the Create VM Instance wizard](assets/wordpress-apache-quickactions.png)
+
+{% imgx assets/wordpress-apache-quickactions.png "Screenshot of the Create VM Instance wizard" %}
+
 The Create Compute Instance page is displayed. It has a section for Placement, Image and shape, Networking, Add SSH keys, and Boot volume.
 2. Choose the Name and Compartment.
     Initial Options: 
@@ -176,6 +176,7 @@ Connect to your Ubuntu instance and configure your firewall settings. Follow the
     ```console
     ssh -i <your-private-key-file> ubuntu@<your-public-ip-address>
     ```
+
     Since you identified your public key when you created the VM, this command logs you into your VM. You can now issue `sudo` commands to install and start your server.
 7. Update firewall settings.
     Next, update your iptables configuration to allow HTTP traffic. To update iptables, run the following commands.
@@ -212,9 +213,9 @@ The commands add a rule to allow HTTP traffic and saves the changes to the iptab
 
     You can test your server from the command line with curl localhost. Or, you can connect your browser to the public IP address assigned to your VM: 
     
-    http://<your-public-ip-address>. The page looks similar to: 
+    `http://<your-public-ip-address>`. The page looks similar to: 
 
-    ![Apache 2 Ubuntu defaul page](assets/wordpress-apache-ubuntu-default.png)
+    {% imgx assets/wordpress-apache-ubuntu-default.png "Apache 2 Ubuntu default page" %}
 
 ### Install PHP
 
@@ -252,11 +253,11 @@ The commands add a rule to allow HTTP traffic and saves the changes to the iptab
     ?>
     ```
 
-5. Connect to http://<your-public-ip-address>/info.php. 
+5. Connect to `http://<your-public-ip-address>/info.php`. 
 
     The browser produces a listing of PHP configuration on your VM. 
 
-    ![A table listing the PHP configuration on your VM](assets/wordpress-apache-php-ubuntu-details.png)
+    {% img assets/wordpress-apache-php-ubuntu-details.png "A table listing the PHP configuration on your VM" %}
     
     You have successfully installed Apache and PHP 7 on your Oracle Cloud Infrastructure instance.
 
@@ -371,7 +372,7 @@ Next, you install and configure the MySQL server and client so it can be used wi
 
 10. List the default databases. 
 
-    ```mysql
+    ```console
     mysql> show databases;
     +--------------------+
     | Database           |
@@ -406,7 +407,7 @@ Next, you install and configure the MySQL server and client so it can be used wi
 
 14. Check the result. 
 
-    ```mysql
+    ```console
     mysql>show databases;
     +--------------------+
     | Database           |
@@ -422,7 +423,7 @@ Next, you install and configure the MySQL server and client so it can be used wi
 
 15. Flush privileges to clear cached memory. 
 
-    ```mysql
+    ```console
     mysql> FLUSH PRIVILEGES;
     Query OK, 0 rows affected (0.00 sec)
 
@@ -481,7 +482,7 @@ Download and follow these steps to install WordPress on your server.
     vi wp-config.php
     ```
 
-8. Run the installation script by opening a browser and this URL: http://<your-public-ip-address>/wp-admin/install.php
+8. Run the installation script by opening a browser and this URL: `http://<your-public-ip-address>/wp-admin/install.php`
 
     Create an administrator account for your WordPress blog. Ensure you write down the information from the install page. You need it to log into your WordPress blog.
 
@@ -491,7 +492,7 @@ Download and follow these steps to install WordPress on your server.
 
     * [First Steps with WordPress](https://wordpress.org/support/article/first-steps-with-wordpress/)
 
-    You have set up a WordPress blog on an OCI compute instance.
+    You have set up a WordPress blog on an Oracle Cloud Infrastructure (OCI) compute instance.
 
 ## What's Next
 
@@ -499,6 +500,6 @@ You have successfully installed and deployed an Apache web server on Oracle Clou
 
 To explore more information about development with Oracle products, check out these sites:
 
-* [Oracle Developers Portal](https://developer.oracle.com/s)
+* [Oracle Developers Portal](https://developer.oracle.com/)
 * [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
 

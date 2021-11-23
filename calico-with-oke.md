@@ -1,15 +1,10 @@
 ---
 title: Installing and using Calico on Oracle Container Engine (OKE)
-parent: tutorials
-tags:
-- calico
-- oke
-- devops
-categories:
-- cloudapps
-- opensource
+parent: [tutorials]
+tags: [oke, devops]
+categories: [cloudapps, opensource]
 thumbnail: assets/calico-on-oracle-graph.png
-date: 2021-11-18 13:16
+date: 2021-11-24 13:16
 description: Ali walks you through configuring OKE with Calico, an open-source networking tool for Kubernetes.
 author:
   name: Ali Mukadam
@@ -22,17 +17,17 @@ There are many [cluster networking](https://kubernetes.io/docs/concepts/cluster-
  * [Flannel](https://github.com/flannel-io/flannel)
  * [Calico](https://www.tigera.io/project-calico/)
 
-![Graph: Software-Defined Networking Ideas with Kubernetes](assets/calico-on-oracle-graph.png)
+{% img assets/calico-on-oracle-graph.png  “Graph: Software-Defined Networking Ideas with Kubernetes” %}
 
 Flannel is a simple and easy way to configure a layer 3 network fabric designed for Kubernetes. It is also used by default by [Oracle Container Services for use with Kubernetes](https://docs.oracle.com/en/operating-systems/oracle-linux/kubernetes/) (aka Kubernetes on Oracle Linux) and by Oracle Container Engine (OKE).
 
 Calico provides both a layer 3 networking and a network policy engine. Its policy engine can also be used together with Flannel.
 
-In this post, we will deploy Calico for network pod policy.
+In this post, we'll deploy Calico for network pod policy.
 
 ## Manually installing Calico
 
-If you have manually created the OKE Cluster using the cli or the OCI console, [obtain the kubeconfig file](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm) and setup your `KUBECONFIG` environment variable:
+If you have manually created the OKE Cluster using the cli or the Oracle Cloud Infrastructure (OCI) console, [obtain the kubeconfig file](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengdownloadkubeconfigfile.htm) and setup your `KUBECONFIG` environment variable:
 
 ```console
 export KUBECONFIG=/path/to/kubeconfig
@@ -46,7 +41,7 @@ https://docs.projectcalico.org/v3.6/getting-started/kubernetes/installation/host
 -O
 ```
 
-By default, the pod CIDR block on OKE is 10.244.0.0/16. Set this as an environment variable:
+By default, the pod CIDR block on OKE is `10.244.0.0/16`. Set this as an environment variable:
 
 ```console
 export POD_CID="10.244.0.0/16"
@@ -93,7 +88,7 @@ Run Terraform apply again:
 terraform apply -auto-approve
 ```
 
-The calico installation script in terraform-oci-oke also handles the cases when you have more than 50 nodes in your cluster and and the number of replicas needed are calculated and scaled to accordingly.
+The Calico installation script in terraform-oci-oke also handles the cases when you have more than 50 nodes in your cluster and and the number of replicas needed are calculated and scaled to accordingly.
 
 ## Testing Calico
 
