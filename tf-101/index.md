@@ -2,11 +2,13 @@
 layout: collection
 title: Terraform 101
 series: tf-101
+parent: [tutorials]
 description: Jumpstart your OCI management experience using IaC (specifically Terraform) with this tutorial series.
 thumbnail: assets/terraform-101.png
 author: tim-clegg
 tags: [open-source, terraform, iac, devops, beginner]
 sort: asc
+date: 2021-09-28 08:13
 ---
 
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
