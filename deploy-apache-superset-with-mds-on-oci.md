@@ -1,6 +1,6 @@
 ---
 title: Deploy Apache Superset with MySQL Database Service on Oracle Cloud Infrastructure
-parent: tutorials
+parent: [tutorials]
 tags:
 - data-management
 - front-end

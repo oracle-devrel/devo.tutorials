@@ -3,12 +3,14 @@ layout: collection
 title:  Oracle Cloud Infrastructure IaC Framework
 redirect_from: "/tutorials/7-steps-to-oci/"
 series: oci-iac-framework
+parent: [tutorials]
 description: Jumpstart your OCI experience using the OCLOUD framework to build your einvironment in 7 steps
 thumbnail: assets/landing-zone.png
 author: kubemen
 tags: [open-source, terraform, iac, devops, beginner]
 sort: asc
 color: purple
+date: 2021-10-29 11:00:00
 ---
 
 {% imgx aligncenter assets/landing-zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}
