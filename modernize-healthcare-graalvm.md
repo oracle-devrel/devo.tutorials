@@ -13,7 +13,7 @@ author:
   linkedin: alimukadam
 ---
 
-{% img assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}
+{% imgx assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}
 
 Imagine a Fortune 5 company, empowering millions of people worldwide with the information, guidance, and tools to make personal health choices, setting  out to work on two parallel streams for modernizing their HealthCare platform’s Cloud-Native tech stack.
 
@@ -34,7 +34,7 @@ Imagine a Fortune 5 company, empowering millions of people worldwide with the in
 * Stream 2 tech stack is being considered with GraalVM Enterprise as an option depending on the outcome of Stream 1 benchmarking results
 * Serverless (initial thoughts) has got some excitement for GraalVM’s Native-Image due to memory footprint and cold-startup optimization
 
-{% img  assets/modernize-healthcare-api-exchange.png “Brand logos for FHIR and Cloud Native Computing Foundation” %}
+{% imgx  assets/modernize-healthcare-api-exchange.png “Brand logos for FHIR and Cloud Native Computing Foundation” %}
 
 ## Healthcare Context
 
@@ -53,7 +53,7 @@ HL7 FHIR is a standard for health care data exchange published by HL7 (HL7 and i
 
 The CNCF Cloud Native Computing Foundation serves as the vendor-neutral home for many of the fastest-growing open-source projects
 
-{% img assets/modernize-healthcare-hl7r.png  “HL7 Logo” %}
+{% imgx assets/modernize-healthcare-hl7r.png  “HL7 Logo” %}
 
 ## Research and Evaluation Proof of Value
 
@@ -73,13 +73,13 @@ Load Configuration Details:
 
 The Clinical API was subjected to a medium spike load as part of the warm-up phase and peak throughput phase.
 
-{% img assets/modernize-healthcare-load-test.png "Load Test Configuration" %}
-{% img assets/modernize-healthcare-responsetimegraph.png "Response Time Graph" %}
-{% img assets/modernize-healthcare-summary-report.png "Summary report of results" %}
+{% imgx assets/modernize-healthcare-load-test.png "Load Test Configuration" %}
+{% imgx assets/modernize-healthcare-responsetimegraph.png "Response Time Graph" %}
+{% imgx assets/modernize-healthcare-summary-report.png "Summary report of results" %}
 
 The evaluation results are summarized in the table below. GraalVM performed better than Open JDK8 in most of the runs and gets better for longer runs.
 
-{% img assets/modernize-healthcare-perform-characteristics.png  “Performance characteristics of GraalVM Enterprise vs. other runtimes” %}
+{% imgx assets/modernize-healthcare-perform-characteristics.png  “Performance characteristics of GraalVM Enterprise vs. other runtimes” %}
 
 ## Conclusion
 

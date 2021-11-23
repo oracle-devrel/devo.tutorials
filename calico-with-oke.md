@@ -17,7 +17,7 @@ There are many [cluster networking](https://kubernetes.io/docs/concepts/cluster-
  * [Flannel](https://github.com/flannel-io/flannel)
  * [Calico](https://www.tigera.io/project-calico/)
 
-{% img assets/calico-on-oracle-graph.png  “Graph: Software-Defined Networking Ideas with Kubernetes” %}
+{% imgx assets/calico-on-oracle-graph.png  “Graph: Software-Defined Networking Ideas with Kubernetes” %}
 
 Flannel is a simple and easy way to configure a layer 3 network fabric designed for Kubernetes. It is also used by default by [Oracle Container Services for use with Kubernetes](https://docs.oracle.com/en/operating-systems/oracle-linux/kubernetes/) (aka Kubernetes on Oracle Linux) and by Oracle Container Engine (OKE).
 

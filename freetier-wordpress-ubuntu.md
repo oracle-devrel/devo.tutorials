@@ -21,7 +21,7 @@ In this tutorial, use an Oracle Cloud Infrastructure Free Tier account to set up
 
 Here's a simplified diagram of the setup for your Linux VM.
 
-{% img assets/wordpress-apache-diagram.png "OCI Apache network diagram" %}
+{% imgx assets/wordpress-apache-diagram.png "OCI Apache network diagram" %}
 
 For additional information, see:
 
@@ -257,7 +257,7 @@ The commands add a rule to allow HTTP traffic and saves the changes to the iptab
 
     The browser produces a listing of PHP configuration on your VM. 
 
-    {% img assets/wordpress-apache-php-ubuntu-details.png "A table listing the PHP configuration on your VM" %}
+    {% imgx assets/wordpress-apache-php-ubuntu-details.png "A table listing the PHP configuration on your VM" %}
     
     You have successfully installed Apache and PHP 7 on your Oracle Cloud Infrastructure instance.
 
