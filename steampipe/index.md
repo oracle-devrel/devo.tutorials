@@ -2,7 +2,6 @@
 layout: collection
 title: Steampipe on Oracle Cloud Infrastructure
 series: steampipe
-parent: [tutorials]
 description: Resources for using Steampipe on Oracle Cloud Infrastructure.
 thumbnail: assets/pexels-gabriela-palai-507410.jpg
 author: tim-clegg
