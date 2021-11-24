@@ -1,15 +1,9 @@
 ---
 title: Deploying Verrazzano on Oracle Container Engine for Kubernetes (OKE)
-parent: tutorials
-tags:
-- open-source
-- oke
-- kubernetes
-- verrazzano
-- devops
-categories:
-- cloudapps
-- opensource
+parent: [tutorials]
+series: [verrazzano-oke]
+tags: [open-source, oke, kubernetes, verrazzano, terraform, devops]
+categories: [cloudapps, opensource]
 thumbnail: assets/verrazzano-logo.png
 date: 2021-11-12 09:11
 description: How to deploy Verrazzano an OKE cluster.
