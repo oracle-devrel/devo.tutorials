@@ -1,13 +1,11 @@
 ---
 title: Deploying A Multi-Cluster Verrazzano on Oracle Container Engine for Kubernetes (OKE) Part 2
 parent: [tutorials]
-series: [verrazzano-oke]
-tags: [open-source, oke, kubernetes, verrazzano, devops]
+tags: [open-source, oke, kubernetes, verrazzano, terraform, devops]
 categories: [cloudapps, opensource]
 thumbnail: assets/verrazzano-logo.png
 date: 2021-11-27 09:11
 description: How to deploy Verrazzano an OKE cluster.
-toc: true
 author:
   name: Ali Mukadam
   home: https://lmukadam.medium.com
@@ -55,6 +53,7 @@ If it’s pointing to one of the other clusters, change it as follows:
     `kubectx admin`
 
 We can now begin the installation:
+
     `kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yaml`
 
 Wait for the deployment to finish:
