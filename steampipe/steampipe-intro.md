@@ -1,16 +1,16 @@
 ---
-title: Introduction to Steampipe on OCI
-parent: steampipe
+title: Introduction to Steampipe on Oracle Cloud Infrastructure
+parent: [tutorials,steampipe]
 tags: [open-source, steampipe, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/pexels-gabriela-palai-507410.jpg
-date: 2021-11-15 10:56
+date: 2021-11-24 10:56
 description: Steampipe is a great tool that you should have in your IaC toolbox.  Learn about how to use it with OCI here!
 toc: true
 author: jon-decamp
 ---
 
-{% img aligncenter assets/pexels-gabriela-palai-507410.jpg 800 534 "Steampipe Intro" "Steampipe Intro" %}
+{% imgx alignright assets/pexels-gabriela-palai-507410.jpg 800 534 "Steampipe Intro" "Steampipe Intro" %}
 
 *Photo credit: Photo by [Gabriela Palai](https://www.pexels.com/@gabriela-palai-129458?utm_content=attributionCopyText&utm_medium=referral&utm_source=pexels) from [Pexels](https://www.pexels.com/photo/train-with-smoke-507410/?utm_content=attributionCopyText&utm_medium=referral&utm_source=pexels)*
 
@@ -19,21 +19,22 @@ I must be virtually hanging out in the wrong circles these days, because [Steamp
 ## So, what is Steampipe?
 Steampipe is a new open source tool for running queries against cloud resources. It supports multiple cloud providers (plugins), supports a Postgres-like SQL query language, and provides an interactive CLI to navigate through resources. I had the opportunity to perform an evaluation of Steampipe, and I wanted to share some of my experiences. The tool seems to be growing quickly, so I'll try to link to their excellent documentation whenever I have a chance.
 
-See the official Steampipe introduction for more background: [https://steampipe.io/blog/introducing-steampipe](https://steampipe.io/blog/introducing-steampipe)
+See the [official Steampipe introduction](https://steampipe.io/blog/introducing-steampipe) for more background.
 
 ## How do you install it?
 Install instructions for Windows, Mac, and Linux are provided on the [Steampipe webpage](https://steampipe.io/downloads) - The installation instructions walk you through using Homebrew if you're on a Mac, an installer script for Linux, or on Windows via Windows Subsystem for Linux with Ubuntu.
 
 ## The OCI plugin
-Steampipe has a plugin which adds support for OCI: [https://hub.steampipe.io/plugins/turbot/oci](https://hub.steampipe.io/plugins/turbot/oci)
+
+Steampipe has a plugin which [adds support for OCI](https://hub.steampipe.io/plugins/turbot/oci) (Oracle Cloud Infrastructure).
 
 You can install the plugin using the syntax below:
 
-```
+```console
 steampipe plugin install oci
 ```
 
-To learn more about the OCI plugin, documentation and examples at the table level can be found here: [https://hub.steampipe.io/plugins/turbot/oci/tables](https://hub.steampipe.io/plugins/turbot/oci/tables) - You can also learn more about the tables available via the plugin using the `.tables` and `.inspect` commands in the interactive shell.
+To learn more about the OCI plugin, see the [documentation and examples at the table level](https://hub.steampipe.io/plugins/turbot/oci/tables). You can also learn more about the tables available via the plugin using the `.tables` and `.inspect` commands in the interactive shell.
 
 Once you have the plugin installed, you're ready to run queries.
 
@@ -42,7 +43,7 @@ The Steampipe [documentation](https://steampipe.io/docs) is a thorough reference
 
 The query syntax can start as simple as a "select thing from table" and extend far beyond that. For example:
 
-```
+```console
 select display_name from oci_kms_vault
 +-----------------------+
 | display_name          |
@@ -54,7 +55,7 @@ select display_name from oci_kms_vault
 
 You can store queries in external files and run the queries by specifying the filename on the command line. Let's look at an example SQL file from the OCI Compliance Mod (more on this later):
 
-```
+```sql
 select
   -- Required Columns
   a.id as resource,
@@ -74,9 +75,9 @@ from
   left join oci_identity_compartment as c on c.id = a.compartment_id;
 ```
 
-And say we have that stored in a file called `objectstorage_bucket_public_access_blocked.sql` - you can run this query like so:
+And say we have that stored in a file called `objectstorage_bucket_public_access_blocked.sql`. You can run this query like so:
 
-```
+```console
 steampipe query objectstorage_bucket_public_access_blocked.sql
 +-----------------------------------------------------------------------------------+--------+---------------------------------------------------+--------------+---------------+
 | resource                                                                          | status | reason                                            | region       | compartment   |
@@ -99,7 +100,7 @@ Other helpful commands in the shell - note that they all begin with a dot:
 
 Example of opening the CLI and listing the available tables:
 
-```
+```console
 steampipe query
 Welcome to Steampipe v0.9.0
 For more information, type .help
@@ -122,11 +123,11 @@ For more information, type .help
 ## Using mods (oci compliance)
 Mods can be a collection of SQL scripts built for custom reporting. Compliance is an important aspect of what [my team works on](https://docs.oracle.com/en/solutions/pci-compliant-webapp-terraform), and that made finding an oci_compliance module an exciting discovery. The oci_compliance mod has CIS compliance reporting built on top of Steampipe, and that just scratches the surface of the possibilities.
 
-Steampipe mods can be found here: [https://hub.steampipe.io/mods](https://hub.steampipe.io/mods)
+Steampipe mods [can be found here](https://hub.steampipe.io/mods).
 
 The [oci_compliance](https://hub.steampipe.io/mods/turbot/oci_compliance) page has instructions and examples, so be sure to go there for more information. Let's install the mod, and run a check for a specific control in this example:
 
-```
+```console
 $ git clone https://github.com/turbot/steampipe-mod-oci-compliance.git
 Cloning into 'steampipe-mod-oci-compliance'...
 remote: Enumerating objects: 254, done.
@@ -154,4 +155,4 @@ $ steampipe check control.cis_v110_2_1
 ```
 
 ## Wrapping Up
-Steampipe shows tremendous potential. It's easier to use Steampipe to query OCI resources, compared to remembering complex CLI options. Results come back fast, especially with a tuned query. Modules provide an additional layer of reporting and glue for the data. I look forward to working with Steampipe and building this tool into my toolbox.
+Steampipe shows tremendous potential. It's easier to use Steampipe to query OCI resources than it is to remember complex CLI options. Results come back fast, especially with a tuned query. Modules provide an additional layer of reporting and glue for the data. I look forward to working with Steampipe and building this tool into my toolbox.
