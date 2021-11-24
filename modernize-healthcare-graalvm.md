@@ -13,7 +13,7 @@ author:
   linkedin: alimukadam
 ---
 
-{% imgx assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}
+{% imgx alignright assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}
 
 Imagine a Fortune 5 company, empowering millions of people worldwide with the information, guidance, and tools to make personal health choices, setting  out to work on two parallel streams for modernizing their HealthCare platform’s Cloud-Native tech stack.
 

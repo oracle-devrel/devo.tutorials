@@ -6,18 +6,14 @@ categories: [cloudapps, opensource]
 thumbnail: assets/calico-on-oracle-graph.png
 date: 2021-11-24 13:16
 description: Ali walks you through configuring OKE with Calico, an open-source networking tool for Kubernetes.
-author:
-  name: Ali Mukadam
-  home: https://lmukadam.medium.com
-  bio: For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management).
-  linkedin: alimukadam
+author: ali-mukadam
 ---
 There are many [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model) options for Kubernetes. Two of the most popular are:
 
  * [Flannel](https://github.com/flannel-io/flannel)
  * [Calico](https://www.tigera.io/project-calico/)
 
-{% imgx assets/calico-on-oracle-graph.png  “Graph: Software-Defined Networking Ideas with Kubernetes” %}
+{% imgx assets/calico-on-oracle-graph.png  "Graph: Software-Defined Networking Ideas with Kubernetes" %}
 
 Flannel is a simple and easy way to configure a layer 3 network fabric designed for Kubernetes. It is also used by default by [Oracle Container Services for use with Kubernetes](https://docs.oracle.com/en/operating-systems/oracle-linux/kubernetes/) (aka Kubernetes on Oracle Linux) and by Oracle Container Engine (OKE).
 
