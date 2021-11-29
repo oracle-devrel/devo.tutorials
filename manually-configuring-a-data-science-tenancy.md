@@ -16,6 +16,7 @@ description: Configure your tenancy for Data Science and test creating a noteboo
   session.
 author: olivier
 redirect_from: "/collections/tutorials/manually-configuring-a-data-science-tenancy/"
+mrm: WWMK211117P00085
 ---
 {% slides %}
 Learn how to get started configuring your tenancy for Data Science and test creating a notebook session.

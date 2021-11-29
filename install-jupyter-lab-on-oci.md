@@ -15,6 +15,7 @@ description: This tutorial will guide you through setting up your environment to
   Jupyter Lab on Oracle Cloud Infrastructure.
 date: 2021-10-07 14:27
 redirect_from: "/collections/tutorials/install-jupyter-lab-on-oci/"
+mrm: WWMK211117P00079
 ---
 {% slides %}
 

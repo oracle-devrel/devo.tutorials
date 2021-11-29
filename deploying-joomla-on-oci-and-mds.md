@@ -12,8 +12,11 @@ categories:
 - modernize
 thumbnail: assets/joomla-ip-address-in-browser.png
 date: 2021-10-28 17:03
-description: MDS (MySQL Database Service) and Moodle are a perfect match for OCI. In this tutorial, you'll learn how to deploy this popular learning management system with OCI.
+description: MDS (MySQL Database Service) and Moodle are a perfect match for OCI.
+  In this tutorial, you'll learn how to deploy this popular learning management system
+  with OCI.
 author: frederic-descamps
+mrm: WWMK211125P00023
 ---
 
 The easiest way to deploy [Joomla!](https://www.joomla.org/) on Oracle Cloud Infrastructure and MySQL Database Service, is to use OCI Resource Manager’s stack.

@@ -19,6 +19,7 @@ tags:
 - community
 date: 2021-08-15 12:00
 redirect_from: "/collections/tutorials/learning-languages-with-oracle-cloud/"
+mrm: WWMK211125P00031
 ---
 
 {% imgx alignright assets/the-whiteboard.jpg 400 400 "A whiteboard for learning the Japanese language." %}

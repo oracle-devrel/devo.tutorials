@@ -19,6 +19,7 @@ author:
   github: lefred
   linkedin: lefred
 redirect_from: "/collections/tutorials/apache-php-ubuntu-oci-installation/"
+mrm: WWMK211125P00028
 ---
 {% slides %}
 

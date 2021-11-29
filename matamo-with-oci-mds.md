@@ -1,15 +1,20 @@
 ---
-title: Use Matomo Website Analytics on OCI with MDS 
-parent: [tutorials]
-categories: [modernize]
+title: Use Matomo Website Analytics on OCI with MDS
+parent:
+- tutorials
+categories:
+- modernize
 thumbnail: assets/matamo-progress-bar.webp
 tags:
 - mysql
 - analytics
 - backend
 date: 2021-11-18 11:11
-description: Matamo, an alternative to Google Analytics, is becoming increasingly popular. This walkthrough shows you how to use this powerful tool with MySQL Database Service and Oracle Cloud Infrastructure.
+description: Matamo, an alternative to Google Analytics, is becoming increasingly
+  popular. This walkthrough shows you how to use this powerful tool with MySQL Database
+  Service and Oracle Cloud Infrastructure.
 author: frederic-descamps
+mrm: WWMK211125P00016
 ---
 [Matomo](https://matomo.org/) is a Google Analytics alternative for tracking metrics on your websites. If you follow my blog, you know how easy it is to deploy popular Open Source web solutions like WordPress, Joomla!, Drupal, Moodle, and Magento on Oracle Cloud Infrastructure (OCI).
 

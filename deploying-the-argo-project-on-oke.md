@@ -23,6 +23,7 @@ author:
     For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
   linkedin: https://www.linkedin.com/in/alimukadam/
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
+mrm: WWMK211125P00029
 ---
 {% imgx alignright assets/argo-icon-color-800.png 400 400 "ARGO Logo" %}
 

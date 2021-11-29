@@ -1,13 +1,24 @@
 ---
 title: Introduction to Steampipe on Oracle Cloud Infrastructure
-parent: [tutorials,steampipe]
-tags: [open-source, steampipe, iac, devops, beginner]
-categories: [iac, opensource]
+parent:
+- tutorials
+- steampipe
+tags:
+- open-source
+- steampipe
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/pexels-gabriela-palai-507410.jpg
 date: 2021-11-24 10:56
-description: Steampipe is a great tool that you should have in your IaC toolbox.  Learn about how to use it with OCI here!
+description: Steampipe is a great tool that you should have in your IaC toolbox.  Learn
+  about how to use it with OCI here!
 toc: true
 author: jon-decamp
+mrm: WWMK211125P00011
 ---
 *[OCI]: Oracle Cloud Infrastructure
 

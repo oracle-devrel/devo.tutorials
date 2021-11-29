@@ -1,6 +1,8 @@
 ---
 title: Why Infrastructure as Code?
-parent: [tutorials, tf-101]
+parent:
+- tutorials
+- tf-101
 sidebar: series
 tags:
 - open-source
@@ -18,6 +20,7 @@ description: Heard about Infrastructure as Code (IaC) but not sure what it's abo
 toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/1-why-iac/"
+mrm: WWMK211117P00010
 ---
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 

@@ -1,19 +1,22 @@
 ---
-title: Installation Guide for OCI Monitoring 
+title: Installation Guide for OCI Monitoring
 parent: tutorials
-categories: [modernize]
+categories:
+- modernize
 toc: true
 tags:
-- ansible 
+- ansible
 - data-visualization
 - data-management
 personas:
 - backend
 date: 2021-11-18 09:42
-description: This tutorial walks you through configuring a basic OCI monitoring solution with components based on Ansible in Oracle Linux 8.
-author: 
+description: This tutorial walks you through configuring a basic OCI monitoring solution
+  with components based on Ansible in Oracle Linux 8.
+author:
   name: Martin Berger
   github: martinberger-ch
+mrm: WWMK211125P00018
 ---
 {% slides %}
 # An Installation Guide for OCI Monitoring

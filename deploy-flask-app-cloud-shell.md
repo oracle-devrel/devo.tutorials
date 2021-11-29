@@ -12,6 +12,7 @@ date: 2021-10-11 01:00
 description: Setting up a Kubernetes cluster using Oracle Cloud, and deploying a Python
   application with Flask framework using Cloud Shell.
 redirect_from: "/collections/tutorials/deploy-flask-app-cloud-shell/"
+mrm: WWMK210625P00048
 ---
 {% slides %}
 

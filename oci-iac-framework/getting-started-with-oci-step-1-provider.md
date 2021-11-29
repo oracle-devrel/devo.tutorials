@@ -1,15 +1,25 @@
 ---
 title: Automating OCI with Terraform
-parent: [tutorials,oci-iac-framework]
+parent:
+- tutorials
+- oci-iac-framework
 redirect_from: "/tutorials/7-steps-to-oci/getting-started-with-oci-step-1-provider"
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/landing-zone.png
-date: 2021-10-26 19:00:00
-description: You want to know how you can automate tasks on OCI - here you can find a short deep dive into automation with Terraform
+description: You want to know how you can automate tasks on OCI - here you can find
+  a short deep dive into automation with Terraform
 toc: true
 author: kubemen
 date: 2021-10-29 08:00
+mrm: WWMK211125P00022
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

@@ -1,9 +1,15 @@
 ---
 title: Extending Terraform OKE with a helm chart
-parent: [tutorials]
-tags: [kubernetes, devops, terraform]
+parent:
+- tutorials
+tags:
+- kubernetes
+- devops
+- terraform
 date: 2021-10-28 12:00
-description: Extend a sample repo with your own extensions to make reusable provisioning scripts.
+description: Extend a sample repo with your own extensions to make reusable provisioning
+  scripts.
+mrm: WWMK211125P00024
 ---
 {% slides %}
 When designing the [Terraform OKE](https://github.com/oracle/sample-oke-for-terraform) provisioning scripts, one of the things we wanted to do is making it reusable. That means extending the base sample repo and add in your own extensions.

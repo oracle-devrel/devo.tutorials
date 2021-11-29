@@ -6,9 +6,12 @@ tags:
 - open-source
 - machine-learning
 date: 2021-11-18 09:45
-categories: [cloudapps]
-description: This walk-through will guide you through setting up your environment to run HopsWorks with OCI.
+categories:
+- cloudapps
+description: This walk-through will guide you through setting up your environment
+  to run HopsWorks with OCI.
 author: olivier
+mrm: WWMK211125P00017
 ---
 {% slides %}
 In this walk-through you'll configure your environment to run HopsWorks in Oracle Cloud Infrastructure.

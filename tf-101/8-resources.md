@@ -1,6 +1,8 @@
 ---
 title: More Terraform Resources
-parent: [tutorials, tf-101]
+parent:
+- tutorials
+- tf-101
 sidebar: series
 tags:
 - open-source
@@ -17,6 +19,7 @@ description: A curated list of helpful resources for expanding your knowledge of
 toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/8-resources/"
+mrm: WWMK211117P00010
 ---
 
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

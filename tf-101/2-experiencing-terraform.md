@@ -1,6 +1,8 @@
 ---
 title: Experiencing Terraform
-parent: [tutorials, tf-101]
+parent:
+- tutorials
+- tf-101
 sidebar: series
 tags:
 - open-source
@@ -17,6 +19,7 @@ description: Experience the power of Terraform through a short project.
 toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/2-experiencing-terraform/"
+mrm: WWMK211117P00010
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

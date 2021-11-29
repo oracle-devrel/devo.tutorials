@@ -1,6 +1,8 @@
 ---
 title: Terraform Variables
-parent: [tutorials, tf-101]
+parent:
+- tutorials
+- tf-101
 sidebar: series
 tags:
 - open-source
@@ -18,6 +20,7 @@ toc: true
 author: tim-clegg
 published: true
 redirect_from: "/collections/tutorials/4-variables/"
+mrm: WWMK211117P00010
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
