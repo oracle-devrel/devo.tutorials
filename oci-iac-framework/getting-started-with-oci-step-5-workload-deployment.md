@@ -12,7 +12,7 @@ draft: true
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-Best practice from Oracle for workload on OCI is to use the concept of an operator host to install and maintain the service application and configuration for the workload. 
+Best practice from Oracle for workload on OCI is to use the concept of an operator host to install and maintain the service application and configuration for the workload.
 
 As the number of applications and needed configurations varies, the goal of this step is to dig a bit deeper in the concept of the operator host and which configuration and automation tools can be used on OCI to deploy your workload.  
 
@@ -22,12 +22,12 @@ The aim of the operator host is:
 2. Provide administrators access without the need to upload api authentication keys (instance_principal).  
 
 ### Access to Operator Host
-As described in the base section, OCI provides the ability to use a bastion service for a controlled and secure access to ressources in your tenancy. 
+As described in the base section, OCI provides the ability to use a bastion service for a controlled and secure access to ressources in your tenancy.
 
 The operator host concept leverages this service, providing administrators and application hosts a quick and secure mechanism to access a system which can run scripts or any automation tool for maintaining and operating the services.
 
 ## OCI Tool Support for automation & configuration management
-The use of Terraform is mostly in defining the infrastructure to host the applications for the service. Terraform itself is not naturally designed to do certain application installation or configuration tasks. 
+The use of Terraform is mostly in defining the infrastructure to host the applications for the service. Terraform itself is not naturally designed to do certain application installation or configuration tasks.
 
 Oracle is not recommending to use any of the described tools as the right way to go for customers or prospects - instead Oracle is describing how to use the most commons tools on the market in combination with Terraform to provide and guide customers with best practices. It is up to the customer and their requirements to define which is the tool combination for their individual workload and which best fulfills their needs.
 
@@ -58,7 +58,7 @@ The oci_config module extends the Puppet language to contain types needed to cre
 - You need tighter integration between OCI configuration in general and the configuration management on your systems. Again, this module is for you. It is regular Puppet so you can use all of the rich Puppet features like exported resources to integrate all of your configuration settings both on the cloud level as well as on the machines.
 
 **Puppet example code:**  
-Configuration of using a tenant: 
+Configuration of using a tenant:
 ```
 $ puppet apply /software/tenant_setup.pp
 Notice: Compiled catalog for oci in environment production in 0.09 seconds
@@ -82,7 +82,7 @@ oci_identity_compartment { 'your_tenant (root)/ManagedCompartmentForPaaS':
   id              => 'ocid1.compartment.oc1..aaaaaaaai2wkrvdvyxfuekjbt3jnv7b4hrlkvwnklu6uryy2daqsq425tzaa',
   lifecycle_state => 'ACTIVE',
   provider        => 'sdk',
-  time_created    => '2019-10-24T08:42:26+00:00',
+  time_created    => '2021-11-24T08:42:26+00:00',
 }
 oci_identity_compartment { 'your_tenant (root)/test_compartment_1':
   ensure          => 'present',
@@ -92,7 +92,7 @@ oci_identity_compartment { 'your_tenant (root)/test_compartment_1':
   id              => 'ocid1.compartment.oc1..aaaaaaaatfskqfckrl4sucabclbsss47uyttlmwwur6lsm7crl3lrz7glfta',
   lifecycle_state => 'ACTIVE',
   provider        => 'sdk',
-  time_created    => '2020-01-23T15:42:35+00:00',
+  time_created    => '2021-11-24T15:42:35+00:00',
 }
 ```
 *(available via [this link] (https://www.enterprisemodules.com/blog/2020/02/getting-to-know-oracle-cloud-with-puppet-part-1/))*
@@ -313,7 +313,7 @@ resource "helm_release" "kafkaconnect" {
 
 #Output the public IP addresses of the helm-chart generated service load balancers
 resource "time_sleep" "wait_120_seconds" {
-  depends_on = [helm_release.hivemq] 
+  depends_on = [helm_release.hivemq]
   create_duration = "120s"
 }
 
@@ -360,7 +360,7 @@ NAME                                                READY   STATUS             R
 pod/hivemq-cluster-59c44cdb59-fpvb9                 1/1     Running            0          61m
 pod/hivemq-cluster-59c44cdb59-nw6dd                 1/1     Running            0          61m
 pod/hivemq-cluster-59c44cdb59-txrt5                 1/1     Running            0          61m
-pod/oss-kafka-connect-deployment-5f87774458-gbr9s   0/1     CrashLoopBackOff   11         61m
+pod/oss-kafka-connect-deployment-5f87774458-gbr9s   0/1     Running            11         61m
 pod/oss-kafka-connect-deployment-5f87774458-qnmgr   1/1     Running            12         61m
 pod/oss-kafka-connect-deployment-5f87774458-zcgpt   1/1     Running            12         61m
 pod/wallet-extractor-job-9j8xl                      0/1     Completed          0          61m
@@ -373,7 +373,7 @@ service/oss-kafka-connect-service   LoadBalancer   10.96.114.200   129.159.74.13
 
 
 
-[< app-infra][app-infra] | [+][home] | [governance >][governance] 
+[< app-infra][app-infra] | [+][home] | [governance >][governance]
 
 <!--- Links -->
 [home]:       index
