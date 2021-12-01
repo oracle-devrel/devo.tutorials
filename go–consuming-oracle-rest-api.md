@@ -1,17 +1,21 @@
 ---
-title: GoLang–Consuming Oracle REST API from an Oracle Cloud Database 
-parent: [tutorials]
+title: GoLang–Consuming Oracle REST API from an Oracle Cloud Database
+parent:
+- tutorials
 toc: true
-tags: 
-  - oci
-  - go
-  - back-end
-  - machine-learning
-categories: [ai-ml]
+tags:
+- oci
+- go
+- back-end
+- machine-learning
+categories:
+- ai-ml
 date: 2021-11-18 19:42
-description: Brendan Tierney shares a method to call an in-database machine learning model and then process the data it returns using GoLang.
-author: 
-    name: Brendan Tierney
+description: Brendan Tierney shares a method to call an in-database machine learning
+  model and then process the data it returns using GoLang.
+author:
+  name: Brendan Tierney
+mrm: WWMK211125P00014
 ---
 Does anyone write code to access data in a database anymore (and by code I mean SQL)?  The answer to this question is "it depends," just like everything in IT.
 

@@ -3,10 +3,13 @@ title: Creating flexible OCI Load Balancers with OKE
 parent: tutorials
 tags:
 - kubernetes
-categories: [clouddev]
+categories:
+- clouddev
 date: 2021-11-02 16:17
-description: New load balancer shapes mean more options to optimize your configuration. Ali walks you through how to create these shapes using OKE.
+description: New load balancer shapes mean more options to optimize your configuration.
+  Ali walks you through how to create these shapes using OKE.
 author: Ali Mukadam
+mrm: WWMK211125P00019
 ---
 Until recently, the OCI Load Balancer shapes were fairly restricted to a handful of options:
 

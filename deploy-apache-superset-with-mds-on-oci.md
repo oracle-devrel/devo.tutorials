@@ -1,6 +1,6 @@
 ---
 title: Deploy Apache Superset with MySQL Database Service on Oracle Cloud Infrastructure
-parent: tutorials
+parent: [tutorials]
 tags:
 - data-management
 - front-end
@@ -13,12 +13,13 @@ date: 2021-10-20 09:18
 description: Deploy Open Source BI, reporting tool on OCI using MySQL Databse Service.
 categories:
 - cloudapps
-author: 
+author:
   name: lefred
   home: https://lefred.be/
   linkedin: freddescamps
   twitter: lefred
   github: lefred
+mrm: WWMK211123P00031
 ---
 
 It's easy to deploy solutions on OCI (Oracle Cloud Infrastructure) using Terraform and Resource Manager’s Stack. I’ve published several resources available on [this page](https://lefred.be/deploy-to-oci/).

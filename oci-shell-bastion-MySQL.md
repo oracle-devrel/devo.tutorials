@@ -11,8 +11,10 @@ categories:
 - cloudapps
 thumbnail: assets/sql-dolphin.png
 date: 2021-10-26 16:48
-description: Recently, Oracle added a Bastion Service to OCI. This tutorial walks you through using this service with OCI Cloud Shell.
+description: Recently, Oracle added a Bastion Service to OCI. This tutorial walks
+  you through using this service with OCI Cloud Shell.
 author: lefred
+mrm: WWMK211125P00026
 ---
 
 Recently, Oracle added a Bastion Service to OCI. And you may also have noticed that the OCI Dashboard offers you the possibility to use a browser based terminal: Cloud Shell.

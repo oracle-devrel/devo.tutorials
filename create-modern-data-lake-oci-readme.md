@@ -1,12 +1,18 @@
 ---
 title: Deploy a modern data lake on OCI
-parent: [tutorials]
-description: Using Terraform to create a data lake on Oracle Cloud Infrastructure. 
+parent:
+- tutorials
+description: Using Terraform to create a data lake on Oracle Cloud Infrastructure.
 thumbnail: assets/datalakeocichart_4481-9331b237844018b1.png
 author: Ali Mukadam
-tags: [kubernetis, devops, terraform, oci]
+tags:
+- kubernetis
+- devops
+- terraform
+- oci
 category: clouddev
 date: 2021-10-29 12:00
+mrm: WWMK211125P00021
 ---
 {% imgx aligncenter assets/datalakeocichart_4481-9331b237844018b1.png "OCI Datalake Architecture Overview" %}
 

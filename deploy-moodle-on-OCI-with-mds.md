@@ -11,8 +11,11 @@ categories:
 - cloudapps
 thumbnail: assets/moodle-database-dropdown.png
 date: 2021-10-27 09:12
-description: MDS (MySQL Database Service) and Moodle are a perfect match for OCI. In this tutorial, you'll learn how to deploy this popular learning management system with OCI.
+description: MDS (MySQL Database Service) and Moodle are a perfect match for OCI.
+  In this tutorial, you'll learn how to deploy this popular learning management system
+  with OCI.
 author: frederic-descamps
+mrm: WWMK211125P00025
 ---
 
 [Moodle](https://moodle.org/) is the world’s most popular learning management system. Moodle is Open Source and of course it’s compatible with the most popular Open Source Database : MySQL!

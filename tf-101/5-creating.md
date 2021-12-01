@@ -1,6 +1,8 @@
 ---
 title: Creating Resources with Terraform
-parent: [tutorials, tf-101]
+parent:
+- tutorials
+- tf-101
 sidebar: series
 tags:
 - open-source
@@ -18,6 +20,7 @@ description: How to create resources using Terraform.
 toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/5-creating/"
+mrm: WWMK211117P00010
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

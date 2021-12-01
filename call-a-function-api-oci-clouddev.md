@@ -1,12 +1,20 @@
 ---
 title: Call a Function using API Gateway
-categories: [clouddev, cloudapps, enterprise]
-description: Using Oracle functions to process data via an Oracle API Gateway, and creating a python function to extract HTTP information.
+categories:
+- clouddev
+- cloudapps
+- enterprise
+description: Using Oracle functions to process data via an Oracle API Gateway, and
+  creating a python function to extract HTTP information.
 thumbnail: assets/call-a-func-oracle-funcs-api-gtw-diagram.png
 sort: desc
-tags: [python, apigateway, oci]
+tags:
+- python
+- apigateway
+- oci
 parent: tutorials
 date: 2021-11-20 12:01
+mrm: WWMK211125P00013
 ---
 {% slides %}
 In this tutorial, you will use Oracle Functions to process data passed from an Oracle API Gateway. You will create a Python function that uses the runtime context to extract HTTP information passed in a request.

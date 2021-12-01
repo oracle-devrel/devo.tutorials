@@ -1,12 +1,19 @@
 ---
 title: Installing and using Calico on Oracle Container Engine (OKE)
-parent: [tutorials]
-tags: [oke, devops]
-categories: [cloudapps, opensource]
+parent:
+- tutorials
+tags:
+- oke
+- devops
+categories:
+- cloudapps
+- opensource
 thumbnail: assets/calico-on-oracle-graph.png
 date: 2021-11-24 13:16
-description: Ali walks you through configuring OKE with Calico, an open-source networking tool for Kubernetes.
+description: Ali walks you through configuring OKE with Calico, an open-source networking
+  tool for Kubernetes.
 author: ali-mukadam
+mrm: WWMK211125P00010
 ---
 There are many [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model) options for Kubernetes. Two of the most popular are:
 

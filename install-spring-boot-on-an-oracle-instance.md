@@ -17,6 +17,7 @@ description: Use an Oracle Cloud Infrastructure Free Tier account to set up an O
   and access your new app from the internet.
 modified: 2021-09-22 18:10
 redirect_from: "/collections/tutorials/install-spring-boot-on-an-oracle-instance/"
+mrm: WWMK211117P00090
 ---
 {% slides %}
 

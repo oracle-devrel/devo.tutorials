@@ -1,6 +1,8 @@
 ---
 title: Understanding The Basics Of Terraform
-parent: [tutorials, tf-101]
+parent:
+- tutorials
+- tf-101
 sidebar: series
 tags:
 - open-source
@@ -18,6 +20,7 @@ description: Let's go through some of the foundational concepts you should under
 author: tim-clegg
 published: true
 redirect_from: "/collections/tutorials/3-understanding-terraform-basics/"
+mrm: WWMK211117P00010
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

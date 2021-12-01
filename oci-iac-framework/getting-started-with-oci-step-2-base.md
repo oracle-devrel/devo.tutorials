@@ -1,14 +1,24 @@
 ---
 title: Service Delivery Framework
-parent: [tutorials,oci-iac-framework]
+parent:
+- tutorials
+- oci-iac-framework
 redirect_from: "/tutorials/7-steps-to-oci/getting-started-with-oci-step-2-base"
-tags: [open-source, terraform, iac, devops, beginner]
-categories: [iac, opensource]
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- beginner
+categories:
+- iac
+- opensource
 thumbnail: assets/landing-zone.png
-date: 2021-10-29 11:00:00
+date: 2021-10-29 11:00
 description: How to deploy a landing zone in OCI
 toc: true
 author: kubemen
+mrm: WWMK211125P00022
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

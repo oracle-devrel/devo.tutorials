@@ -1,16 +1,27 @@
 ---
 title: Modernizing the Healthcare platform with a GraalVM Proof of Value
-parent: [tutorials]
-tags: [graalvm, devops]
-categories: [clouddev, modernize]
+parent:
+- tutorials
+tags:
+- graalvm
+- devops
+categories:
+- clouddev
+- modernize
 thumbnail: assets/modernize-healthcare-ambulance.jpeg
 date: 2021-11-24 10:11
-description: Ali makes the case for GraalVM in the healthcare industry by diving deep into a couple strategic solutions.
+description: Ali makes the case for GraalVM in the healthcare industry by diving deep
+  into a couple strategic solutions.
 author:
   name: Ali Mukadam
   home: https://lmukadam.medium.com
-  bio: For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management).
+  bio: For the past 16 years, Ali has held technical presales, architect and industry
+    consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware
+    and application development. Although he pretends to be Thor, his real areas of
+    expertise are Application Development, Integration, SOA (Service Oriented Architecture)
+    and BPM (Business Process Management).
   linkedin: alimukadam
+mrm: WWMK211125P00012
 ---
 
 {% imgx alignright assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}
