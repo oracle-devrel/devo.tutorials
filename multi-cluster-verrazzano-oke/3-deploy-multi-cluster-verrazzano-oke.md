@@ -8,29 +8,20 @@ date: 2021-12-3 09:11
 description: How to deploy Verrazzano an OKE cluster.
 color: purple
 mrm: WWMK211123P00031
-author:
-  name: Ali Mukadam
-  home: https://lmukadam.medium.com
-  bio: |-
-    Technical Director, Asia Pacific Center of Excellence.
-
-    For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
-  linkedin: https://www.linkedin.com/in/alimukadam/
-
+author: ali-mukadam
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
-
-In [Part 1](1-deploying-verrazzano-on-oke), we discussed setting up the network infrastructure for a multi-cluster [Verrazzano ](https://verrazzano.io/)deployment. In this article, we will configure the clusters so they behave as a kind of global cluster. Below is the multi-clustering process depicted graphically:
+In [Part 1](1-deploying-verrazzano-on-oke), we discussed setting up the network infrastructure for a multi-cluster [Verrazzano](https://verrazzano.io/)deployment. In this article, we will configure the clusters so they behave as a kind of global cluster. Below is the multi-clustering process depicted graphically:
 
 {% imgx aligncenter assets/vNjGKLaGatczobm2O5Ycdw.png 1076 630 "Verrazzano multi-cluster deployment and registration process" "Verrazzano multi-cluster deployment and registration process" %}
-
 
 Recall that a Verrazzano multi-cluster has 1 Admin cluster and 1 or more managed clusters and that each Verrazzano cluster is a Kubernetes cluster:
 
 {% imgx aligncenter assets/5i_215fK15AiaYSz.png 535 413 "Verrazzano multi-cluster architecture" "Verrazzano multi-cluster architecture" %}
 
 Also, remember we have the following setup:
+
 {% imgx aligncenter assets/695/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote peering with different regions" "Remote peering with different regions using star architecture for managed clusters" %}
 
 Plus, we chose the Admin server to be in the Singapore OCI region.
@@ -40,27 +31,35 @@ We will install Verrazzano with dev/prod profile on the Admin cluster and with m
 ### Note on using kubectx
 
 In the commands below, I use kubectx to set the Kubernetes context where a context is equivalent to a Kubernetes cluster. Strictly speaking that’s not true but it serves our purpose here. Since we have 1 Admin servers and 3 managed servers in 4 different regions, we have 4 different contexts:
+
 {% imgx aligncenter assets/8IaaB1P-hc9P6vjffKZaDA.png 700 121 "Verifying your Kubernetes context" "Verifying your Kubernetes context" %}
 
-To ensure we are always using the correct context, I execute the kubectx `<context-name>` before every command.
+To ensure we are always using the correct context, I execute the `kubectx <context-name>` before every command.
 
 ## Installing Verrazzano as Admin
 
 Installing Verrazzano as the Admin cluster is straightforward. You follow the [quickstart guide](https://verrazzano.io/docs/quickstart/) and you can choose between the dev/prod profile. On the operator host, ensure your context is pointing to “admin”:
+
 {% imgx aligncenter assets/700/8IaaB1P-hc9P6vjffKZaDA.png 700 121 "Verifying your Kubernetes context" "Verifying your Kubernetes context" %}
 
 
 If it’s pointing to one of the other clusters, change it as follows:
 
-    `kubectx admin`
+```console
+kubectx admin
+```
 
 We can now begin the installation:
 
-    `kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yaml`
+```console
+kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yaml
+```
 
 Wait for the deployment to finish:
 
-    `kubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator`
+```console
+kubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
+```
 
 And confirm the operator pods are working correctly:
 
@@ -136,7 +135,9 @@ Repeat the verification for each managed cluster.
 
 Verify the the CA certificate type for each managed cluster:
     
-    `kubectx sydneykubectl -n verrazzano-system get secret system-tls -o jsonpath**=**'{.data.ca\.crt}'`
+```console
+kubectx sydneykubectl -n verrazzano-system get secret system-tls -o jsonpath**=**'{.data.ca\.crt}'
+```
 
 If this value is empty, then your managed cluster is using certificates signed by a well-known certificate authority and you can generate a secret containing the CA certificate in YAML format. If it’s not empty, then the certificate is self-signed and needs to be extracted. Refer to the workflow at the beginning of this article.
 
@@ -162,7 +163,9 @@ kubectl apply -f managedtokyo.yaml
 
 Get the cluster name for the Admin Cluster:
     
-    `kubectl config get contexts`
+```console
+kubectl config get contexts
+```
 
 {% imgx aligncenter assets/AHjsVsuj0gcjB0RNKCNVIQ.png 700 132 "Cluster names" "Cluster names" %}
 
@@ -268,11 +271,8 @@ Navigate to the Verrazzano console, login and you should be able to see all 3 cl
 Similarly, on the Rancher console, you should be able to see all 4 clusters:
 {% imgx aligncenter assets/v3E0CZxe1nF3Ni80qCB7tg.png 700 173 "Admin and managed clusters in Rancher" "Admin and managed clusters in Rancher" %}
 
-“local” is the Admin cluster whereas the others are the managed clusters.
+"local" is the Admin cluster whereas the others are the managed clusters.
 
 ## Conclusion
 
 This concludes the execise of connecting the OKE clusters deployed in different regions into a multi-cluster Verrazzano deployment. Note that in this post, we did not configure things like DNS, Certificates, Ingress Controller etc. Our aim is to get the multi-cluster configuration going. In a future post, we will look at those other things as well.
-
-Stay tuned for Part 3.
-

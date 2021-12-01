@@ -9,11 +9,10 @@ description: How to deploy Verrazzano an OKE cluster.
 color: purple
 mrm: WWMK211123P00031
 author: ali-mukadam
-redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
-Oracle recently released [Verrazzano](https://verrazzano.io/), an "end-to-end container platform to deploy cloud native and traditional applications in multi-cloud and hybrid environments." If that’s a lot to take in, it’s because Verrazzano, (v8o for short) packs a lot. In this post, we will explore deploying Verrazzano on [OKE (Oracle Container Engine)](https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top).
+Oracle recently released [Verrazzano](https://verrazzano.io/), an "end-to-end container platform to deploy cloud native and traditional applications in multi-cloud and hybrid environments." If that’s a lot to take in, it’s because Verrazzano, (v8o for short) packs a lot. In this post, we will explore deploying Verrazzano on [Oracle Container Engine](https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top) (OKE).
 
 The single cluster deployment model is easy:
 
@@ -98,8 +97,6 @@ $ kubectl wait \
 
 In order to access Verrazzano, you need to get the console URL:
 
-<!--EDIT-->
-
 ```console
 $ kubectl get vz -o yaml
 ```
@@ -113,7 +110,7 @@ Access this url in your browser and you will be prompted to login:
 The username is `verrazzano` and you can obtain the password by issuing the following command:
 
 ```console
-kubectl get secret \
+$ kubectl get secret \
     --namespace verrazzano-system verrazzano \
     -o jsonpath={.data.password} | base64 \
     --decode; echo
@@ -128,51 +125,51 @@ You should now be able to access the Verrazzano console:
 We will deploy the hello-helidon application. First, create a namespace:
 
 ```console
-kubectl create namespace hello-helidon
+$ kubectl create namespace hello-helidon
 ```
 
 and add labels to identify the namespace as managed by Verrazzano and enabled for Istio:
 
 ```console
-kubectl label namespace hello-helidon verrazzano-managed=true istio-injection=enabled
+$ kubectl label namespace hello-helidon verrazzano-managed=true istio-injection=enabled
 ```
 
 Next, deploy the Verrazzano [component](https://verrazzano.io/docs/applications/#components):
 
 ```console
-kubectl apply -f https://raw.githubusercontent.com/verrazzano/verrazzano/master/examples/hello-helidon/hello-helidon-comp.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/verrazzano/verrazzano/master/examples/hello-helidon/hello-helidon-comp.yaml
 ```
 
 Then create the [Application Configuration](https://verrazzano.io/docs/applications/#application-configurations):
 
 ```console
-kubectl apply -f https://raw.githubusercontent.com/verrazzano/verrazzano/master/examples/hello-helidon/hello-helidon-app.yaml
+$ kubectl apply -f https://raw.githubusercontent.com/verrazzano/verrazzano/master/examples/hello-helidon/hello-helidon-app.yaml
 ```
 You can now get the name of your pod:
 
-```bash
+```console
 $ kubectl get pods -n hello-helidon
 NAME                                        READY   STATUS    RESTARTS   AGEhello-helidon-deployment-54979d7d74-6c9nw   1/1     Running   0          2m18s
 ```
 
 And check if the application is ready:
 
-```bash
+```console
 $ kubectl wait — timeout=300s — for=condition=Ready -n hello-helidon pod/hello-helidon-deployment-54979d7d74–6c9nw
 pod/hello-helidon-deployment-54979d7d74-6c9nw condition met
 ```
 
 Lookup the hostname of the load balancer:
 
-```bash
-HOST=$(kubectl get gateway hello-helidon-hello-helidon-appconf-gw \
+```console
+$ HOST=$(kubectl get gateway hello-helidon-hello-helidon-appconf-gw \
     -n hello-helidon \
     -o jsonpath='{.spec.servers[0].hosts[0]}')
 ```   
 
 You can then test the application:
 
-```bash
+```console
 $ curl -sk \
     -X GET \
     "https://${HOST}/greet"
@@ -180,7 +177,7 @@ $ curl -sk \
 
 This should return you the following:
 
-```bash
+```console
 {"message":"Hello World!"}
 ```
 
@@ -202,7 +199,7 @@ From here, you can create your own visualizations and dashboards.
 What if we want to peek at the Kubernetes cluster itself? Again, Verrazzano has got you covered. From the Verrazzano console, locate the link to Rancher and click on it. The default username is "admin" and you can retrieve the password as follows:
 
 ```console
-kubectl get secret \
+$ kubectl get secret \
     --namespace cattle-system rancher-admin-secret \
     -o jsonpath={.data.password} | base64 \
     --decode; echo
