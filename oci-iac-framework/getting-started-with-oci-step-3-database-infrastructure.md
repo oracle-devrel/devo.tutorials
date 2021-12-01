@@ -14,7 +14,7 @@ mrm: WWMK211201P00070
 
 # Overview of the Oracle Database Cloud Service
 
-{% imgx aligncenter assets/assets/dbcs_overview.png 1200 494 "Database System Overview" "Database System Overview" %}
+{% imgx aligncenter /assets/dbcs_overview.png 1200 494 "Database System Overview" "Database System Overview" %}
 
 The Oracle Database Cloud Service offers autonomous and co-managed Oracle Database cloud solutions. Autonomous databases are preconfigured, fully-managed environments that are suitable for either transaction processing or for data warehouse workloads. Co-managed solutions are virtual machine and Exadata DB systems that you can customize with the resources and settings that meet your needs.
 
@@ -45,7 +45,7 @@ In addition to our Oracle Database Cloud Solution (DBCS) we also offer managed M
 
 ### Cloud automation under customer control - provisioning, patching, backup, disaster recovery
 
-{% imgx aligncenter assets/assets/assets/dbcs_features.png 1200 737 "DBCS Features" "DBCS Features" %}
+{% imgx aligncenter /assets/dbcs_features.png 1200 737 "DBCS Features" "DBCS Features" %}
 
 # Database Cloud Service Provisioning using Terraform and OCI Resource Manager
 
@@ -68,7 +68,7 @@ Before we create a DBCS on VM resource, we'll set up a Compartment, a Virtual Cl
 
 Instructions on how to deploy OCloud Landing Zone can be found [here](https://github.com/oracle-devrel/terraform-oci-ocloud-landing-zone).
 
-{% imgx aligncenter assets/assets/assets/ocloud_dbcs_architecture.png 1200 648 "DBCS Architecture" "DBCS Architecture" %}
+{% imgx aligncenter /assets/ocloud_dbcs_architecture.png 1200 648 "DBCS Architecture" "DBCS Architecture" %}
 
 
 Policies for the Database Compartment allow members of the dbops group to create database subnets and to manage database-family resources:
