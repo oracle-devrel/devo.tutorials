@@ -4,7 +4,7 @@ parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-11-12 12:00:00
+date: 2021-12-01 12:00:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
@@ -29,13 +29,15 @@ For details about each offering, start with the following overview topics:
 The Database service offers Oracle's [Autonomous Databases](https://docs.oracle.com/en-us/iaas/Content/Database/Concepts/adboverview.htm#Overview_of_Autonomous_Databases) with transaction processing and data warehouse workload types.
 
 **Co-managed Systems**
+
 - [Virtual Machine DB Systems](https://docs.oracle.com/en-us/iaas/Content/Database/Concepts/overview.htm#Bare)
 - [Exadata Cloud Service](https://docs.oracle.com/en-us/iaas/Content/Database/Concepts/exaoverview.htm#Exadata_DB_Systems)
 - [Exadata Cloud@Customer](https://docs.oracle.com/en-us/iaas/exadata/index.html)
 
 ## Database Cloud Service on Virtual Machine
 
-Database Cloud Service offers full-featured Oracle Database cloud instances
+Database Cloud Service offers full-featured Oracle Database cloud instances:
+
 - Enterprise Edition or Standard Edition 2
 - Multiple Oracle Database versions, including [21c](https://blogs.oracle.com/database/post/introducing-oracle-database-21c)
 - 4 tiers of Oracle Database License Included options or Bring Your Own License
@@ -52,6 +54,7 @@ In addition to our Oracle Database Cloud Solution (DBCS) we also offer managed M
 Database Cloud Service on VM is an exceptional entry into the world of cloud-supported database services. First, you keep full control of your database servers and databases, plus the service includes many convenience functions, which simplify and accelerate the creation and configuration of database systems. Furthermore, with a few clicks your database can be enhanced with more features to accommodate growing demands or required adjustments. This includes CPU and storage scaling, or the creation of a standby database through Data Guard.
 
 When creating a Database Cloud Service on VM all the cloud resources you need to get a fully operational database instance going are provisioned:
+
 - Compute instance instantiates a Real Application Cluster (RAC)
 - Block storage is made available to the database nodes
 - Object Store is used to store automated and manual backups
@@ -279,6 +282,7 @@ stack_id = "ocid1.ormstack.oc1.eu-frankfurt-1.aaaaaaaaqyekvuodrozodmn23zxi…"
 ```
 
 OCloud DBCS on VM Stack supports other ways to deploy a database system, but they're not the subject of this session:
+
 -	Deploy a Database System into an existing subnet
 -	Overwrite Organization, Project and Environment labels which were defined by the corresponding OCloud Landing Zone
 -	Customize all stack parameters
@@ -311,6 +315,7 @@ Copy the SSH command from OCI console (Bastion Session) to create an SSH tunnel 
 ```console
 ssh -i <private key file path> -N -L <local port>:<database node ip address>:22 -p 22 <bastion session OCID>@host.bastion.eu-frankfurt-1.oci.oraclecloud.com
 ```
+
 To ssh to the DB Node use the following command:
 
 ```console
@@ -360,12 +365,6 @@ We successfully provisioned a Database Cloud Service on VM Database instance. Fr
 
 Happy building!
 
-
-
-
-[< base][base] | [+][home] | [app-infra >][app-infra]
-
-<!--- Links -->
 [home]:       index
 [intro]:      getting-started-with-oci-intro.md
 [provider]:   getting-started-with-oci-step-1-provider

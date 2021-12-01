@@ -10,7 +10,7 @@ author: kubemen
 tags: [open-source, terraform, iac, devops, beginner]
 sort: asc
 color: purple
-date: 2021-10-29 11:00:00
+date: 2021-12-01 11:00:00
 ---
 
 {% imgx aligncenter assets/landing-zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}
