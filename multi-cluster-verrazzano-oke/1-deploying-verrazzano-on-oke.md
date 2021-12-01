@@ -8,14 +8,7 @@ date: 2021-12-03 09:11
 description: How to deploy Verrazzano an OKE cluster.
 color: purple
 mrm: WWMK211123P00031
-author:
-  name: Ali Mukadam
-  home: https://lmukadam.medium.com
-  bio: |-
-    Technical Director, Asia Pacific Center of Excellence.
-
-    For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
-  linkedin: https://www.linkedin.com/in/alimukadam/
+author: ali-mukadam
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
@@ -23,6 +16,7 @@ redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 Oracle recently released [Verrazzano](https://verrazzano.io/), an "end-to-end container platform to deploy cloud native and traditional applications in multi-cloud and hybrid environments." If that’s a lot to take in, it’s because Verrazzano, (v8o for short) packs a lot. In this post, we will explore deploying Verrazzano on [OKE (Oracle Container Engine)](https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top).
 
 The single cluster deployment model is easy:
+
 - Create a Kubernetes cluster
 - Install the Verrazzano platform operator
 - Install Verrazzano
@@ -30,9 +24,10 @@ The single cluster deployment model is easy:
 After this, you can deploy your application of choice.
 
 ## Creating the OKE cluster
+
 We will start by creating the OKE cluster using [Terraform OKE module](https://github.com/oracle-terraform-modules/terraform-oci-oke). Since we are only taking Verrazzano for a spin, we only need the bare minimum features. Follow the [quickstart](https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/quickstart.adoc) guide, create the providers and create a copy of the terraform.tfvars.example and rename the copy to terraform.tfvars. Ensure the following features/resources are enabled/created:
 
-```console
+```terraform
 create_bastion_host = true
 bastion_access = ["anywhere"]
 create_operator                    = true
@@ -56,20 +51,20 @@ From here onwards, all kubectl commands are executed on the operator host.
 
 Let’s first install the Verrazzano operator:
 
-```bash
+```console
 $ kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.1/operator.yaml
 ```
 
 and wait for the deployment to complete:
 
-```bash
+```console
 $ kubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
-Waiting for deployment “verrazzano-platform-operator” rollout to finish: 0 of 1 updated replicas are available…
+Waiting for deployment "verrazzano-platform-operator" rollout to finish: 0 of 1 updated replicas are available...
 ```
 
 Give it a couple of minutes and the operator should have deployed by then. Verify that the operator is running:
 
-```bash
+```console
 $ kubectl -n verrazzano-install get pods
 NAME                                            READY   STATUS    RESTARTS   AGE
 verrazzano-platform-operator-5f788568fd-w8cz7   1/1     Running   0          80s
@@ -80,7 +75,7 @@ verrazzano-platform-operator-5f788568fd-w8cz7   1/1     Running   0          80s
 We can now install Verrazzano. We will use the dev profile for this exercise:
 
 ```console
-kubectl apply -f - <<EOF
+$ kubectl apply -f - <<EOF
 apiVersion: install.verrazzano.io/v1alpha1
 kind: Verrazzano
 metadata:
@@ -93,7 +88,7 @@ EOF
 We need to wait for Verrazzano to install:
 
 ```console
-kubectl wait \
+$ kubectl wait \
     --timeout=20m \
     --for=condition=InstallComplete \
     verrazzano/
@@ -103,7 +98,9 @@ kubectl wait \
 
 In order to access Verrazzano, you need to get the console URL:
 
-```bash
+<!--EDIT-->
+
+```console
 $ kubectl get vz -o yaml
 ```
 

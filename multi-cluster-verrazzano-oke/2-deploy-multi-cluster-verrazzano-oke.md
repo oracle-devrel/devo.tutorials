@@ -8,22 +8,14 @@ date: 2021-12-03 09:11
 description: How to deploy Verrazzano an OKE cluster.
 color: purple
 mrm: WWMK211123P00031
-author:
-  name: Ali Mukadam
-  home: https://lmukadam.medium.com
-  bio: |-
-    Technical Director, Asia Pacific Center of Excellence.
-
-    For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
-  linkedin: https://www.linkedin.com/in/alimukadam/
-
+author: ali-mukadam
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
 
 In a [previous article](1-deploying-verrazzano-on-oke), we took a brief look at Verrazzano and took it for a quick spin on Oracle Container Engine for Kubernetes (OKE). In this article, we are going to deploy a multi-cluster Verrazzano on OKE. To make things interesting, we will also do that using different OCI regions.
 
-First, a little digression into WebLogic and Kubernetes and then we’ll discuss Verrazzano.
+First, a little digression into WebLogic and Kubernetes and then we'll discuss Verrazzano.
 
 ## From WebLogic to Kubernetes to Verrazzano
 
@@ -33,7 +25,7 @@ A few years ago, when I had to explain Kubernetes to folks internally, especiall
 
 Explaining Kubernetes using familiar concepts greatly helped with understanding. In a WebLogic cluster, the Admin server handles the administration, deployment and other less silky but nevertheless important tasks, whereas the managed servers were meant for deploying and running the applications and responding to requests. Of course, you could always run your applications on the single Admin server (somewhat equivalent to [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) of the master nodes) but this is not recommended. 
 
-The managed servers, on the other hand, could be scaled out and configured to run your applications. Together, the admin and managed servers form a cluster. You can run your applications across your entire cluster or on specific managed servers. If your application is deployed to the cluster and a managed server in the cluster fails (JVM, host, reboot etc), other managed servers in the cluster will automatically handle the job. If the managed server where your singleton service is running fails, WebLogic has got you covered as well with Automatic Service Migration. Check [this document](https://www.oracle.com/technetwork/middleware/weblogic/weblogic-automatic-service-migratio-133948.pdf) for a more detailed read. Essentially, it’s a bit like a ReplicaSet in Kubernetes. Applications on Kubernetes were initially stateless until the addition of StatefulSets. You can now also run stateful applications across the entire cluster.
+The managed servers, on the other hand, could be scaled out and configured to run your applications. Together, the admin and managed servers form a cluster. You can run your applications across your entire cluster or on specific managed servers. If your application is deployed to the cluster and a managed server in the cluster fails (JVM, host, reboot etc), other managed servers in the cluster will automatically handle the job. If the managed server where your singleton service is running fails, WebLogic has got you covered as well with Automatic Service Migration. Check [this document](https://www.oracle.com/technetwork/middleware/weblogic/weblogic-automatic-service-migratio-133948.pdf) for a more detailed read. Essentially, it's a bit like a ReplicaSet in Kubernetes. Applications on Kubernetes were initially stateless until the addition of StatefulSets. You can now also run stateful applications across the entire cluster.
 
 What if, for the purpose of high availability, you needed to run your Kubernetes applications in geographically distributed clusters. You could try your luck with [kubefed](https://github.com/kubernetes-sigs/kubefed), whose progress is painfully slow and is still in beta (this is not a criticism — _Ed_). Or you could try deploying the same applications to different clusters, implement a kind of global health check and then use an [intelligent load balancer](https://docs.oracle.com/en-us/iaas/Content/TrafficManagement/Concepts/overview.htm) to switch the traffic from one cluster to another. All these approaches are still error-prone and risky and have several limitations.
 
@@ -73,7 +65,7 @@ We are going to the use [terraform-oci-oke module](https://github.com/oracle-ter
 
 Create a new terraform project and define your variables as follows:
 
-```console
+```terraform
 # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
 # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
 
@@ -134,7 +126,7 @@ verrazzano_regions = {
 
 In your provider.tf, define the providers for the different regions using aliases:
 
-```console
+```terraform
 provider "oci" {
   fingerprint      = var.api_fingerprint
   private_key_path = var.api_private_key_path
@@ -183,7 +175,7 @@ provider "oci" {
 
 Finally, in your main.tf, create the different clusters (note that some of the parameters here have the same values, and you could use the default ones, but I wanted to show it was possible to configure these by regions too):
 
-```console
+```terraform
 module "vadmin" {
   source  = "oracle-terraform-modules/oke/oci"
   version = "4.0.1"
@@ -542,9 +534,9 @@ module "vtok" {
 }
 ```
 
-For convenience, let’s print out the operator host in each region:
+For convenience, let's print out the operator host in each region:
 
-```console
+```terraform
 output "ssh_to_admin_operator" {
   description = "convenient command to ssh to the Admin operator host"
   value       = module.vadmin.ssh_to_operator
@@ -568,7 +560,7 @@ output "ssh_to_jp_operator" {
 
 Run terraform init, plan and the plan should indicate the following:
 
-```console  
+```console
 Plan: 292 to add, 0 to change, 0 to destroy.Changes to Outputs:  
 + ssh_to_admin_operator = (known after apply)  
 + ssh_to_au_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"  
@@ -587,15 +579,15 @@ This means our four OKE Clusters are being simultaneously created in 4 different
 
 The ssh convenience commands to the various operator hosts will also be printed.
 
-Next, navigate to the DRGs in **_each managed cluster_**’s region i.e. Mumbai, Tokyo, Sydney. Click on Remote Peering Attachment and create a Remote Peering Connection (call it rpc_to_admin). However, in the Admin region (Singapore in our selected region), create 3 Remote Peering Connections:
+Next, navigate to the DRGs in **_each managed cluster_**'s region i.e. Mumbai, Tokyo, Sydney. Click on Remote Peering Attachment and create a Remote Peering Connection (call it rpc_to_admin). However, in the Admin region (Singapore in our selected region), create 3 Remote Peering Connections:
 
 {% imgx aligncenter assets/sub6pYSaRFEQumzQLQdDxwg.png 1200 339 "3 RPCs in the Admin region" "3 RPCs in the Admin region" %}
 
-We need to peer them. Click on the rpc_to_syd. Open a new tab in your browser and access the OCI Console and change region to Sydney. Then, navigate to the DRG and the rpc_to_syd page. Copy the RPC’s OCID (not the DRG), switch to the Admin tab and click on “Establish Connection”:
+We need to peer them. Click on the rpc_to_syd. Open a new tab in your browser and access the OCI Console and change region to Sydney. Then, navigate to the DRG and the rpc_to_syd page. Copy the RPC's OCID (not the DRG), switch to the Admin tab and click on “Establish Connection”:
 
 {% imgx aligncenter assets/2g_Oih2j9NBRy_cUoUW9Eg.png 619 216 "Establishing RPC" "Establishing RPC" %}
 
-Once you’ve provided the RPC ID and the region as above, click on “Establish Connection” button to perform the peering. Repeat the same procedure for the Tokyo and Mumbai regions until all the managed cluster regions are peered with the Admin region. When the peering is performed and completed, you will see its status will change to “Pending” and eventually “Peered”:
+Once you've provided the RPC ID and the region as above, click on “Establish Connection” button to perform the peering. Repeat the same procedure for the Tokyo and Mumbai regions until all the managed cluster regions are peered with the Admin region. When the peering is performed and completed, you will see its status will change to “Pending” and eventually “Peered”:
 
 {% imgx aligncenter assets/DX7Nv3MRwczRYbmc5aXzlA.png 1200 405 "RPCs in Pending state" "RPCs in Pending state" %}
 
@@ -607,13 +599,15 @@ At this point, our VCNs are peered but there are three more things we need to do
 2. Configure NSGs for the control plane CIDRs to accept requests from Admin VCN
 3. Merge the kubeconfigs
 
-Actually, the configuration of the routing rules have already been done. “How,” you ask? Well, one of the [recent features](https://github.com/oracle-terraform-modules/terraform-oci-oke/releases) we added is the [ability to configure and update routing tables](https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/279). In your main.tf, look in the the Admin cluster module, you will find a parameter that is usually an empty list:
+Actually, the configuration of the routing rules have already been done. "How," you ask? Well, one of the [recent features](https://github.com/oracle-terraform-modules/terraform-oci-oke/releases) we added is the [ability to configure and update routing tables](https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/279). In your main.tf, look in the the Admin cluster module, you will find a parameter that is usually an empty list:
     
-`nat_gateway_route_rules = []`
+```terraform
+nat_gateway_route_rules = []
+```
 
 Instead, in our Admin module definition, we had already changed this to:
 
-```console
+```terraform
 nat_gateway_route_rules = [
 {
   destination       = "10.1.0.0/16"
@@ -638,7 +632,7 @@ nat_gateway_route_rules = [
 
 Similarly, in the managed cluster definitions, we had also set the routing rules to reach the Admin cluster in Singapore:
 
-```console
+```terraform
 nat_gateway_route_rules = [  
   {  
     destination       = "10.0.0.0/16"  
@@ -649,9 +643,9 @@ nat_gateway_route_rules = [
 ]
 ```
 
-Note that you can also update these later. Let’s say you add another managed region in Hyderabad (VCN CIDR: 10.4.0.0). In the routing rules for Admin, you will add ome more entry to route traffic to Hyderabad:
+Note that you can also update these later. Let's say you add another managed region in Hyderabad (VCN CIDR: 10.4.0.0). In the routing rules for Admin, you will add ome more entry to route traffic to Hyderabad:
 
-```console
+```terraform
 nat_gateway_route_rules = [  
 {  
   destination       = "10.4.0.0/16"  
@@ -668,15 +662,15 @@ Navigate to the Network Visualizer page to check your connectivity and routing r
 
 {% imgx aligncenter assets/oS_bZ4lnAounnM_lgBGELg.png 1200 390 "Network connectivity across regions" "Network connectivity across regions" %}
 
-Next, in each region managed VCN’s control plane NSG, add an ingress to accept TCP requests from source CIDR 10.0.0.0/16 (Admin) and destination port 6443. This is for the Admin cluster to be able to communicate with the Managed Cluster’s control plane.
+Next, in each region managed VCN's control plane NSG, add an ingress to accept TCP requests from source CIDR 10.0.0.0/16 (Admin) and destination port 6443. This is for the Admin cluster to be able to communicate with the Managed Cluster's control plane.
 
-{% imgx aligncenter assets/UbwGSoe2twNSHayNM4YfRg.png 1200 359 "Additional ingress security rule in each managed cluster’s control plane NSG" "Additional ingress security rule in each managed cluster’s control plane NSG" %}
+{% imgx aligncenter assets/UbwGSoe2twNSHayNM4YfRg.png 1200 359 "Additional ingress security rule in each managed cluster's control plane NSG" "Additional ingress security rule in each managed cluster's control plane NSG" %}
 
 ## Operational Convenience
 
 Finally, for convenience, we want to be able to execute most of our operations from the Admin operator host. We first need to obtain the kubeconfig of each cluster and merge them together on the admin operator. You have to do this step manually today but we will try to improve this in the future:
 
-1. Navigate to each managed cluster’s page and click on Access cluster.
+1. Navigate to each managed cluster's page and click on Access cluster.
 2. Copy the second command which allows you get the kubeconfig for that cluster
     
 ```console
@@ -687,10 +681,10 @@ oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.... --file $HOME/.ku
 oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.... --file $HOME/.kube/configtok --region ap-tokyo-1 --token-version 2.0.0  --kube-endpoint PRIVATE_ENDPOINT
 ```
 
-Note that you also have to rename the file so it won’t overwrite the existing config for the Admin region. In our example above, that would be configsyd, configmum, and configtok. Run the commands to get the managed cluster’s respective kubeconfigs. You should have four kubeconfigs:
+Note that you also have to rename the file so it won't overwrite the existing config for the Admin region. In our example above, that would be configsyd, configmum, and configtok. Run the commands to get the managed cluster's respective kubeconfigs. You should have four kubeconfigs:
 
 ```console
-[opc@v8o-operator ~]$ ls -al .kube  
+$ ls -al .kube  
 total 16  
 drwxrwxr-x. 2 opc opc   71 Nov 10 11:40 .  
 drwx------. 4 opc opc  159 Nov 10 11:15 ..  
@@ -712,29 +706,33 @@ This will return us the list of nodes in each cluster:
 
 {% imgx aligncenter assets/Wbt9jmrz8pJxxZliPssYBw.png 818 310 "List of nodes in each cluster" "List of nodes in each cluster" %}
 
-One thing we also want to do for convenience is rename each cluster’s context for convenience so we know which region we are dealing with. In this exercise, we want 1 context to equate to a Verrazzano cluster. Let’s rename all the kubeconfig files first:
+One thing we also want to do for convenience is rename each cluster's context for convenience so we know which region we are dealing with. In this exercise, we want 1 context to equate to a Verrazzano cluster. Let's rename all the kubeconfig files first:
 
 * config -> admin
 * configmum -> mumbai
 * configsyd -> sydney
 * configtok -> tokyo
 
-Let’s rename their respective contexts:
+Let's rename their respective contexts:
 
-```console
-    for cluster in admin sydney mumbai tokyo; do  
-      current=$(KUBECONFIG=$cluster kubectl config current-context)  
-      KUBECONFIG=$cluster kubectl config rename-context $current $cluster  
-    done
+```bash
+for cluster in admin sydney mumbai tokyo; do  
+  current=$(KUBECONFIG=$cluster kubectl config current-context)  
+  KUBECONFIG=$cluster kubectl config rename-context $current $cluster  
+done
 ```
 
 We are now ready to merge:
     
-`KUBECONFIG=./admin:./sydney:./mumbai:./tokyo kubectl config view --flatten > ./config`
+```bash
+KUBECONFIG=./admin:./sydney:./mumbai:./tokyo kubectl config view --flatten > ./config
+```
 
-Let’s get a list of the contexts:
+Let's get a list of the contexts:
     
-`kubectl config get-contexts`
+```console
+kubectl config get-contexts
+```
 
 This will return us the following:
 
@@ -746,15 +744,15 @@ sydney    cluster-cmgb37morjq   user-cmgb37morjqtokyo
 tokyo     cluster-coxskjynjra   user-coxskjynjra
 ```
 
-This is all rather verbose. Instead we will use [kubectx ](https://github.com/ahmetb/kubectx)(I’m a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
+This is all rather verbose. Instead we will use [kubectx ](https://github.com/ahmetb/kubectx)(I'm a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
 
 ```console
-wget [https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx](https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx)  
+wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx
 chmod +x kubectx  
 sudo mv kubectx /usr/local/bin
 ```
 
-Now when we run kubectx, :
+Now when we run kubectx:
 
 {% imgx aligncenter assets/DPsupx6c_ADhdwE0TwS-Zw.png 397 113 "Using kubectx" "Using kubectx" %}
 
