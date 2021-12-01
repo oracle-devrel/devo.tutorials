@@ -8,13 +8,13 @@ date: 2021-11-12 12:00:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
-draft: true
+mrm: WWMK211201P00070
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
 # Overview of the Oracle Database Cloud Service
 
-![Database System Overview](assets/dbcs_overview.png "Database System Overview")
+{% imgx aligncenter assets/assets/dbcs_overview.png 1200 494 "Database System Overview" "Database System Overview" %}
 
 The Oracle Database Cloud Service offers autonomous and co-managed Oracle Database cloud solutions. Autonomous databases are preconfigured, fully-managed environments that are suitable for either transaction processing or for data warehouse workloads. Co-managed solutions are virtual machine and Exadata DB systems that you can customize with the resources and settings that meet your needs.
 
@@ -33,55 +33,60 @@ The Database service offers Oracle's [Autonomous Databases](https://docs.oracle.
 - [Exadata Cloud Service](https://docs.oracle.com/en-us/iaas/Content/Database/Concepts/exaoverview.htm#Exadata_DB_Systems)
 - [Exadata Cloud@Customer](https://docs.oracle.com/en-us/iaas/exadata/index.html)
 
-## Database Cloud Service on VM
+## Database Cloud Service on Virtual Machine
 
 Database Cloud Service offers full-featured Oracle Database cloud instances
 - Enterprise Edition or Standard Edition 2
-- Multiple Oracle Database versions, including 21c
+- Multiple Oracle Database versions, including [21c](https://blogs.oracle.com/database/post/introducing-oracle-database-21c)
 - 4 tiers of Oracle Database License Included options or Bring Your Own License
 - Enhanced with Cloud automation features
 
-Beside of Oracle Database Cloud Solution we offer also managed MySQL Cloud Services and other Data Management Cloud Services.
+In addition to our Oracle Database Cloud Solution (DBCS) we also offer managed MySQL Cloud Services and other Data Management Cloud Services.
 
 ### Cloud automation under customer control - provisioning, patching, backup, disaster recovery
 
-![DBCS Features](assets/dbcs_features.png "DBCS Features")
+{% imgx aligncenter assets/assets/assets/dbcs_features.png 1200 737 "DBCS Features" "DBCS Features" %}
 
 # Database Cloud Service Provisioning using Terraform and OCI Resource Manager
 
-Database Cloud Service on VM offers a favorable entry into the world of Cloud supported database services. On one hand you keep full control of your database servers and databases, on the other hand the service includes many convenience functions, which simplifies and speeds up creating and configuration of database systems.  Furthermore, by a view clicks your database can be enhanced with addition features to accommodate to growing demands or required adjustments. This includes for instance CPU and Storage scaling or creation of a standby database through Data Guard.
+Database Cloud Service on VM is an exceptional entry into the world of cloud-supported database services. First, you keep full control of your database servers and databases, plus the service includes many convenience functions, which simplify and accelerate the creation and configuration of database systems. Furthermore, with a few clicks your database can be enhanced with more features to accommodate growing demands or required adjustments. This includes CPU and storage scaling, or the creation of a standby database through Data Guard.
 
-With creating a Database Cloud Service on VM all cloud resources are provisioned that are required for a fully operational database instance:
-- Compute instance respectively instances with use of a Real Application Cluster (RAC)
-- Block storage which available to the database nodes respectively the database
-- Object Store used to store automated and manual backups
+When creating a Database Cloud Service on VM all the cloud resources you need to get a fully operational database instance going are provisioned:
+- Compute instance instantiates a Real Application Cluster (RAC)
+- Block storage is made available to the database nodes
+- Object Store is used to store automated and manual backups
 
-Note that all DBCS resources are only accessible through the Database System resource though not through the individual categories as Compute Instances or Object Store.
+>**Note:** All DBCS resources are only accessible through the Database System resource, not through the individual categories as Compute Instances or Object Store.
+{:.notice}
 
-Note that all DBCS components are created as part of the Database System resource. Therefore you won't find them under the Compute Instance or Object Storage Categories in the OCI console.
+>**Note:** All DBCS components are created as part of the Database System resource. Therefore you won't find them under the Compute Instance or Object Storage Categories in the OCI console.
+{:.notice}
 
 ## Prepare the OCloud Landing Zone
 
-As a prerequisite for creating a DBCS on VM resource, a Compartment, a Virtual Cloud Network (VCN) and a Subnet need to be setup. This can be accomplished through the OCI console or Terraform that utilizes OCI’s Rest API. The latter method is used for this session.
+Before we create a DBCS on VM resource, we'll set up a Compartment, a Virtual Cloud Network (VCN), and a Subnet. You can do this through the OCI console or Terraform, using OCI’s Rest API. The latter method is used for this session.
 
 Instructions on how to deploy OCloud Landing Zone can be found [here](https://github.com/oracle-devrel/terraform-oci-ocloud-landing-zone).
 
-![DBCS Architecture](assets/ocloud_dbcs_architecture.png "DBCS Architecture")
+{% imgx aligncenter assets/assets/assets/ocloud_dbcs_architecture.png 1200 648 "DBCS Architecture" "DBCS Architecture" %}
 
 
 Policies for the Database Compartment allow members of the dbops group to create database subnets and to manage database-family resources:
--	ALLOW GROUP `<label>`_dbops manage database-family in compartment `<label>`_database_compartment
--	ALLOW GROUP `<label>`_dbops read all-resources in compartment `<label>`_database_compartment
--	ALLOW GROUP `<label>`_dbops manage subnets in compartment `<label>`_database_compartment
+
+```sql
+-	ALLOW GROUP <label>_dbops manage database-family in compartment <label>_database_compartment
+-	ALLOW GROUP <label>_dbops read all-resources in compartment <label>_database_compartment
+-	ALLOW GROUP <label>_dbops manage subnets in compartment <label>_database_compartment
+```
 
 ## OCloud Remote Stack
 
-To create the database system resource OCI Rest API requires the target compartment and a target subnet. There are three different ways to collect information in OCI:
+Now, to create the database system resource OCI Rest API requires a target compartment and a target subnet. There are three different ways to collect information in OCI:
 
--	The terraform stack defines the required parameters as default values, or they are entered by the user when the stack is created in OCI Resource Manager (ORM)
+-	The Terraform stack defines the required parameters as default values, or they are entered by the user when the stack is created in OCI Resource Manager (ORM)
 -	Database Compartment OCID and VNC OCID are queried from OCI as data elements:
 
-```
+```terraform
 # In this example a list of all compartments within a Tenant is returned which is filtered by the database compartment name
 data "oci_identity_compartments" "db_compartment" {
    compartment_id = <tenancy_ocid>
@@ -94,9 +99,9 @@ data "oci_identity_compartments" "db_compartment" {
 }
 ```
 
--	Terraform supports direct access to the output data of previously provisioned stacks through oci_resourcemanager_stack_tf_stat and terraform_remote_state resources. For this ORM respectively terraform extracts the desired information from the terraform tfstate file which are stored as part of a successfully deployed OCI Stack.   
+-	Terraform supports direct access to the output data of previously provisioned stacks through oci_resourcemanager_stack_tf_stat and terraform_remote_state resources. For this object-relational mapping (ORM) Terraform extracts the desired information from the terraform tfstate file which is stored as part of a successfully deployed OCI Stack.   
 
-```
+```terraform
 data "oci_resourcemanager_stack_tf_state" "stack1_tf_state" {
    stack_id   = <stack id>
    local_path = "stack1.tfstate"
@@ -111,19 +116,19 @@ data "terraform_remote_state" "external_stack_remote_state" {
 }
 ```
 
-In real-life, all methods will probably be used in combination.
+In real-life, several of these methods will likely be used in combination.
 
 ## Creating the Database Subnet
 
-After validating the prerequisites for a DBCS on VM deployment we now proceed with the resources which are part of the DBCS on VM stack.
+After validating the prerequisites for a DBCS on VM deployment, now we'll provision the resources for the DBCS on VM stack.
 
-For this use case all members of the dbops group should be able to create subnets and database resources within the Tenant’s respectively Database Compartment’s limits.  For creating subnets, we use a dedicated terraform module that is provided by terraform-oci-ocloud-landing-zone repository.
+For this use case all members of the dbops group should be able to create subnets and database resources within the Tenant’s Database Compartment’s limits. For creating subnets, we use a dedicated Terraform module that is provided by the terraform-oci-ocloud-landing-zone repository.
 
 [https://github.com/oracle-devrel/terraform-oci-ocloud-landing-zone/tree/main/component/network_domain](https://github.com/oracle-devrel/terraform-oci-ocloud-landing-zone/tree/main/component/network_domain)
 
 The network_domain module, which is also used as part of the landing zone provisioning, creates a private subnet and all required Security List Policies to communicate with the database system.
 
-When sizing the subnet, you need to pay attention to the minimum required IP addresses for a certain deployment type (single node vs RAC). The OCloud landing zone defines the bigger subnets for each service however if the database architecture demands more as one big subnet, the terraform function cidrsubnet(prefix,newbits,netum) allows you to split the address space into smaller chunks
+When sizing the subnet, you should pay attention to the minimum required IP addresses for a certain deployment type (single node vs RAC). The OCloud landing zone defines the bigger subnets for each service, but if the database architecture demands more as one big subnet, the Terraform function cidrsubnet(prefix,newbits,netum) allows you to split the address space into smaller chunks
 
 | service_segment_subnets | key	subnet |
 |---|---|
@@ -144,13 +149,13 @@ Below you can see an example where CIDIR block 10.0.0.64/26 is split into four s
 ])
 ```
 
-The terraform module network_domain creates a private subnet for a given database compartment and VNC.  It also sets all ingress rules to allow ssh to the Database nodes and to communicate with the database itself, and last but not least, all egress rules to access Object Storage and YUM Repository on the Service Network.
+The Terraform module network_domain creates a private subnet for a given database compartment and VNC. It also sets all ingress rules to allow ssh to the Database nodes and to communicate with the database itself. Last but not least, it sets all egress rules to access Object Storage and YUM Repository on the Service Network.
 
-The db_domain module doesn’t define its own Bastion Service as it is available through the application subnet however after provisioning the database, a couple of Bastion Sessions are created (ssh, sqlnet) aiming to validate database system connectivity. Once the Time-to-Live has exceeded the Bastion Sessions will be terminated automatically.
+The db_domain module doesn’t define its own Bastion Service as this is available through the application subnet however, after provisioning the database, a couple of Bastion Sessions are created (ssh, sqlnet) aiming to validate database system connectivity. Once the Time-to-Live has exceeded the Bastion Sessions it will be terminated automatically.
 
 **Resource Schema**
 
-```
+```terraform
 module "db_domain" {
   …
   source = "github.com/oracle-devrel/terraform-oci-ocloud-landing-zone/component/network_domain"
@@ -197,9 +202,9 @@ module "db_domain" {
 
 ## Database System Provisioning
 
-Now that all prerequisite resources were created, we are ready to take care of the final components. The OCI resource oci_database_db_system provisions a database system, database nodes and an initial CDB and PDB, all in one step. Note that oci_database_db_system comes with many additional parameters to support other flavors of provisioning a database, i.e., to create a database instance from a backup or as clone from an existing database system.  For this scenario we focus on a fresh database install. Refer to oci_database_db_system resource documentation for further details.
+Now that all our prerequisite resources are created, we're ready to set up the final components. The OCI resource oci_database_db_system provisions a database system, database nodes, and an initial CDB and PDB all in one step. Convenient, no? Note that oci_database_db_system comes with many additional parameters to support other flavors of provisioning a database, i.e., to create a database instance from a backup or as clone from an existing database system. For this scenario we'll focus on a fresh database install. Refer to oci_database_db_system resource documentation for further details.
 
-```
+```terraform
 resource "oci_database_db_system" "dbaas_db_system" {
   availability_domain = <Availibility Domain>
   compartment_id      = <Database Compartment>
@@ -242,15 +247,15 @@ resource "oci_database_db_system" "dbaas_db_system" {
 
 ## OCI Resource Manager
 
-To use DBCS on VM stack with Resource Manager you need to either download the code as zip-file from https://github.com/oracle-devrel/terraform-oci-ocloud-db/tree/main, click “Deploy to Oracle Cloud” within the Github repository’s Readme, https://github.com/oracle-devrel/terraform-oci-ocloud-db/blob/updates/README.md or create your own cloned repository on Gitlab or Github.  Note that DBCS stack references https://github.com/oracle-devrel/terraform-oci-ocloud-landing-zone/tree/main/component/network_domain so if you are using a customized version of the landing zone stack you might have to update the “source” parameter of the db_domain module.
+To use DBCS on VM stack with Resource Manager you need to either download the code as zip-file from [https://github.com/oracle-devrel/terraform-oci-ocloud-db/tree/main](https://github.com/oracle-devrel/terraform-oci-ocloud-db/tree/main), click “Deploy to Oracle Cloud” within the Github repository’s [Readme](https://github.com/oracle-devrel/terraform-oci-ocloud-db/blob/updates/README.md) or create your own cloned repository on Gitlab or Github.  Note that DBCS stack [references](https://github.com/oracle-devrel/terraform-oci-ocloud-landing-zone/tree/main/component/network_domain) so if you are using a customized version of the landing zone stack you might have to update the “source” parameter of the db_domain module.
 
-For this session we pick “Deploy to Cloud” from the stack’s Readme. It automatically redirects you to OCI Console login and after successfully authentication, opens Resource Manager. “Package URL” points to the stack artefact which is stored within the Github repository. Confirm the “Terms of Use”.
+For this session we'll pick "Deploy to Cloud" from the stack’s Readme. It automatically redirects you to OCI Console login and after authentication, opens Resource Manager. "Package URL" points to the stack artifact which is stored within the Github repository. Confirm the "Terms of Use."
 
-In the first step enter a meaningful name for your DBCS stack and choose a Compartment where your stack resource will be created. Note that the stack compartment may differ from the Compartment where the actual infrastructure resources reside.
+Now, let's enter a meaningful name for your DBCS stack and choose a Compartment where your stack resource will be created. Note that the stack compartment may differ from the Compartment where the actual infrastructure resources reside.
 
-On the next page you finalize the database system configuration. First enter the landing zone’s Stack OCID which can be found in Resource Manager next to the landing zone stack. This avoids the need to re-enter a lot of the parameters and enables access to Output artefacts from the landing zone.
+On the next page you'll finalize the database system configuration. Enter the landing zone’s Stack OCID, which can be found in Resource Manager next to the landing zone stack. This avoids the need to re-enter a lot of the parameters and enables access to Output artifacts from the landing zone.
 
-Enter a Database System display name. Accept the shown default values or adjust them to you needs. For a default deployment the following values are used:
+Enter a Database System display name. Accept the shown default values, or adjust them to you needs. For a default deployment the following values are used:
 
 | Configuration	| Database Version | Oracle Database Software Edition | Shape | OCPUs | Storage(GB) |
 |---|---|---|---|---|---|
@@ -262,18 +267,18 @@ Enter a Database System display name. Accept the shown default values or adjust 
 
 Finally enter the admin or sys password and the public part of your ssh key. Make sure you update the admin password after installation as the initial password will show up in the Terraform tfstate file.
 
-Another way to preconfigure parameters, is to manually download the terraform code from repository and to add a terraform.tfvars file. The respective values are shown as read-only parameters in the stack configuration.
+Another way to preconfigure parameters is to manually download the Terraform code from repository and add a terraform.tfvars file. The respective values are shown as read-only parameters in the stack configuration.
 
 Example:
 
-```
+```terraform
 db_system_display_name = "OCI Database System Display Name"
 db_system_ssh_public_keys = "ssh-rsa …"
 db_system_db_home_database_admin_password = "Password"
 stack_id = "ocid1.ormstack.oc1.eu-frankfurt-1.aaaaaaaaqyekvuodrozodmn23zxi…"
 ```
 
-OCloud DBCS on VM Stack also supports alternative ways of deploying a database system however they are not subject of this session:
+OCloud DBCS on VM Stack supports other ways to deploy a database system, but they're not the subject of this session:
 -	Deploy a Database System into an existing subnet
 -	Overwrite Organization, Project and Environment labels which were defined by the corresponding OCloud Landing Zone
 -	Customize all stack parameters
@@ -282,17 +287,17 @@ For further information refer to the OCloud DBCS on VM stack’s [Readme](https:
 
 ### Plan but don’t apply
 
-Create the stack but don’t check “Run Apply” because you should first plan your deployment. This step is very important as it validates if the stack code contains any syntax error and which OCI resources are going to be added, updated or destroyed. OCI resources contain updateable and non-updateable parameter therefore it is recommended to make the planning task a routine as updating a non-updateable value may result in a destruction of the resource:
+Create the stack but don’t check "Run Apply" because you should plan your deployment first. This step is very important as it validates to see if the stack code contains any syntax errors, and exadtly which OCI resources are going to be added, updated, or destroyed. OCI resources contain updateable and non-updateable parameters, therefore it is recommended to make the planning task a routine as updating a non-updateable value may result in destruction of the resource:
 
 ```
 Plan: 9 to add, 0 to change, 0 to destroy.
 ```
 
-After verifying the expected results, the stack can be applied. For a “Small” configuration and “Fast Provisioning” it can take between 20 to 25 minutes until the database is available.
+After verifying the expected results, the stack can be applied. For a "Small" configuration and "Fast Provisioning" it can take between 20 to 25 minutes until the database is available.
 
 ### Verify DB Node and Database access
 
-Once Database System, Container Database and Pluggable Database are available you can verify connectivity. Our target resource is in a private subnet; therefore, the Apps Compartments Bastion Service need to be used respectively the Bastion Sessions which were created as part of the DBCS stack.
+Once Database System, Container Database, and Pluggable Database are available you can verify connectivity. Our target resource is in a private subnet; therefore, the Apps Compartments Bastion Service needs to be used as the Bastion Sessions were created as part of the DBCS stack.
 
 | Protocol | Session type | IP Address | Port | Maximum session time-to-live (min) ||
 |---|---|---|---|---|---|
@@ -301,21 +306,22 @@ Once Database System, Container Database and Pluggable Database are available yo
 
 **SSH:**
 
-Copy the SSH command from OCI console (Bastion Session) to create an SSH tunnel from localhost:localport to `<database node ip address>`:22.
+Copy the SSH command from OCI console (Bastion Session) to create an SSH tunnel from `localhost:localport` to `<database node ip address>:22`.
 
-```
-	ssh -i <private key file path> -N -L <local port>:<database node ip address>:22 -p 22 <bastion session OCID>@host.bastion.eu-frankfurt-1.oci.oraclecloud.com
+```console
+ssh -i <private key file path> -N -L <local port>:<database node ip address>:22 -p 22 <bastion session OCID>@host.bastion.eu-frankfurt-1.oci.oraclecloud.com
 ```
 To ssh to the DB Node use the following command:
-```
-	ssh -i <private key file> opc@localhost -p <local port>
+
+```console
+ssh -i <private key file> opc@localhost -p <local port>
 ```
 
 **Oracle SQL Developer:**
 
-For a Oracle SQL Developer connection to either the CDB or PDB, copy the SSH command from OCI console (Bastion Session) to create an SSH tunnel from localhost:localport to `<database node ip address>`:1521.
+For an Oracle SQL Developer connection to either the CDB or PDB, copy the SSH command from OCI console (Bastion Session) to create an ssh tunnel from `localhost:localport` to `<database node ip address>:1521`.
 
-```
+```console
 ssh -i <private key file> -N -L <local port>:<database node ip address>:1521 -p 22 <bastion session OCID>@host.bastion.eu-frankfurt-1.oci.oraclecloud.com
 ```
 
@@ -331,26 +337,28 @@ Open sqldeveloper and create a new database connection:
 | Port | [local sql port] |
 | Service Name | CDB or PDB SERVICE_NAME from DBCS output |
 
-**SQLcl and SQL*plus**
+**SQLcl and SQLplus**
 
-For a sqlcl or sqlplus connection, copy the SSH command from OCI console (Bastion Session) to create a SSH tunnel from localhost:localport to `<database node ip address>`:1521.
+For a sqlcl or sqlplus connection, copy the SSH command from OCI console (Bastion Session) to create a SSH tunnel from `localhost:localport` to `<database node ip address>:1521`.
 
-```
+```console
 ssh -i <private key file> -N -L <local port>:<database node ip address>:1521 -p 22 <bastion session OCID>@host.bastion.eu-frankfurt-1.oci.oraclecloud.com
 ```
 Execute
-```
+
+```console
 sql sys@localhost:1523/<FQ Database Name> AS sysdba
 or
 sqlplus sys@<FQ Database Name> AS sysdba
 ```
 
-to login to the database.
+And now you've logged into the database, congratulations!
 
 ## Conclusion
-We successfully provisioned a Database Cloud Service on VM Database instance. From there you can apply further adjustments or add additional stacks to your OCI Infrastructure in your Tenancy.
 
-Happy building.
+We successfully provisioned a Database Cloud Service on VM Database instance. From here, you can apply further adjustments or add additional stacks to your OCI Infrastructure in your Tenancy.
+
+Happy building!
 
 
 
