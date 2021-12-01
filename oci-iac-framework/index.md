@@ -16,9 +16,10 @@ date: 2021-10-29 11:00:00
 {% imgx aligncenter assets/landing-zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}
 
 
-**Difficulty:** Beginner
+**Difficulty:** Expert
 
 Want to get started with Oracle Cloud Infrastructure (OCI), but not sure how to do it in a pragmatic way? This series will give you a structured approach to getting started with OCI in seven steps! Here's what we'll cover:
+
 
 *  [Introduction to OCI](getting-started-with-oci-intro)
 *  [Step 1: Overview of the OCI terraform provider](getting-started-with-oci-step-1-provider)
