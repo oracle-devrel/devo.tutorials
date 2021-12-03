@@ -291,7 +291,7 @@ For further information refer to the OCloud DBCS on VM stack’s [Readme](https:
 
 ### Plan but don’t apply
 
-Create the stack but don’t check "Run Apply" because you should plan your deployment first. This step is very important as it validates to see if the stack code contains any syntax errors, and exadtly which OCI resources are going to be added, updated, or destroyed. OCI resources contain updateable and non-updateable parameters, therefore it is recommended to make the planning task a routine as updating a non-updateable value may result in destruction of the resource:
+Create the stack but don’t check "Run Apply" because you should plan your deployment first. This step is very important as it validates to see if the stack code contains any syntax errors, and exactly which OCI resources are going to be added, updated, or destroyed. OCI resources contain updateable and non-updateable parameters, therefore it is recommended to make the planning task a routine as updating a non-updateable value may result in destruction of the resource:
 
 ```
 Plan: 9 to add, 0 to change, 0 to destroy.
