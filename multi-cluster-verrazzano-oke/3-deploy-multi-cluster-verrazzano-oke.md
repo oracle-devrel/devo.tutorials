@@ -12,7 +12,7 @@ author: ali-mukadam
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
-In [Part 1](1-deploying-verrazzano-on-oke), we discussed setting up the network infrastructure for a multi-cluster [Verrazzano](https://verrazzano.io/)deployment. In this article, we will configure the clusters so they behave as a kind of global cluster. Below is the multi-clustering process depicted graphically:
+In [Part 1](2-deploy-multi-cluster-verrazzano-oke), we discussed setting up the network infrastructure for a multi-cluster [Verrazzano](https://verrazzano.io/)deployment. Earlier, we focused on deploying Verrazzano on [Oracle Container Engine (OKE)](1-deploying-verrazzano-on-oke). In this article, we will configure the clusters so they behave as a kind of global cluster. Below is the multi-clustering process depicted graphically:
 
 {% imgx aligncenter assets/vNjGKLaGatczobm2O5Ycdw.png 1076 630 "Verrazzano multi-cluster deployment and registration process" "Verrazzano multi-cluster deployment and registration process" %}
 
