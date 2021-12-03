@@ -64,7 +64,7 @@ kubectl -n verrazzano-install rollout status deployment/verrazzano-platform-oper
 And confirm the operator pods are working correctly:
 
 ```console  
-[opc@v8o-operator ~]$  kubectl -n verrazzano-install get pods
+kubectl -n verrazzano-install get pods
 NAME                                            READY   STATUS    RESTARTS   AGE
 verrazzano-platform-operator-54cf56884f-46zzk   1/1     Running   0          91s
 ```
@@ -107,7 +107,7 @@ Using the same procedure as for the Admin region, verify that the Verrazzano ope
 
 Now, install Verrazzano for each using the managed profile by changing the context and name accordingly:
 
-```console   
+```yaml
 apiVersion: install.verrazzano.io/v1alpha1  
 kind: Verrazzano  
 metadata:  
