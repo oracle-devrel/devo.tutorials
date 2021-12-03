@@ -194,4 +194,3 @@ If you're running directly on a virtual machine and have a browser installed, it
 You should now see the next Python Web environment "Jupyterlab".
 
 That's it! Enjoy using Cassandra with OCI.
-}
