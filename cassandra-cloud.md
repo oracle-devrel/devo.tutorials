@@ -8,6 +8,7 @@ date: 2021-12-03 19:45
 description:  Cassandra, an open-source NoSQL database, plays well with Oracle Cloud Infrastructure. Let Olivier show you how to configure it.
 author: Olivier Francois Xavier Perard
 ---
+{% slides %}
 This walk-through guides you through configuring your environment to run Cassandra in Oracle Cloud Infrastructure (OCI).
 
 It's fun, we promise.
@@ -194,3 +195,4 @@ If you're running directly on a virtual machine and have a browser installed, it
 You should now see the next Python Web environment "Jupyterlab".
 
 That's it! Enjoy using Cassandra with OCI.
+{% endslides %}
