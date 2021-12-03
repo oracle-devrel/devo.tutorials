@@ -1,5 +1,5 @@
 ---
-title: Deploying A Multi-Cluster Verrazzano On Oracle Container Engine for Kubernetes (OKE) — Part 1 
+title: Deploying A Multi-Cluster Verrazzano On Oracle Container Engine for Kubernetes (OKE) Part 1 
 parent: [tutorials, multi-cluster-verrazzano-oke]
 tags: [open-source, oke, kubernetes, verrazzano, terraform, devops]
 categories: [cloudapps, opensource]

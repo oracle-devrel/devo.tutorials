@@ -4,7 +4,7 @@ parent: [tutorials, multi-cluster-verrazzano-oke]
 tags: [open-source, oke, kubernetes, verrazzano, terraform, devops]
 categories: [cloudapps, opensource]
 thumbnail: assets/verrazzano-logo.png
-date: 2021-12-3 09:11
+date: 2021-12-03 09:11
 description: How to deploy Verrazzano an OKE cluster.
 color: purple
 mrm: WWMK211123P00031
@@ -142,10 +142,14 @@ kubectx sydneykubectl -n verrazzano-system get secret system-tls -o jsonpath='{.
 If this value is empty, then your managed cluster is using certificates signed by a well-known certificate authority and you can generate a secret containing the CA certificate in YAML format. If it’s not empty, then the certificate is self-signed and needs to be extracted. Refer to the workflow at the beginning of this article.
 
 ```console
-kubectx $sydneyCA_CERT=$(kubectl \  
+kubectx sydney
+
+CA_CERT=$(kubectl \  
     get secret system-tls \  
     -n verrazzano-system \  
-    -o jsonpath="{.data.ca\.crt}" | base64 --decode)kubectl create secret generic "ca-secret-sydney" \  
+    -o jsonpath="{.data.ca\.crt}" | base64 --decode)
+
+kubectl create secret generic "ca-secret-sydney" \  
   -n verrazzano-mc \  
   --from-literal=cacrt="$CA_CERT" \  
   --dry-run=client -o yaml > managedsydney.yaml

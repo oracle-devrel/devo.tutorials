@@ -1,7 +1,7 @@
 ---
 layout: collection
 title: Deploying Verrazzano on Oracle Container Engine for Kubernetes
-series: verrazzano-oke
+series: multi-cluster-verrazzano-oke
 thumbnail: assets/verrazzano-logo.png
 description: Deploying a multi-cluster Verrazzano instance on Oracle Container Engine for Kubernetes (OCI).
 tags: [open-source, verrazzano, oke, devops, kubernetes]
