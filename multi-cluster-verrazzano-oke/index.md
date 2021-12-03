@@ -2,11 +2,13 @@
 layout: collection
 title: Deploying Verrazzano on Oracle Container Engine for Kubernetes
 series: multi-cluster-verrazzano-oke
+parent: [tutorials]
 thumbnail: assets/verrazzano-logo.png
 description: Deploying a multi-cluster Verrazzano instance on Oracle Container Engine for Kubernetes (OCI).
 tags: [open-source, verrazzano, oke, devops, kubernetes]
 sort: asc
 color: purple
+date: 2021-12-03 09:00
 ---
 
 {% imgx aligncenter assets/verrazzano-logo.png 400 400 "Deploying Verrazzano" "Deploying Verrazzano Tutorial Series" %}

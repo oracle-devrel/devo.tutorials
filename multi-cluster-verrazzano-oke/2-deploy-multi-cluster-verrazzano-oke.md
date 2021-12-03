@@ -114,7 +114,7 @@ variable "label_prefix" {
 
 In your terraform.tfvars, along with your identity parameters, define your regions:
 
-```console
+```terraform
 verrazzano_regions = {  
   home  = "your-tenancy-home-region" #replace with your tenancy's home region  
   admin = "ap-singapore-1"  
