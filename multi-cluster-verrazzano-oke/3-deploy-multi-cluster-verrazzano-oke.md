@@ -12,7 +12,7 @@ author: ali-mukadam
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
-In [Part 1](2-deploy-multi-cluster-verrazzano-oke), we discussed setting up the network infrastructure for a multi-cluster [Verrazzano](https://verrazzano.io/)deployment. Earlier, we focused on deploying Verrazzano on [Oracle Container Engine (OKE)](1-deploying-verrazzano-on-oke). In this article, we will configure the clusters so they behave as a kind of global cluster. Below is the multi-clustering process depicted graphically:
+In [Part 1](2-deploy-multi-cluster-verrazzano-oke), we discussed setting up the network infrastructure for a multi-cluster [Verrazzano](https://verrazzano.io/) deployment. Earlier, we focused on deploying Verrazzano on [Oracle Container Engine (OKE)](1-deploying-verrazzano-on-oke). In this article, we will configure the clusters so they behave as a kind of global cluster. Below is the multi-clustering process depicted graphically:
 
 {% imgx aligncenter assets/vNjGKLaGatczobm2O5Ycdw.png 1076 630 "Verrazzano multi-cluster deployment and registration process" "Verrazzano multi-cluster deployment and registration process" %}
 
@@ -86,8 +86,8 @@ Now we need to wait until the installation is complete:
     
 ```console
 kubectl wait \  
-    --timeout**=**20m \  
-    --for**=**condition**=**InstallComplete \  
+    --timeout=20m \  
+    --for=condition=InstallComplete \  
     verrazzano/admin
 ```
 
@@ -124,8 +124,8 @@ Change the context again and verify:
 
 ```console
 kubectx sydneykubectl wait \  
-    --timeout**=**20m \  
-    --for**=**condition**=**InstallComplete \  
+    --timeout=20m \  
+    --for=condition=InstallComplete \  
     verrazzano/sydney
 ```
 
@@ -136,19 +136,19 @@ Repeat the verification for each managed cluster.
 Verify the the CA certificate type for each managed cluster:
     
 ```console
-kubectx sydneykubectl -n verrazzano-system get secret system-tls -o jsonpath**=**'{.data.ca\.crt}'
+kubectx sydneykubectl -n verrazzano-system get secret system-tls -o jsonpath='{.data.ca\.crt}'
 ```
 
 If this value is empty, then your managed cluster is using certificates signed by a well-known certificate authority and you can generate a secret containing the CA certificate in YAML format. If it’s not empty, then the certificate is self-signed and needs to be extracted. Refer to the workflow at the beginning of this article.
 
 ```console
-kubectx **sydney**CA_CERT=$(kubectl \  
+kubectx $sydneyCA_CERT=$(kubectl \  
     get secret system-tls \  
     -n verrazzano-system \  
-    -o jsonpath="{.data.ca\.crt}" | base64 --decode)kubectl create secret generic "ca-secret-**sydney**" \  
+    -o jsonpath="{.data.ca\.crt}" | base64 --decode)kubectl create secret generic "ca-secret-sydney" \  
   -n verrazzano-mc \  
   --from-literal=cacrt="$CA_CERT" \  
-  --dry-run=client -o yaml > managed**sydney**.yaml
+  --dry-run=client -o yaml > managedsydney.yaml
 ```
 
 Repeat the above for the 2 other regions replacing the region/context and filenames accordingly.
@@ -275,4 +275,4 @@ Similarly, on the Rancher console, you should be able to see all 4 clusters:
 
 ## Conclusion
 
-This concludes the execise of connecting the OKE clusters deployed in different regions into a multi-cluster Verrazzano deployment. Note that in this post, we did not configure things like DNS, Certificates, Ingress Controller etc. Our aim is to get the multi-cluster configuration going. In a future post, we will look at those other things as well.
+This concludes the exercise of connecting the OKE clusters deployed in different regions into a multi-cluster Verrazzano deployment. Note that in this post, we did not configure things like DNS, Certificates, Ingress Controller etc. Our aim is to get the multi-cluster configuration going. In a future post, we will look at those other things as well.
