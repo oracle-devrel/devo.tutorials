@@ -98,7 +98,7 @@ This will take a while. In the meantime, let’s install Verrazzano on the manag
 Change the context to 1 of the managed clusters and install the operator again e.g.
  
 ```console
-kubectx sydneykubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yamlkubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
+kubectx sydney kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yamlkubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
 ```
 
 Repeat the above for all the managed clusters. Before running in each managed cluster, ensure you have changed your context with kubectx `<contextname>` as above.
@@ -123,7 +123,7 @@ While the managed clusters are being installed, let’s see if we can [access th
 Change the context again and verify:
 
 ```console
-kubectx sydneykubectl wait \  
+kubectx sydney kubectl wait \  
     --timeout=20m \  
     --for=condition=InstallComplete \  
     verrazzano/sydney
@@ -136,7 +136,7 @@ Repeat the verification for each managed cluster.
 Verify the the CA certificate type for each managed cluster:
     
 ```console
-kubectx sydneykubectl -n verrazzano-system get secret system-tls -o jsonpath='{.data.ca\.crt}'
+kubectx sydney kubectl -n verrazzano-system get secret system-tls -o jsonpath='{.data.ca\.crt}'
 ```
 
 If this value is empty, then your managed cluster is using certificates signed by a well-known certificate authority and you can generate a secret containing the CA certificate in YAML format. If it’s not empty, then the certificate is self-signed and needs to be extracted. Refer to the workflow at the beginning of this article.
