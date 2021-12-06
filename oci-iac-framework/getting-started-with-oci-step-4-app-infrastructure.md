@@ -6,7 +6,6 @@ categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
 date: 2021-12-06 12:00
 description: How to deploy application infrastructure on top of the OCLOUD framework
-toc: true
 author: kubemen
 draft: true
 mrm: WWMK211125P00022
