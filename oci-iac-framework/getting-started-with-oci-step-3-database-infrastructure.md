@@ -4,7 +4,7 @@ parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-12-01 12:00:00
+date: 2021-12-01 12:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen

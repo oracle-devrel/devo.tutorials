@@ -4,7 +4,7 @@ parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-18 20:00:00
+date: 2021-10-18 20:00
 description: Introduction to Governance as part of the OCLOUD framework
 toc: true
 author: kubemen
