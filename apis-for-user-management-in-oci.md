@@ -7,6 +7,7 @@ thumbnail: assets/api-management-gh-python.png
 author: 
     name: Paul Guerin 
     bio: Paul Guerin is a consultant of Oracle Technology.
+published: false
 ---
 APIs are not just for receiving information about an end-point.
 
