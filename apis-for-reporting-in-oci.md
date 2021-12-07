@@ -8,6 +8,7 @@ thumbnail: assets/reporting-welcome-fish.png
 author: 
     name: Paul Guerin
     bio: Paul Guerin is a consultant of Oracle Technology.
+published: false
 ---
 {% imgx assets/reporting-gradient-w-pattern.png "Red and blue gradient with pattern" %}
 
