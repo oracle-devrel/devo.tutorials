@@ -2,7 +2,7 @@
 title: APIs for Reporting in OCI
 parent: tutorials
 tags: [oci, backend]
-date: 2020-12-16 14:32
+date: 2021-12-07 14:32
 description: Access more even more insight into your environment using these advanced tools for reporting–OCI console, OCI command line tool, and Python APIs.
 thumbnail: assets/reporting-welcome-fish.png
 author: 
@@ -121,7 +121,7 @@ oci raw-request --http-method POST --target-uri https://usageapi.ap-sydney-1.oci
 
 You’ll get a long output that looks like this:
 
-{% assets/reporting-json-output.png imgx "Example JSON output" %}
+{% imgx assets/reporting-json-output.png "Example JSON output" %}
 
 However, it can be more convenient to get the same information from Python.
 
