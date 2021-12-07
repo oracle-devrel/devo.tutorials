@@ -1,6 +1,7 @@
 ---
 title: APIs for User Management in OCI
-layout: tutorials
+parent: [tutorials]
+date: 2021-12-06 12:00
 description: Find out how easy using Python with OCI is super easy is, even on Oracle's Always-Free Tier account.
 thumbnail: assets/api-management-gh-python.png
 author: 
