@@ -8,6 +8,7 @@ author:
 tags: [oci,data-management]
 categories: [cloudapps]
 thumbnail: assets/oci-cloud-shell-connect-adw-Screen%2BShot%2B2020-09-30%2Bat%2B18.28.42.png
+published: false
 ---
 {% imgx assets/oci-cloud-shell-connect-adw-Screen%2BShot%2B2020-09-30%2Bat%2B18.28.42.png %}
 
