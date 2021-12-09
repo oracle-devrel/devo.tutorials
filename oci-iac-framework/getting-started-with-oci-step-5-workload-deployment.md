@@ -4,11 +4,10 @@ parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-29 08:00
+date: 2021-12-09 08:00
 description: How to deploy and configure your code on the OCLOUD framework landing zone
 toc: true
 author: kubemen
-draft: true
 mrm: WWMK211125P00022
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
@@ -47,9 +46,9 @@ OCI supports the use of Ansible's modules to automate cloud infrastructure provi
 
 {% imgx assets/ansible.png "Ansible" %}
 
-The OCI Ansible collection supports Ansible Tower and AWX. For more information on how to set up the collection with Ansible Tower, refer to the [ansible_blogpost]. To install the free version of Ansible Tower (AWX) on an OCI Compute instance, you can use [ansible solution on GitHub] and the following [ansible example playbooks]
+The OCI Ansible collection supports Ansible Tower and AWX. For more information on how to set up the collection with Ansible Tower, refer to the [Ansible blog post][ansible_blogpost]. To install the free version of Ansible Tower (AWX) on an OCI Compute instance, you can use [ansible solution on GitHub] and the following [ansible example playbooks].
 
-A complete example how you can use Ansible to deploy Kubernetes, Istio and an example service can be found [here] (https://blog.kube-mesh.io/single-click-deployment-of-oke-istio-mushop-using-ansible-from-oci-cloud-shell/).  
+A complete example how you can use Ansible to deploy Kubernetes, Istio and an example service can be found [here](https://blog.kube-mesh.io/single-click-deployment-of-oke-istio-mushop-using-ansible-from-oci-cloud-shell/).  
 Link: [ansible_collection]
 
 ### Puppet
@@ -109,15 +108,14 @@ oci_identity_compartment { 'your_tenant (root)/test_compartment_1':
 }
 ```
 
-*(available via [this link] (https://www.enterprisemodules.com/blog/2020/02/getting-to-know-oracle-cloud-with-puppet-part-1/))*
+*(available via [this link](https://www.enterprisemodules.com/blog/2020/02/getting-to-know-oracle-cloud-with-puppet-part-1/))*
 
 
 **Learn more**  
 
-- Download the oci_config module from [puppet_forge]  
-- Read the [puppet_enterprise_guide] to installing the oci_config Puppet module  
-- Follow the guide to [deploy_an_Oracle19_database_via_puppet]  
-Link by Puppet: [puppet_blog]
+- Download the oci_config module from [Puppet forge][puppet_forge]  
+- Read the [Puppet Enterprise Guide][puppet_enterprise_guide] to installing the oci_config Puppet module  
+- Follow the guide to [deploy an Oracle 19 database via Puppet][deploy_an_Oracle19_database_via_puppet].
 
 ### Chef
 
@@ -127,12 +125,11 @@ This diagram shows how you develop, test, and deploy your Chef code
 
 {% imgx assets/chef.png "Chef" %}
 
-*(Image Courtesy https://docs.chef.io/platform_overview.html)*
-*Chef Plugin for OCI*
+*Chef Plugin for OCI ([Image Courtesy](https://docs.chef.io/platform_overview.html))*
 
 The **knife-oci** plugin allows users to interact with Oracle Cloud Infrastructure through chef knife.
 
-The home page for the project is [here] (https://docs.us-phoenix-1.oraclecloud.com/Content/API/SDKDocs/knifeplugin.htm). Plugin can be downloaded from [this](https://github.com/oracle/knife-oci/releases) location.
+The home page for the project is [here](https://docs.us-phoenix-1.oraclecloud.com/Content/API/SDKDocs/knifeplugin.htm). Plugin can be downloaded from [this](https://github.com/oracle/knife-oci/releases) location.
 
 Following are the knife-oci plugin commands available.
 - Launch an OCI instance and bootstrap it as a Chef node: *knife oci server create*
@@ -145,10 +142,9 @@ Following are the knife-oci plugin commands available.
 - List the shapes that may be used for a particular image type: *knife oci shape list*
 - List the availability domains for your tenancy: *knife oci ad list*
 
-How to setup the knife-oci plugin can be found [here] (https://medium.com/oracledevs/using-oracles-chef-plugin-to-provision-resource-in-oracle-cloud-infrastructure-5891100e20ab).   
-OCI documentation for chef is available here: [chef_plugin]
+How to setup the knife-oci plugin can be found [here](https://medium.com/oracledevs/using-oracles-chef-plugin-to-provision-resource-in-oracle-cloud-infrastructure-5891100e20ab). See the [OCI documentation for chef][chef_plugin].
 
-### **Helm**
+### Helm
 
 Helm helps you manage Kubernetes applications: Helm Charts help you define, install, and upgrade even the most complex Kubernetes application. Charts are easy to create, version, share, and publish so you can avoid copy-and-paste.  
 
@@ -160,7 +156,7 @@ The advantages of using Helm for the deployment of applications on top of Kubern
 - Rollbacks
 
 The Oracle Resource Manager (ORM) supports the Terraform provider for Helm and can be easily used in combination with the Terraform Kubernetes providers.  
-Details about Third-party Provider Versions for ORM can be found [here] (https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/providers.htm).   
+Details about Third-party Provider Versions for ORM can be found [here](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/Concepts/providers.htm).   
 
 In order to get the needed information about the Kubernetes cluster we'll need to get the content of the Kubernetes cluster which has been deployed.
 This can be achieved for the Kubernetes and Helm provider this way:
@@ -213,7 +209,7 @@ provider "helm" {
 
 It's recommended as best practice to separate Kubernetes by service into logical entities called *namespaces*. 
 
-Information about namespaces can be found [here] (https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
+Information about namespaces can be found [here](https://kubernetes.io/docs/concepts/overview/working-with-objects/namespaces/).
 
 The following code snippet in terraform creates a namespace:
 
@@ -382,7 +378,7 @@ Furthermore, we have added a 120-second timeout as the loadbalancers will be dep
 
 The overall output via kubectl looks likes follows:
 
-```terraform
+```console
 $ kubectl -n hivekafka get deployments,pods,services
 NAME                                           READY   UP-TO-DATE   AVAILABLE   AGE
 deployment.apps/hivemq-cluster                 3/3     3            3           61m
@@ -401,10 +397,6 @@ service/hivemq-discovery            ClusterIP      None            <none>       
 service/hivemq-mqtt                 LoadBalancer   10.96.49.214    129.159.77.93    1883:31094/TCP   61m
 service/oss-kafka-connect-service   LoadBalancer   10.96.114.200   129.159.74.132   80:31501/TCP     61m
 ```
-
-
-
-[< app-infra][app-infra] | [+][home] | [governance >][governance] 
 
 <!--- Links -->
 [home]:       index

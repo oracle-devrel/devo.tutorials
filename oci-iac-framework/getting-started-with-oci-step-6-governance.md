@@ -4,11 +4,10 @@ parent: [tutorials,oci-iac-framework]
 tags: [open-source, terraform, iac, devops, beginner]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
-date: 2021-10-18 20:00
+date: 2021-12-09 20:00
 description: Introduction to Governance as part of the OCLOUD framework
 toc: true
 author: kubemen
-draft: true
 mrm: WWMK211125P00022
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
@@ -370,30 +369,25 @@ Main Features
 
 ### Modern Cloud Economics
 
- [Unlocking business value of cloud for enterprise workloads][cost_economics]. A C-Suite’s guide to build and execute the Enterprise Cloud Strategy that delivers cloud’s full business value potential.
+[Unlocking business value of cloud for enterprise workloads][cost_economics]. A C-Suite’s guide to build and execute the Enterprise Cloud Strategy that delivers cloud’s full business value potential.
 
- Commercial principles enable enterprises to continuously leverage the optimal commercial frameworks of cloud service  provider, based on the changing usage profiles and deployment requirements, thereby de-risking unexpected cost overruns as well as maximizing the combined financial productivity of on-premise licenses, annual license support, and cloud subscription. The principles are the following:
+Commercial principles enable enterprises to continuously leverage the optimal commercial frameworks of cloud service  provider, based on the changing usage profiles and deployment requirements, thereby de-risking unexpected cost overruns as well as maximizing the combined financial productivity of on-premise licenses, annual license support, and cloud subscription. The principles are the following:
 
- - Delink  data  and  network  linear  usage  from  cost
- - Avoid service deployment lock-in
- - Re-purpose on-premise spend to acquire future cloud capabilities
+- Delink  data  and  network  linear  usage  from  cost
+- Avoid service deployment lock-in
+- Re-purpose on-premise spend to acquire future cloud capabilities
 
 {% imgx assets/economics.jpg 80% "Modern Cloud Economics Enablers of Oracle Cloud Infrastructure (OCI)" %}
 
 
 **OCI enablers for Commercial principles**
 
- OCI offers a range of commercial enablers to optimize rate, de-risk cost overruns and maximize financial productivity across the investments in Oracle on-premise licenses and cloud subscriptions. The key enablers are:
+OCI offers a range of commercial enablers to optimize rate, de-risk cost overruns and maximize financial productivity across the investments in Oracle on-premise licenses and cloud subscriptions. The key enablers are:
 
- - Best price performance guarantee
- - Avoid service deployment lock-in
- - Re-purpose on-premise spend to acquire future cloud capabilities
+- Best price performance guarantee
+- Avoid service deployment lock-in
+- Re-purpose on-premise spend to acquire future cloud capabilities
 
-
-
----
-
-[< workload][workload] | [+][home] | [vizualize >][vizualize]
 
 <!--- Links -->
 [home]:       index
