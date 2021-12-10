@@ -5,10 +5,7 @@ tags: [python, oci]
 date: 2021-12-10 13:04
 description: Ignacio walks you through Oracle MTS, a translation service, using Python and even provides a benchmarking function to test its speed.
 MRM: WWMK211210P00028
-author: 
-    name: Ignacio Martinez 
-    linkedin: ignacio-g-martinez
-	github: jasperan
+author: ignacio-martinez
 ---
 
 ## Introduction

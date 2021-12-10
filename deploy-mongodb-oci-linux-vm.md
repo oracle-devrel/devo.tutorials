@@ -3,9 +3,9 @@ title: Deploying MongoDB in Oracle Cloud (OCI) Linux VM
 parent: [tutorials]
 tags: [devops, python]
 date: 2021-12-10 14:34
-description: MongoDB and Oracle Cloud Infrastructure play well together—Olivier shows you how to configure your envionment to connect them.
+description: MongoDB and Oracle Cloud Infrastructure play well together --- Olivier shows you how to configure your envionment to connect them.
 MRM: WWMK211208P00082
-author: Olivier Francois Xavier Perard
+author: olivier
 ---
 If you've ever wanted a guide for running MongoDB Enterprise/Community in your Oracle Cloud Infrastructure (OCI) environment, we have good news for you! 
 
