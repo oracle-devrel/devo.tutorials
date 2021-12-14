@@ -230,6 +230,7 @@ Follow these steps to set up your instance and build your application:
 
     ```console
     $ sudo yum update
+    $ sudo yum install -y oracle-nodejs-release-el7
     $ sudo yum install -y nodejs
     $ node --version
     ```
