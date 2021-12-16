@@ -6,13 +6,8 @@ tags: [backend, oci]
 date: 2021-12-15 13:34
 description: Redis, Prometheus, OKE, oh my!
 MRM: WWMK211213P00053
-ali-mukadam:
-  name: Ali Mukadam
-  home: https://lmukadam.medium.com
-  bio: |-
-    Technical Director, Asia Pacific Center of Excellence.
-    For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
-  linkedin: alimukadam
+author: ali-mukadam
+toc: false
 ---
 In the [previous post](https://medium.com/@lmukadam/extending-terraform-oke-with-a-helm-chart-a51ae0df29d4), we added a simple extension to the [terraform-oci-oke project](https://github.com/oracle-terraform-modules/terraform-oci-oke) so that it uses the [Redis helm chart](https://github.com/helm/charts/tree/master/stable/redis) to deploy a Redis cluster on Kubernetes
 
@@ -57,6 +52,7 @@ Setting `serviceMonitorSelectorNilUsesHelmValues` to false ensures that all Serv
 
 Get a list of pods and identify the Prometheus pods:
 
+<!--EDIT there's a line break missing somewhere between grep and prom- but I'm not sure where-->
 ```console
 kubectl -n monitoring get pods | grep prometheusalertmanager-prom-operator-prometheus-o-alertmanager-0   2/2     Running   0          18s                                                        
 prom-operator-prometheus-node-exporter-9xhzr             1/1     Running   0          24s                                                        
@@ -140,7 +136,7 @@ Let’s now do a mass insertion of data into Redis. I found this neat gem to loa
 
 Given a csv file of the following format:
 
-```console
+```
 id, first name, age, gender, nickname, salary
 1, John Smith, 40, Male, John, 10000
 2, Marco Polo, 43, Male, Marco, 10000
@@ -162,6 +158,7 @@ pip install mimesis
 
 And we will adapt the schema a little bit so we can make use of whatever mimesis provides to create a csv file using Python:
 
+<!--EDIT: This appears to be mangled python, please validate from source-->
 ```console
 import csvfrom mimesis import Personfrom mimesis.enums import Genderen = Person('en')with open('file.csv',mode='w') as csv_file:field_names = ['id', 'full name', 'age', 'gender', 'username', 'weight']writer = csv.DictWriter(csv_file, fieldnames=field_names)writer.writeheader()for n in range(100000):writer.writerow({'id': str(n), 'first name': en.full_name(), 'age': str(en.age()), 'gender': en.gender(), 'username':en.username(), 'weight':str(en.weight())})
 ```
@@ -183,7 +180,8 @@ This will allow us to use the redis-cli from the bastion where we have generated
 On the bastion, get a list of Redis pods:
 
 ```console
-kubectl -n redis get podsNAME                             READY   STATUS    RESTARTS   AGE                                                                                
+kubectl -n redis get pods
+NAME                             READY   STATUS    RESTARTS   AGE                                                                                
 redis-master-0                   1/1     Running   0          156m                                                                               
 redis-metrics-794db76ff7-xmd2q   1/1     Running   0          156m                                                                               
 redis-slave-7fd8b55f7-25w8d      1/1     Running   1          156m                                                                               
@@ -193,6 +191,7 @@ redis-slave-7fd8b55f7-mjq8q      1/1     Running   1          156m
 
 Afterwards, use port-forward to so you can access it using the redis-cli:
 
+<!--EDIT is there actually a command `k`?-->
 ```console
 k -n redis port-forward redis-master-0 6379:6379
 Forwarding from 127.0.0.1:6379 -> 6379
@@ -206,6 +205,7 @@ export REDIS_PASSWORD=$(kubectl get secret --namespace redis redis -o jsonpath="
 
 Do a quick test to see you can connect to Redis:
 
+<!--EDIT command appears mangled-->
 ```console
 redis-cli -a $REDIS_PASSWORD127.0.0.1:6379> ping                                                                                                                                                        
 PONG                                                                                                                                                                        
@@ -220,10 +220,13 @@ kubectl -n monitoring port-forward prom-operator-grafana-77cdf86d94-m8pv5 3000:3
 
 Now import the csv file as follows:
 
+<!--EDIT appears mangled, assume line break in --pipe\nAll, and no line break before file.csv-->
 ```console
-awk -F, 'NR > 1{ print "SET", "\"employee_"$1"\"", "\""$0"\"" }' 
-file.csv | redis-cli -a $REDIS_PASSWORD --pipeAll data transferred. Waiting for the last reply...                                                                                                                   
-Last reply received from server.                                                                                                                                      
+awk -F, 'NR > 1{ print "SET", "\"employee_"$1"\"", "\""$0"\"" }' file.csv | redis-cli -a $REDIS_PASSWORD --pipe
+All data transferred. Waiting for the last reply...
+
+Last reply received from server.
+
 errors: 0, replies: 1000000
 ```
 
@@ -235,7 +238,8 @@ While we installed the Prometheus Operator and Redis Cluster manually using the 
 
 However, when you use Terraform to do the provisioning, you will need to explicitly set the order as follows:
 
-```console
+<!--EDIT please verify indentation-->
+```terraform
 resource "helm_release" "prometheus-operator" {
       ...
       ...
