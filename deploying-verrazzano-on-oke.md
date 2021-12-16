@@ -36,6 +36,8 @@ The single cluster deployment model is easy:
 
 After this, you can deploy your application of choice.
 
+Remember, if you don't yet have an OCI account, you can quickly sign up for one today by registering for an [Oracle Cloud Free Tier](https://www.oracle.com/cloud/free/#always-free) account.
+
 ## Creating the OKE cluster
 We will start by creating the OKE cluster using [Terraform OKE module](https://github.com/oracle-terraform-modules/terraform-oci-oke). Since we are only taking Verrazzano for a spin, we only need the bare minimum features. Follow the [quickstart](https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/quickstart.adoc) guide, create the providers and create a copy of the terraform.tfvars.example and rename the copy to terraform.tfvars. Ensure the following features/resources are enabled/created:
 
