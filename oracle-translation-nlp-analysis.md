@@ -17,7 +17,7 @@ Let’s explore some examples of how Oracle's MT services are different from oth
 
 If you don't yet have an OCI account, you can quickly sign up for one today by registering for an [Oracle Cloud Free Tier](https://www.oracle.com/cloud/free/#always-free) account. 
 
-Afterwards, check [developer.oracle.com/linux](https://developer.oracle.com/python/) for even more Pytnon content.
+Afterwards, check [developer.oracle.com/linux](https://developer.oracle.com/python/) for even more Python content.
 
 ## Authentication
 
