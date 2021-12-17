@@ -10,7 +10,6 @@ thumbnail: assets/call-a-func-oracle-funcs-api-gtw-diagram.png
 sort: desc
 tags:
 - python
-- apigateway
 - oci
 parent: tutorials
 date: 2021-11-20 12:01

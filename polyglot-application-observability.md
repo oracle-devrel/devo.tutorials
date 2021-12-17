@@ -2,9 +2,7 @@
 title: Polyglot Application Observability
 parent: tutorials
 tags:
-- pinpoint
 - graalvm
-- observability
 categories:
 - clouddev
 thumbnail: assets/polyglot-daigram-graalServer1.png

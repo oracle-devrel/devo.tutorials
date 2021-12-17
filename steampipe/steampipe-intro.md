@@ -8,7 +8,7 @@ tags:
 - steampipe
 - iac
 - devops
-- beginner
+- get-started
 categories:
 - iac
 - opensource

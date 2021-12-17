@@ -2,10 +2,10 @@
 title: How to Deploy a Python Flask Application in a Kubernetes cluster
 parent: tutorials
 tags:
+- flask
+- kubernetes
 - oci
 - open-source
-- kubernetes
-- flask-cloud-shell
 - python
 thumbnail: assets/flask-shell-diagram.png
 date: 2021-10-11 01:00

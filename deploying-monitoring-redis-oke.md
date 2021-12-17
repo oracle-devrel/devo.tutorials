@@ -2,7 +2,7 @@
 title: Deploying and monitoring a Redis cluster to Oracle Container Engine (OKE)
 parent: [tutorials]
 thumbnail: assets/redis-dashboard.png
-tags: [backend, oci]
+tags: [back-end, oci]
 date: 2021-12-15 13:34
 description: Redis, Prometheus, OKE, oh my!
 MRM: WWMK211213P00053

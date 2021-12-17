@@ -6,7 +6,7 @@ description: Using Terraform to create a data lake on Oracle Cloud Infrastructur
 thumbnail: assets/datalakeocichart_4481-9331b237844018b1.png
 author: Ali Mukadam
 tags:
-- kubernetis
+- kubernetes
 - devops
 - terraform
 - oci

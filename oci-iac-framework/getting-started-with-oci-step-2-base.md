@@ -9,7 +9,7 @@ tags:
 - terraform
 - iac
 - devops
-- beginner
+- get-started
 categories:
 - iac
 - opensource

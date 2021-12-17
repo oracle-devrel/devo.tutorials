@@ -2,7 +2,7 @@
 title: "Free Tier: Install WordPress on an Ubuntu Instance"
 parent: [tutorials]
 toc: true
-tags: [ubuntu, backend]
+tags: [ubuntu, back-end]
 categories: [modernize]
 thumbnail: assets/modernize-healthcare-ambulance.jpeg
 date: 2021-11-24 9:45

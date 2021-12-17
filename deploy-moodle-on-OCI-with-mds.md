@@ -3,8 +3,7 @@ title: Deploy Moodle on OCI with MDS
 parent: tutorials
 tags:
 - oci
-- moodle
-- MySQL
+- mysql
 toc: true
 categories:
 - frameworks

@@ -7,7 +7,7 @@ parent: [tutorials]
 description: Jumpstart your OCI experience using the OCLOUD framework to build your environment in 7 steps
 thumbnail: assets/landing-zone.png
 author: kubemen
-tags: [open-source, terraform, iac, devops, beginner]
+tags: [open-source, terraform, iac, devops, get-started]
 sort: asc
 color: purple
 date: 2021-12-09 11:00

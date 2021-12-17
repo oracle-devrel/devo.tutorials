@@ -6,7 +6,7 @@ parent: [tutorials]
 description: Jumpstart your OCI management experience using IaC (specifically Terraform) with this tutorial series.
 thumbnail: assets/terraform-101.png
 author: tim-clegg
-tags: [open-source, terraform, iac, devops, beginner]
+tags: [open-source, terraform, iac, devops, get-started]
 sort: asc
 date: 2021-09-28 08:13
 ---

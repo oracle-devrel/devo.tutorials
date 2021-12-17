@@ -7,7 +7,6 @@ tags:
 - mysql
 - oci
 - analytics
-- bi
 thumbnail: assets/mds_superset/mds_superset.webp
 date: 2021-10-20 09:18
 description: Deploy Open Source BI, reporting tool on OCI using MySQL Databse Service.

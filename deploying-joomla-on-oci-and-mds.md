@@ -2,11 +2,9 @@
 title: Deploying Joomla! on OCI and MDS
 parent: tutorials
 tags:
-- playwright
-- chrome
 - docker
-- node.js
-- MySQL
+- nodejs
+- mysql
 categories:
 - frameworks
 - modernize

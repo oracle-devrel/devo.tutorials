@@ -2,7 +2,6 @@
 title: Get Started with the Feature Store HopsWorks (LogicalClocks) on Oracle Cloud
 parent: tutorials
 tags:
-- feature-store
 - open-source
 - machine-learning
 date: 2021-11-18 09:45

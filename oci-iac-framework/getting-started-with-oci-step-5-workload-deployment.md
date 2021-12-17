@@ -1,7 +1,7 @@
 ---
 title: Workload Deployment
 parent: [tutorials,oci-iac-framework]
-tags: [open-source, terraform, iac, devops, beginner]
+tags: [open-source, terraform, iac, devops, get-started]
 categories: [iac, opensource]
 thumbnail: assets/landing-zone.png
 date: 2021-12-09 08:00

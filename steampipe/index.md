@@ -5,7 +5,7 @@ series: steampipe
 description: Resources for using Steampipe on Oracle Cloud Infrastructure.
 thumbnail: assets/pexels-gabriela-palai-507410.jpg
 author: tim-clegg
-tags: [open-source, terraform, iac, devops, beginner]
+tags: [open-source, terraform, iac, devops, get-started]
 date: 2021-11-24 08:00
 ---
 

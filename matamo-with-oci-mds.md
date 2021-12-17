@@ -8,7 +8,7 @@ thumbnail: assets/matamo-progress-bar.webp
 tags:
 - mysql
 - analytics
-- backend
+- back-end
 date: 2021-11-18 11:11
 description: Matamo, an alternative to Google Analytics, is becoming increasingly
   popular. This walkthrough shows you how to use this powerful tool with MySQL Database

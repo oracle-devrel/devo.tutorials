@@ -3,8 +3,7 @@ title: Using OCI Cloud Shell & Bastion with MySQL Database Service
 parent: tutorials
 tags:
 - oci
-- bastion
-- MySQL
+- mysql
 - always-free
 categories:
 - frameworks

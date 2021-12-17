@@ -8,8 +8,7 @@ tags:
 - ansible
 - data-visualization
 - data-management
-personas:
-- backend
+- back-end
 date: 2021-11-18 09:42
 description: This tutorial walks you through configuring a basic OCI monitoring solution
   with components based on Ansible in Oracle Linux 8.
