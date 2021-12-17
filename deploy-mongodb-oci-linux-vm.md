@@ -16,6 +16,10 @@ If you've ever wanted a guide for running MongoDB Enterprise/Community in your O
 * Python 3.6 or higher is installed.
 * You have access to root either directly or via sudo. By default in OCI, you are connected like an "opc" user with sudo privilege.
 
+If you don't yet have an OCI account, you can quickly sign up for one today by registering for an [Oracle Cloud Free Tier](https://www.oracle.com/cloud/free/#always-free) account. 
+
+Afterwards, check [developer.oracle.com/linux](https://developer.oracle.com/linux/) for even more Linux content.
+
 ## MongoDB Installation
 
 Create an `/etc/yum.repos.d/mongodb-enterprise-5.0.` repo file in the yum configuration so that you can install MongoDB Enterprise directly with this command:

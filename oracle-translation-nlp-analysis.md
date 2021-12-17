@@ -15,6 +15,10 @@ Oracle Translate is an MTS made available by Oracle’s International Product So
 
 Let’s explore some examples of how Oracle's MT services are different from other translation services like Google's.
 
+If you don't yet have an OCI account, you can quickly sign up for one today by registering for an [Oracle Cloud Free Tier](https://www.oracle.com/cloud/free/#always-free) account. 
+
+Afterwards, check [developer.oracle.com/linux](https://developer.oracle.com/python/) for even more Python content.
+
 ## Authentication
 
 Authentication is performed against Oracle Cloud resources and handled by Oracle's Identity Cloud Service (IDCS), using base 64 encoding.
