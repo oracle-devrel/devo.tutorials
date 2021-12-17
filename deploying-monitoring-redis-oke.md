@@ -246,11 +246,11 @@ kubectl -n monitoring port-forward prom-operator-grafana-77cdf86d94-m8pv5 3000:3
 Now import the csv file as follows:
 
 ```console
-awk -F, 'NR > 1{ print "SET", "\"employee_"$1"\"", "\""$0"\"" }' 
-file.csv | redis-cli -a $REDIS_PASSWORD --pipe
+awk -F, 'NR > 1{ print "SET", "\"employee_"$1"\"", "\""$0"\"" }' file.csv | redis-cli -a $REDIS_PASSWORD --pipe
 
-All data transferred. Waiting for the last reply...                                                                                                                   
-Last reply received from server.                                                                                                                                      
+All data transferred. Waiting for the last reply...                                                                                      
+Last reply received from server.
+     
 errors: 0, replies: 1000000
 ```
 
