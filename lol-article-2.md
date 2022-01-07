@@ -125,7 +125,9 @@ Subsequently, in our `data_mine()` function, we will only process those matches 
 ```python
 all_match_ids = collection_match.find().filter({'processed_1v1': {"$ne":1}}).getDocuments()
 ```
+
 After processing our 1v1 models, in the upcoming articles we will make the same filtering but for the other processed bit:
+
 ```python
 all_match_ids = collection_match.find().filter({'processed_5v5': {"$ne":1}}).getDocuments()
 ```

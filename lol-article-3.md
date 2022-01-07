@@ -217,7 +217,6 @@ if winner_prediction == 1:
     print('Predicted winner is team 1: \n{}'.format(str(inverse_prediction['champ1'])))
 else:
      print('Predicted winner is team 2: \n{}'.format(str(inverse_prediction['champ2'])))
-
 ```
 
 Now, we can see one prediction per case, totaling 5 cases, and one final team prediction using our `find_winner()`:
@@ -264,7 +263,6 @@ df.head(2)
 | :--------: | :----------: | :---------------------: | :----: | :-----: | :------: | :------: | :--------: | :---------: | :--------: | :--------: | :--------: | :--------: |
 | BR1_2309470512_jungle | 7670 | 37 | False | 4 | 2 | 7 | Graves | 23 | b1ZVlTG630NWh8Hgc7H-_-SErq3E3OkV50XSBuz_uzkIuA... |11215 | tired blessed | 	11.14.385.9967 |
 | EUN1_2809958230_top | 11108 | 202 | False | 1 | 9 | 8 | Gwen | 28 | 19ii6j4OOWmkUaw_yAXhMOhcgUvZaK8M1yVT0I3HwBYQka... | 17617 | ozzyDD 	| 11.8.370.4668 |
-
 
 We determine our predicting feature and fit the model:
 
