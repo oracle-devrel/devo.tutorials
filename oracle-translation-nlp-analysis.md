@@ -203,7 +203,9 @@ Each request takes about an average of 1.5 seconds to finish.
 
 ## Docker setup
 
-I've included a Docker file that only requires a config.yaml file to run. The contents of `config.yaml` should be like this:
+I've included a Docker file that only requires a config.yaml file to run. To download the Docker file, find it in [this GitHub](https://github.com/oracle-devrel/nlp-oracle-translation/tree/main/oracle) directory.
+
+The contents of `config.yaml` should be like this:
 
 ```yaml
 mt_translation:
