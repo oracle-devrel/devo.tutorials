@@ -1,5 +1,5 @@
 ---
-title: Making calls to the OCI API using Postman
+title: Making calls to the Oracle Cloud API using Postman
 parent: tutorials
 tags:
 - api
@@ -11,7 +11,7 @@ description: Learn how to make calls directly to the OCI API using Postman.
 categories:
 - devops
 author: tim-clegg
-mrm: FIXME
+mrm: WWMK220203P00028
 ---
 
 {% imgx alignright assets/pexels-adis-bacinovic-7103901.jpg 800 534 "Mail box" %}
