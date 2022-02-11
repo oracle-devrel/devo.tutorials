@@ -76,3 +76,5 @@ node sendmail.js
 That’s all, hope it helps! 🙂
 
 If you’re curious about the goings-on of Oracle Developers in their natural habitat, come join us on our [public Slack channel](https://oracledevrel.slack.com/join/shared_invite/zt-uffjmwh3-ksmv2ii9YxSkc6IpbokL1g#/shared-invite/email)!
+
+And don't forget our [free tier](https://signup.cloud.oracle.com/?language=en), where you can try out what we just discussed.
