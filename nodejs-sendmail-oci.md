@@ -6,7 +6,7 @@ languages: [nodejs]
 categories: [frameworks, cloudapps]
 thumbnail: assets/ociemailimage-10.jpg
 description: Use Oracle Cloud Infrastructure to manage a high-volume email solution for sending out emails to many recipients for critical communications.
-date: 2022-02-04 19:42
+date: 2022-02-14 19:42
 mrm: WWMK220204P00005
 author:
     name: Javier Mugueta
