@@ -1,5 +1,6 @@
 ---
 title: Sending Emails from OCI with Email Delivery Service in Node.js 
+parent: [tutorials]
 toc: false
 tags: [open-source, oci, always-free, nodejs, javascript]
 languages: [nodejs]
