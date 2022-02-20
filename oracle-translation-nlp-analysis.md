@@ -27,13 +27,13 @@ The two main components of Oracle Translate are a client ID and a client secret.
 
 ```python
 # Defining variables
-IDCSSERVER = 'https://idcs-49a260143f4b4a309c5adc9e8a25de61.identity.oraclecloud.com'
+IDCSSERVER = '<url_provided_by_oracle_mts_team.com>'
 SCOPE = 'urn:opc:idm:__myscopes__'
 # Production endpoint
-BASEURL = 'https://translation-api.us.oracle.com'
+BASEURL = '<url_provided_by_oracle_mts_team.com>'
 ENDPOINT = '{}/translation/api'.format(BASEURL)
-REALTIME_ENDPOINT = 'https://mt.oraclecorp.com/api'
-NLP_ENDPOINT = 'https://mt.oraclecorp.com/nlp-api'
+REALTIME_ENDPOINT = '<url_provided_by_oracle_mts_team.com>'
+NLP_ENDPOINT = '<url_provided_by_oracle_mts_team.com>'
 data = load_config_file()
 basic_authorization = '{}:{}'.format(
 data['mt_translation']['MT_CLIENT_ID'], data['mt_translation']['MT_CLIENT_SECRET']
