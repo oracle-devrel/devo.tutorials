@@ -9,7 +9,7 @@ author: ignacio-martinez
 ---
 
 ## Introduction
-Welcome! This article is an overview of Oracle's Machine Translation Services (MTS) and how they complement the standard open-source NLP libraries out there today.
+Welcome! This article is an overview of Oracle's Machine Translation Services (MTS) and how they complement the standard open-source NLP libraries out there today. Currently, this service is focused / created with the intention of helping Oracle internal teams translate texts in a secure way (see below), so this is not a readily available product. However, there are plans for the future to make it available for OCI users.
 
 Oracle Translate is an MTS made available by Oracle’s International Product Solutions. It's beneficial to use Oracle's service over others, especially for sensitive information, because other services, such as Google Translate, are known to harvest and collect requesting data which could infringe on company confidentiality and chain of custody of protected documents. Oracle's service does not store this information, and all transactions happen in a secure Oracle network environment.
 
@@ -106,9 +106,9 @@ def batch_translation(api_token, file_path, file_name):
 After executing and periodically waiting for the resulting file to be ready, we get our processed data in about 40 seconds:
 
 ```console
-Request URL: https://translation-api.us.oracle.com/translation/api/files?service=mt&sourceLang=en&scope=fr
+Request URL: <url_provided_by_oracle_mts_team.com>
 Request file: {'file': ('intro.md', <_io.BufferedReader name='../data/intro.md'>)}
-202 {'id': 115162, 'status': 'CREATED', 'service': 'mt', 'source': {'originalPath': 'intro.md', 'language': 'en'}, 'scope': ['fr'], 'otp_instance_id': 343337, '_links': {'self': 'https://ipscloud.us.oracle.com/translation/api/requests/115162', 'otp_status': 'https://ips.us.oracle.com/otp-service/api/instances/343337/status?extended=true', 'otp_wordcount': 'https://ips.us.oracle.com/otp-service/api/instances/343337/wordcounts'}, 'pipeline': {'id': 343337, 'status': 'https://ips.us.oracle.com/otp-service/api/instances/343337/status?extended=true', 'wordcount': 'https://ips.us.oracle.com/otp-service/api/instances/343337/wordcounts'}}
+202 {'id': 115162, 'status': 'CREATED', 'service': 'mt', 'source': {'originalPath': 'intro.md', 'language': 'en'}, 'scope': ['fr'], 'otp_instance_id': 343337, '_links': {'self': '<url_provided_by_oracle_mts_team.com>', 'otp_status': '<url_provided_by_oracle_mts_team.com>', 'otp_wordcount': '<url_provided_by_oracle_mts_team.com>'}, 'pipeline': {'id': 343337, 'status': '<url_provided_by_oracle_mts_team.com>', 'wordcount': '<url_provided_by_oracle_mts_team.com>'}}
 Waiting for translated file to be ready...
 {'id': 343337, 'state': 'RUNNING', 'pipeline_id': 1, 'start': '2021-11-17T00:24:57Z', 'update_time': '2021-11-17T00:24:57Z', 'end': '', 'running_time_str': '1s', 'updated_ago_in_str': '1s', 'progress': {'preprocessing': 0, 'translation': 0, 'merge_and_delivery': 0}, 'map': {'translated_langs': [], 'deferred_langs': [], 'originalFileName': 'intro.md'}, 'messages': []}
 Waiting for translated file to be ready...
@@ -116,8 +116,8 @@ Waiting for translated file to be ready...
 Waiting for translated file to be ready...
 {'id': 343337, 'state': 'RUNNING', 'pipeline_id': 1, 'start': '2021-11-17T00:24:57Z', 'update_time': '2021-11-17T00:24:57Z', 'end': '', 'running_time_str': '23s', 'updated_ago_in_str': '23s', 'progress': {'preprocessing': 0, 'translation': 0, 'merge_and_delivery': 0}, 'map': {'translated_langs': [], 'deferred_langs': [], 'originalFileName': 'intro.md'}, 'messages': []}
 Waiting for translated file to be ready...
-{'id': 343337, 'state': 'RUNNING', 'pipeline_id': 1, 'start': '2021-11-17T00:24:57Z', 'update_time': '2021-11-17T00:25:21Z', 'end': '', 'running_time_str': '34s', 'updated_ago_in_str': '10s', 'progress': {'preprocessing': 100, 'translation': 1, 'merge_and_delivery': 0}, 'map': {'languages': 1, 'translated_langs': [], 'deferred_langs': [], 'en_drop': 'https://ipscloud.us.oracle.com/translation_artifact/drop-pre_release-local/developer_relations/developer_relations-developer_relations-ua/1.0-s115162/developer_relations-developer_relations-ua-1.0-s115162.zip', 'originalFileName': 'intro.md'}, 'messages': []}
-File result in https://ipscloud.us.oracle.com/translation_artifact/drop-pre_release-local/developer_relations/developer_relations-developer_relations-ua/1.0-s115162/developer_relations-developer_relations-ua-1.0-s115162.zip
+{'id': 343337, 'state': 'RUNNING', 'pipeline_id': 1, 'start': '2021-11-17T00:24:57Z', 'update_time': '2021-11-17T00:25:21Z', 'end': '', 'running_time_str': '34s', 'updated_ago_in_str': '10s', 'progress': {'preprocessing': 100, 'translation': 1, 'merge_and_delivery': 0}, 'map': {'languages': 1, 'translated_langs': [], 'deferred_langs': [], 'en_drop': '<url_provided_by_oracle_mts_team.com>/s115162.zip', 'originalFileName': 'intro.md'}, 'messages': []}
+File result in <url_provided_by_oracle_mts_team.com>/s115162.zip
 ```
 
 And with the final result we can download the .zip file with our translated file inside the folder. 
@@ -168,7 +168,7 @@ python mt_translation.py --source-language-code "en" --target-language-code "fr"
 We see this result:
 
 ```bash
-https://mt.oraclecorp.com/api/translate/en/fr?s=This%20is%20an%20example
+<url_provided_by_oracle_mts_team.com>/translate/en/fr?s=This%20is%20an%20example
 200 b"C'est un exemple"
 ```
 
