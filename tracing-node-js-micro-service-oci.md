@@ -53,11 +53,13 @@ const {HttpLogger} = require('zipkin-transport-http');
 ```
 
 Replace the last line with:
+
 ```console
 const CLSContext = require('zipkin-context-cls');
 ```
 
 We continue with:
+
 ```console
 const debug = 'undefined' !== typeof window
   ? window.location.search.indexOf('debug') !== -1
@@ -65,6 +67,7 @@ const debug = 'undefined' !== typeof window
 ```
 
 Of course, the BaseURL will not be a localhost, so remove the line below the comment here:
+
 ```console
 // Send spans to Zipkin asynchronously over HTTP
 const zipkinBaseUrl = 'http://localhost:9411';
@@ -73,6 +76,7 @@ const zipkinBaseUrl = 'http://localhost:9411';
 ```
 
 And replace **const zipkinBaseUrl = 'http://localhost:9411;'** with:
+
 ```console
 const httpLogger = new HttpLogger({
   endpoint: '<domain data upload endpoint in step 2>/20200101/observations/public-span?dataFormat=zipkin&dataFormatVersion=2&dataKey=<public data key in step 2>',
@@ -81,6 +85,7 @@ const httpLogger = new HttpLogger({
 ```
 
 Here we'll remove this logger and add a tracer. First remove this:
+
 ```console
 const httpLogger = new HttpLogger({
   endpoint: `${zipkinBaseUrl}/api/v2/spans`,
@@ -89,6 +94,7 @@ const httpLogger = new HttpLogger({
 ```
 
 And add this:
+
 ```console
 // Setup the tracer
 const tracer = new Tracer({
@@ -102,6 +108,7 @@ const tracer = new Tracer({
 ```
 
 The rest should look like this:
+
 ```console
 function recorder(serviceName) {
   return debug ? debugRecorder(serviceName) : new BatchRecorder({logger: httpLogger});
