@@ -14,17 +14,17 @@ author:
     home: https://javiermugueta.blog/author/javiermugueta/ 
 ---
 
-In this post we are deploying a custom Node.js web application in Oracle Kubernetes Engine (OKE).
+In this post we are deploying a custom Node.js web application in the Oracle Kubernetes Engine (OKE).
 
 We want to show how to configure the custom web application so we have a unique Single Sign On user experience.
 
 ## First part
 
-Follow this tutorial [here ](https://www.oracle.com/webfolder/technetwork/tutorials/obe/cloud/idcs/idcs_nodejs_sdk_obe/idcs-nodejs-sdk.html)explaining how to enable SSO to the web app running locally
+Follow this tutorial [here](https://www.oracle.com/webfolder/technetwork/tutorials/obe/cloud/idcs/idcs_nodejs_sdk_obe/idcs-nodejs-sdk.html) explaining how to enable SSO in the web app running locally.
 
 ## Second part
 
-Now we are making small changes to deploy on kubernetes
+Next we make some small changes to deploy on Kubernetes.
 
 Create a Dockerfile in the nodejs folder of the cloned project with the following:
 
@@ -38,9 +38,9 @@ EXPOSE 3000
 CMD ["npm","start"]
 ```
 
-Create K8s deployment file as follows:
+Create a K8s deployment file as follows:
 
-```console 
+```yaml
 apiVersion: v1
 kind: Service
 metadata:
@@ -61,9 +61,9 @@ Deploy to k8s:
 kubectl apply -f service.yaml
 ```
 
-Grab the url of the new external load-balancer service created in k8s and modify the file auth.js with the appropriate values in your cloud environment
+Grab the url of the new external load-balancer service created in K8s and modify the file `auth.js` with the appropriate values in your cloud environment:
 
-```console 
+```console
 var ids = {
 oracle: {
 "ClientId": "**client id of the IdCS app**",
@@ -88,13 +88,13 @@ docker build -t javiermugueta/idcsnodeapp .
 docker push javiermugueta/idcsnodeapp
 ```
 
-Modify the IdCS application with the public IP of the k8s load-balancer service
+Modify the IdCS application with the public IP of the k8s load-balancer service:
 
 {% imgx assets/okenodejavierimagaidcssso.png %}
 
 Create a k8s deployment file as follows:
 
-```console
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -120,19 +120,16 @@ ports:
 - containerPort: 3000
 name: idcsnodeapp
 ``` 
-    
-    
 
-Deploy to k8s
+Deploy to K8s:
 
 ```console
-    kubectl apply -f  deployment.yaml
+kubectl apply -f  deployment.yaml
 ```
 
 Test the app and verify SSO is working:
+
 {% imgx assets/okejavierslideshowpartidcssso1.png %}
 
-
-
-Hope it helps! 🙂
+Hope this helps! 🙂
 
