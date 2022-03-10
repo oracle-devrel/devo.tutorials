@@ -7,7 +7,7 @@ languages: [nodejs]
 categories: [frameworks, cloudapps]
 thumbnail: assets/ociemailimage-10.jpg
 description: How to configure custom Node.js web application to have a unique Single Sign On user experience.
-date: 2022-03-12 18:42
+date: 2022-03-10 08:42
 mrm: WWMK210625P00048 
 author:
     name: Javier Mugueta
