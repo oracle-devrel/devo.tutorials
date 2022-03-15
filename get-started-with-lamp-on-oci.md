@@ -21,6 +21,7 @@ author:
   github: lefred
 redirect_from: "/collections/tutorials/get-started-with-lamp-on-oci/"
 mrm: WWMK211117P00082
+redirect: https://developer.oracle.com/tutorials/get-started-with-lamp-on-oci/
 ---
 
 

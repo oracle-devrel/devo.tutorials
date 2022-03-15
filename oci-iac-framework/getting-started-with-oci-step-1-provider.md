@@ -20,6 +20,7 @@ toc: true
 author: kubemen
 date: 2021-10-29 08:00
 mrm: WWMK211125P00022
+redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-1-provider/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

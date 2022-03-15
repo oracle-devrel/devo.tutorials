@@ -1,11 +1,16 @@
 ---
 title: Using Oracle's Machine Translation Services for NLP Analysis
-parent: [tutorials]
-tags: [python, oci]
+parent:
+- tutorials
+tags:
+- python
+- oci
 date: 2021-12-10 13:04
-description: Ignacio walks you through Oracle MTS, a translation service, using Python and even provides a benchmarking function to test its speed.
+description: Ignacio walks you through Oracle MTS, a translation service, using Python
+  and even provides a benchmarking function to test its speed.
 MRM: WWMK211210P00028
 author: ignacio-martinez
+redirect: https://developer.oracle.com/tutorials/oracle-translation-nlp-analysis/
 ---
 
 ## Introduction

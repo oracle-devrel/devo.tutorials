@@ -1,14 +1,24 @@
 ---
 title: Database Infrastructure
-parent: [tutorials,oci-iac-framework]
-tags: [open-source, terraform, iac, devops, get-started]
-categories: [iac, opensource]
+parent:
+- tutorials
+- oci-iac-framework
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- get-started
+categories:
+- iac
+- opensource
 thumbnail: assets/landing-zone.png
 date: 2021-12-01 12:00
 description: How to deploy database infrastructure on top of the OCLOUD framework
 toc: true
 author: kubemen
 mrm: WWMK211201P00070
+redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-3-database-infrastructure/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

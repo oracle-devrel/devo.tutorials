@@ -1,14 +1,20 @@
 ---
 title: Creating an E-commerce Site with Oracle Coherence CE and Micronaut
-parent: [tutorials]
-tags:  [analytics, oci]
+parent:
+- tutorials
+tags:
+- analytics
+- oci
 date: 2022-01-14 13:04
-description: Coherence and Micronaut are powrful bedfellows when used together. This tutorial steps you through using them to build a hypothetical online sock shop. That's right, socks.
+description: Coherence and Micronaut are powrful bedfellows when used together. This
+  tutorial steps you through using them to build a hypothetical online sock shop.
+  That's right, socks.
 mrm: WWMK220110P00039
 thumbnail: assets/coherence-micronaut-diagram.png
 author:
-  name:  Aleks Seovic 
+  name: Aleks Seovic
   github: https://github.com/aseovic
+redirect: https://developer.oracle.com/tutorials/coherence-micronaut-sock-shopp/
 ---
 Welcome! 
 

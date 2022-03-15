@@ -19,6 +19,7 @@ description: Steampipe is a great tool that you should have in your IaC toolbox.
 toc: true
 author: jon-decamp
 mrm: WWMK211125P00011
+redirect: https://developer.oracle.com/tutorials/steampipe/steampipe-intro/
 ---
 *[OCI]: Oracle Cloud Infrastructure
 

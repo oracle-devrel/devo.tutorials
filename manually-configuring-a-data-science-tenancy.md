@@ -17,6 +17,7 @@ description: Configure your tenancy for Data Science and test creating a noteboo
 author: olivier
 redirect_from: "/collections/tutorials/manually-configuring-a-data-science-tenancy/"
 mrm: WWMK211117P00085
+redirect: https://developer.oracle.com/tutorials/manually-configuring-a-data-science-tenancy/
 ---
 {% slides %}
 Learn how to get started configuring your tenancy for Data Science and test creating a notebook session.

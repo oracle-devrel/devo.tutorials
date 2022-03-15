@@ -1,10 +1,17 @@
 ---
-title: Hosting a private Helm Repository on OCI (Oracle Cloud Infrastructure) with ChartMuseum and OCI Object Storage
-parent: [tutorials]
-thumbnail:  assets/helm-network-diagram.png
-tags: [back-end, oci]
+redirect: https://developer.oracle.com/tutorials/helm-repository-chartmuseum-object/
+title: Hosting a private Helm Repository on OCI (Oracle Cloud Infrastructure) with
+  ChartMuseum and OCI Object Storage
+parent:
+- tutorials
+thumbnail: assets/helm-network-diagram.png
+tags:
+- back-end
+- oci
 date: 2021-12-15 12:21
-description: This guide walks you through how to host Helm Chart privately with ChartMuseum,  an open source Helm Chart Repository server with support for various cloud storage backends, including OCI Object Storage.
+description: This guide walks you through how to host Helm Chart privately with ChartMuseum,  an
+  open source Helm Chart Repository server with support for various cloud storage
+  backends, including OCI Object Storage.
 MRM: WWMK211213P00054
 ali-mukadam:
   name: Ali Mukadam

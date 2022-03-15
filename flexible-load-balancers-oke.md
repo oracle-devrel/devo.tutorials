@@ -10,6 +10,7 @@ description: New load balancer shapes mean more options to optimize your configu
   Ali walks you through how to create these shapes using OKE.
 author: Ali Mukadam
 mrm: WWMK211125P00019
+redirect: https://developer.oracle.com/tutorials/flexible-load-balancers-oke/
 ---
 Until recently, the OCI Load Balancer shapes were fairly restricted to a handful of options:
 

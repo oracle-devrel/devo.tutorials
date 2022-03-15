@@ -1,17 +1,26 @@
 ---
 title: Tracing A Node.js with OCI Application Performance Monitoring and Zipkin
-parent: [tutorials]
+parent:
+- tutorials
 toc: false
-tags: [open-source, oci, nodejs]
-languages: [nodejs]
-categories: [frameworks, cloudapps]
+tags:
+- open-source
+- oci
+- nodejs
+languages:
+- nodejs
+categories:
+- frameworks
+- cloudapps
 thumbnail: assets/ociemailimage-10.jpg
-description: Using Zipkin as an open-source tracking tool with OCI Application Performance Monitoring.  
+description: Using Zipkin as an open-source tracking tool with OCI Application Performance
+  Monitoring.
 date: 2022-02-25 19:42
 mrm: WWMK220224P00058
 author:
-    name: Javier Mugueta
-    home: https://javiermugueta.blog/author/javiermugueta/ 
+  name: Javier Mugueta
+  home: https://javiermugueta.blog/author/javiermugueta/
+redirect: https://developer.oracle.com/tutorials/tracing-node-js-micro-service-oci/
 ---
 OCI Application Performance Monitoring (APM) provides a comprehensive set of features to monitor applications and diagnose performance issues.
 

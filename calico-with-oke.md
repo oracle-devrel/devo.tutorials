@@ -14,6 +14,7 @@ description: Ali walks you through configuring OKE with Calico, an open-source n
   tool for Kubernetes.
 author: ali-mukadam
 mrm: WWMK211125P00010
+redirect: https://developer.oracle.com/tutorials/calico-with-oke/
 ---
 There are many [cluster networking](https://kubernetes.io/docs/concepts/cluster-administration/networking/#how-to-implement-the-kubernetes-networking-model) options for Kubernetes. Two of the most popular are:
 

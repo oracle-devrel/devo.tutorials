@@ -1,14 +1,24 @@
 ---
 title: Application Infrastructure
-parent: [tutorials,oci-iac-framework]
-tags: [open-source, terraform, iac, devops, get-started]
-categories: [iac, opensource]
+parent:
+- tutorials
+- oci-iac-framework
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- get-started
+categories:
+- iac
+- opensource
 thumbnail: assets/landing-zone.png
 date: 2021-12-06 12:00
 description: How to deploy application infrastructure on top of the OCLOUD framework
 author: kubemen
 draft: true
 mrm: WWMK211125P00022
+redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-4-app-infrastructuree/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

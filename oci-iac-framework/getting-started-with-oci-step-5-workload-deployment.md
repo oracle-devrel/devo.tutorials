@@ -1,14 +1,25 @@
 ---
 title: Workload Deployment
-parent: [tutorials,oci-iac-framework]
-tags: [open-source, terraform, iac, devops, get-started]
-categories: [iac, opensource]
+parent:
+- tutorials
+- oci-iac-framework
+tags:
+- open-source
+- terraform
+- iac
+- devops
+- get-started
+categories:
+- iac
+- opensource
 thumbnail: assets/landing-zone.png
 date: 2021-12-09 08:00
-description: How to deploy and configure your code on the OCLOUD framework landing zone
+description: How to deploy and configure your code on the OCLOUD framework landing
+  zone
 toc: true
 author: kubemen
 mrm: WWMK211125P00022
+redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-5-workload-deployment/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

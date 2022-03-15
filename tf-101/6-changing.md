@@ -21,6 +21,7 @@ toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/6-changing/"
 mrm: WWMK211117P00010
+redirect: https://developer.oracle.com/tutorials/tf-101/6-changing/
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

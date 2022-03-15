@@ -1,17 +1,28 @@
 ---
-title: Sending Emails from OCI with Email Delivery Service in Node.js 
-parent: [tutorials]
+title: Sending Emails from OCI with Email Delivery Service in Node.js
+parent:
+- tutorials
 toc: false
-tags: [open-source, oci, always-free, nodejs, javascript]
-languages: [nodejs]
-categories: [frameworks, cloudapps]
+tags:
+- open-source
+- oci
+- always-free
+- nodejs
+- javascript
+languages:
+- nodejs
+categories:
+- frameworks
+- cloudapps
 thumbnail: assets/ociemailimage-10.jpg
-description: Use Oracle Cloud Infrastructure to manage a high-volume email solution for sending out emails to many recipients for critical communications.
+description: Use Oracle Cloud Infrastructure to manage a high-volume email solution
+  for sending out emails to many recipients for critical communications.
 date: 2022-02-14 19:42
 mrm: WWMK220204P00005
 author:
-    name: Javier Mugueta
-    home: https://javiermugueta.blog/author/javiermugueta/ 
+  name: Javier Mugueta
+  home: https://javiermugueta.blog/author/javiermugueta/
+redirect: https://developer.oracle.com/tutorials/nodejs-sendmail-ocii/
 ---
 Oracle Cloud Infrastructure [Email Delivery](https://docs.oracle.com/en-us/iaas/Content/Email/Concepts/overview.htm) is an email sending service that provides a fast and reliable managed solution for sending high-volume emails that need to reach your recipients’ inbox. Email Delivery provides the tools necessary to send application-generated email for mission-critical communications such as receipts, fraud detection alerts, multi-factor identity verification, and password resets.
 
