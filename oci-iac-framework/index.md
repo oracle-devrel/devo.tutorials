@@ -35,6 +35,6 @@ Want to get started with Oracle Cloud Infrastructure (OCI), but not sure how to 
 *  [Step 3:  How to build the database infrastructure](getting-started-with-oci-step-3-database-infrastructure)
 *  [Step 4:  How to build the application infrastructure](getting-started-with-oci-step-4-app-infrastructure)
 *  [Step 5:  How to deploy your workload on top of the infrastructure](getting-started-with-oci-step-5-workload-deployment)
-*  [Step 6:  How to introduct governance in your tenancy](getting-started-with-oci-step-6-governance)
+*  [Step 6:  How to introduce governance in your tenancy](getting-started-with-oci-step-6-governance)
 *  Step 7:  Create and provide an easy to consume service catalog of your environment
 
