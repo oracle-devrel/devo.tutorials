@@ -33,7 +33,7 @@ Object Store [Documentation](learn_doc_storage)  [Video](learn_video_storage)
 
 ## Code Structure
 
-We employ [Infrastructure as Code][ref_iac] to combine dedicated resources with managed cloud- and orchestration services into [custom resources][ref_logresource]. The code is separated into multipe definiton files that Terraform merges into one deployment plan at the time of execution. The following structure uses [compartments][oci_compartments] to reflect shared service center for independent businesses or business units that are separated on the network layer. 
+We employ [Infrastructure as Code][ref_iac] to combine dedicated resources with managed cloud- and orchestration services into [custom resources][ref_logresource]. The code is separated into multiple definition files that Terraform merges into one deployment plan at the time of execution. The following structure uses [compartments][oci_compartments] to reflect shared service center for independent businesses or business units that are separated on the network layer. 
 
 | Nr. | Domain                  | File               | Resources                                              |          |
 |:---:|:---                     |:---                | :---                                                   |:---      |
