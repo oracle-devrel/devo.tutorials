@@ -1,6 +1,8 @@
 # How to contribute
 
-We've strived to make the contribution process super simple!  Here it is the process you should follow to contribute to this project.
+We've strived to make the contribution process super simple! There are, however, some strict requirements for your content formatting, so please see [this README](https://github.com/oracle-devrel/cool.devo.build/blob/main/README.md) when writing the actual content.
+
+Once your content conforms to the requirements above, the following is the process you should follow to contribute to this project.
 
 ## Setup your working repo
 
