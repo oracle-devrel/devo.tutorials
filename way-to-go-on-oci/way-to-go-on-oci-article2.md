@@ -117,7 +117,7 @@ You can now clone the code repository to create a local copy on your computer, a
 
 Upon running the command, the clone operation starts. You are prompted for the username. Depending on whether you use direct signin for logging in to OCI, then the username you need to enter is `tenancy/username` - for example `unicorn-lab/archimedes@rockstars.nl`. If you connect to OCI through an identity provider - a federated login - then the username required here consists of `tenancy/identityprovider/username`. For example: `lucascloudlab/oracleidentitycloudservice/lucas@rainbowmail.nl`.  
 
-When prompted for the password, paste the authentication token that you created earlier - and saved for this purpose.
+When prompted for the password, paste the authentication token that you created earlier and saved for this purpose.
 
 The repository will now be cloned from OCI DevOps to your local machine and your access through git is configured locally. To stop git from prompting you for credentials with every operation against the remote repository, you can run
 
@@ -125,9 +125,9 @@ The repository will now be cloned from OCI DevOps to your local machine and your
 git config --global credential.helper store
 ```
 
-Thenm perform a `git pull`, login one more time and from now on, git has the login details and will no prompt you again. 
+Then perform a `git pull`, login one more time and from now on, git has the login details and will no prompt you again. 
 
-As an aside: a OCI Code Repository can also be set up as a mirror for another git repository on GitHub or GitLab. This means that changes to this existing git repo are replicated to the Code Repository on OCI and can trigger pipeline in OCI DevOps. The other benefit of doing that is speeding up the build process: when the build needs to fetch the sources from the repo, it will be able to do so much faster from a nearby OCI Code Repository than from a farther removed GitHub or GitLab repository.
+As an aside: a OCI Code Repository can also be set up as a mirror for another git repository on GitHub or GitLab. This means that changes to this existing git repo are replicated to the Code Repository on OCI and can trigger pipeline in OCI DevOps. The other benefit of doing that is speeding up the build process: when the build needs to fetch the sources from the repo, it will be able to do so much faster from a nearby OCI Code Repository than from a farther removed GitHub or GitLab repository. 
 
 ### Create Artifact Registry
 
@@ -359,12 +359,12 @@ Toggle radio group *Rollout policy* - not useful in our case with only a single 
 
 The pipeline stage is created in the pipeline. And the pipeline can now be executed - to retrieve the zip file with the my-server application from the artifact repository, download zipfile and extract its contents in the target VM and run the application as background process. When the deployment pipeline is done running, the application should be serving HTTP requests.
 
-Click on button *Run pipeline*.  A page appears to provide an overview of the manual run of the deployment pipeline. It allows you to set a name - to indicate the specific significance of this particular deployment. Parameter values can now be provided for use in this run of the deployment pipeline. Our pipeline does not currently have any such parameters defined so we can not set any values. In the future, we might well use parameters, for example to define the prefix for log output or the port on which *my-server* should listen for HTTP requests - set as an environment variable or startup parameter in the deployment configuration.   
+Click on button *Run pipeline*.  A page with an overview of the manual run of the deployment pipeline. It allows you to set a name - to indicate the specific significance of this particular deployment. Parameter values can now be provided for use in this run of the deployment pipeline. Our pipeline does not currently have any such parameters defined so we can not set any values. In the future, we might well use parameters, for example to define the prefix for log output or the port on which *my-server* should listen for HTTP requests - set as an environment variable or startup parameter in the deployment configuration.  Now press button *Start manual run*. The deployment is started. An email is sent to the address that you subscribed on the notification topic, to alert you of the start of the run. A second mail will be sent to let you know about the result of the run.  
 
 The next figure shows the configuration of the Deployment Pipeline in conjunction with the other OCI resources it depends on. The configuration
 ![](assets/wtgo-deployment-pipeline-diagram.png)  
 
-Send an HTTP request - with curl or from a browser - to port 8080 at the public IP of the VM: 
+When the deployment is finished successfully, send an HTTP request - with curl or from a browser - to port 8080 at the public IP of the VM: 
 
 ```
 http://<public ip of the compute instance>:8080/greet?name=Success
@@ -384,15 +384,393 @@ The deployment pipeline can do several additional things. Take parameter values 
 
 You would be forgiven for thinking that this has been quite a lot of work for what is really a simple installation. If you would do this installation only once, then creating an SSH connection as we did in part one of this series and just performing the installation steps manually would be much more efficient than creating this pipeline to perform the installation. When however you want to install the application on multiple compute instances that you not have SSH access to or you want to install the application multiple times, whenever a new version of the application becomes available and you want colleagues without Linux skills or access privileges to be able to perform the installation, having this deployment pipeline slowly begins to make sense. Once you know the steps in the pipeline are correct, the deployment can be run in a fully automatic manner without the risk of human errors, abuse of access privileges, lack of audit trail, lenghty wait times because of unavailability of staff. Suddenly the concept of deployment pipelines is more and more enticing. Assuming much more involved deployment processes with additional installation steps, larger numbers of artifacts, more complex, perhaps parameter driven environment configuration - the value of automated deployment pipelines will be obvious.
 
-
-## Build Pipeline
-
-In the previous section the artifact to be deployed was created manually and uploaded into the artifacts repository by hand. In the name of automation we want to use build pipelines for creating such artifacts. Starting from the source code of the Go application, the build pipeline will enlist a build server, copy the relevant sources to that server, perform the linting, code analysis, compilation, testing and packaging steps and save the resulting deployable artifacts to the artifacts repository. The build pipeline can subsequently trigger the deployment pipeline to take those artifacts and deploy them to a specified environment. The build pipeline itself can be triggered manually or by an event such as a commit or a merge-to-master of a pull request in the code repository. 
+To get a glimpse of this effect, you could quickly create a new compute instance in the compartment. Then define a new environment in the DevOps project for this compute instance and associate the Deployment Pipeline with this environment. Then run the pipeline. With just a few simple steps, you have made the application run on this second compute instance. Without resorting to SSH connections and command line operations. In fact, through only a simple console based process that you can teach to fairly non-technical staff.
 
 
+## Build Pipelines for Automated Source to Artifact Build and Delivery
+
+In the previous section the artifact to be deployed was created manually and uploaded into the artifacts repository by hand. In the name of automation we want to use build pipelines for creating such artifacts. 
+
+Starting from the source code of the Go application, the build pipeline will enlist a build server, copy the relevant sources to that server, perform the linting, code analysis, compilation, testing and packaging steps and save the resulting deployable artifacts to the artifacts repository. The build pipeline can subsequently trigger the deployment pipeline to take those artifacts and deploy them to a specified environment. The build pipeline itself can be triggered manually or by an event such as a commit or a merge-to-master of a pull request in the code repository. 
+
+In this section we are going to create an OCI Devops Build Pipeline. It is on the one hand associated with the Code Repository you have created in the DevOps Project and it delivers artifacts to the Artifact Registry repository on the other. The pipeline can contains for these activities:
+* Perform a managed build (execute build according to specification on a build server) a
+* Deliver the output of a managed build stage to an Artifact Registry repository
+* Wait (for a specified period of time)
+* Trigger a Deployment Pipeline while passing parameters to it 
+
+The Build Pipeline we will create next will take sources for a Go application from Code Repository, perform lint, test and compile on the application and package the application with its resources in a zip file. This file is the artifact that is published to the Artifact Registry. Subsequently, the Deployment Pipeline is triggered - to deliver this application to a compute instance and make it run. 
+
+### Prepare Code repository
+
+Our pipeline will have precious little to build at present, because our Code Repository is quite empty.
+
+git clone to local file system
+
+copy contents of root to the local clone of your Code Repository
+
+commit and push the *go-on-oci-repo* - to have the sources stored on OCI.
+
+Inspect the sources through the console.
 
 
-Introducing DevOps Deployment:https://medium.com/oracledevs/oci-devops-free-automated-cloud-native-application-deployment-to-oracle-cloud-1461b3a8c08d
+
+### Assembling the Build Pipeline
+
+The Build Pipeline is a workflow definition, just like the deployment pipeline. It describes the steps to take whenever an automated build is required, the order for the steps and through parameters the context for the steps. It also describes the input - the sources from the code repository - and (where to store) the output. The real action happens in *managed build* stages, on a build server. 
+
+We will now first create the Build Pipeline and then add three stages to it: managed build, publish artifact and trigger deployment pipeline. Before we can run the pipeline we then also need to take care of permissions through a dynamic group and some policies. 
+
+#### Create the Build Pipeline
+
+On the overview page for DevOps Project *go-on-oci*, click on button *Create build pipeline*. A page is presented for specifying the name - say *build-myserver* - and a description. Press *Create* to have the build pipeline added to the DevOps Project.
+
+Click on the link *build-myserver* in the list to navigate to the details page.
+
+#### First Stage - Managed Build 
+
+The first stage in any build pipeline is a *Managed Build* stage. This stage provides instructions for the pipeline to get hold of a build server, copy specified sources from code repositories to the server and run through a number of actions on that server. At the time of writing, we can use a single image for the build server. It is an Oracle Linux image (8 GB memory, 1 OCPU) that has a number of pre installed tools and language run times. For example: Git, Docker, Helm, OCI CLI, Node.js, Java and Go are on the build runner image. For Go, the current version is 1.16.5. If the build process requires additional or different versions of technologies, you will have to make their installation part of the build process.
+
+In the future, we will be able to choose between multiple build runner images (different composition and size) and bring our own images to use. Note: You are charged for using the compute shape (OCPU and memory) during the build run.   
+
+Reference [OCI Docs - Build Runner Details](https://docs.oracle.com/en-us/iaas/Content/devops/using/runtime_details.htm)
+
+Click on either the plus icon or the *Add Stage* card. The two step *Add a stage* wizard appears. On step one in the wizard, make sure that the *Managed Build* card is selected for the type of stage. Press *Next*.
+
+The second page is shown. Define a name for the build stage: *build-source-to-executable*. Optionally type a description.  
+
+At present we cannot select a different build image, so we settle for the one available - which is fine for our purpose. The default name and location for the build specification is correct - file build_spec.yaml in the root of the repository. 
+
+Click on the *Select* button under *Primary code repository*. We can now specify from which code repository the build will get its sources. Select *OCI Code Repository* as the *Source Connection Type*. Then select the *go-on-oci-repo* repository. We will work with source on the main branch, so do not change that default. Type *myserver-sources* as the value for *Build source name*. This managed build stage can use sources from multiple repositories. In the build specification, we can refer to each of these sources using the label defined as *Build source name*. Click on *Save*. 
+
+Press button *Add*. This completes the definition of the managed build stage. This is all it takes to take sources and process into artifacts. 
+
+Well, hang on, I hear you think. We may have indicated the sources to use, but we certainly did not say what to do with those sources. Whether any linting, testing, compilation and packaging into a zip file should be performed. And in fact - we did stipulate exactly what should happen on the build server. It is right there - in the `build-spec.yaml` file. We have not talked about that file yet and we certainly did not create it. But it pushed into the code repository and sitting there in the root directory of the project. It is this file that contains the instructions for the actual detailed steps executed on the build server.
+
+
+
+If you are eager to see the managed build stage in action, you can skip the next two sections for now, define the dynamic group and the policies described under *IAM Policies* and then press the button *Start manual run*. The pipeline grinds into action. A build server is acquired, the build specification is located and the steps in the specification are executed. The logs are shown and provide insight into the proceedings. After a little while, the build is complete. An output is created on the build server - but not yet published to the artifact registry. It will now be lost when the stateless build server gets reset for a next run by us or someone else entirely.
+
+We will now define the stage that publishes the artifact, to allow us to really enjoy the fruits of our managed build.
+
+Reference:
+[OCI Documentation - Build Specification Reference](https://docs.oracle.com/en-us/iaas/Content/devops/using/build_specs.htm)
+
+
+#### Second Stage - Publish Artifact
+
+In the overview page for the build pipeline, click on the plus icon at the bottom of the current managed build stage. In the context menu that pops up, click on *Add stage*. The stage wizard appears.
+
+Click on *Deliver artifacts*. Then click on *Next*. 
+
+Enter the name for this stage: *publish-myserver-as-artifact*. We need to select the artifact in the DevOps project that we want to publish. This artifact can be a container image in the image registry or a generic artifact in an artifact registry repository. The latter is the case. Click on button *Select artifact(s)*. Select the *my-server* artifact that we used previously in the deployment pipeline. We will have our build pipeline produce fresh updates of this artifact.
+
+In the area *Associate artifacts with build result* we have to indicate for each of the artifacts selected which of the outcomes of a managed build stage is the source for publishing the artifact. The *build-spec.yaml* file defines an output labeled *myserver-archive*. This output refers to the my-server.zip file that is produced by the build process. Enter this label *myserver-archive* in the field *Build config/result artifact name*. The press the *Add* button to create the *Deliver Artifacts* stage. 
+
+If you feel like it - and already defined dynamic group and policies - you could press the *Start manual run* button. This time the build will not only create a zip file on the build server (that is then lost forever) but it will store that zip file in the artifact registry repository. The *Build run progress* will inform you about it. And when the run is complete and you check the *go-on-oci-artifacts-repo* repository in the Artifact Registry, you will find the file *my-server.zip* with a creation timestamp that is very close to now. This is the work of the build pipeline.
+
+The deployment pipeline that we created earlier uses this very artifact as a starting point. With this freshly built artifact available, you can now manually start a run of the deployment pipeline to have the new Go application installed and started. Or you can wait a little bit longer and trigger the deployment pipeline from the a stage at the end of the build pipeline. When that is in place, triggering the build pipeline will result in an end to end build and deploy flow.    
+
+#### Third Stage - Trigger Deployment Pipeline
+
+In the overview page for the build pipeline, click on the plus icon at the bottom of the *Deliver artifacts* stage. In the context menu that pops up, click on *Add stage*. The stage wizard appears.
+
+Click on *Trigger deployment*. Then click on *Next*. 
+
+Type a name for the stage: *trigger-deployment-of-myserver* and optionally a description. Click on the button *Select deployment pipeline*. Select the pipeline *deploy-myserver-on-go-app-vm* (probably the only deployment pipeline there is to select). Details of the pipeline are shown - such as parameters (none defined at this point) and artifacts used by the deployment.
+
+Click on button *Add* to complete the stage definition and add it to the build pipeline.
+
+This completes the build pipeline: it grabs sources, processes them into a deployable artifact, publishes the artifact to the registry and triggers the deployment pipeline to take it from there. If you have not yet set up a dynamic group and IAM policies, you will do so in the next section. And then we can run the end to end process of build, delivery and deployment.
+
+The next figure visualizes the build pipeline and its relation with the deployment pipeline.
+
+![](assets/wtgo-build-and-deployment-pipelines.png)  
+
+### IAM Policies
+
+Build pipelines require permissions to do the things they are supposed to do. They need to read from a Code Repository and publish artifacts to an Artifact Registry. And they need to trigger a deployment pipeline. For all these actions, the build pipeline has to be granted permission through a dynamic group - just like the deployment pipeline got its permissions. 
+
+#### Create Dynamic Group for the Build Pipeline(s)
+
+To create the dynamic group, type *dyn* in the search bar. Click on the link *Dynamic Groups* in the search results pane.  
+
+On the overview page for dynamic groups, Click on the button *Create Dynamic Group*.
+
+Enter the name for the Dynamic Group for the Deployment Pipeline(s) - for example *build-pipelines-for-go-on-oci* - and optionally type a description. Define the following rule that selects all deployment pipelines that are part of the compartment (in this case we have not even created a single deployment pipeline, but we soon will):
+
+``` 
+ALL {resource.type = 'devopsbuildpipeline', resource.compartment.id = '<compartment_id>'}
+``` 
+
+Of course, replace `<compartment_id>` with the identifier of the compartment you are working in. Then press *Create*.
+
+It is convenient to define the dynamic group in this broad fashion - simply including all resources in the compartment of type build pipeline. In a realistic environment, it is recommended to define dynamic groups and policies as fine grained as possible - as to not grant more permissions than is needed and than you may realize.
+
+#### Define Policies that bestowe Rights on the Dynamic Group
+
+To create a policy in the console: type *poli* in the search bar and click on *Policies | Identity* in the *Services* area in the search results popup. This takes you to the *Policies* overview page for the current compartment.
+
+The first policy defines the permission for the build pipelines to deliver artifacts to the Artifact Registry. Define a name, a description and the following statement:
+
+```
+Allow dynamic-group build-pipelines-for-go-on-oci to manage generic-artifacts in compartment go-on-oci
+```
+
+To send notifications for the build process, provide access to ONS (notification service) to the build pipelines:
+
+```
+Allow dynamic-group build-pipelines-for-go-on-oci to use ons-topics in compartment go-on-oci
+```
+
+And to allow the build pipelines to read deployment artifacts in the Deliver Artifacts stage, read DevOps code repository in the Managed Build stage, and trigger deployment pipelines:
+
+```
+Allow dynamic-group build-pipelines-for-go-on-oci to manage devops-family in compartment go-on-oci
+```
+
+With these policies in place, the build pipeline can be taken for a spin. 
+
+![](assets/wtgo-dyngroup-and-policies-buildpipeline.png)  
+
+### Run the Build Pipeline - and making the application run
+
+The Build Pipeline can be triggered by events in the Code Repository. Simple events such as commits or slightly more complex events such as merge to a specific branch (such as merge of a pull request to the main or master branch) can be set up to trigger the pipeline. It can also be triggered manually. Just started from the console. That is what you will do next.
+
+Click on *Start manual run* in the overview page for the build pipeline. 
+
+![](assets/wtgo-start-build-run.png)  
+
+The build pipeline is kicked into action. It acquires a build server, retrieves the code and saves it on the build server. Then it performs the steps in the build specification. The outputs from this build process are published from the build server's file system, uploaded to the Artifact Registry, where they will be waiting for the Deployment Pipeline to come along and fetch them. And indeed this is what happens next: the build pipeline's final stage triggers the deployment pipeline. This has the artifact as its source and continues on to write the artifact to the compute instance and perform the installation steps. You will receive emails about the start and completion of both the build pipeline and the triggered deployment pipeline. You may start to think about setting routing rules to a specific mail folder for emails from OCI DevOps.  
+
+
+
+When the Build Pipeline is completed successfully, the triggered deployment can still be running or can have failed miserably. The build pipeline does not hear back from the deployment pipeline. Once you see that the deployment pipeline has completed successfully too, we should be able to access the application that was deployed based on the artifact built based on the sources in the code repository. 
+
+Validate if the application is indeed running. 
+
+```
+http://<public IP compute instance>:8080/....
+```
+
+### Introducing Parameters
+
+We want our sources as well as our deployment artifacts to be environment independent. The same artifacts can be deployed in different environments and work well, calling to different endpoints perhaps, listening to environment specific ports and writing to environment specific file system locations. At deployment time, the artifact can be combined with these environment specific values. 
+
+OCI DevOps Deployment Pipelines support this way of working. You can use placeholders in the Deployment Configuration file and in [the contents of] artifacts; these placeholders are replaced at deployment time with the value of the corresponding parameters or secrets in OCI Vault. Moreover, the version indication of artifacts can be defined using a placeholder that is replaced at deployment time by the actual value of a parameter. 
+
+Build pipelines can also work with parameters. Parameters can be used in the managed build - replacing placeholders in the build specification. A build pipeline parameter can also be used to determine the version label of the artifact that is published by the pipeline and this parameter can subsequently be leveraged in the deployment pipeline to fetch that exact artifact version to be deployed.
+
+We will now make use of a parameter called `MYSERVER_VERSION` in three places:
+* in the custom path of a DevOps Project Artifact's definition
+* a parameter in the Deployment Pipeline 
+* a parameter in the Build Pipeline
+
+And to show off a little, the parameter can also be used in the `build_spec.yaml` (because any build pipeline parameter is available as environment variable in the build server session) and the [inline] configuration definition (where too environment variables in the deployment environment can be defined based on pipeline parameter values). 
+
+#### Placeholder in DevOps Artifact Version
+
+In the DevOps project, go to the *Artifacts* tab. Click on three dots for the artifact called *my-server* and select *Edit* from the menu. The *Edit artifact* dialog appears. 
+
+Change *Artifact Location* to *Set Custom Location*. The field *Artifact Path* should have the value *my-server.zip* and the Version should be set to *${MYSERVER_VERSION}*. This value means that whenever the DevOps project refers to the artifact - from a Build Pipeline or a Deployment Pipeline - the specific version to use of the artifact is to be derived using the value of parameter *MYSERVER_VERSION*. As a consequence, any reference to the artifact at a time when there is no value set for a parameter with this name is meaningless.
+
+Select *Yes, substitute placeholders* under *Replace parameters used in this artifact* to make sure that the value of the parameter is actually applied to compose the version (and *${MYSERVER_VERSION}* is not regarded as a simple string). 
+
+![](assets/wtgo-edit-myserver-artifact-definition.png)  
+
+Press button *Save* to apply the changes in the artifact definition. 
+
+#### Deployment Pipeline Parameter
+
+Deployment Pipelines can have parameters associated with them. These parameters have a name, a default value and a description. When a run is started for a deployment pipeline, the default values of the parameters can be overridden, setting appropriate values for that specific deployment. The values for the parameters are used to resolve `${placeholder}` expressions that can be in the deployment specification, in the artifact's version definition and in the content body of any of the deployed artifacts. 
+
+To set parameter values, go to the *Parameters* tab on the Deployment Pipeline page. Add two parameters:
+    1. MYSERVER_VERSION - to define the version of the *my-server* artifact to deploy; set the default value to 4.8
+    2. HTTP_SERVER_PORT - to define the port on which the my-server application will listen to incoming HTTP requests; set the default value to 8090 
+
+![](assets/wtgo-deployment-pipeline-parameters.png)  
+
+The value for *MYSERVER_VERSION* is immediately meaningful: when you next will run the deployment pipeline, the artifact to retrieve for the deployment is found using the artifact definition in the DevOps project, with path set to `my-server.zip` and version defined as `${MYSERVER_VERSION}`. The value for version is deduced using the value of the parameter.
+
+If you run the deployment pipeline right now, it will fail because there is no artifact `my-server.zip` with version `4.8`. We need to update the build pipeline to produce that artifact (or go to the artifact repository and manually set the version label to this value).
+
+The second parameer - HTTP_SERVER_PORT - has no effect yet. It is defined, it is available when the deployment pipeline is started but it is not yet used. We can change that.
+
+Go to the Artifacts tab in the DevOps project. Click on the link *myserver-to-vm-deployment-configuration* for the inline artifact with the deployment configuration. Then click on *Edit* to update the configuration.
+
+Add two environment variables, as shown next. This will cause two environment variables to be available during deployment, called VERSION_OF_MYSERVER and HTTP_SERVER_PORT with their values derived from the deployment pipeline parameters.. 
+
+
+```
+version: 1.0
+component: deployment
+env:
+  variables:
+    VERSION_OF_MYSERVER: ${MYSERVER_VERSION}
+    HTTP_SERVER_PORT : ${HTTP_SERVER_PORT}
+files:
+```
+
+The environment variable *HTTP_SERVER_PORT* is meaningful: it is read in the *my-server* application and interpreted as the HTTP port on which the application is listening to incoming HTTP requests. The default value that was used until now is *8080*. With the environment variable now set from the pipeline parameter that has *8090* as its default value, things will change upon the next deployment: the application will listen on port 8090 - as it states in the deployment log. In the same line, the application also indicates its own version. That information was read from environment variable *VERSION_OF_MYSERVER*.  
+
+To verify that the environment variables are set as desired, you can add this step to the deployment configuration, that will write the two environment variables to the output:
+
+```
+  - stepType: Command
+    name: Report
+    command: echo myserver version to install in this deployment $VERSION_OF_MYSERVER && echo port to make the application listen to $HTTP_SERVER_PORT
+    timeoutInSeconds: 60
+  - stepType: Command
+```
+
+#### Build Pipeline Parameter
+
+Build pipeline parameters can be used during the build process. The parameters are available as environment variables on the build server during the execution of the build process. Additionally, when a deployment pipeline that is triggered from a build pipeline has parameters with the same name as parameters defined in the build pipeline, then the value set to the build pipeline parameter is passed in to the deployment pipeline and used for the corresponding parameter. This is used for example to pass the value of the parameter that identified the artifact version.
+
+Go to the *Parameters* tab for the Build Pipeline. Define a new parameter called *MYSERVER_VERSION*. Its description can be something like *Version of the myserver artifact that is produced*. The default value can be set to *4.8* - or anything else. When you run a build pipeline you can override the default value for every parameter. 
+
+![](assets/wtgo-buildpipeline-parameter.png)  
+
+#### End to End Parametrized Build and Deployment 
+
+By defining the parameter *MYSERVER_VERSION* for both the build pipeline and the deployment pipeline as well as in the artifact's version label, we have tied the two pipelines together. When we run the Build Pipeline and set the value for *MYSERVER_VERSION* to a value such as *4.8* (or any other version label like string) then the build pipeline will produce the *my-server.zip* artifact with the version set to that value and the deployment pipeline will take that artifact version as its source for the deployment. During build as well as during deployment, environment variables are available based on the parameter(s) defined for the pipeline. 
+
+![](assets/wtgo-end-to-end-parameters-in-build-and-deploypipeline.png)  
+
+Run the build pipeline and when prompted provide a value for the parameter *MYSERVER_VERSION*. It can be 4.8 but 5.7 or 9.3 is fine too. Or anything else.
+
+Inspect the logging for both the build pipeline and the deployment pipeline for the appearances of the environment variables. One of the final log lines in the deployment log reads: *Starting my-server (version 4.8) listening for requests at port 8090* . The version indicated depends on the value you defined for the parameter *MYSERVER_VERSION*. The port similarly depends on the parameter *HTTP_SERVER_PORT*. 
+
+Note that any port different from 8080 has a consequence: *myserver* friendly greet service is currently not accessible from outside the compute instance. For port 8080, we have defined an Ingress rule in the subnet's network security list (in part one of this series) and we have added this port to the firewall on the VM. With the application listening on a different port, we have to make sure that this port is opened up in a similar way as was port 8080. Feel free to do so - or to revert back to port 8080 by changing the value of deployment pipeline parameter *HTTP_SERVER_PORT* to 8080 and running the pipeline again.
+
+Note: opening up the port in the compute instance's firewall rules can be accomplished as part of the deployment by adding this step to the deployment configuration:
+
+```
+  - stepType: Command
+    name: Report
+    runAs: root
+    command: firewall-cmd  --permanent --zone=public --add-port=${HTTP_SERVER_PORT}/tcp && firewall-cmd  --reload
+    timeoutInSeconds: 60
+```
+
+However, this command requires *sudo* permissions and this means that you must grant *sudo* permissions to the Compute Instance Run Command plugin to be able to run the command. The plugin runs as the *ocarun* user and this user must be explicityly allowed to run all commands as *sudo*. See for details on how to realize this:
+[OCI Documentation - Running Commands with Administrator Privileges](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/runningcommands.htm#administrator-privileges). 
+## API Gateway - exposing My Server to the World
+
+Even though the compute instance to which the myserver application has been deployed has a public IP address, the service is currently not accessible from the outside. The network security that was set up in the first installment in this series were defined to allow traffic to port 8080, but not to 8090. In fact, we do not want any traffic directly to our production servers. And public IP addresses for compute instances probably are generally not a good idea. 
+
+Services that should be accessible to consumers external to our cloud tenancy should be published as APIs on an API Gateway.  Not only can we protect the VM from network traffic from the public internet, we also encapsulate our service's location and implementation, allowing us to change such implementation details without impacting the consumers of the API. Additionally, the API Gateway allows us to aggregate services into a single API, use better defined paths, headers and parameters and enforce authorization. The API Gateway can perform request and response manipulation, enforce throttling rules to protect the backend service and provide detailed insight in the usage of the API.
+
+Without going into all features the API Gateway offers, we will create an API Gateway with a Deployment that has a single route for exposing the service offered by application *my-server*, built from the Go application sources and deployed to the compute instance.
+
+### Create API Gateway
+
+Type *gat* into the search bar in the console. Click on the link *Gateways | API Management*.
+
+Click on the button *Create Gateway*. Enter a name for the new gateway, for example *the-api-gateway*. Accept the type *Public*. Select the same VCN used for the Compute Instance and the same public subnet and do not enable network security groups. Accept the default setting under Certificate. Press *Create Gateway*. 
+
+![](assets/wtgo-create-api-gateway.png)  
+
+Note: we are doing a very simple deployment using the smallest number of OCI cloud resources we can get away with. In a real world scenario, we would most probably not have the API Gateway on the same subnet as the Compute Instance it is routing to- because one of the things we try to achieve is insulate the backend VM from the public internet using the front end API Gateway.
+
+### Create Deployment
+
+The API Gateway will now be created. Once that has been done, navigate to the *Deployments* tab. A Deployment on an API Gateway is a collection of (incoming) routes that are mapped to backend services to handle requests. Click on the button *Create Deployment*.
+
+![](assets/wtgo-create-deployment.png)  
+
+The first page of a three page wizard appears. Here we define the name of the deployment - for example *myserver-api* - and the path prefix used by all requests to the API Gateway that are to be handled in this deployment. For example: */my-api*.
+
+![](assets/wtgo-create-deployment-1.png)  
+
+ Click on *Next* to move to the second page in the wizard.
+
+ On this page, we define each of the routes this deployment will take care of. Let's start by defining just a single one. Type */welcome* as the path. This means that requests to the API Gateway looking like: *https//<URL for API Gateway>/my-api/welcome* will be handled by this route. 
+
+ Select the *GET* method - the only HTTP method this route will be able to handle. 
+
+ Accept the Type *HTTP* . In the *URL* field type the HTTP endpoint for the service exposed by *myserver* on the compute instance. At this moment, it is the same endpoint you have used in the browser to access the service because right now the compute instance has a public IP and the network configuration allows that direct traffic. With the API Gateway handling the inbound traffic, we can restrict network access to the VM - as long of course as the API Gateway can make requests to it.     
+
+ ![](assets/wtgo-createdeployment2.png)  
+
+Click on button *Next* to go to an overview of the definition of the deployment. Click on *Save* on this third page to create deployment with its single route.
+
+It takes a little while for the API Gateway to be updated with the deployment. 
+
+![](assets/wtgo-createdeployment4.png)  
+
+### Update Network Security and Invoke API
+
+On the Deployment Details page is the (public) *Endpoint* for the deployment. CLick on the *Copy* link. Now paste the link in your browser's address bar, add */welcome* to the URL and press enter. 
+
+``` 
+https://<URL for API Gateway>/my-api/welcome
+```
+
+This probably will not give the expected result - not if you expected success at least. 
+
+The request we sent to the API Gateway is sent over HTTPS to the defauilt HTTPS port of 443. The public subnet that we associated with the API Gateway was configured in the previous installment of the series to allow inbound traffic for port 20-22 (for SSH connections) and for port 80 (plain HTTP traffic). We now need to extend that definition to also allow ingress traffic to port 443.
+
+Type *net* in the search bar and click on link *Virtual Cloud Networks* in the services list. Click on the *VCN* that was created earlier and subsequently on the *Subnet* that was associated to the API Gateway. Click on the *Security List*. Click on *Add Ingress Rule*. 
+
+Define a new Ingress Rule with *Source CIDR* set to `0.0.0.0/0`, *Destination Port Range* set to `443` and optionally a description of the rule. Press button *Add Ingress Rules* to save the new rule.
+
+Now try again once more to access the *welcome* route on the API from your browser:
+
+``` 
+https://<URL for API Gateway>/my-api/welcome
+```
+
+This time round, you should get the expected response. 
+
+Adding a query parameter:
+
+``` 
+https://<URL for API Gateway>/my-api/welcome?name=No+Stranger
+```
+
+Requests to the public endpoint of the API Gateway and with the configured path prefix of *my-api* and the one supported route of *welcome* are forwarded to the API Gateway to the *myserver* application on the compute instance and the request is returned to us. In the next section we will show one small example of request manipulation in the API Gateway. 
+
+#### Connecting API Gateway to a private Compute Instance
+
+Because of our earlier work with the go-app-vm compute instance, it has a public ip and is aasociated with a subnet that allows all kinds of inbound network traffic from any source on the public internet. However, in reality it will be more likely to create a compute instance that has no public IP and is associated only with a private subnet. In that case, these are the high level steps to configure the API Gateway to route requests to the VM as backend for an API route. There are three elements that need to be addressed.
+
+
+    1.	*Firewall on the VM* : as before  make sure that the appropriate ports are added to the firewall on the VM (as we have seen and done before)
+    2.	*Network Route Table*: configure the network route table to make sure that traffic can route between the public subnet wth which the API Gateway is associated and the private subnet to which the VM is linked 
+    3.	*Network Security Groups (NSG)*: create an NSG for the VM and one for the API Gateway. Add an ingress rule for the VM's NSG to allow traffic from the NSG defined for the API Gateway and on that latter NSG an egress rule to allow traffic to the VM's NSG. You can allow all ports, or limit it to the specific port(s) listend on by the service in the VM. The great thing about NSG is that you do not need to worry about IP addresses of API Gateway or VM: just attach the NSG to the gateway and the VM with the rules in place and it will be configured.
+
+### One tiny little bit of API Gateway Magic
+
+The OCI API Gateway can help us in many ways with handling requests. From authorization, validation and throttling to transformation of headers and parameter, routing and reporting as well as caching. To give you a little taste of that, let's configure the deployment route to set a default value for the *name* query parameter if no value is provided in the request. 
+
+At the moment, when the URL is invoked without a query parameter called *name* 
+
+``` 
+https://<URL for API Gateway>/my-api/welcome
+```
+
+the response will be *Hello Stranger!* 
+
+We will change that behavior, and ensure the response will be *Hello Friend!*. We can define validations and transformations on query parameters and headers. One simple transformation allows us to set a value for a query parameter if no value was set already. The API Gateway maybe called without query parameter *name* but in that case we will make sure the request to *myserver* will have that parameterm, with the appropriate value of *Friend*.
+
+Go to the details page for the (API) deployment *myserver-api*. Click on *Edit*. Go to the second page, with *Routes*. Click on the link *Show Route Request Policies*. Click on the *Add* button under *Query Parameter Transformations*.
+
+The *Action* is *Set*, *Behavior* is *Skip* (do not change value when already set), the *Query Parameyer Name* is *name* and the *Value* is *Friend*.  
+
+![](assets/wtgo-query-param-transform.png)  
+
+Click on *Apply Changes*. Then click button *Next* and subsequently *Save Changes*. The deployment will be updated with the changes.
+
+When done, try again to access the URL in the browser, without the *name* query parameter:
+
+``` 
+https://<URL for API Gateway>/my-api/welcome
+```
+
+The response should be *Hello Friend!* thanks to the magic wrought by the API Gateway.
+
+
 
 
 
@@ -408,53 +786,3 @@ Source code repository for the sources discussed in this article series:  <provi
 [OCI Documentation - IAM Policies on Artifact Registry](https://docs.oracle.com/en-us/iaas/Content/artifacts/iam-policies.htm)
 
 
-
-
-
-
-DEPLOY CANARY example
-
-https://github.com/RahulMR42/oci-devops-deploy-instances-with-canary-model
-
-
-
-
-schedule application as autostart 
-https://www.howtogeek.com/687970/how-to-run-a-linux-program-at-startup-with-systemd/
-
-https://medium.com/oracledevs/automatically-starting-your-web-server-2b7b793dfcb4
-
-
-# Appendix
-
-## Build Pipeline for Infrastructure as Code
-
-Build server does not contain Terraform; it has the CLI that can engage Resource Manager that can create a job from Terraform sources and can run that job.
-
-Ensure that the context compartment is the right one - in my case *go-on-oci*, created in part 1 of this series. Type *devops* in search field; then navigate to *Overview*. An overview is shown of all DevOps projects
-
-Create Stack (from Compartment)
-
-List images
-
-oci compute image list -c ocid1.compartment.oc1..aaaaaaaaqb4vxvxuho5h7eewd3fl6dmlh4xg5qaqmtlcmzjtpxszfc7nzbyq \
---operating-system "Oracle Linux" --query "data[*]".{'name:"display-name",id:id'} 
-
-for example: 
-
-
-  {
-    "id": "ocid1.image.oc1.iad.aaaaaaaa5slk43vqyk27x27x7ca5ulkvdgqimglns35e7l7vntwawlodeexq",
-    "name": "Oracle-Linux-8.5-aarch64-2022.03.17-1"
-  }
-
-Generate Key Pair: 
-https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/managingkeypairs.htm?Highlight=key%20pair#two
-
-ssh-keygen -t rsa -N "" -b 2048 -C "on-the-go-key" -f ./on-the-go-key
-
-The public key is now in ./on-the-go-key.pub
-
-
-oci compute instance list -c ocid1.compartment.oc1..aaaaaaaaqb4vxvxuho5h7eewd3fl6dmlh4xg5qaqmtlcmzjtpxszfc7nzbyq 
-oci compute shape list -c ocid1.compartment.oc1..aaaaaaaaqb4vxvxuho5h7eewd3fl6dmlh4xg5qaqmtlcmzjtpxszfc7nzbyq 
