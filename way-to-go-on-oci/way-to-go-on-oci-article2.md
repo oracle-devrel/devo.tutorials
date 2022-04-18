@@ -447,6 +447,116 @@ Press button *Add*. This completes the definition of the managed build stage. Th
 
 Well, hang on, I hear you think. We may have indicated the sources to use, but we certainly did not say what to do with those sources. Whether any linting, testing, compilation and packaging into a zip file should be performed. And in fact - we did stipulate exactly what should happen on the build server. It is right there - in the `build-spec.yaml` file. We have not talked about that file yet and we certainly did not create it. But it pushed into the code repository and sitting there in the root directory of the project. It is this file that contains the instructions for the actual detailed steps executed on the build server.
 
+```
+version: 0.1
+component: build
+timeoutInSeconds: 6000
+runAs: root
+shell: bash
+env:
+  # these are local variables to the build config
+  variables:
+     SOURCE_DIRECTORY: "myserver-sources"
+
+  # the value of a vaultVariable is the secret-id (in OCI ID format) stored in the OCI Vault service
+  # you can then access the value of that secret in your build_spec.yaml commands
+  vaultVariables:
+
+  # exportedVariables are made available to use in sucessor stages in this Build Pipeline
+  exportedVariables:
+    - BUILDRUN_HASH
+
+
+steps:
+  - type: Command
+    name: "Export variables"
+    timeoutInSeconds: 40
+    command: |
+      export BUILDRUN_HASH=`echo ${OCI_BUILD_RUN_ID} | rev | cut -c 1-7`
+      echo "BUILDRUN_HASH: " $BUILDRUN_HASH
+      echo "SOURCE-DIRECTORY: " $SOURCE_DIRECTORY
+      echo "${OCI_PRIMARY_SOURCE_DIR}" ${OCI_PRIMARY_SOURCE_DIR}
+      echo "fully qual sources" ${OCI_WORKSPACE_DIR}/${SOURCE_DIRECTORY}
+      echo "myserver-version from build pipeline parameter" ${MYSERVER_VERSION}
+      go version
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Install golangci-lint"
+    command: |
+      curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b $(go env GOPATH)/bin v1.37.1
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Verify golangci-lint version"
+    command: |
+      /root/go/bin/golangci-lint version
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Run go mod tidy for Go Application"
+    command: |
+      go mod tidy
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Run go vet for Go Application"
+    command: |
+      go vet .
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Run gofmt for Go Application"
+    command: |
+      gofmt -w .
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Run Lint for Go Application"
+    command: |
+      /root/go/bin/golangci-lint run
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Run Unit Tests for Go Application (with verbose output)"
+    command: |
+      go test -v
+  
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Build Go Application into Executable"
+    command: |
+      go build -o my-server
+
+  - type: Command
+    timeoutInSeconds: 600
+    name: "Zip my-server Application Executable along with website"
+    command: |
+      zip -r my-server.zip website
+      zip -rv my-server.zip my-server
+  
+outputArtifacts:
+  - name: myserver-archive
+    type: BINARY
+    location: ${OCI_WORKSPACE_DIR}/${SOURCE_DIRECTORY}/my-server.zip
+```
+
+The build specification consists of three parts: 
+    1. Set up - who to run the script as, which shell to use, which variables to use
+    2. Build steps - Shell commands to execute on the build server
+    3. Output Artifacts - indicate which files at the end of all build steps are meaningful and to be made available to other steps in the pipeline (for example to publish as artifact)
+
+The build steps can be summarized as: 
+    1. Print environment variables and currently installed Go version (on the vanilla build server)
+    2. Install golangci-lint
+    3. Verify success and version of golangci-lint installation
+    4. Run `go mod tidy` to organize the go.mod file with dependencies
+    5. Run `go vet` to run a first inspection on the Go Sources
+    6. Run `go fmt` to format the sources according to generic formatting rules
+    7. Run `golangci-lint` to lint (check) the sources against various linting rules
+    8. Run unit tests
+    9. Build sources into binary executable - called `my-server`
+    10. Create zip file `my-server.zip` with the *website* directory and the executable `my-server`
 
 
 If you are eager to see the managed build stage in action, you can skip the next two sections for now, define the dynamic group and the policies described under *IAM Policies* and then press the button *Start manual run*. The pipeline grinds into action. A build server is acquired, the build specification is located and the steps in the specification are executed. The logs are shown and provide insight into the proceedings. After a little while, the build is complete. An output is created on the build server - but not yet published to the artifact registry. It will now be lost when the stateless build server gets reset for a next run by us or someone else entirely.
@@ -661,7 +771,9 @@ Even though the compute instance to which the myserver application has been depl
 
 Services that should be accessible to consumers external to our cloud tenancy should be published as APIs on an API Gateway.  Not only can we protect the VM from network traffic from the public internet, we also encapsulate our service's location and implementation, allowing us to change such implementation details without impacting the consumers of the API. Additionally, the API Gateway allows us to aggregate services into a single API, use better defined paths, headers and parameters and enforce authorization. The API Gateway can perform request and response manipulation, enforce throttling rules to protect the backend service and provide detailed insight in the usage of the API.
 
-Without going into all features the API Gateway offers, we will create an API Gateway with a Deployment that has a single route for exposing the service offered by application *my-server*, built from the Go application sources and deployed to the compute instance.
+Without going into all features the API Gateway offers, we will create an API Gateway with a Deployment that has a single route for exposing the service offered by application *myserver*, built from the Go application sources and deployed to the compute instance.
+
+![](assets/wtgo-apigw-to-apponvm2.png)  
 
 ### Create API Gateway
 
@@ -710,6 +822,8 @@ https://<URL for API Gateway>/my-api/welcome
 This probably will not give the expected result - not if you expected success at least. 
 
 The request we sent to the API Gateway is sent over HTTPS to the defauilt HTTPS port of 443. The public subnet that we associated with the API Gateway was configured in the previous installment of the series to allow inbound traffic for port 20-22 (for SSH connections) and for port 80 (plain HTTP traffic). We now need to extend that definition to also allow ingress traffic to port 443.
+
+![](assets/wtgo-http-serverport-network-rules.png)  
 
 Type *net* in the search bar and click on link *Virtual Cloud Networks* in the services list. Click on the *VCN* that was created earlier and subsequently on the *Subnet* that was associated to the API Gateway. Click on the *Security List*. Click on *Add Ingress Rule*. 
 
