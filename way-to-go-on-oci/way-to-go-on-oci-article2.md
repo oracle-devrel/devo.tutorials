@@ -29,24 +29,19 @@ The articles describe how to get Going on OCI and to try out the examples, reade
 
 ## Introduction
 
-The first part describes provisioning of a Compute Instance based on the Oracle Linux Cloud Developer image, opening it up for inbound and outbound network activity, creating and running a Go application that serves HTTP requests and connecting logging produced by the application to OCI Logging. This part takes the software engineering, build and deployment of the application and the Compute Instance to the next level. Automation is the name of the game and the OCI DevOps service is introduced for storing the Go source code, building the application executable and storing it as deployable artifact, deploying that artifact to a Compute Instance that itself is provisioned through Infrastructure as Code, exposing an HTTP endpoint for that application through an OCI API Gateway and finally checking its health status after deployment. All using automated pipelines. 
+The first part describes provisioning of a Compute Instance based on the Oracle Linux Cloud Developer image, opening it up for inbound and outbound network activity, creating and running a Go application that serves HTTP requests and connecting logging produced by the application to OCI Logging. This part takes the software engineering, build and deployment of the application to the next level, using the compute instance created in the previous installment. Automation is the name of the game and the OCI DevOps service is introduced for storing the Go source code, building the application executable and storing it as deployable artifact, deploying that artifact to the Compute Instance. The last step in this article is exposing an HTTP endpoint for that application through an OCI API Gateway. 
 
 The detailed steps in this article:
 * set up the OCI DevOps project with the artifact registry and source code repository
-* load the application resources for the Go application and Terraform infrastructure as code resources for the OCI resources into the source code repository
-* OPTIONAL create OCI DevOps Build Pipeline for formatting, validating, linting and testing the Terraform sources resulting in a clean, consolidated, ready-to-deploy artifact in the artifact registry 
+
+* load the application resources for the Go application as code resources for the OCI resources into the source code repository
+
 * create OCI DevOps Build Pipeline for producing a deployable artifact from Go source code; include Go fumpting/linting and testing in the pipeline. Deliver the artifact to the OCI Artifact Repository. Trigger the pipeline manually, to see it in action; watch lint and test. Verify the artifact that is produced.
 
-* OPTIONAL create OCI DevOps Build Pipeline for running the Terraform plans that provision and configure a new Compute Instance – a VM based on a Vanilla Oracle Linux image – nothing pre-installed (except the OCI agent). These plans also provision the required network configuration for the VM . Note: DevOps Deploy Pipeline deploys an artifact into a function, container or VM - it does not deploy the VM itself. A DevOps Build Pipeline can be created to run commands through OCI CLI or to apply a Terraform plan with OCI provider to provision OCI resources such as a Compute Instance   
-
 * create an OCI DevOps Deployment Pipeline that takes the built Go app artifact - a binary executable - and deploys it to the VM (and makes it run). Add a trigger of the Deployment Pipeline in the Build Pipeline.
-Manually trigger the build pipeline. The Go application is deployed to the new VM. 
+Manually trigger the build pipeline. The Go application is deployed to the VM. 
 
-* From the pipeline, invoke the HTTP endpoint exposed by the Go application from the VM created in article one; note: the new VM does not have a public IP (and can only be invoked within the OCI VCN).
-
-* Optional: Create API Gateway with a new API Deployment with a route for the HTTP endpoint exposed by the Go app that was just deployed to the new VM. Check out HTTP calls to the now public API – see them handled.
-
-* Optional Make some changes to the Go App. Commit and Merge. The build pipeline is triggered. And fails – because of linting and/or testing failures. Correct code. Commit and Merge again. This time build pipeline succeeds, changed application is deployed to VM. Make some more HTTP calls and experience the new behavior.
+* Create API Gateway with a new API Deployment with a route for the HTTP endpoint exposed by the Go app that was just deployed to the VM. Check out HTTP calls to the now public API – see them handled. Apply a little request manipulation in the API Gateway's route to the Go application 
 
 ## Create DevOps Project with Code Repository and Artifact Registry
 
@@ -870,7 +865,7 @@ We will change that behavior, and ensure the response will be *Hello Friend!*. W
 
 Go to the details page for the (API) deployment *myserver-api*. Click on *Edit*. Go to the second page, with *Routes*. Click on the link *Show Route Request Policies*. Click on the *Add* button under *Query Parameter Transformations*.
 
-The *Action* is *Set*, *Behavior* is *Skip* (do not change value when already set), the *Query Parameyer Name* is *name* and the *Value* is *Friend*.  
+The *Action* is *Set*, *Behavior* is *Skip* (do not change value when already set), the *Query Parameter Name* is *name* and the *Value* is *Friend*.  
 
 ![](assets/wtgo-query-param-transform.png)  
 
@@ -882,11 +877,14 @@ When done, try again to access the URL in the browser, without the *name* query 
 https://<URL for API Gateway>/my-api/welcome
 ```
 
-The response should be *Hello Friend!* thanks to the magic wrought by the API Gateway.
+The response should be *Hello Friend!* thanks to the magic wrought by the API Gateway Query Parameter Transformation.
 
 
 
+## Conclusion
+In this article, we continued our journey with Go on OCI. The main focus in this article was *automation*. Using the OCI DevOps services, we created pipelines for build and deployment of a Go application, from sources in the Code Repository to a deployed and running application on a Compute Instance. We used API Gateway to expose our service in a decoupled way to external consumers - for better security, reduced dependencies and improved operations. We saw a small example of API Gateway's capabilities for validating and manipulating requests and responses. 
 
+In the next article, we will create Serverless Functions in Go on deploy them on OCI. And we will start using the Go SDK for OCI that enables us to interact with OCI services from Go applications. The first service to be used is the OCI Object Storage service – for creating buckets, writing and reading files from a local Go application and from the Functions deployed to OCI.  
 
 ## Resources
 
