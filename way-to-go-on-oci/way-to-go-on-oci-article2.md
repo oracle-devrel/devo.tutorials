@@ -346,7 +346,7 @@ Type the stage name, for example *deploy-myserver-to-vm*. Select the environment
 
 Under *Deployment configuration*, click on *Add Artifact*. A list of all artifacts in the DevOps project of type *Instance group deployment configuration* is presented. Select the only entry - that was created earlier. Press button *Save changes* to associate this deployment configuration with the deployment stage.
 
-Note that the button *Add Artifact* is no longer enabled: only a single deplpyment configuration can be defined in a stage. 
+Note that the button *Add Artifact* is no longer enabled: only a single deployment configuration can be defined in a stage. 
 
 To specify the artifact(s) that are to be taken from an artifact store and put into the target environment, click on the second button labeled *Select Artifact*. Select the *my-server* artifact that was added to the DevOps project, representing the similarly named artifact *my-server.zip:1.0* in the Artifact Registry repository *go-on-oci-artifacts-repo*. Click on *Save Changes*.
 
@@ -816,7 +816,7 @@ https://<URL for API Gateway>/my-api/welcome
 
 This probably will not give the expected result - not if you expected success at least. 
 
-The request we sent to the API Gateway is sent over HTTPS to the defauilt HTTPS port of 443. The public subnet that we associated with the API Gateway was configured in the previous installment of the series to allow inbound traffic for port 20-22 (for SSH connections) and for port 80 (plain HTTP traffic). We now need to extend that definition to also allow ingress traffic to port 443.
+The request we sent to the API Gateway is sent over HTTPS to the default HTTPS port of 443. The public subnet that we associated with the API Gateway was configured in the previous installment of the series to allow inbound traffic for port 20-22 (for SSH connections) and for port 80 (plain HTTP traffic). We now need to extend that definition to also allow ingress traffic to port 443.
 
 ![](assets/wtgo-http-serverport-network-rules.png)  
 
