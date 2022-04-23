@@ -400,6 +400,8 @@ The Build Pipeline we will create next will take sources for a Go application fr
 
 Our pipeline will have precious little to build at present, because our Code Repository is quite empty.
 
+// TODO
+
 git clone to local file system
 
 copy contents of root to the local clone of your Code Repository
@@ -619,7 +621,7 @@ To create a policy in the console: type *poli* in the search bar and click on *P
 The first policy defines the permission for the build pipelines to deliver artifacts to the Artifact Registry. Define a name, a description and the following statement:
 
 ```
-Allow dynamic-group build-pipelines-for-go-on-oci to manage generic-artifacts in compartment go-on-oci
+Allow dynamic-group build-pipelines-for-go-on-oci to manage all-artifacts in compartment go-on-oci
 ```
 
 To send notifications for the build process, provide access to ONS (notification service) to the build pipelines:
