@@ -1,5 +1,5 @@
 ---
-title: The Way to Go on OCI
+title: The Way to Go on OCI - Part 1 - How to get Going on OCI Compute 
 
 parent:
 - tutorials
@@ -12,14 +12,22 @@ tags:
 - back-end
 - go
 categories:  [clouddev, cloudapps]
-thumbnail: assets/landing-zone.png
+thumbnail: assets/way-to-go-on-oci-1-end-of-article1.png
 date: 2022-05-01 11:00
 description: How to build and run Go applications on Oracle Cloud Infrastructure Compute Instances. How to produce logging from the Go application and capture the logging into OCI Logging.
 toc: true
-author: lucasjellema
+author:
+  name: Lucas Jellema
+  bio: developer, solution architect, blogger, Oracle Groundbreaker Ambassador, Oracle ACE Director
+  home: https://technology.amis.nl
+  twitter: lucasjellema
+  github: lucasjellema
+  linkedin: lucasjellema
+  location: The Netherlands
+  email: lucasjellema@gmail.com
 redirect: https://developer.oracle.com/tutorials/way-to-go-on-oci/go-on-oci-article-1/
 ---
-{% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+{% imgx alignright assets/way-to-go-on-oci-1-end-of-article1.png 400 400 "Go application running on OCI Compute Instance" %}
 
 
 
@@ -28,6 +36,8 @@ This is the first installment in a five part series about Go and Oracle Cloud In
 In order to follow along with these articles, readers should have at least basic knowledge of how to create Go applications. It is assumed that readers have access to their own Go development environment. Some of the examples and screenshots will specifically mention VS Code as development tool. However, other editors and IDEs can be used as well. The Go code presented in these articles demonstrates a number of mechanisms in their simplest form for maximum clarity and with the least dependencies. Readers should not expect meaningful functionality or production ready code. 
 
 The articles describe how to get Going on OCI and to try out the examples, readers will need to have access to an OCI tenancy with permissions to create the OCI resources discussed in these articles. Most of the resources used are available in the *Aways Free Tier* (Compute Instance, VCN, Autonomous Database, Object Storage, Logging, Resource Manager) or have a free allotment tier for limited monthly usage (Functions, API Gateway, Streaming, Vault, DevOps). 
+
+Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
 
 
 ## 1. Get Going on OCI
@@ -40,8 +50,8 @@ The steps in this article:
 * extend the application to produce logging; then route this logging into the OCI Logging service
 
 The final state at the end of the article is shown in the next figure.
-![](assets/way-to-go-on-oci-1-end-of-article1.png) 
 
+{% imgx aligncenter assets/way-to-go-on-oci-1-end-of-article1.png 526 619 "End state - Go application running on OCI Compute Instance" %}
 ### Create and Configure OCI Compute Instance
 
 Oracle Cloud Infrastructure offers a wide range in Compute Instances - from bare metal or virtual and from fairly small and always free to quite substantial in terms of CPU and memory resources and associated costs. For the purpose of this article, we can settle for an always free shape for the VM. The image selected is the Oracle Linux Cloud Developer 8 that comes with a wide range of tools and runtimes preinstalled. We will need to associate the Compute Instance with a VCN (a virtual cloud network) and a public subnet - either preexisting ones or to be created along with the new compute instance. 
@@ -50,7 +60,7 @@ A public IP address is requested to the compute instance - to allow external con
 
 To keep your OCI tenancy well organized and have a good overview of the resources created for these *Go on OCI* explorations, it is recommended to create a dedicated compartment. These are free, can easily be created and allow fine grained administration. The compartment used in the examples below is called *go-on-oci*.
 
-![](assets/way-to-go-on-oci-1-create-compartment.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-compartment.png 1122 620 "Create Compartment" %}
 
 
 #### Create Compute Instance
@@ -58,23 +68,32 @@ Open the OCI console in your browser. Switch to the compartment in which you int
 
 Type *instance* in the search bar. A popup appears that shows a heading *Services* and below the link *Instances*. 
 
-![](assets/way-to-go-on-oci-1-search-instances.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-search-instances.png 1034 181 "Navigate to Compute Instance through the search box in the console" %}
+
 Click this link - that takes you to an overview of the Compute Instances currently present in the compartment. Click on the button *Create Instance*.
-![](assets/way-to-go-on-oci-1-create-instance.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance.png 1081 416 "Create a new Compute Instance" %}
+
 
 A simple wizard *Create Compute Instance* is presented. It is a form that allows you to provide the specifications for the compute instance you want to have provisioned. 
 
 First, give it a name; for example *go-app-vm*. Verify that the indicated compartment is indeed the correct one.
 
 Unless you have a reason to customize the *Placement* settings you can accept the defaults.
-![](assets/way-to-go-on-oci-1-create-instance-edit-image-shape.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance-edit-image-shape.png 1200 600 "Define name and edit shape for new Compute Instance" %}
+
+
 Click on the *Edit* link in the *Image and Shape* section. Next, click on the button *Change image*. A list of available VM images appears. Mark the checkbox for image Oracle Linux Cloud Developer. [read the Terms of Use for the image and ] mark the checkbox to indicate you have reviewed the document. Click on *Select image*.
-![](assets/way-to-go-on-oci-1-create-instance-select-image.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance-select-image.png 1200 800 "Select the image for the new Compute Instance" %}
 
 The shape selected by default - always free eligible AMD VM.Standard.E2.1.Micro - is fine, so no need to change it.
 
 Next, turn your attention to the *Networking* settings. The default settings are acceptable. However, if you want to specify better names for the new VCN and subnet or associate the new VM with an existing VCN and (public) subnet, then click on the *Edit* link and define the appropriate settings. Make sure that a public IP address will be assigned.
-![](assets/way-to-go-on-oci-1-create-instance-network.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance-network.png 1200 870 "Go and edit the network for the new Compute Instance" %}
+
 
 In order to connect to the VM once it is running we need to be able to establish an SSH connection. An SSH key pair is used to authenticate our connection to the VM. The VM has the public key and we need the private key to encrypt messages to the VM. Click on *Save Private Key* in order to download this private key to a local file. You will need this file later on so make sure to hang on to it. You do not need the public key.
 
@@ -82,22 +101,25 @@ The default Boot Volume settings are acceptable, so we can skip this section.
 
 You are now ready to have the Compute Instance provisioned. Click on *Create* to start this action.
 
-![](assets/way-to-go-on-oci-1-create-instance-keypair-boot-done.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance-keypair-boot-done.png 1200 860 "Generate and download an SSH keypair to access the instance" %}
 
 When you press the *Create* button, there will be a small pause when OCI accepts your provisioning request. Then a page is presented that shows the Provisioning (in progress) overview. 
 
-![](assets/way-to-go-on-oci-1-create-instance-provisioning.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance-provisioning.png 1200 600 "Instance is in the process of being provisioned" %}
+
 
 After a little while - typically within 1-2 minutes - the Compute Instance is running and the page is refreshed with the runtime details. This page contains the public IP address for the new VM - you will need this value. 
 
-![](assets/way-to-go-on-oci-1-create-instance-running-vm.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-instance-running-vm.png 1200 600 "New Compute Instance is up and running" %}
 
 From this page, you can perform administrative tasks - such as stop, reboot, terminate, audit, add to instance pool, configure agents and create a custom image for additional VMs. 
 
 #### Configure Rules in Subnet Security List 
 In order to allow the necessary network traffic out from and into the VM, we need to configure a few rules in the Security List for the Subnet to which the VM is connected. In order to do so, click on the subnet link on the Compute Instance overview page. Alternatively, type *virtual* in the OCI console's search bar, navigate to *Virtual Cloud Network*, click on the VCN created or selected for the VM and click on the relevant subnet.
 
-![](assets/way-to-go-on-oci-1-security-list-subnet.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-security-list-subnet.png 1200 600 "Update the security list for the public subnet attached to the VM" %}
+
+
 Click on the security list for the subnet. 
 
 Two categories of rules can be defined: Ingress rules that govern traffic coming into the VM and Egress rules for traffic that goes out of the VM. We need the following types of traffic allowed:
@@ -105,14 +127,16 @@ Two categories of rules can be defined: Ingress rules that govern traffic coming
 * *Ingress*: port 22 - SSH connection from our development environment (public internet)
 * *Ingress*: port 8080 (or any other port that we select) - HTTP requests from external consumers of the HTTP server we will implement in Go
 
-![](assets/way-to-go-on-oci-1-security-list-subnet-overview.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-security-list-subnet-overview.png 1200 600 "Ingress Rules in the security list - for incoming SSH connections and TCP requests on port 8080" %}
+
 
 * *Egress*: port 443 - outbound HTTPS traffic for fetching Go modules (for example with `go get` or `go mod download` ) and performing *git* commands (including `git clone`)
 
 Depending on whether you used an existing subnet or had a new one set up when the VM was created, you may need to configure some or all of these rules. Note: use `0.0.0.0/0` as the Source CIDR in all cases.
 
 The next image shows creation of an Ingress rule for allowing incoming TCP traffic on port 8080, from any originating network address or port.
-![](assets/way-to-go-on-oci-1-security-list-subnet-rules.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-security-list-subnet-rules.png 1200 600 "Defining the ingress rule for inbound TCP requests on port 8080" %}
 
 #### Connect to Compute Instance with SSH
 
@@ -122,17 +146,19 @@ There are various tools available that make managing SSH sessions very simple, s
 
 2. Change the accessibility of the private key file
 
-```
+```console
 chmod 400 <private key file>
 ```
 
 3. initiate the SSH session:
-```
+4. 
+```console
 ssh –i <private key file> opc@<public ip address of instance>
 ```
+
 And to celebrate the success of making the connection, we could do a little looking around in our new OCI Compute Instance. Check for example what versions are available in the VM of some language runtimes:
 
-```
+```console
 git version
 go version
 java -version
@@ -146,7 +172,7 @@ You could even create a very simple first Go application inside the VM and run i
 
 Type `vi app.go` to bring up the editor (or alternatively use the *nano* or *vim* editor). Enter *Insert* mode by typing `i`. Paste or type this Go code into the editor:
 
-```
+```go
 package main
 import "fmt"
 
@@ -157,7 +183,7 @@ func main() {
 
 Type `esc` followed by `:wq`. This writes the file content and returns you to the command line. You can now this simplest of Go applications, with:
 
-```
+```console
 go run app.go
 ```
 
@@ -175,21 +201,27 @@ There are several tools that facilitate interaction with a remote server over SS
 In case you use VS Code and are interested in this extension, I will briefly share the steps to get started with it.
 
 Open the *Extensions* tab in VS Code. Type *ssh* in the search bar. A list of extensions will appear with the *Remote SSH* extension at or near the top. 
-![](assets/way-to-go-on-oci-1-vscode-remotessh-extension.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-vscode-remotessh-extension.png 1200 430 "Details for the VS Code Remote SSH extension" %}
+
 
 Install the extension. 
 
 Click on the Remote SSH FS icon. Then click on the icon to create a new SSH FS connection.
 
-![](assets/way-to-go-on-oci-1-vscode-remotessh-createnewconnection.png) 
+{% imgx aligncenter assets/way-to-go-on-oci-1-vscode-remotessh-createnewconnection.png 451 407 "Define a new connection in the the VS Code Remote SSH extension" %}
+
 
 Provide the name for the new configuration - for example *go-on-oci* - and click on *Save*
 
-![](assets/way-to-go-on-oci-1-vscode-remotessh-namenewconfig.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-vscode-remotessh-namenewconfig.png 707 392 "Set the name for the new SSH connection configuration" %}
+
 
 A form is presented in which you provide details for the Compute Instance: – the host's public IP address and SSH port (22), the username (which is *opc* on Oracle Linux images such as the one used for the Compute Instance) and the private key file.
 
-![](assets/way-to-go-on-oci-1-remote-ssh-edit-configuration.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-remote-ssh-edit-configuration.png 997 1068 "Edit the SSH connection configuration - set host, port, username and private key" %}
+
+
 
 (this screenshot only contains the relevant fields; you can ignore other aspects of the configuration)
 
@@ -197,7 +229,7 @@ Click on Save.
 
 With this in place, you can open terminal windows on the OCI Compute Instance from within your local VS Code environment and also explore and manipulate the file system contents of the remote VM from inside VS Code.
 
-![](assets/way-to-go-on-oci-1-vscode-remotessh-opensshsession.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-vscode-remotessh-opensshsession.png 907 812 "Open Remote Terminal Session on OCI Compute Instance" %}
 
 Apart from the obvious latency, developing against the remote Compute Instance on Oracle Cloud Infrastructure is the same as working locally in VS Code.
 
@@ -207,7 +239,7 @@ Create a new directory on the remote OCI Compute Instance, called *myserver* - e
 
 Create a file `my-server.go`in this directory. Paste the following contents into this file:
 
-```
+```go
 package main
 
 import (
@@ -256,7 +288,7 @@ This Go program will start an HTTP Server that listens on port 8080 or incoming 
 
 Under directory *myserver*, create a subdirectory *website*. Create file *index.html* in this subdirectory and paste the following content to this file:
 
-```
+```html
 <html>
   <head>
     <title>My Website</title>
@@ -267,42 +299,49 @@ Under directory *myserver*, create a subdirectory *website*. Create file *index.
 </html>
 ```
 
-![](assets/way-to-go-on-oci-1-remotessh-go-webserver.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-remotessh-go-webserver.png 388 709 "Directory structure on compute instance" %}
+
 
 Our Web Server is ready for some action. Or so it would seem. However, the Oracle Linux image we are using for the VM is configured to reject just any inbound network request (resulting in "Route to host not found" error messages). This is an element of security hardening that comes on top of the Network Security List rules that we discussed earlier. In order to make the operating system accept the inbound requests for port 8080, you need to execute the following statements:
 
-```
+```console
 sudo firewall-cmd  --permanent --zone=public --add-port=8080/tcp
 sudo firewall-cmd  --reload
 ```
 
 And now the Web Server can really get *going*. Execute this command to run the application:
 
-```
+```console
 go run my-server.go
 ```
+
 After a few seconds - compilation, initialization - the application is running as you can tell from the logging.
 
 #### Access the Go Web Server
 
 Try to access the Web Server from your local environment, using a curl command 
 
-```
+```console
 curl <public IP address for Compute Instance>:8080/greet?name=Your+Name
 ```
-![](assets/way-to-go-on-oci-1-go-webserver-response-on-commandline.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-go-webserver-response-on-commandline.png 671 63 "Service call with curl and response on command line" %}
+
 or in a web browser with this URL:
+
 ```
 http://<public IP address for Compute Instance>:8080/greet?name=YourNameOrSomeoneElses
 ```
+
 and:
+
 ```
 http://<public IP address for Compute Instance>:8080/site/index.html
 ```
+
 The response should come in - and the logging from the Go application should also indicate the request that was handled. 
 
-![](assets/way-to-go-on-oci-1-go-webserver-response-in-browser.png)
-
+{% imgx aligncenter assets/way-to-go-on-oci-1-go-webserver-response-in-browser.png 485 109 "Service response in a browser window" %}
 
 
 ## Connect Go application to OCI Logging service
@@ -315,7 +354,7 @@ In order to make our Go application's custom logging part of OCI Logging, we wil
 
 Modify the code in `my-server.go`. Add the function 
 
-```
+```go
 func initLogging() (logfile *os.File) {
 	syslogWriter, e := syslog.New(syslog.LOG_NOTICE, "greet-app")
 	if e == nil {
@@ -332,7 +371,7 @@ func initLogging() (logfile *os.File) {
 
 Add an import of module *os*:
 
-```
+```go
 import (
     "fmt"
     "log"
@@ -344,7 +383,7 @@ import (
 
 and add a call to *initLogging()* as first line in function *main* :
 
-```
+```go
 func main() {
     initLogging()
     ...
@@ -352,13 +391,13 @@ func main() {
 
 Run the application again:
 
-```
+```console
 go run my-server.go
 ```
 
 This time, we will not get any feedback on the command line from the application. It is still writing log output -  but now it is sent to the Linux syslog. Verify if logging is indeed still being produced using the following command on a different terminal into the OCI Compute Instance: 
 
-```
+```console
 sudo tail -f /var/log/messages
 ```
 
@@ -373,15 +412,18 @@ There are a few hoops to jump through in order to get the logging written inside
 * an Agent Configuration needs to be created that is associated with the Dynamic Group (for the Compute Instance), a custom Log (in the Log Group) and the log file path /var/log/* from which the logs are to be ingested
 * the Management Agent plugin needs to be enabled in the Compute Instance's Oracle Cloud Agent configuration
 
-![](assets/way-to-go-on-oci-1-oci-logging-design.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-oci-logging-design.png 1200 815 "Configuration of logging agents, settings and related policies" %}
+
 
 #### 1. Dynamic Group go-on-oci-instances
 
 In order to create the Dynamic Group for all Compute Instances in the Compartment, we need the OCID (the Oracle Cloud [resource] Identifier) for the Compartment. To get it, type *comp* in the search bar. Click on the link *Compartments* in the Services section. This will list all visible compartments. Locate the compartment that contains the Compute Instance that you created earlier. Hover your mouse over the value for the compartment in the *OCID* column. Click on the *Copy* link to move the OCID into the clipboard. 
-![](assets/way-to-go-on-oci-1-compartment-ocid.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-compartment-ocid.png 1200 410 "Get hold of the OCID for compartment go-on-oci" %}
 
 Type *dyn* in the search bar. Click on *Dynamic Groups*. Click on the button *Create Dynamic Group*.
-![](assets/way-to-go-on-oci-1-create-dynamic-group.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-dynamic-group.png 1039 390 "Go create a Dynamic Group" %}
 
 Enter the name for the Dynamic Group - for example *go-on-oci-instances* - and type optionally a description. Define the following rule that selects all [compute] instances that are part of the compartment (in this case only the compute instance *go-app-vm*):
 
@@ -391,7 +433,7 @@ instance.compartment.id = '<compartment_id>'
 
 Then press *Create*.
 
-![](assets/way-to-go-on-oci-1-define-dynamic-group.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-define-dynamic-group.png 1200 670 "Define Dynamic Group for Compute Instances" %}
 
 #### 2. Create Log Group go-on-oci-logs
 
@@ -399,25 +441,25 @@ Create the log group in OCI Logging. A log group is a logical container for orga
 
 Type *log g* in the OCI console's search bar. Click on the link *Log Groups* in the Services section of the panel that is shown. An overview page is shown listing all Log Groups in the compartment. 
 
-![](assets/way-to-go-on-oci-1-loggroups-overview.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-loggroups-overview.png 1200 340 "Go create a new Log Group" %}
 
 Click on the button *Create Log Group*. 
 
 Creating a Log Group is very straightforward: provide a name and optionally a description. I have called the log group *go-on-oci-logs*; however, any name will do. 
 
-![](assets/way-to-go-on-oci-1-create-loggroup.png)
-
+{% imgx aligncenter assets/way-to-go-on-oci-1-loggroups-overview.png 1200 450 "Define new Log Group go-on-oci-logs" %}
 
 #### 3. Create the Custom Log and Logging Agent Configuration
 To have the custom logs from the Go application on the Compute Instance sent to the Log Group, we need to create a Custom Log Agent Configuration. This Agent Configuration is an instruction for agents running on the Compute Instances about collecting log entries from specific files and sending them to a custom log in a Log Group. An Agent Configuration associates one or more dynamic groups (identifying  compute instances) on which the specific log files should be ingested into the Log Group.
 
 Type *log* in the OCI Console searchbar. Click on the *Logs* link in the *Services* section. This takes you to the Logs page. Click on the button *Create Custom Log*. 
 
-![](assets/way-to-go-on-oci-1-create-custom-log.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-custom-log.png 1200 280 "Start creation of Custom Log" %}
 
 You now enter a two step wizard for defining the Custom Log and Agent Configuration. Enter the name for the custom log, for example `go-on-oci-log`. The compartment should be set correctly - if not select the compartment that contains the Log Group you have created in the previous section. If not already set, also select the Log Group you have just created. 
 
-![](assets/way-to-go-on-oci-1-create-custom-log-page1.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-custom-log-page1.png 1200 560 "Name and Location of new Custom Log" %}
+
 
 Click on the button *Create Custom Log* to move to the next page.
 
@@ -427,7 +469,8 @@ Type the name of the configuration, for example *go-on-oci-log-agent-configurati
 
 The *Group Type* should be set to *Dynamic group*. Select the Dynamic Group *go-on-oci-instances* that you created earlier. Now click on the button *Create* to create a policy for allowing the compute instances in the dynamic group to interact with the OCI Logging service. 
 
-![](assets/way-to-go-on-oci-1-create-custom-log-page2a.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-create-custom-log-page2a.png 1200 560 "Name and association of custom log to (dynamic group with) Compute Instances" %}
+
 
 A message is presented with the name of and a link to the policy that was created. Its policy statement says *allow dynamic-group go-on-oci-instances to use log-content in tenancy*.
 
@@ -435,7 +478,8 @@ Set the *Input type* to *Log path*. Type a value for *Input name*, such as *linu
 
 The fields under the heading *Log Destination* will already be set; these specify the Custom Log in the Log Group and Compartment that were selected on the previous page.
 
-![](assets/way-to-go-on-oci-1-create-custom-log-page2b.png)
+{% imgx aligncenter assets/way-to-go-on-oci1-create-custom-log-page2b.png 1200 600 "Configure Input on Compute Instance for Custom Log" %}
+
 Click on the button *Create Custom Log* to create the *Agent Configuration*. 
 
 #### 4. Enable the Management Agent plugin in the compute instance. 
@@ -445,16 +489,20 @@ Type *instance* in the search bar in the console. Navigate to *Instances*. Drill
 
 Enable the *Management Agent* plugin if it is not currently enabled. It may take some time for this plugin to go from *disabled* via status *Starting* to status *Running*. 
 
-![](assets/way-to-go-on-oci-1-enable-agent.png)
+{% imgx aligncenter assets/way-to-go-on-oci-1-enable-agent.png 1200 600 "Enable Management Agent on Compute Instance " %}
+
 
 Once the plugin has status *Running*, it will read new log entries to the files in */var/log/* and send them to the custom log *go-on-oci-log* in the Log Group *go-on-oci-logs*.
 
 To check on the status of the monitoring agent from within the VM, you can execute the statement in a remote SSH session to the Compute Instance:
-```
+
+```console
 systemctl status unified-monitoring-agent
 ```
+
 The output should indicate that agent - a Fluentd based data collector for OCI - is running.
-![](assets/way-to-go-on-oci-1-logging-agent-running-in-vm.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-logging-agent-running-in-vm.png 1125 414 "Check if monitoring plugin of management agent is running" %}
 
 
 #### 5. Explore logs from Go Application in OCI Logging
@@ -463,19 +511,28 @@ The logging agent will scrape and forward new log entries from the system logs i
 Now *make some noise* - by starting the my-server application if it is not still running and making some HTTP requests to the /greet path and/or the /site path. It will take between 1-2 minutes before the logs that result from these requests are available in the Log Explorer in the OCI Console.
 
 To take a look at the logs in the console, type *log* in the search bar. Then click on Logs.
-![](assets/way-to-go-on-oci-1-navigate-to-log-explorer.png) 
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-navigate-to-log-explorer.png 1028 211 "Navigate to OCI Logging service resources" %}
+
 The Logs in the compartment are shown. Click on the link for *go-on-oci-log* (or whatever name you assigned to the log).
 
 This takes you to the Log Explorer - a page for browsing and searching through the log entries.
-![](assets/way-to-go-on-oci-1-log-explorer.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-log-explorer.png 1200 560 "Log Explorer providing overview of recently collected logs" %}
+
 When you scroll down, there is a table with the most recently ingested log entries. In this table will be various Linux system log messages alongside the output from the my-server application.
-![](assets/way-to-go-on-oci-1-log-explorer-table-of-entries.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-log-explorer-table-of-entries.png 1200 600 "Table with log entries, collected from the Compute Instance" %}
+
 To track down the specific log output from *my-server*, we can search for the log prefix assigned in the Go code: *greet-app:*. Click on the link *Explore with Log Search*. The Log Search panel is shown. An
 
 Enter the string *greet-app:* in the field *Custom Filters* and press enter. This string is now a search filter. Press the *Search* button to perform search over the indicated time range of log entries for this filter.
-![](assets/way-to-go-on-oci-1-log-entries-from-my-server.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-log-entries-from-my-server.png 1200 700 "Filtering for log entries with prefix greet-app" %}
+
 The log entries can be expanded for closer inspection. Details are shown for when and where this entry was ingested and how it is stored in the OCI Logging service. The source (instance), source file and type are indicated as well.  
-![](assets/way-to-go-on-oci-1-log-entry-expanded.png)
+
+{% imgx aligncenter assets/way-to-go-on-oci-1-log-entry-expanded.png 1200 414 "Inspecting full details for a log entry" %}
 
 There are three timestamps available - one produced by the Go application, one from the Linux system log handler and one from the Logging agent at the time of scraping the log entry. The delta between the first two is not meaningful and the application really does not have to add the timestamp. The difference between the second and third should be small. The fourth timestamp - when the log record was created in the OCI Log and  became available for scrutiny - is not shown. It would not add eaning to the log entry.
 
