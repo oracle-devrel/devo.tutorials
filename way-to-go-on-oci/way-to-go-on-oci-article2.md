@@ -9,6 +9,8 @@ tags:
 - devops
 - get-started
 - automation
+- back-end
+- go
 - iac
 categories:  [clouddev, cloudapps]
 thumbnail: assets/landing-zone.png

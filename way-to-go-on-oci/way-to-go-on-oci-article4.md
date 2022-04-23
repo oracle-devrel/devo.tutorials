@@ -1,26 +1,22 @@
 ---
-title: OCI Functions in Go and Using the OCI Go SDK for accessing OCI services from Go
+title: Working in Go applications with Oracle Database and OCI Autonomous Database
 parent:
 - tutorials
 - way-to-go-on-oci
-redirect_from: "/tutorials/way-to-go-on-oci/go-on-oci-functions-and-sdk-article-3"
+redirect_from: "/tutorials/way-to-go-on-oci/go-on-oci-go-and-db-article-4"
 tags:
 - open-source
 - devops
 - get-started
 - automation
-- serverless
-- docker
-- back-end
-- go
 - iac
 categories:  [clouddev, cloudapps]
 thumbnail: assets/landing-zone.png
 date: 2022-05-01 11:00
-description: Building OCI Functions in Go and using the Go SDK for OCI to leverage OCI services.
+description: Working with on premises Oracle Database and OCI Autonomous Database in Go Applications.
 toc: true
 author: lucasjellema
-redirect: https://developer.oracle.com/tutorials/way-to-go-on-oci/go-on-oci-functions-and-sdk-article-3/
+redirect: https://developer.oracle.com/tutorials/way-to-go-on-oci/go-on-oci-go-and-db-article-4/
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

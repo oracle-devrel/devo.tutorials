@@ -1,23 +1,27 @@
-# The Way to Go on OCI
-- [The Way to Go on OCI](#the-way-to-go-on-oci)
-- [1. Get Going on OCI](#1-get-going-on-oci)
-	- [Create and Configure OCI Compute Instance](#create-and-configure-oci-compute-instance)
-		- [Create Compute Instance](#create-compute-instance)
-		- [Configure Rules in Subnet Security List](#configure-rules-in-subnet-security-list)
-		- [Connect to Compute Instance with SSH](#connect-to-compute-instance-with-ssh)
-	- [Create and Run Go application in Compute Instance](#create-and-run-go-application-in-compute-instance)
-		- [Connect to Compute Instance VS Code Remote SSH extension (optional)](#connect-to-compute-instance-vs-code-remote-ssh-extension-optional)
-		- [Create and Run a Web Server in Go on OCI](#create-and-run-a-web-server-in-go-on-oci)
-		- [Access the Go Web Server](#access-the-go-web-server)
-	- [Connect Go application to OCI Logging service](#connect-go-application-to-oci-logging-service)
-		- [Configure Custom Logging from Compute Instance](#configure-custom-logging-from-compute-instance)
-			- [1. Dynamic Group go-on-oci-instances](#1-dynamic-group-go-on-oci-instances)
-			- [2. Create Log Group go-on-oci-logs](#2-create-log-group-go-on-oci-logs)
-			- [3. Create the Custom Log and Logging Agent Configuration](#3-create-the-custom-log-and-logging-agent-configuration)
-			- [4. Enable the Management Agent plugin in the compute instance.](#4-enable-the-management-agent-plugin-in-the-compute-instance)
-			- [5. Explore logs from Go Application in OCI Logging](#5-explore-logs-from-go-application-in-oci-logging)
-	- [Conclusion](#conclusion)
-- [Resources](#resources)
+---
+title: The Way to Go on OCI
+
+parent:
+- tutorials
+- way-to-go-on-oci
+redirect_from: "/tutorials/way-to-go-on-oci/go-on-oci-article-1"
+tags:
+- open-source
+- devops
+- get-started
+- back-end
+- go
+categories:  [clouddev, cloudapps]
+thumbnail: assets/landing-zone.png
+date: 2022-05-01 11:00
+description: How to build and run Go applications on Oracle Cloud Infrastructure Compute Instances. How to produce logging from the Go application and capture the logging into OCI Logging.
+toc: true
+author: lucasjellema
+redirect: https://developer.oracle.com/tutorials/way-to-go-on-oci/go-on-oci-article-1/
+---
+{% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+
+
 
 This is the first installment in a five part series about Go and Oracle Cloud Infrastructure. This series discusses how Go applications can be created and run on Oracle Cloud Infrastructure - in Compute Instances (VMs), containerized on Kubernetes or as serverless Functions. The articles show how to automate the build and deployment of these Go applications using OCI DevOps. An important topic is how to use OCI services from Go applications - both those running on OCI as well as Go code running elsewhere. Some of the OCI services discussed are Object Storage, Streaming, Key Vault and Autonomous Database.
 
@@ -26,7 +30,7 @@ In order to follow along with these articles, readers should have at least basic
 The articles describe how to get Going on OCI and to try out the examples, readers will need to have access to an OCI tenancy with permissions to create the OCI resources discussed in these articles. Most of the resources used are available in the *Aways Free Tier* (Compute Instance, VCN, Autonomous Database, Object Storage, Logging, Resource Manager) or have a free allotment tier for limited monthly usage (Functions, API Gateway, Streaming, Vault, DevOps). 
 
 
-# 1. Get Going on OCI
+## 1. Get Going on OCI
 
 The first objective is to create a Compute Instance (a VM) on OCI and create and run a Go application in it. This simple Go application handles HTTP requests from outside the OCI tenancy. Subsequently, the logging from this Go application is channeled into the OCI Logging service where it is available for monitoring and analysis purposes.    
 
@@ -38,7 +42,7 @@ The steps in this article:
 The final state at the end of the article is shown in the next figure.
 ![](assets/way-to-go-on-oci-1-end-of-article1.png) 
 
-## Create and Configure OCI Compute Instance
+### Create and Configure OCI Compute Instance
 
 Oracle Cloud Infrastructure offers a wide range in Compute Instances - from bare metal or virtual and from fairly small and always free to quite substantial in terms of CPU and memory resources and associated costs. For the purpose of this article, we can settle for an always free shape for the VM. The image selected is the Oracle Linux Cloud Developer 8 that comes with a wide range of tools and runtimes preinstalled. We will need to associate the Compute Instance with a VCN (a virtual cloud network) and a public subnet - either preexisting ones or to be created along with the new compute instance. 
 
@@ -49,7 +53,7 @@ To keep your OCI tenancy well organized and have a good overview of the resource
 ![](assets/way-to-go-on-oci-1-create-compartment.png)
 
 
-### Create Compute Instance
+#### Create Compute Instance
 Open the OCI console in your browser. Switch to the compartment in which you intend to create the Compute Instance.
 
 Type *instance* in the search bar. A popup appears that shows a heading *Services* and below the link *Instances*. 
@@ -90,7 +94,7 @@ After a little while - typically within 1-2 minutes - the Compute Instance is ru
 
 From this page, you can perform administrative tasks - such as stop, reboot, terminate, audit, add to instance pool, configure agents and create a custom image for additional VMs. 
 
-### Configure Rules in Subnet Security List 
+#### Configure Rules in Subnet Security List 
 In order to allow the necessary network traffic out from and into the VM, we need to configure a few rules in the Security List for the Subnet to which the VM is connected. In order to do so, click on the subnet link on the Compute Instance overview page. Alternatively, type *virtual* in the OCI console's search bar, navigate to *Virtual Cloud Network*, click on the VCN created or selected for the VM and click on the relevant subnet.
 
 ![](assets/way-to-go-on-oci-1-security-list-subnet.png)
@@ -110,7 +114,7 @@ Depending on whether you used an existing subnet or had a new one set up when th
 The next image shows creation of an Ingress rule for allowing incoming TCP traffic on port 8080, from any originating network address or port.
 ![](assets/way-to-go-on-oci-1-security-list-subnet-rules.png)
 
-### Connect to Compute Instance with SSH
+#### Connect to Compute Instance with SSH
 
 There are various tools available that make managing SSH sessions very simple, such as MobaXTerm and Putty. From a Linux command line, the probably most straightforward way to open an SSH connection is like this: 
 
@@ -141,6 +145,7 @@ oci --version
 You could even create a very simple first Go application inside the VM and run it as well.
 
 Type `vi app.go` to bring up the editor (or alternatively use the *nano* or *vim* editor). Enter *Insert* mode by typing `i`. Paste or type this Go code into the editor:
+
 ```
 package main
 import "fmt"
@@ -148,8 +153,8 @@ import "fmt"
 func main() {
         fmt.Println("Hello You")
 }
-
 ```
+
 Type `esc` followed by `:wq`. This writes the file content and returns you to the command line. You can now this simplest of Go applications, with:
 
 ```
@@ -159,12 +164,11 @@ go run app.go
 The program is compiled and executed and the output will appear. You are now officially *going on OCI*.
 
 
-
-## Create and Run Go application in Compute Instance
+### Create and Run Go application in Compute Instance
 
 At this point, we have a running OCI Compute Instance that we can connect to via SSH from our local environment. The VM has a number of tools and language runtime environments that allow us to create, compile and run applications. We have prepared inbound network connectivity on port 8080 to the VM. Let us now create a Go application that listens to such inbound [HTTP] requests and serves them with a simple response.
 
-### Connect to Compute Instance VS Code Remote SSH extension (optional)
+#### Connect to Compute Instance VS Code Remote SSH extension (optional)
 
 There are several tools that facilitate interaction with a remote server over SSH. You can of course pick the one you like best. One option that I have come to appreciate is an extension for Visual Studio Code: the Remote SSH Extension.
 
@@ -197,7 +201,7 @@ With this in place, you can open terminal windows on the OCI Compute Instance fr
 
 Apart from the obvious latency, developing against the remote Compute Instance on Oracle Cloud Infrastructure is the same as working locally in VS Code.
 
-### Create and Run a Web Server in Go on OCI 
+#### Create and Run a Web Server in Go on OCI 
 
 Create a new directory on the remote OCI Compute Instance, called *myserver* - either through the VS Code user interface or on the terminal command line with  `mkdir myserver`.
 
@@ -247,6 +251,7 @@ func main() {
 	}
 }
 ```
+
 This Go program will start an HTTP Server that listens on port 8080 or incoming requests. Requests with URL path /site are handled by the static content handler that returns files from the local *website* directory (that does not exist yet). Requests with a URL path */greet* are handled by the *greetHandler* function. This function will return a response with a friendly *Hello*, followed by either the value of the query parameter *name* or the hard coded string *Stranger*. Other requests are handled in the *fallbackHandler* function, that returns a 404 HTTP StatusNotFound result.
 
 Under directory *myserver*, create a subdirectory *website*. Create file *index.html* in this subdirectory and paste the following content to this file:
@@ -261,6 +266,7 @@ Under directory *myserver*, create a subdirectory *website*. Create file *index.
   </body>
 </html>
 ```
+
 ![](assets/way-to-go-on-oci-1-remotessh-go-webserver.png)
 
 Our Web Server is ready for some action. Or so it would seem. However, the Oracle Linux image we are using for the VM is configured to reject just any inbound network request (resulting in "Route to host not found" error messages). This is an element of security hardening that comes on top of the Network Security List rules that we discussed earlier. In order to make the operating system accept the inbound requests for port 8080, you need to execute the following statements:
@@ -277,7 +283,7 @@ go run my-server.go
 ```
 After a few seconds - compilation, initialization - the application is running as you can tell from the logging.
 
-### Access the Go Web Server
+#### Access the Go Web Server
 
 Try to access the Web Server from your local environment, using a curl command 
 
@@ -323,7 +329,9 @@ func initLogging() (logfile *os.File) {
 	return logfile
 }
 ```
+
 Add an import of module *os*:
+
 ```
 import (
     "fmt"
@@ -333,7 +341,9 @@ import (
     "os"	
 )
 ```
+
 and add a call to *initLogging()* as first line in function *main* :
+
 ```
 func main() {
     initLogging()
@@ -341,14 +351,17 @@ func main() {
 ```
 
 Run the application again:
+
 ```
 go run my-server.go
 ```
+
 This time, we will not get any feedback on the command line from the application. It is still writing log output -  but now it is sent to the Linux syslog. Verify if logging is indeed still being produced using the following command on a different terminal into the OCI Compute Instance: 
 
 ```
 sudo tail -f /var/log/messages
 ```
+
 This will show a live feed of all system log messages, including those produced by *my-server*.
 
 
@@ -476,9 +489,9 @@ After provisioning a Compute Instance based on the Oracle Linux Cloud Developer 
 In the next article, we will focus on automation of the software engineering process for a somewhat more complex Go application: how to use OCI DevOps for storing the source code, building the executable and storing it as deployable artifact, deploying that artifact to a Compute Instance, exposing an HTTP endpoint for that application through an OCI API Gateway and finally checking its health status after deployment. All using automated pipelines. 
 
 
-# Resources
+## Resources
 
-Source code repository for the sources discussed in this article series:  <provide GitHub Repo URL> 
+[Source code repository for the sources discussed in this article series](https://github.com/lucasjellema/go-on-oci-article-sources) 
 
 [Documentation on OCI Compute](https://docs.oracle.com/en-us/iaas/Content/Compute/home.htm)
 
