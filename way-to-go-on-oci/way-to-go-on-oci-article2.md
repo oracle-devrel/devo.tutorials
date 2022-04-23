@@ -62,26 +62,26 @@ Click on *Create* to create the subscription.
 
 The new subscription is shown with status *Pending*. The subscription only becomes active when the email address is confirmed. Check your mailbox. You should find a mail from OCI that invites you to confirm your subscription. When you click the link in the mail (or copy the url for the link to a browser window) you are taken to a web page that informs you that the subscription was confirmed. At this point, messages published to the topic will be relayed as email to the address you have subscribed with.
 
-![](assets/wtgo-email-subscription-confirmation.png)   
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-email-subscription-confirmation.png 1200 647 "email subscription-confirmation" %}   
 
 Let's now create a DevOps project. Ensure that the context compartment is the right one - in my case *go-on-oci*, created in part 1 of this series. Type *devops* in search field; then navigate to *Overview*. An overview is shown of all DevOps projects - probably none at this point.
 
 Click on the button Create DevOps Project.
-![](assets/wtgo-createdevopsproject.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-createdevopsproject.png 1200 564 "createdevopsproject" %}
 Type the name of the project, for example *go-on-oci*, and optionally enter a description - "Resources for the Way to Go on OCI application".
 
 Click on *Select Topic* and select the Topic you have just created. Then click on *Create DevOps Project*.
 
-![](assets/wtgo-create-devopsproject2.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-create-devopsproject2.png 1200 564 "create devopsproject2" %}
 
 The DevOps project is created. Its overview page is shown. 
-![](assets/wtgo-devopsproject-created.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-devopsproject-created.png 1200 564 "devopsproject created" %}
 
 One last step to complete the project definition: enable logging. Click on the button *Enable Log*. This takes you to a tab labeled *Logs*. Toggle the switch to *Enable Log*. 
 
 This brings up a pane where the Log Group and the name of the Log are defined. In article 1 of this series, we created a Log Group *go-on-oci-logs* which can serve us now. If you want to use a different Log Group or do not have that group available (anymore), click on the link *Create New Group*. Provide a name for the Log. Then click on *Enable Log*.
 
-![](assets/wtgo-enable-logging.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-enable-logging.png 1200 487 "enable logging" %}
 
 The new log is shown with status *Creating*. After a minute or so, the status will be be updated to *Active*. Now the DevOps project is fully primed, ready for some action. 
 
@@ -207,13 +207,13 @@ Allow dynamic-group go-on-oci-instances to use instance-agent-command-execution-
 
 This diagram visualizes the dynamic groups and policies that are now in place.
 
-![](assets/wtgo-deployment-pipeline-policies.png)   
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-deployment-pipeline-policies.png 900 631 "deployment pipeline-policies" %}   
 
 #### Oracle Cloud Agent and Run Command Plugin
 
 The Compute Instance *Run Command plugin* must be enabled on the VM, and the plugin must be running for the Deployment Pipeline to be able to have commands executed on the instance. You can check and enable this on the Oracle Cloud Agent tab in the Compute Instance details page in the console. For the *Compute Instance Run Command plugin*, make sure the *Enabled Plugin* switch is in the *Enabled* setting. It takes up to 10 minutes for the change to take effect. 
 
-![](assets/wtgo-runcommand-plugin.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-runcommand-plugin.png 1200 564 "runcommand plugin" %}
 
 
 
@@ -336,11 +336,11 @@ Now it is time to create the deployment pipeline itself - and link the two artif
 
 On the DevOps Project's overview page, click on the button *Create pipeline*. The *Create pipeline* form is presented. Type a name - *deploy-myserver-on-go-app-vm* - and optionally a description. Then click on the button *Create pipeline*. The deployment pipeline is now created - though it is quite empty: not an environment into which it should deploy, no artifacts that are to be deployed and no configuration file to define the steps to execute. 
 
-![](assets/wtgo-create-pipeline-stage.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-create-pipeline-stage.png 1200 552 "create pipeline-stage" %}
 
 In the pipeline editor that appears, click on the *Add Stage* tile (or on the plus icon). The next page shows a list of stage types. Click on the tile labeled *Deploy incrementally through Compute instance groups*; although a mouthful it simply means (for our purpose): deploy stuff onto a single VM.  
 
-![](assets/wtgo-select-stagetype.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-select-stagetype.png 1200 564 "select stagetype" %}
 
 Press button *Next*. 
 
@@ -359,7 +359,7 @@ The pipeline stage is created in the pipeline. And the pipeline can now be execu
 Click on button *Run pipeline*.  A page with an overview of the manual run of the deployment pipeline. It allows you to set a name - to indicate the specific significance of this particular deployment. Parameter values can now be provided for use in this run of the deployment pipeline. Our pipeline does not currently have any such parameters defined so we can not set any values. In the future, we might well use parameters, for example to define the prefix for log output or the port on which *my-server* should listen for HTTP requests - set as an environment variable or startup parameter in the deployment configuration.  Now press button *Start manual run*. The deployment is started. An email is sent to the address that you subscribed on the notification topic, to alert you of the start of the run. A second mail will be sent to let you know about the result of the run.  
 
 The next figure shows the configuration of the Deployment Pipeline in conjunction with the other OCI resources it depends on. The configuration
-![](assets/wtgo-deployment-pipeline-diagram.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-deployment-pipeline-diagram.png 714 600 "deployment pipeline-diagram" %}  
 
 When the deployment is finished successfully, send an HTTP request - with curl or from a browser - to port 8080 at the public IP of the VM: 
 
@@ -594,7 +594,7 @@ This completes the build pipeline: it grabs sources, processes them into a deplo
 
 The next figure visualizes the build pipeline and its relation with the deployment pipeline.
 
-![](assets/wtgo-build-and-deployment-pipelines.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-build-and-deployment-pipelines.png 838 542 "build and-deployment-pipelines" %}  
 
 ### IAM Policies
 
@@ -640,7 +640,7 @@ Allow dynamic-group build-pipelines-for-go-on-oci to manage devops-family in com
 
 With these policies in place, the build pipeline can be taken for a spin. 
 
-![](assets/wtgo-dyngroup-and-policies-buildpipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-dyngroup-and-policies-buildpipeline.png 722 377 "dyngroup and-policies-buildpipeline" %}  
 
 ### Run the Build Pipeline - and making the application run
 
@@ -648,7 +648,7 @@ The Build Pipeline can be triggered by events in the Code Repository. Simple eve
 
 Click on *Start manual run* in the overview page for the build pipeline. 
 
-![](assets/wtgo-start-build-run.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-start-build-run.png 1200 752 "start build-run" %}  
 
 The build pipeline is kicked into action. It acquires a build server, retrieves the code and saves it on the build server. Then it performs the steps in the build specification. The outputs from this build process are published from the build server's file system, uploaded to the Artifact Registry, where they will be waiting for the Deployment Pipeline to come along and fetch them. And indeed this is what happens next: the build pipeline's final stage triggers the deployment pipeline. This has the artifact as its source and continues on to write the artifact to the compute instance and perform the installation steps. You will receive emails about the start and completion of both the build pipeline and the triggered deployment pipeline. You may start to think about setting routing rules to a specific mail folder for emails from OCI DevOps.  
 
@@ -685,7 +685,7 @@ Change *Artifact Location* to *Set Custom Location*. The field *Artifact Path* s
 
 Select *Yes, substitute placeholders* under *Replace parameters used in this artifact* to make sure that the value of the parameter is actually applied to compose the version (and *${MYSERVER_VERSION}* is not regarded as a simple string). 
 
-![](assets/wtgo-edit-myserver-artifact-definition.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-edit-myserver-artifact-definition.png 1200 729 "edit myserver-artifact-definition" %}  
 
 Press button *Save* to apply the changes in the artifact definition. 
 
@@ -697,7 +697,7 @@ To set parameter values, go to the *Parameters* tab on the Deployment Pipeline p
     1. MYSERVER_VERSION - to define the version of the *my-server* artifact to deploy; set the default value to 4.8
     2. HTTP_SERVER_PORT - to define the port on which the my-server application will listen to incoming HTTP requests; set the default value to 8090 
 
-![](assets/wtgo-deployment-pipeline-parameters.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-deployment-pipeline-parameters.png 1200 389 "deployment pipeline-parameters" %}  
 
 The value for *MYSERVER_VERSION* is immediately meaningful: when you next will run the deployment pipeline, the artifact to retrieve for the deployment is found using the artifact definition in the DevOps project, with path set to `my-server.zip` and version defined as `${MYSERVER_VERSION}`. The value for version is deduced using the value of the parameter.
 
@@ -738,13 +738,13 @@ Build pipeline parameters can be used during the build process. The parameters a
 
 Go to the *Parameters* tab for the Build Pipeline. Define a new parameter called *MYSERVER_VERSION*. Its description can be something like *Version of the myserver artifact that is produced*. The default value can be set to *4.8* - or anything else. When you run a build pipeline you can override the default value for every parameter. 
 
-![](assets/wtgo-buildpipeline-parameter.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-buildpipeline-parameter.png 1200 394 "buildpipeline parameter" %}  
 
 #### End to End Parametrized Build and Deployment 
 
 By defining the parameter *MYSERVER_VERSION* for both the build pipeline and the deployment pipeline as well as in the artifact's version label, we have tied the two pipelines together. When we run the Build Pipeline and set the value for *MYSERVER_VERSION* to a value such as *4.8* (or any other version label like string) then the build pipeline will produce the *my-server.zip* artifact with the version set to that value and the deployment pipeline will take that artifact version as its source for the deployment. During build as well as during deployment, environment variables are available based on the parameter(s) defined for the pipeline. 
 
-![](assets/wtgo-end-to-end-parameters-in-build-and-deploypipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-end-to-end-parameters-in-build-and-deploypipeline.png 1041 813 "end to-end-parameters-in-build-and-deploypipeline" %}  
 
 Run the build pipeline and when prompted provide a value for the parameter *MYSERVER_VERSION*. It can be 4.8 but 5.7 or 9.3 is fine too. Or anything else.
 
@@ -772,7 +772,7 @@ Services that should be accessible to consumers external to our cloud tenancy sh
 
 Without going into all features the API Gateway offers, we will create an API Gateway with a Deployment that has a single route for exposing the service offered by application *myserver*, built from the Go application sources and deployed to the compute instance.
 
-![](assets/wtgo-apigw-to-apponvm2.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-apigw-to-apponvm2.png 1015 177 "apigw to-apponvm2" %}  
 
 ### Create API Gateway
 
@@ -780,7 +780,7 @@ Type *gat* into the search bar in the console. Click on the link *Gateways | API
 
 Click on the button *Create Gateway*. Enter a name for the new gateway, for example *the-api-gateway*. Accept the type *Public*. Select the same VCN used for the Compute Instance and the same public subnet and do not enable network security groups. Accept the default setting under Certificate. Press *Create Gateway*. 
 
-![](assets/wtgo-create-api-gateway.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-create-api-gateway.png 1200 564 "create api-gateway" %}  
 
 Note: we are doing a very simple deployment using the smallest number of OCI cloud resources we can get away with. In a real world scenario, we would most probably not have the API Gateway on the same subnet as the Compute Instance it is routing to- because one of the things we try to achieve is insulate the backend VM from the public internet using the front end API Gateway.
 
@@ -788,11 +788,11 @@ Note: we are doing a very simple deployment using the smallest number of OCI clo
 
 The API Gateway will now be created. Once that has been done, navigate to the *Deployments* tab. A Deployment on an API Gateway is a collection of (incoming) routes that are mapped to backend services to handle requests. Click on the button *Create Deployment*.
 
-![](assets/wtgo-create-deployment.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-create-deployment.png 1200 627 "create deployment" %}  
 
 The first page of a three page wizard appears. Here we define the name of the deployment - for example *myserver-api* - and the path prefix used by all requests to the API Gateway that are to be handled in this deployment. For example: */my-api*.
 
-![](assets/wtgo-create-deployment-1.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-create-deployment-1.png 1200 652 "create deployment-1" %}  
 
  Click on *Next* to move to the second page in the wizard.
 
@@ -802,13 +802,13 @@ The first page of a three page wizard appears. Here we define the name of the de
 
  Accept the Type *HTTP* . In the *URL* field type the HTTP endpoint for the service exposed by *myserver* on the compute instance. At this moment, it is the same endpoint you have used in the browser to access the service because right now the compute instance has a public IP and the network configuration allows that direct traffic. With the API Gateway handling the inbound traffic, we can restrict network access to the VM - as long of course as the API Gateway can make requests to it.     
 
- ![](assets/wtgo-createdeployment2.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-createdeployment2.png 1200 740 "createdeployment2" %}  
 
 Click on button *Next* to go to an overview of the definition of the deployment. Click on *Save* on this third page to create deployment with its single route.
 
 It takes a little while for the API Gateway to be updated with the deployment. 
 
-![](assets/wtgo-createdeployment4.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-createdeployment4.png 1200 564 "createdeployment4" %}  
 
 ### Update Network Security and Invoke API
 
@@ -822,7 +822,7 @@ This probably will not give the expected result - not if you expected success at
 
 The request we sent to the API Gateway is sent over HTTPS to the default HTTPS port of 443. The public subnet that we associated with the API Gateway was configured in the previous installment of the series to allow inbound traffic for port 20-22 (for SSH connections) and for port 80 (plain HTTP traffic). We now need to extend that definition to also allow ingress traffic to port 443.
 
-![](assets/wtgo-http-serverport-network-rules.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-http-serverport-network-rules.png 896 329 "http serverport-network-rules" %}  
 
 Type *net* in the search bar and click on link *Virtual Cloud Networks* in the services list. Click on the *VCN* that was created earlier and subsequently on the *Subnet* that was associated to the API Gateway. Click on the *Security List*. Click on *Add Ingress Rule*. 
 
@@ -871,7 +871,7 @@ Go to the details page for the (API) deployment *myserver-api*. Click on *Edit*.
 
 The *Action* is *Set*, *Behavior* is *Skip* (do not change value when already set), the *Query Parameter Name* is *name* and the *Value* is *Friend*.  
 
-![](assets/wtgo-query-param-transform.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-2-query-param-transform.png 1200 564 "query param-transform" %}  
 
 Click on *Apply Changes*. Then click button *Next* and subsequently *Save Changes*. The deployment will be updated with the changes.
 
@@ -892,7 +892,7 @@ In the next article, we will create Serverless Functions in Go on deploy them on
 
 ## Resources
 
-Source code repository for the sources discussed in this article series:  <provide GitHub Repo URL> 
+[Source code repository for the sources discussed in this article series](https://github.com/lucasjellema/go-on-oci-article-sources) 
 
 [OCI Documentation - Create DevOps project ](https://docs.oracle.com/en-us/iaas/Content/devops/using/create_project.htm#create_a_project
 )
