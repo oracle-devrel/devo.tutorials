@@ -584,13 +584,91 @@ Curl and other HTTP tools like Postman can be used to interact with the API, usi
 
 ## Go Application on OCI interacting with Autonomous Database and Object Storage service
 
+
 Extend the Go application we used in article #2 – add functionality to read files from OCI Object Storage and to create database records based on the contents of the file. Extend the deployment pipeline to also deploy the Oracle Wallet to the VM. Set up Instance Principal Authorization for the VM to have appropriate permissions for OCI services.
 
 Run the build and deployment pipelines. 
 Put a file to process on OCI Object Storage. Trigger Go App. File is read and renamed/moved. File contents is processed into records in the database table. Inspect table contents (either from local Go app or through web based SQL Developer or perhaps SQLcl in CloudShell)
 
 
+All the application needs for you to add in order to run:
 
+    1. Copy your `cwallet.sso` file to the root directory of the application
+    2. Define your Autonomous Database connection details in `data-server.go` 
+    3. Edit `my-server.go` - set the correct value for compartmentOCID
+    4. Upload the file `website/sample-persons.json` to a bucket on Object Storage service (feel free to edit the file or to upload a different file with similarly shaped contents)
+
+You can then locally run the application, using
+
+```console
+go run *.go
+```
+
+The application starts and reports for duty. 
+
+In a separate terminal window, you use *curl* statements to interact with the new persons file processor API. An HTTP request should pass in the name of the bucket and the object that contains the JSON data to process. The service will fetch the file, parse its contents and create or update records the PEOPLE table in the autonomous database. 
+
+```console
+curl "localhost:8080/people?objectName=sample-persons.json&bucketName=the-bucket"
+```
+
+Using a call to the data API you can inspect the data records:
+
+```console
+curl localhost:8080/data?name=Martha
+```
+
+And you can do the same in the SQL Developer Worksheet:
+
+![](assets/4go-personnelfileprocessed-in-sqldeveloper.png)  
+
+
+Now let us bring this application to OCI, to the compute instance we have also used in the previous section. Some steps are needed as preparation:
+
+    1. Edit file `object-processor.go` - change the value of const RUN_WITH_INSTANCE_PRINCIPAL_AUTHENTICATION from false to true (this flag is false when running locally and true when running on a Compute Instance in OCI where Instance Principal authentication and authorization is used) 
+    2. Git actions: add `cwallet.sso` and commit this new file along with the changed files `my-server.go`, `object-processor.go` and `data-service.go`; push the commit to OCI Code Repository  
+    3. Make sure an IAM policy exists that allows the dynamic group `go-on-oci-instances` to read objects in the compartment - to make it possible for the application running on the VM to call out to Object Storage Service to read the JSON file with *person* records . The policy statement could read: `Allow dynamic-group go-on-oci-instances to read objects in compartment go-on-oci`
+
+After these git add, commit and push actions, the Code Repository *go-on-oci-repo* should contain your `cwallet.sso` and the `data-service.go` that you modified. 
+
+You can now reuse the build pipeline *build-myserver* that we used  before. Just as we did earlier, we have to update the reference to the build specification file.
+
+Open the details page of the Build Pipeline *build-myserver* in the OCI Console. Open the details for the managed build stage. Click on *Edit*. Change the value in the field *Build spec file path* to `/applications/people-file-processor/build_spec.yaml` - the build specification that is modified to build the extended version of *myserver*. Click on *Save*. 
+
+![](assets/4go-updatebuildpipeline-buildspec-people-processor.png) 
+
+Start a build run. Set a new version for the parameter *MYSERVER_VERSION* if you want to.
+
+The pipeline will produce a new artifact - a zip file with the executable built from the Go sources in directory `/applications/people-file-processor` and containing the wallet file and `website` subdirectory. The pipeline will trigger the deployment pipeline that will bring the artifact to the compute instance, copy the application to the `/tmp/yourserver` directory and run the application. It starts listening for HTTP requests on the port specified by the deployment pipeline parameter *HTTP_SERVER_PORT* (or on 8080 if the parameter is not set). 
+
+You can access the API on the public IP address for the VM - if that is still exposed. Better to add a route on API Gateway, to expose access to the personnel file processor. Navigate to the details for `the-api-gateway`. Open the tab *Deployments*. Click on *Edit*. Open the second step - for *Routes*. Add a new route. 
+
+Define the *Path* as `/personnel-file-handler`. The *GET* method should be supported. The type of the route is *HTTP*. The *URL* is: `http://<Public IP for Compute Instance>:8095/people`. Check the value of the *HTTP_SERVER_PORT* on the deployment pipeline *deploy-myserver-on-go-app-vm*. If it is not set to *8095*, then modify the URL value to use the proper port number for the application.  
+
+![](assets/4go-create-route-for-personnel-file-processor-on-apigw.png)  
+
+Press *Next*, then *Save changes*. It will take a moment for the API Gateway's Deployment to be refreshed. Once it has, the service that reads a file from an Object Storage bucket, processes the JSON content and creates records in table PEOPLE in the Autonomous Database instance for the entries in this file can be triggered with a simple HTTP GET request to:
+
+```
+https://<public endpoind of API Gateway>/my-api/personnel-file-handler?objectName=sample-persons.json&bucketName=the-bucket
+```
+
+The effect of making the call can be inspected through the *person* API that reads records from that same table in that same database:
+
+```
+https://<public endpoind of API Gateway>/my-api/person?name=Jasper
+```
+
+The end to end picture of what is now deployed on OCI is shown in the next figure.
+
+![](assets/4go-endtoend-apigw-vm-object-atp.png)  
+
+What is not shown in the picture and quite important to realize:
+* the Oracle Wallet file deployed with the application (in the artifact built from the source in Code Repository)
+* hard coded reference to the compartment in the application
+* the policy that grants permission to the compute instance to read objects
+
+In the next article we introduce OCI Key Vault - a much better way to store the Oracle Wallet and make it available to the application at deployment time)(or even runtime). 
 
 ## Conclusion
 
