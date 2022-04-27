@@ -9,29 +9,25 @@ tags:
 categories:
 - frameworks
 - cloudapps
-thumbnail: ruby_on_rails_logo.png
+thumbnail: assets/rails-logo.png
 date: 2022-01-28 17:03
 description:
 author: hassan-ajan
 published: true
 ---
-{% imgx https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/Ruby_On_Rails_Logo.svg/200px-Ruby_On_Rails_Logo.svg.png "Ruby on Rails Logo" %}
+{% imgx assets/rails-logo.png "Ruby on Rails Logo" %}
 
 ## Introduction
 
-Ruby on Rails is a rapid development framework It’s used by over a million websites amongst them AirBNB, Bloomberg, Github, Gitlab, Couchsurfing and many more.
+Ruby on Rails is a rapid development framework. It’s used by over a million websites, including AirBNB, Bloomberg, Github, Gitlab, Couchsurfing, and many more.
 
-The ruby language is easy to understand as it’s close to English making it great for beginners. In this tutorial we'll show you how to get started with a new Ruby on Rails project and how to bring your existing Ruby on Rails application to OCI.
-
-## TLDR
-
-Don't have time to read the whole article, use the "Deploy Button" to provision the Ruby on Rails environment with a few clicks. On this environment you can build a new application or bring your existing Ruby on Rails application to OCI. 
-
-[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/haj/oci-arch-rubyonrails-mds/archive/refs/tags/latest.zip)
+The Ruby language is easy to understand as it’s close to English, making it great for beginners. In this tutorial we'll show you how to get started with a new Ruby on Rails project and how to bring your existing Ruby on Rails application to OCI.
 
 ## Set up environment automatically
 
-The quickest way to setup a ruby on rails environment on OCI is by using the "Deploy Button".
+Don't have time to read the whole article? Use the "Deploy Button" to provision the Ruby on Rails environment with a few clicks. In this environment you can build a new application or bring your existing Ruby on Rails application to OCI. 
+
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/haj/oci-arch-rubyonrails-mds/archive/refs/tags/latest.zip)
 
 The button takes you to Oracle Resource Manager which runs Terraform code that will provision the full Ruby on Rails environment.
 
@@ -49,40 +45,37 @@ The following ressources will be created:
 | 1 | Load balancer 10 mpbs      | flex loadbalancer upto 4000 mbps |
 
 
-The public subnet will contain the following ressources:
+The public subnet will contain the following resources:
 
-- Loadbalancer
+- Load balancer
 - Bastion Host
 
-The private subnet will contain the following ressources:
+The private subnet will contain the following resources:
 
 - Ruby on Rails VM(s)
 - Managed MySQL Database
 
-### Software packages installed on the VMs
+Software packages installed on the VMs:
 
-#### RBENV
-
-Package manager for ruby to make it easy to manage different ruby versions and gem packs 
-
-#### Nodejs
+- RBENV Package manager for ruby to make it easy to manage different ruby versions and gem packs
+- Nodejs
 
 The bootstrap script in the gihub repo shows how the VMs are configured and all the packages that are installed:
 
-You can check the script on Github: [Bootstrap Script](https://github.com/haj/oci-arch-rubyonrails-mds/blob/main/scripts/ror_bootstrap.sh). 
+You can check out [the script on Github](https://github.com/haj/oci-arch-rubyonrails-mds/blob/main/scripts/ror_bootstrap.sh). 
 
-If you have deployed the environment using the deploy button you can skip the next section. The bootstrap script has been run automatically when the VMs were provisioned. 
+If you have deployed the environment using the deploy button, you can skip the next section. The bootstrap script has been run automatically when the VMs were provisioned. 
 
 
-## How to setup environment automatically
+### How to setup environment automatically
 
-1. Click the deploy button [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/haj/oci-arch-rubyonrails-mds/archive/refs/tags/latest.zip)
+1. Click the deploy button [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/haj/oci-arch-rubyonrails-mds/archive/refs/tags/latest.zip).
 2. If you aren't already signed in, when prompted, enter the tenancy and user credentials.
 3. Review and accept the terms and conditions.
 4. Select the region where you want to deploy the stack.
 5. Follow the on-screen prompts and instructions to create the stack.
 6. After creating the stack, click **Terraform Actions**, and select **Plan**.
-7. Wait for the job to be completed, and review the plan. To make any changes, return to the Stack Details > page, click **Edit Stack**, and make the required changes. Then, run the **Plan** action again.
+7. Wait for the job to be completed, and review the plan. To make any changes, return to the Stack Details page, click **Edit Stack**, and make the required changes. Then, run the **Plan** action again.
 8. If no further changes are necessary, return to the Stack Details page, click **Terraform Actions**, and select **Apply**.
 
 ## How to setup environment manually
@@ -98,14 +91,13 @@ Once you have a VM and MySQL database ready you can proceed to the next step to 
 - VM running Ubuntu 20.04
 - MySQL Database
 
-## How to install Ruby on Rails on Ubuntu 20.04 with rbenv
+### How to install Ruby on Rails on Ubuntu 20.04 with rbenv
 
-SSH to your VM and run the following commands
-Make sure to run the commaned with a user that has sudo rights. On Ubuntu the Ubuntu user is usually fine: 
+SSH to your VM and run the following commands. Make sure to run the commaned with a user that has sudo rights. On Ubuntu the `ubuntu` user is usually fine: 
 
 Update apt:
 
-```bash
+```console
 sudo apt update
 ```
 
@@ -125,7 +117,7 @@ sudo apt update
 sudo apt install -y yarn
 ```
 
-Install ruby package manager to help install and manage different ruby versions
+Install the ruby package manager to help install and manage different ruby versions:
 
 ```console
 cd
@@ -139,18 +131,19 @@ echo 'export PATH="$HOME/.rbenv/plugins/ruby-build/bin:$PATH"' >> ~/.bash_profil
 source ~/.bash_profile
 ```
 
-Now we are ready to install ruby. If you need a different version, change the version number. 
+Now we are ready to install ruby. If you need a different version, change the version number:
 
 ```console
 rbenv install 3.0.1
 ```
 
-Check that the correct version of ruby is installed
+Check that the correct version of ruby is installed:
 
 ```console
 ruby -v
 ```
-Use version 3.0.1 and make it default.
+
+Use version 3.0.1 and make it default:
 
 ```console
 rbenv global 3.0.1
@@ -170,13 +163,13 @@ gem install rails
 gem install bundler
 ```
 
-Congratulations you have now installed Ruby on Rails on your VM. 
+Congratulations you have now installed Ruby on Rails on your VM!
 
 ## Create your Ruby on Rails application
 
 In this section we will create a rails applcation using the built-in scaffolding methods of rails. We will connect the rails app to the database provisioned. 
 
-Let's create a directory where our app will reside and make the Ubuntu user the owner of the directory
+Let's create a directory where our app will reside and make the `ubuntu` user the owner of the directory:
 
 ```console
 sudo mkdir /opt/apps
@@ -215,7 +208,7 @@ Run all migration scripts to create the tables in the DB. This step needs to run
 rake db:migrate
 ```
 
-Start rails server as a background process, listen on port 8080 and bind all interfaces and send log output to startup.log:
+Start the rails server as a background process, listen on port 8080, bind all interfaces, and send log output to startup.log:
 
 ```console
 rails s -p 8080 -b 0.0.0.0 >> ./log/startup.log &
@@ -223,33 +216,30 @@ rails s -p 8080 -b 0.0.0.0 >> ./log/startup.log &
 
 ### Accessing the application
 
-If you configured your VM manually you should now be able to access your new rails application on `http://my-vm-public.ip:8080`.
+If you configured your VM manually you should now be able to access your new rails application at `http://my-vm-public.ip:8080`.
 
 If you provisioned your environment automatically using the "Deploy Button" you can access the application through the load balancer, e.g. `http://my-load-balancer-ip`.
 
-Check Oracle Resource Manager output for the ip or check the load balancer page.
+Check Oracle Resource Manager output for the IP or check the load balancer page.
 
 The load balancer is configured to listen on port 80 and forwards all traffic to the VM where the Ruby on Rails application is running.
 
 The load balancer will forward traffic to all the VMs if you provisioned more than one VM.  
 
-## Summary
+### Summary
 
-A new Rails App is created in the directory `/opt/apps/myapp`.
-
-A database schema is created on the MySQL server.
-
-Database schema name: `myapp`
-
-The app is configured to connect to the database. Configuration can be found in: `/opt/apps/app/config/database.yml`
+- A new Rails App is created in the directory `/opt/apps/myapp`.
+- A database schema is created on the MySQL server.
+    - Database schema name: `myapp`
+- The app is configured to connect to the database. Configuration can be found in `/opt/apps/app/config/database.yml`.
 
 ## How to deploy your existing application
 
-Before deleting the app we will take a backup of the database.yml file. We'll need it later.
+1. Before deleting the app we will take a backup of the database.yml file. We'll need it later.
 
-```console
-cp /opt/apps/myapp/config/database.yml  /opt/apps/bck_database.yml
-```
+    ```console
+    cp /opt/apps/myapp/config/database.yml /opt/apps/bck_database.yml
+    ```
 
 1. Delete the existing vanilla Ruby on Rails app created in `/opt/apps/myapp`
 
@@ -317,21 +307,3 @@ You can see available Ruby version by running:
 ```console
 rbenv install list 
 ```
-
-In this part we take a look at the following topics, stay tuned:
-
-**How to build a new application**
-
-- Scaffold 
-- Developer in the cloud 
-- Connect VSCode with SSH 
-- Connect Netbeans with SSH and bastion
-- Connect Jdeveloper with SSH and bastion
-
-**My top 10 favorite gems**
-
-- Check out Rails Admin Gem
-- Check out Devise 
-- CanCan
-- Bootstrap
-
