@@ -1,5 +1,5 @@
 ---
-title: Get started with Ruby in Rails on OCI
+title: Get started with Ruby on Rails on Oracle Cloud
 parent: tutorials
 tags:
 - ruby
