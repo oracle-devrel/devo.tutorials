@@ -1,6 +1,6 @@
 ---
 title: The Way to Go on OCI - Part 1 - How to get Going on OCI Compute 
-
+published: false
 parent:
 - tutorials
 - way-to-go-on-oci
@@ -15,15 +15,7 @@ thumbnail: assets/way-to-go-on-oci-1-end-of-article1.png
 date: 2022-05-01 11:00
 description: How to build and run Go applications on Oracle Cloud Infrastructure Compute Instances. How to produce logging from the Go application and capture the logging into OCI Logging.
 toc: true
-author:
-  name: Lucas Jellema
-  bio: developer, solution architect, blogger, Oracle Groundbreaker Ambassador, Oracle ACE Director
-  home: https://technology.amis.nl
-  twitter: lucasjellema
-  github: lucasjellema
-  linkedin: lucasjellema
-  location: The Netherlands
-  email: lucasjellema@gmail.com
+author: lucas-jellema
 ---
 {% imgx alignright assets/way-to-go-on-oci-1-end-of-article1.png 400 400 "Go application running on OCI Compute Instance" %}
 
