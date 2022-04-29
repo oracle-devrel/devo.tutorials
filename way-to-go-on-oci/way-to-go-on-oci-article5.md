@@ -396,11 +396,42 @@ allow dynamic-group my-secret-group to read secret-family in compartment go-on=o
 
 ## From Streaming Messages to new Database Records
 
-Combine the application that consumes messages from the Stream with the functionality to create records in the Autonomous Database - and read all runtime configuration details from secrets in the vault. The contents from the messages consumed from the Stream is used to insert new records in the database. 
+It is not too hard to pull the previous steps we took together and create a single application that contains no configuration - except for some OCID values for secrets in the OCI vault - and still can subscribe to a Stream in OCI, poll and consume messages and create database records in an Autonomous Database on OCI for every message received from the Stream. With the preparations we have made in the previous sections, this is easily accomplished.
 
-Run the local Go application to produce messages to the Streaming Topic. 
-Verify whether database records based on these messages have been created in the database table.
+The application we are discussing now is visualized in the next figure:
 
+![](assets/go5-endtoend-readsecrets-consumemessages-createdbrecords.png)  
+
+The code for this application is in directory `applications/from-stream-to-database`. The files are familiar: `consumer.go` retrieves the secret with details for subscribing to the stream and `oracle-database-client-app.go` does the same thing for the database connection details. This last file also exposes function `PersistPerson` that can be invoked with an instance of type `Person` that is subsequently turned into a new database record. Make same changes in `oracle-database-client-app` as in the previous section - with the OCID values for the secrets for database connection details and the database wallet.
+
+You need to create a secret in the OCI vault, with Stream details in this JSON string (make sure to set the values that apply to your environment):
+
+```
+{
+ "streamMessagesEndpoint" : "https://cell-1.streaming.us-ashburn-1.oci.oraclecloud.com" ,
+ "streamOCID"             : "ocid1.stream.oc1.iad.amaaaaaa6sde7caa56brreqvzptc37wytom7pjk7vx3qaflagk2t3syvk67q"
+}
+```
+
+Use the OCID for this new secret to set the value for `const streamDetailsSecretOCID` in file `consumer.go` in `applications/from-stream-to-database/consumer.go` . The `main` function in this file subscribes to the stream and starts a series of iterations in which it polls the stream for new messages. Whenever a message is consumed, it is supposed to hold details for a person in a valid JSON message that is decoded into a Person instance and passed to `PersistPerson`.
+
+You can publish messages to the stream in the OCI Console. Go to the page for the stream in the console. Click on button *Produce Test Message*. Type or paste a valid JSON message with Person details that looks as the next message. 
+
+```
+{
+	"name" : "John Doe",
+	"age" : 34,
+	"comment" : "Nice chap, good looking; not too bright"
+}
+```
+
+Then press button *Produce* to publish the message on the topic and make it available for processing by the consumer.
+
+![](assets/go5-producepersontestmessage.png)  
+
+Feel free to publish the message multiple times. It will not result in multiple database records (the name is used as identifier) but you will see some effect in the logging of the application. Of course if you make changes in the name - however small - between the messages, you will get many more records created in the database. 
+
+Note: the code is not very robust. It will likely choke on messages with a different format, just so you know.
 
 ## Deploy Message Publisher on OKE
 
