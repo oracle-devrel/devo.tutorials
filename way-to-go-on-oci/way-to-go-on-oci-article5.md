@@ -238,24 +238,166 @@ As long as there is only a single instance in the group, all messages on all par
 
 ## Create an OCI Vault and Store Secrets
 
-Create an OCI Vault. 
+Applications often use configuration settings to run. These settings determine part of the behavior of the application or instruct the application about endpoints, file system locations and credentials for making connections. The configuration settings can be enviroment dependent: the same application in a test environment uses different values than in the production environment. Some of the configuration settings are sensitive - such as passwords or private keys.
 
-Store Oracle Wallet in Vault. 
+The Go applications discussed so far in this series did not work very explicitly with such configuration settings. Some applications contain hard coded references to compartment, bucket and stream or are committed to the code repostory with a database wallet and hard coded database connection details. This is really not a proper way of working.
 
-Extend Go App from article #4 with functionality to retrieve Oracle Wallet from the Vault. Remove Oracle Wallet from Artifact Repository. Update Deployment Pipeline. 
+From this point on, we will improve our way of working, using OCI Vault. The Vault service on OCI lets you create vaults in your tenancy as containers for encryption keys and secrets. Vaults are logical entities where the Vault service creates and durably stores keys and secrets. The type of vault you choose  determines features and functionality such as degrees of storage isolation, access to management and encryption, and scalability. The type of vault you have also affects pricing.
+
+If needed, a virtual private vault provides you with a dedicated partition in a hardware security module (HSM), offering a level of storage isolation for encryption keys that’s effectively equivalent to a virtual independent HSM. Keys are stored on highly available and durable hardware security modules (HSM) that meet Federal Information Processing Standards (FIPS) 140-2 Security Level 3 security certification. The Vault service uses the Advanced Encryption Standard (AES) as its encryption algorithm and its keys are AES symmetric keys. Note that the virtual private vault has a substantial price tag (several $ per hour) whereas the default vault can be used for free.
+
+Keys are logical entities that represent one or more key versions that contain the cryptographic material used to encrypt and decrypt data, protecting the data where it is stored. When processed as part of an encryption algorithm, a key specifies how to transform plaintext into ciphertext during encryption and how to transform ciphertext into plaintext during decryption. Plain text in this sense can be base64 representation of binary content and can also be a JSON document that contain many configuration settings in a single key.
+
+Vaults are first and foremost associated with secrets that contain sensitive information. And of course that is what they are good at. However, even information that may not be very sensitive can be stored in a key to be used by the application during deployment or at runtime to help define the environment specific settings and behavior. A reference to the Vault Secret is all that the application needs to retrieve the *secret* that provides the required settings. No more hard coding that is ugly, against any best practices and that makes it impossible to use a single code base for all environments. Secrets can be managed independently of an application. However, when the value of secret changes and you want the application to start using the new values, you have to make sure the application reinitializes using the changed values.
+
+We will create a *Vault* and create a simple secret that we read from a Go application. Next we will create a secret that contains an Oracle Wallet and a second secret with a JSON document with additional database connection details. Using this secret, we create an application that can work with an(y) Oracle Database and only learns at runtime when it accesses the secret how to connect to the database. Change the secret, restart the application and a different database is connected to.
+
+
+### Create an OCI Vault. 
+
+Type *vau* in the search box in the OCI Console. Then click on the link *Vault | Identity & Security*. The overview page with all vaults in the current compartment is shown - probably without any entries.
+
+Click on button *Create Vault*. In the *Create Vault* form enter the name for the new vault: *go-on-oci-vault*. The new vault does not have to be a *Virtual Private Vault*, so leave the checkbox unchecked. Press the *Create Vault* button to have the vault creating.
+![](assets/go5-createvault.png)  
+You are returned to the list of vaults - this time with the new vault, in the status *creating*. It can take up to one minute or so for the vault to be initialized.
+
+When the new vault's status is *Active*, click on the name of the vault to navigate to the details page. We need to create a *master encryption key* for the vault before we can start creating secrets in it. Enter the name for the master key - for example *go-on-oci-vault-master-key*. Accept all default values and click on *Create Key*. It will take a little time for this new master key to be produced.
+
+![](assets/go5-createmasterkey.png)  
+
+### Create a Secret
+
+We now have a vault and a master key to encrypt any secrets we will store in the vault. We are ready to start defining secrets in the vault. Let's start with a very simple one. 
+
+Click on the link for tab *Secrets*. Then click on button *Create Secret*. A page is presented where a new secret can be created.
+
+Type the name for the secret - for example *greeting-of-the-day*. Select the master key we have just set up for the vault. Leave the selection list *Secret Type Template* at *Plain Text*. Then type the value of the secret greeting, for example *Have a wonderful day*. Or anything else, it does not really matter right now. Click on *Create Secret* to save the new secret to the store. This is the start of what internally is called a *secret bundle*. A secret bundle consists of the secret contents, properties of the secret and secret version (such as version number or rotation state), and user-provided contextual metadata for the secret. When you rotate secret, you provide new secret contents to the Vault service to generate a new secret version. The complete version history of all values that will be assigned to the secret, throughout time are retained.
+
+![](assets/go5-createsecretgreeting.png)  
+
+### Read Secret from Go application
+The secret that you just defined is now urgently required in our Go application. Let's explore how from our application we can get hold of the values of secrets. File `secret-reader.go` in directory `applications/secret-reader` in the source code repository contains the probably most straightforward example of how to retrieve a secret from an OCI Vault from Go. It uses the Go SDK for OCI and the only piece of information it needs - in addition to the `$HOME/.oci/config` file is the OCID for the secret to be retrieved. Note: the assumption is that whichever user's credentials are configured in the config file has read permissions on the secret.
+
+```go
+package main
+
+import (
+	"context"
+	b64 "encoding/base64"
+	"fmt"
+
+	"github.com/oracle/oci-go-sdk/v65/common"
+	"github.com/oracle/oci-go-sdk/v65/secrets"
+)
+
+const (
+	secretOCID = "<OCID of the Secret to be Read from a Vault"
+)
+
+func main() {
+	secretsClient, _ := secrets.NewSecretsClientWithConfigurationProvider(common.DefaultConfigProvider())
+	secretReq := secrets.GetSecretBundleRequest{SecretId: common.String(secretOCID)}
+	secretResponse, _ := secretsClient.GetSecretBundle(context.Background(), secretReq)
+	contentDetails := secretResponse.SecretBundleContent.(secrets.Base64SecretBundleContentDetails)
+	decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
+	fmt.Println("Secret Contents:", string(decodedSecretContents))
+}
+```
+
+Run the application - after you have changed the value of *secretOCID* - using `go run secret-reader.go`. This should result in the content of the secret that you have just created being printed on the command line.
+
+To see the effect of managing configuration settings separate from the application source code, update the secret in the OCI Console and run the application again. You should now see the changed content - because without further instructions the application will always retrieve the latest version of the secret. Not only does the code not contain the highly sensitive value of the secret - it also remains unchanged when the value of the secret is updated. In this case, we had to restart the application to get the updated value. How to refresh the updated values of configuration settings in live applications is an interesting topic - for another moment. Let's first create secrets that actually contain sensitive information. 
+
+### Store Oracle Database connection details and Wallet in Vault
+
+Information that we stored hard coded in our source code and stored completely exposed in our source code repository in the previous article were the database connection details and the Oracle Wallet. In a real environment that would be inexcusable. A proper way to handle such data would be using the vault. The application knows it has to connect to a database - but it does not know where it is and using which credentials it can be connected with. That information can be retrieved from the vault - using the secret identifiers and only if the application is running as a user or on a host that has permissions for reading the content of these secrets.
+
+Storing the database connection details - the `autonomousDB` *struct* in the file *data-service.go* in application *data-service* discussed in the previous article - a secret is not very difficult at all. Create a string formatted as JSON from the data in the struct:
+
+```
+{ "service":        "k8j2fvxbaujdcfy_goonocidb_medium.adb.oraclecloud.com",
+  "username":       "demo",
+  "server":         "adb.us-ashburn-1.oraclecloud.com",
+  "port":           "1522",
+  "password":       "thePassword1"
+}
+```
+
+Go to the vault page for *go-on-oc-vault* in the OCI console. In the *Secrets* tab, click on *Create Secret*. Enter the name for the secret: *autonomousDB-demo-credentials*. Select the master encryption key. Paste the JSON content with database connection details as the *Secret Contents* - with type template still on *Plain-Text*. The click on button *Create Secret*. 
+
+![](assets/go5-create-secret-autonomousdb-credentials.png)  
+
+In the Go application, define a type to hold the database credentials:
+
+```go
+type DatabaseConnectDetails struct {
+	Service        string `json:service`
+	Username       string `json:username`
+	Server         string `json:server`
+	Port           string `json:port`
+	Password       string `json:password`
+	WalletLocation string `json:walletLocation`
+}
+```
+
+and write code to decode the content from the secret into a variable based on this type 
+
+```go
+    secretReq := secrets.GetSecretBundleRequest{SecretId: common.String(secretOCID)}
+	secretResponse, _ := secretsClient.GetSecretBundle(context.Background(), secretReq)
+	contentDetails := secretResponse.SecretBundleContent.(secrets.Base64SecretBundleContentDetails)
+    decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
+	var dbCredentials DatabaseConnectDetails
+    json.Unmarshal(decodedSecretContents, &dbCredentials)
+	fmt.Println("database connect details for user: " + dbCredentials.Username)
+```
+
+Next we need to also store the wallet file *cwallet.sso* in a secret. This file contains binary content. In order to store this content as a secret we turn it into a string representation by encoding as base64. On the Linux command line this can easily be done, for example with the command:
+
+```console
+base64 -i cwallet.sso > cwallet-sso-base64.txt
+```
+
+File `cwallet-sso-base64.txt` contains the content we want to use for the secret. Just as before from the vault page for *go-on-oc-vault* in the OCI console, go to the  *Secrets* tab and click on *Create Secret*. Enter the name for the secret: *autonomousDB-cwallet-sso*. Select the master encryption key. Paste the base64 content with database wallet details as the *Secret Contents* - with type template set to on *Base64*. The click on button *Create Secret*.  
+
+![](assets/go5-createsecret-for-cwallet.png)  
+
+
+The contents of this secret can be retrieved from the Go code in the same way as before. However, this time the application needs to write a local `cwallet.sso` file with the contents from the secret:
+
+```go
+	decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
+	_ = os.WriteFile("./cwallet.sso", decodedSecretContents, 0644)
+```
+
+This allows the application - using only the OCID values for the two secrets with database connection details and the database wallet file - to initiate communications with the database it needs to use in its current environment. Nothing hard coded, nothing exposed.
+### Go application connecting with Oracle Database based on Secrets from Vault
+
+Directory `applications/safe-database-client` in the source code repository for the article contains the code for a simple Oracle Database client application. It is very similar to what we discussed in article four regarding the application `applications/go-orcl-db`. The main difference: this application does not contain a wallet file or any database connection details. However, it does require two references to OCI Secrets - one OCID refers to the secret with the JSON string with connection details and the other OCID is for a secret that contains the base64 encoded representation of the `cwallet.sso` file.  
+
+The code in file `oracle-database-client-app.go` has two variables that you need to provide values for in order to run this application:
+
+```go
+const (
+	autonomousDatabaseConnectDetailsSecretOCID = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caabn37hbdsu7dczk6wpxvr7euq7j5fmti2zkjcpwzlmowq"
+	autonomousDatabaseCwalletSsoSecretOCID     = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caazzhfhfsy2v6tqpr3velezxm4r7ld5alifmggjv3le2cq"
+)
+```
+
+Using these  values, two secrets are retrieved from the vault. One is used to write the file `cwallet.sso` in the local directory, the other is used to construct an instance of type `DatabaseConnectDetails` that contains login details for the database: username, password, host, port, service. The connection is created - as was the case in the previous article - in the file `godror-based-oracle-database-client.go`. 
+
+You can run the application on the command line with `go run *.go`. It will connect to the Autonomous Database and perform some small SQL feats. The relevance of this example is that the application does not require any information at all about the database it is going to interact with.
+
+Note: in order to run an application on OCI that needs to read secrets from an OCI Vault, you need to make sure that through Resource Principal or Instance Principal authentication the following policy applies to the host that runs the code:
 
 ```
 allow dynamic-group my-secret-group to read secret-family in compartment go-on=oci where target.secret.name = 'my-secret'
 ```
 
-check https://blogs.oracle.com/developers/post/oracle-functions-connecting-to-an-atp-database-with-a-wallet-stored-as-secrets
-
-
 ## From Streaming Messages to new Database Records
 
-Extend the application with functionality to consume message from Streaming Topic. The contents from the messages is used to create records in the autonomous database. Extend deployment pipeline to pass parameters (for vault secret & stream topic) to the Go application.
+Combine the application that consumes messages from the Stream with the functionality to create records in the Autonomous Database - and read all runtime configuration details from secrets in the vault. The contents from the messages consumed from the Stream is used to insert new records in the database. 
 
-Run the pipelines – which cause the application to run.
 Run the local Go application to produce messages to the Streaming Topic. 
 Verify whether database records based on these messages have been created in the database table.
 
@@ -263,11 +405,17 @@ Verify whether database records based on these messages have been created in the
 ## Deploy Message Publisher on OKE
 
 ...
-Create Compute Instance
+Producer reads Stream details from Vault
+
+
+Create Compute Instance + policies to read vault and to publish on stream
 Create OKE instance with that instance in the pool 
 Create build pipeline for producing container image for Go application (similar to for Go Fn Function)
 Create deploy pipeline for deployment of image to OKE instance
+COnfigure Cron job - or expose as HTTP service?
 
+
+Run local consumer & db inserter. 
 
 ## Conclusion
 
