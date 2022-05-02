@@ -83,7 +83,7 @@ The console will indicate that the message was produced successfully. Press the 
 
 Click on the button *Load Messages*. All recently (last 60 seconds) published messages on the stream are displayed. The test message that was published moments ago should show up.
 
-![](assetsd/5go-loadmessages.png)  
+![](assetsd/go5-loadmessages.png)  
 
 
 ### Go Message Producer
@@ -450,7 +450,11 @@ The steps in short:
 * create an OKE cluster instance (using the quick start wizard and consisting of a single node)
 * run the *Person Producer* application on the OKE cluster instance (manual deployment from *kubectl*, passing the OCID of the stream to publish to as an environment variable)
 * create an OCI DevOps deployment pipeline to publish the *Person Producer* container image to the OKE cluster instance -- and run the pipeline
-* create an OCI DevOps build pipeline to build the *message producer* container image from the source code repository, publish the image to the container image registry and trigger the deployment pipeline
+* create an OCI DevOps build pipeline to build the *Person Producer* from the source code repository, publish the image to the container image registry and trigger the deployment pipeline
+
+When all is said and done, the end result can be visualized as follows:
+
+![](assets/go5-visualization-personproducer-dev-2-deploy.png)  
 
 ### Build and Run the Person Producer Application locally
 
@@ -780,6 +784,8 @@ deployment.apps/personproducer-deployment created
 
 That means that the Pod is starting, the container image is being pulled and the application will soon run and start publishing messages. You can check the logs from the Pod, for example in the Kubernetes Dashboard. You can also verify in the OCI Console if the expected messages arrive on the stream. You can even run application `applications/from-stream-to-database` and see if new database records get created.
 
+![](assets/go5-container-on-oke.png)  
+
 Note: if the logging reveals problems for the application with permissions on OCI resources - specifically retrieving the secret with stream details or producing messages to the stream itself, you may need to check if policy statements have been defined for dynamic group `go-on-oci-instances` to allow all compute instances - including the node of the OKE cluster and by extension any application running in a container on this VM to read secrets and work with streams in the compartment:
 
 ```
@@ -787,6 +793,8 @@ allow dynamic-group go-on-oci-instances to read secret-family in compartment go-
 
 allow dynamic-group go-on-oci-instances to manage streams in compartment go-on-oci
 ```
+
+![](assets/go5-policies-on-streams-secrets-for-dyngroup-instances.png)  
 
 
 ### Create and Run OCI DevOps Deployment Pipeline to publish the Application to the OKE cluster
@@ -861,6 +869,8 @@ The output from running the pipeline is reassuring - green checkmarks:
 
 Check on the Stream to find new messages being published, or check in the Kubernetes Dashboard on the state of the Deployment and the Pod. Or simply check in `kubectl` with `kubectl get pods` to find a very recently kicked off Pod for `personproducer-deployment`.
 
+![](assets/go5-personproducer-deploymentpipeline.png)  
+
 ### Create an OCI DevOps Build Pipeline 
 As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository, publishes the container image to the registry and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code. 
 
@@ -919,6 +929,8 @@ The third and final stage to be defined is called `name: *trigger-person-produce
 
 Press button *Save* to complete the stage definition.
 
+![](assets/go5-buildpipeline-container-image.png)  
+
 #### Run Build Pipeline and Create Container Image and Run Deployment Pipeline
 
 The Build Pipeline is complete. You can run it, set the value for parameter *imageVersion* and wait for the source code to be converted into a running Pod on OKE. You will typically make a change to the application source code, commit that change to the code repository and trigger the build pipeline. After a few minutes, when the two pipelines are done, the changed application will be running. For me at the time of writing the end to end flow from triggering the build pipeline to completion of the deployment on the OKE instance took around three minutes. 
@@ -935,6 +947,7 @@ You can also check out the logs from the Pod using kubectl:
 ```console
 kubectl logs -l app=personproducer
 ```
+
 
 ## Conclusion
 
