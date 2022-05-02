@@ -437,22 +437,22 @@ Feel free to publish the message multiple times. It will not result in multiple 
 
 Note: the code is not very robust. It will likely choke on messages with a different format, just so you know.
 
-## Deploy Message Publisher on OKE
+## Deploy Person Producer on OKE
 
 One runtime platform for our Go applications on OCI that we have not discussed yet is Kubernetes. Or more specifically: Oracle Container Engine for Kubernetes or OKE for short. We have taken our executable compiled from the Go source code and deployed them on a compute instance and we have turned the source code into a serverless function. We have not yet containerized a standalone application and deployed it on an OKE cluster instance. That is what we will do in this final section of this article series.
 
 The steps in short:
-* build and run the enhanced *message producer* application locally (or on the *go-app-vm* compute instance)
-* create a light weight container image for the *message producer* application
-* run a local container to provde the image is complete and correct
+* build and run the enhanced *Person Producer* application locally 
+* create a light weight container image for the *Person Producer* application
+* run a local container to prove the image is complete and correct
 * push the container image to the OCI Container Image Registry
-* optionally: pull the container image from the registry and run a container in the Cloud Shell or on the *go-app-vm* compute instance
+* optionally: pull the container image from the registry and run a container in the Cloud Shell or on the *go-app-vm* compute instance or on some other environment, to ascertain to the images was pushed correctly to the image registry
 * create an OKE cluster instance (using the quick start wizard and consisting of a single node)
-* run the *message producer* application on the OKE cluster instance (manual deployment from *kubectl*, passing the OCID of the stream to publish to as environment variable)
-* create an OCI DevOps deployment pipeline to publish the *message producer* container image to the OKE cluster instance - and run the pipeline
+* run the *Person Producer* application on the OKE cluster instance (manual deployment from *kubectl*, passing the OCID of the stream to publish to as an environment variable)
+* create an OCI DevOps deployment pipeline to publish the *Person Producer* container image to the OKE cluster instance -- and run the pipeline
 * create an OCI DevOps build pipeline to build the *message producer* container image from the source code repository, publish the image to the container image registry and trigger the deployment pipeline
 
-### build and run the enhanced *message producer* application locally (or on the *go-app-vm* compute instance)
+### Build and Run the Person Producer Application locally
 
 Directory `applications/person-message-producer` in the source code repository for this series of articles contains the Go application that publishes person messages to the Stream on OCI. The code for the message producer is in file `person-producer.go`.
 
@@ -480,7 +480,7 @@ On the command line this looks like:
 You can check the messages that are published to the stream in the console (if you get there within one minute)
 ![](assets/go5-personmessages-in-console.png)  
 
-### create a light weight container image for the *message producer* application
+### Build a light weight Container Image for the Application
 
 The objective we are working towards is running the message producer as a containerized application on an OKE cluster. An essential step to get there is creating a container image for the application.
 
@@ -521,9 +521,6 @@ key_file=/app/oci_api_key.pem
 
 Note: adding the OCI config and private key file should (of course) never be done in a container image that leaves you machine. We only do it now to locally test the image. Then we will rebuild the image without these files and only then push it to the container image registry.
 
-
-### build and run a local container to provde the image is complete and correct
-
 Build the container image locally using this command:
 
 ```console
@@ -559,7 +556,7 @@ docker build -t person-producer:1.0.1 -f DockerfileAlpine .
 ```
 
 The 1.0.1 image does not have the private parts that we do not want to ship.  
-###  push the container image to the OCI Container Image Registry
+###  Push the Container Image to the OCI Container Image Registry
 
 The container image needs to be pushed to the OCI Container Image Registry before it can be deployed to an OKE Cluster. The steps for pushing are as described below.
 
@@ -602,7 +599,7 @@ docker push iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:1.0.1
 You can check the success of the push by checking the OCI Container Image Registry through the OCI console. 
 
 
-### optionally: pull the container image from the registry and run a container in the Cloud Shell or on the *go-app-vm* compute instance
+### Optionally: Run a Container from the Image in Cloud Shell
 
 An easy way to verify the existence of the container image is on OCI Cloud Shell. Simply open the Cloud Shell from the OCI Console. Then run:
 
@@ -613,7 +610,7 @@ docker run -e INSTANCE_PRINCIPAL_AUTHENTICATION=NO iad.ocir.io/idtwlqf2hanz/go-o
 The image will be downloaded. Then running it quickly exits because no OCI configuration file is found. This does show that the image was pushed successfully to the image registry. 
 
 
-### create an OKE cluster instance (using the quick start wizard and consisting of a single node)
+### Create an OKE Cluster Instance
 
 Creating an Kubernetes cluster may sound like a daunting task. At least it always sounds somewhat intimidating to me. However, on OCI it is really the simplest of things. You run a simple wizard. The main choices you have: how many nodes (Compute Instances or VMs) should there be in the cluster (this can easily be changed later on) and what should be the shape of these VMs. After you have made that decision - or even accepted the default settings - you can leave it to the wizard to take care of the network configuration, the compute instances and the node pool formed by the instances and finally the Kubernetes cluster on top of the node pool. It takes a few minutes - and then the OKE instance is available, ready to accept deployments.
 
@@ -641,7 +638,7 @@ Once all actions are complete, you can inspect the details for the new Kubernete
 
 Note: the dynamic group *go-on-oci-instances* that was defined in the first article in this series was created in such a way that it includes all compute instances in the compartment. That means that if you are still working in that same compartment and the OKE cluster is also running now in that compartment that now the node in the OKE instance is member of the dynamic group and inherits all OCI IAM permissions granted to the group. Containers running in Pods on the OKE instance and scheduled on this node also inherit these privileges when they use instance principal authentication. 
 
-### Connect to OKE instance
+### Connect to the OKE Cluster instance
 
 Interaction with a Kubernetes Cluster is typically done through the kubectl command line tool. We can use the kubectl installation included in Cloud Shell, or a local installation of kubectl. Before we can use kubectl to access a cluster, we have to specify the cluster on which to perform operations by setting up the cluster’s kubeconfig file. Note: at the time of writing, to access a cluster using kubectl in Cloud Shell, the Kubernetes API endpoint must have a public IP address – which our cluster does, thanks to the wizard setting.
 
@@ -722,7 +719,7 @@ namespace:  11 bytes
 
 The token is the section that starts with *eyJh* and ends with *pE9w*. Copy this value to the clipboard and paste it into the winodw that prompts for a token when you try to access the dashboard application.
 
-### run the *message producer* application on the OKE cluster instance (manual deployment from *kubectl*, passing the OCID of the stream to publish to as environment variable)
+### Run the Person Producer Application on the OKE Cluster instance
 
 File `person-producer-deployment.yaml` contains the specification of the Kubernetes resources that we would like to deploy on the cluster. A Deployment with a Pod based on the container image `<region key>.ocir.io/<namespace>/go-on-oci/person-producer:1.0.1` that we have pushed a little while back.
 
@@ -748,8 +745,6 @@ spec:
     # enter the path to your image, be sure to include the correct region prefix    
         image: iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:1.0.1
         env:
-        - name: INSTANCE_PRINCIPAL_AUTHENTICATION
-          value: "YES"
         - name: STREAM_DETAILS_SECRET_OCID
           value: "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caa6m5tuweeu3lbz22lf37y2dsbdojnhz2owmgvqgwwnvka"
       imagePullSecrets:
@@ -866,17 +861,80 @@ The output from running the pipeline is reassuring - green checkmarks:
 
 Check on the Stream to find new messages being published, or check in the Kubernetes Dashboard on the state of the Deployment and the Pod. Or simply check in `kubectl` with `kubectl get pods` to find a very recently kicked off Pod for `personproducer-deployment`.
 
-### create an OCI DevOps build pipeline to build the *message producer* container image from the source code repository, publish the image to the container image registry and trigger the deployment pipeline
-
-As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code. 
+### Create an OCI DevOps Build Pipeline 
+As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository, publishes the container image to the registry and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code. 
 
 The steps are straightforward:
-* create the build pipeline 
-* add managed build stage - that builds and tags the container image locally (on the build server)
+* create a DevOps artifact for the container image `person-producer`
+* create the build pipeline
+* add parameter *imageVersion*, to determine the version for the container image to produce 
+* add managed build stage -- that builds and tags the container image locally (on the build server)
 * add a stage to publish the freshly built image to the container image registry
 * add a final stage to trigger the deployment pipeline *deploy-person-producer-to-oke*
 * make a change to the application source code, commit the change to the code repository and trigger the build pipeline; wait for a few minutes and inspect the Stream for messages that carry the change made in the source code of the application
 
+#### Define DevOps Artifact
+
+Add a new artifact in the DevOps project. It is called `PersonProducerImage` and of type `Docker image`. It's Artifact repository path is defined as `iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:${imageVersion}` -- replace region key, namespace and repository prefix as befits your environment. The toggle *Replace parameters used in this artifact* must be set to *Yes, substitute placeholders*.
+
+![](assets/go5-define-devopsartifact-for-containerimage.png)  
+
+#### Create Build Pipeline and Add Parameter imageVersion
+
+Create a new Build Pipeline in the DevOps Project. An example of a name is *build-person-message-producer*, but any name will do. Optionally provide a description.
+
+While you are at it, please also define one parameter for the build pipeline. It is called *imageVersion* and it contains a string that defines the version label assigned to the container image produced by the build pipeline. The value of that parameter is also made available to the deployment pipeline to determine the container image to fetch from the container image registry and use in the Pod created on the OKE cluster instance. Set the default value for example to *1.0.5*.
+
+![](assets/go5-define-buildpipeline-parameter.png)  
+
+#### Add Managed Build Stage - to build the Container Image
+
+Add a stage to the build pipeline, of type *Managed Build*. This stage will take care of taking the input sources from the source repository and building them first to a linted, tested, vetted, formatted Go application executable and subsequently into a lean container image.
+
+Set the stage name to *build-container-image-for-go-application*. Set the *build spec file path* to `/applications/person-message-producer/build_spec.yaml`. This refers to the file `build_spec.yaml` in the root of the application directory for application *person-message-producer*. This file contains the build steps that take the Go sources, perform automated build steps on them and finally build a light weight, stand alone executable suitable for the Alpine Linux container image. The last step performs the `docker build` into a container image, with the local tag `fresh-person-producer-container-image`. The output from the stage of type *DOCKER_IMAGE* is labeled `person-producer-image` and references the `fresh-person-producer-container-image`. This output is used in the next stage that publishes the container image to the container image registry.
+
+Select the source code repository `go-on-oci-sources` and set the *Build source name* to `go-on-oci-sources`. 
+
+![](assets/go5-add-managed-build-stage-for-container-image.png)  
+
+Press button *Save* to complete the stage definition.
+
+#### Add a Stage to Publish the freshly built image to the container image registry
+
+Add a second stage in the build pipeline, of type *Deliver artifacts*. This stage will take care of taking the output of the managed build stage and pushing the container image to the registry, with the right version tag based on the build pipeline's parameter.
+
+Set the stage name to *push-container-image*. 
+
+Select the artifact to publish as the *PersonProducerImage*: the *Docker image* with path `iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:${imageVersion}` that was defined as artifact in the DevOps Project only a few paragrahs earlier. 
+
+![](assets/go5-create-stage-to-publish-image.png)  
+
+Press button *Save* to complete the stage definition.
+
+#### Add a stage to Trigger the Deployment Pipeline 
+
+The third and final stage to be defined is called `name: *trigger-person-producer-deployment-pipeline*. It is a stage of type *Trigger deployment*. The deployment pipeline that should be triggered by this stage is *deploy-person-producer-to-oke*.
+
+![](assets/go5-create-pipeline-stage-to-trigger-deployment-pipeline.png)  
+
+Press button *Save* to complete the stage definition.
+
+#### Run Build Pipeline and Create Container Image and Run Deployment Pipeline
+
+The Build Pipeline is complete. You can run it, set the value for parameter *imageVersion* and wait for the source code to be converted into a running Pod on OKE. You will typically make a change to the application source code, commit that change to the code repository and trigger the build pipeline. After a few minutes, when the two pipelines are done, the changed application will be running. For me at the time of writing the end to end flow from triggering the build pipeline to completion of the deployment on the OKE instance took around three minutes. 
+
+Midway during the execution of the build pipeline, the console looks as is shown below:
+![](assets/go5-midway-build-pipeline.png)  
+
+The output from the deployed application can be seen as the Pod logs in the Kubernetes Dashboard:
+
+![](assets/go5-pod-logs-in-dashboard.png)  
+
+You can also check out the logs from the Pod using kubectl:
+
+```console
+kubectl logs -l app=personproducer
+```
 
 ## Conclusion
 
