@@ -63,27 +63,27 @@ Type *str* in the OCI Console search box. Then click on *Streaming | Messaging*.
 
 Click on button *Create Stream*.
 
-![](assets/go5-create-stream0.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-stream0.png 1200 334 "create stream0" %}  
 
 Provide some details on the stream – its name (*go-on-oci-stream*), the number of partitions (leave at one), the retention time (24 hours should be fine for our purposes). Leave the radio button selected for *Auto-Create a Default Stream Pool*.
 
-![](assets/go5-create-stream1.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-stream1.png 1200 555 "create stream1" %}  
 
 Then press button *Create Stream*. Now the Stream will be created, which takes a few seconds to complete.
 
-![](assets/go5-streamcreated.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-streamcreated.png 1200 774 "streamcreated" %}  
 
 ### Try out the new Stream
 
 When the Stream has been created and is active, click on button *Produce Test Message*. Type a message and press *Produce*. 
 
-![](assets/go5-producemessage.png) 
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-producemessage.png 1097 591 "producemessage" %} 
 
 The console will indicate that the message was produced successfully. Press the *Cancel* link to close the popup window. 
 
 Click on the button *Load Messages*. All recently (last 60 seconds) published messages on the stream are displayed. The test message that was published moments ago should show up.
 
-![](assetsd/go5-loadmessages.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-loadmessages.png 922 224 "loadmessages" %}  
 
 
 ### Go Message Producer
@@ -123,7 +123,7 @@ Before you can run `producer.go`, you have to set the appropriate values for `st
 
 Execute `go run producer.go`. Use the OCI Streaming console to inspect the arrival of messages. Click on the button `Load Messages`. You will see the messages produced by the Go application. Feel free to change the content or number of messages produced, run the producer again and check again for the messages in the console.
 
-![](assets/go5-messages-published-by-producer.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-messages-published-by-producer.png 962 573 "messages published-by-producer" %}  
 
 
 ### Consume Messages from a Stream in a Go application
@@ -258,12 +258,12 @@ We will create a *Vault* and create a simple secret that we read from a Go appli
 Type *vau* in the search box in the OCI Console. Then click on the link *Vault | Identity & Security*. The overview page with all vaults in the current compartment is shown - probably without any entries.
 
 Click on button *Create Vault*. In the *Create Vault* form enter the name for the new vault: *go-on-oci-vault*. The new vault does not have to be a *Virtual Private Vault*, so leave the checkbox unchecked. Press the *Create Vault* button to have the vault creating.
-![](assets/go5-createvault.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-createvault.png 1200 370 "createvault" %}  
 You are returned to the list of vaults - this time with the new vault, in the status *creating*. It can take up to one minute or so for the vault to be initialized.
 
 When the new vault's status is *Active*, click on the name of the vault to navigate to the details page. We need to create a *master encryption key* for the vault before we can start creating secrets in it. Enter the name for the master key - for example *go-on-oci-vault-master-key*. Accept all default values and click on *Create Key*. It will take a little time for this new master key to be produced.
 
-![](assets/go5-createmasterkey.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-createmasterkey.png 1200 564 "createmasterkey" %}  
 
 ### Create a Secret
 
@@ -273,7 +273,7 @@ Click on the link for tab *Secrets*. Then click on button *Create Secret*. A pag
 
 Type the name for the secret - for example *greeting-of-the-day*. Select the master key we have just set up for the vault. Leave the selection list *Secret Type Template* at *Plain Text*. Then type the value of the secret greeting, for example *Have a wonderful day*. Or anything else, it does not really matter right now. Click on *Create Secret* to save the new secret to the store. This is the start of what internally is called a *secret bundle*. A secret bundle consists of the secret contents, properties of the secret and secret version (such as version number or rotation state), and user-provided contextual metadata for the secret. When you rotate secret, you provide new secret contents to the Vault service to generate a new secret version. The complete version history of all values that will be assigned to the secret, throughout time are retained.
 
-![](assets/go5-createsecretgreeting.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-createsecretgreeting.png 1200 564 "createsecretgreeting" %}  
 
 ### Read Secret from Go application
 The secret that you just defined is now urgently required in our Go application. Let's explore how from our application we can get hold of the values of secrets. File `secret-reader.go` in directory `applications/secret-reader` in the source code repository contains the probably most straightforward example of how to retrieve a secret from an OCI Vault from Go. It uses the Go SDK for OCI and the only piece of information it needs - in addition to the `$HOME/.oci/config` file is the OCID for the secret to be retrieved. Note: the assumption is that whichever user's credentials are configured in the config file has read permissions on the secret.
@@ -325,7 +325,7 @@ Storing the database connection details - the `autonomousDB` *struct* in the fil
 
 Go to the vault page for *go-on-oc-vault* in the OCI console. In the *Secrets* tab, click on *Create Secret*. Enter the name for the secret: *autonomousDB-demo-credentials*. Select the master encryption key. Paste the JSON content with database connection details as the *Secret Contents* - with type template still on *Plain-Text*. The click on button *Create Secret*. 
 
-![](assets/go5-create-secret-autonomousdb-credentials.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-secret-autonomousdb-credentials.png 1200 697 "create secret-autonomousdb-credentials" %}  
 
 In the Go application, define a type to hold the database credentials:
 
@@ -360,7 +360,7 @@ base64 -i cwallet.sso > cwallet-sso-base64.txt
 
 File `cwallet-sso-base64.txt` contains the content we want to use for the secret. Just as before from the vault page for *go-on-oc-vault* in the OCI console, go to the  *Secrets* tab and click on *Create Secret*. Enter the name for the secret: *autonomousDB-cwallet-sso*. Select the master encryption key. Paste the base64 content with database wallet details as the *Secret Contents* - with type template set to on *Base64*. The click on button *Create Secret*.  
 
-![](assets/go5-createsecret-for-cwallet.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-createsecret-for-cwallet.png 1200 648 "createsecret for-cwallet" %}  
 
 
 The contents of this secret can be retrieved from the Go code in the same way as before. However, this time the application needs to write a local `cwallet.sso` file with the contents from the secret:
@@ -400,7 +400,7 @@ It is not too hard to pull the previous steps we took together and create a sing
 
 The application we are discussing now is visualized in the next figure:
 
-![](assets/go5-endtoend-readsecrets-consumemessages-createdbrecords.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-endtoend-readsecrets-consumemessages-createdbrecords.png 1077 657 "endtoend readsecrets-consumemessages-createdbrecords" %}  
 
 The code for this application is in directory `applications/from-stream-to-database`. The files are familiar: `consumer.go` retrieves the secret with details for subscribing to the stream and `oracle-database-client-app.go` does the same thing for the database connection details. This last file also exposes function `PersistPerson` that can be invoked with an instance of type `Person` that is subsequently turned into a new database record. Make same changes in `oracle-database-client-app` as in the previous section - with the OCID values for the secrets for database connection details and the database wallet.
 
@@ -415,7 +415,7 @@ You need to create a secret in the OCI vault - with Stream details in a JSON str
 
 You can call the secret *stream-connection-details*.
 
-![](assets/go5-secret-stream-connection-details.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-secret-stream-connection-details.png 1200 523 "secret stream-connection-details" %}  
 
 Use the OCID for this new secret to set the value for `const streamDetailsSecretOCID` in file `consumer.go` in `applications/from-stream-to-database/consumer.go`. The `main` function in this file subscribes to the stream and starts a series of iterations in which it polls the stream for new messages. Whenever a message is consumed, it is supposed to hold details for a person in a valid JSON message that is decoded into a Person instance and passed to `PersistPerson`.
 
@@ -431,7 +431,7 @@ You can publish messages to the stream in the OCI Console. Go to the page for th
 
 Then press button *Produce* to publish the message on the topic and make it available for processing by the consumer.
 
-![](assets/go5-producepersontestmessage.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-producepersontestmessage.png 1113 711 "producepersontestmessage" %}  
 
 Feel free to publish the message multiple times. It will not result in multiple database records (the name is used as identifier) but you will see some effect in the logging of the application. Of course if you make changes in the name - however small - between the messages, you will get many more records created in the database. 
 
@@ -454,7 +454,7 @@ The steps in short:
 
 When all is said and done, the end result can be visualized as follows:
 
-![](assets/go5-visualization-personproducer-dev-2-deploy.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-visualization-personproducer-dev-2-deploy.png 1200 622 "visualization personproducer-dev-2-deploy" %}  
 
 ### Build and Run the Person Producer Application locally
 
@@ -479,10 +479,10 @@ go run person-producer.go
 
 On the command line this looks like:
 
-![](assets/go5-commandline-output.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-commandline-output.png 1109 430 "commandline output" %}  
 
 You can check the messages that are published to the stream in the console (if you get there within one minute)
-![](assets/go5-personmessages-in-console.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-personmessages-in-console.png 1200 704 "personmessages in-console" %}  
 
 ### Build a light weight Container Image for the Application
 
@@ -568,7 +568,7 @@ A repository inside the container registry is a collection point for versions of
 
 For example: create a repository in the OCI Container Image Registry in the context of compartment `go-on-oci` and call the repository `person-producer`. Next when the container image is pushed as `<region key>/<namespace>/go-on-oci/person-producer:<version tag>`, this image will be stored in the repository. If you do not create the repository beforing pushing the image, a repository is created automatically in the context of the root compartment, with a name of `go-on-oci/person-producer`. Everything will still work fine. The repository structure is just a little less nice.
 
-![](assets/go5-create-image-repository.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-image-repository.png 1200 347 "create image-repository" %}  
 
 After either creating the repository or not creating the repository (your choice), on the command line of your development environment do a docker login to `<region key>.ocir.io` where you have to provide your region key. We did this in the third article in the series. You wil need the login name and the authentication token. 
 
@@ -622,23 +622,23 @@ Type *ok* in the search box and click on link *Kubernetes Clusters (OKE) | Conta
 
 A popup window appears with two radio buttons: *Quick create* and *Custom create*. Accept the first one - *Quick create* - and click on *Launch workflow*.
 
-![](assets/go5-quickstart-oke.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-quickstart-oke.png 1200 389 "quickstart oke" %}  
 
 In step one of a two step wizard, select *Public Endpoint* and *Private Workers*. You can accept the shape *VM.Standard.E3.Flex* - or pick any different one. You can accept three as the number of nodes, but just one node is enough for our purposes. Click button *Next*. 
 
-![](assets/go5-quickcreate-oke-step1.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-quickcreate-oke-step1.png 1200 564 "quickcreate oke-step1" %}  
 
 Step two provides an overview of what the wizard will do on our behalf. Time for a final inspection. If you like the proposed action, then press button *Creat cluster*.
-![](assets/go5-quickcreate-oke-step2.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-quickcreate-oke-step2.png 1200 754 "quickcreate oke-step2" %}  
 
 The wizard will create all required resources - quite a bit of network configuration, creating a new compute instance and provisioning the OKE master. A progress page is shown to indicate the status of the actions. 
 
-![](assets/go5-progress-page-oke-wizard.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-progress-page-oke-wizard.png 1105 902 "progress page-oke-wizard" %}  
 
 
 Once all actions are complete, you can inspect the details for the new Kubernetes cluster, the node pool, the network resources and the compute instance. The screenshot shows the details for the node pool and the node(s) in the pool. 
 
-![](assets/go5-nodepool-for-oke.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-nodepool-for-oke.png 1200 564 "nodepool for-oke" %}  
 
 Note: the dynamic group *go-on-oci-instances* that was defined in the first article in this series was created in such a way that it includes all compute instances in the compartment. That means that if you are still working in that same compartment and the OKE cluster is also running now in that compartment that now the node in the OKE instance is member of the dynamic group and inherits all OCI IAM permissions granted to the group. Containers running in Pods on the OKE instance and scheduled on this node also inherit these privileges when they use instance principal authentication. 
 
@@ -648,7 +648,7 @@ Interaction with a Kubernetes Cluster is typically done through the kubectl comm
 
 In the Cluster Details window, click the Access Cluster button to display the Access Your Cluster dialog box.
 
-![](assets/go5-accesscluster.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-accesscluster.png 1200 564 "accesscluster" %}  
 
 Click Cloud Shell Access. Click on *Copy* to copy the shell statement under (2) to the clipboard. Then click *Launch Cloud Shell* to display the Cloud Shell window – if it is not yet open. Paste the shell statement into the Cloud Shell. Then press enter to execute the statement.
 
@@ -784,7 +784,7 @@ deployment.apps/personproducer-deployment created
 
 That means that the Pod is starting, the container image is being pulled and the application will soon run and start publishing messages. You can check the logs from the Pod, for example in the Kubernetes Dashboard. You can also verify in the OCI Console if the expected messages arrive on the stream. You can even run application `applications/from-stream-to-database` and see if new database records get created.
 
-![](assets/go5-container-on-oke.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-container-on-oke.png 579 743 "container on-oke" %}  
 
 Note: if the logging reveals problems for the application with permissions on OCI resources - specifically retrieving the secret with stream details or producing messages to the stream itself, you may need to check if policy statements have been defined for dynamic group `go-on-oci-instances` to allow all compute instances - including the node of the OKE cluster and by extension any application running in a container on this VM to read secrets and work with streams in the compartment:
 
@@ -794,7 +794,7 @@ allow dynamic-group go-on-oci-instances to read secret-family in compartment go-
 allow dynamic-group go-on-oci-instances to manage streams in compartment go-on-oci
 ```
 
-![](assets/go5-policies-on-streams-secrets-for-dyngroup-instances.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-policies-on-streams-secrets-for-dyngroup-instances.png 887 571 "policies on-streams-secrets-for-dyngroup-instances" %}  
 
 
 ### Create and Run OCI DevOps Deployment Pipeline to publish the Application to the OKE cluster
@@ -834,7 +834,7 @@ spec:
 
 Note: you have to replace part of the image name to make it fit your environment: `iad.ocir.io/idtwlqf2hanz/go-on-oci/` => `<region key>/<namespace>/<repository prefix>`.
 
-![](assets/go5-define-artifact-k8s-deployment.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-define-artifact-k8s-deployment.png 535 826 "define artifact-k8s-deployment" %}  
 
 Also note that the manifest contains two placeholders: ${STREAM_DETAILS_SECRET_OCID} and ${imageVersion}. These are to be replace when the artifact is used in a deployment, with values from parameters set at deployment time. Make sure to set field *Replace parameters used in this artifact* to *Yes, substitute placeholders*.
 
@@ -844,7 +844,7 @@ Click on button *Save*.
 
 Define an environment in the DevOps Project. Pick *Oracle Kubernetes Engine* as the type. Set the name to *go-on-oci-oke*. Click button *Next*. Select the cluster instance that you created earlier on. Then click button *Create environment*.
 
-![](assets/go5-create-environment-for-oke.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-environment-for-oke.png 1200 557 "create environment-for-oke" %}  
 
 #### Define a Deployment Pipeline
 
@@ -852,24 +852,24 @@ Create a new Deployment Pipeline in the DevOps Project. Set the name to *deploy-
 
 You can accept or change the Kubernetes namespace. Press *Save* to create the stage.
 
-![](assets/go5-define-deployment-pipeline-oke.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-define-deployment-pipeline-oke.png 1200 498 "define deployment-pipeline-oke" %}  
 
 Now define two Pipeline Parameters. One is called *STREAM_DETAILS_SECRET_OCID* - and its default value should be the OCID of the secret that contains the Stream details (message endpoint and stream OCID). The second parameter is called *imageVersion*. Its default value can be *1.0.1*. This parameter determines the version of the container image *person-producer* to get from the image registry and deploy onto the OKE cluster. 
 
-![](assets/go5-deployment-pipeline-parameters.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-deployment-pipeline-parameters.png 1200 338 "deployment pipeline-parameters" %}  
 
 #### Run the Deployment Pipeline to Deploy Person-Producer on OKE Cluster
 
 The pipeline is ready to be run. You can kick it off, provide overrides for the parameters - but these are probably not needed - and have the Deployment created on Kubernetes. Of course the effect of running the pipeline is most impressive if before running you have removed the Pod and Deployment for person-producer from the OKE cluster. If it then makes a reappearance, you know it is the pipeline that did it.
 
-![](assets/go5-run-deployment-pipeline1.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-run-deployment-pipeline1.png 1200 716 "run deployment-pipeline1" %}  
 
 The output from running the pipeline is reassuring - green checkmarks:
-![](assets/go5-running-deployment-pipeline-output.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-running-deployment-pipeline-output.png 1200 666 "running deployment-pipeline-output" %}  
 
 Check on the Stream to find new messages being published, or check in the Kubernetes Dashboard on the state of the Deployment and the Pod. Or simply check in `kubectl` with `kubectl get pods` to find a very recently kicked off Pod for `personproducer-deployment`.
 
-![](assets/go5-personproducer-deploymentpipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-personproducer-deploymentpipeline.png 790 825 "personproducer deploymentpipeline" %}  
 
 ### Create an OCI DevOps Build Pipeline 
 As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository, publishes the container image to the registry and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code. 
@@ -887,7 +887,7 @@ The steps are straightforward:
 
 Add a new artifact in the DevOps project. It is called `PersonProducerImage` and of type `Docker image`. It's Artifact repository path is defined as `iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:${imageVersion}` -- replace region key, namespace and repository prefix as befits your environment. The toggle *Replace parameters used in this artifact* must be set to *Yes, substitute placeholders*.
 
-![](assets/go5-define-devopsartifact-for-containerimage.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-define-devopsartifact-for-containerimage.png 1200 447 "define devopsartifact-for-containerimage" %}  
 
 #### Create Build Pipeline and Add Parameter imageVersion
 
@@ -895,7 +895,7 @@ Create a new Build Pipeline in the DevOps Project. An example of a name is *buil
 
 While you are at it, please also define one parameter for the build pipeline. It is called *imageVersion* and it contains a string that defines the version label assigned to the container image produced by the build pipeline. The value of that parameter is also made available to the deployment pipeline to determine the container image to fetch from the container image registry and use in the Pod created on the OKE cluster instance. Set the default value for example to *1.0.5*.
 
-![](assets/go5-define-buildpipeline-parameter.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-define-buildpipeline-parameter.png 1200 441 "define buildpipeline-parameter" %}  
 
 #### Add Managed Build Stage - to build the Container Image
 
@@ -905,7 +905,7 @@ Set the stage name to *build-container-image-for-go-application*. Set the *build
 
 Select the source code repository `go-on-oci-sources` and set the *Build source name* to `go-on-oci-sources`. 
 
-![](assets/go5-add-managed-build-stage-for-container-image.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-add-managed-build-stage-for-container-image.png 1200 560 "add managed-build-stage-for-container-image" %}  
 
 Press button *Save* to complete the stage definition.
 
@@ -917,7 +917,7 @@ Set the stage name to *push-container-image*.
 
 Select the artifact to publish as the *PersonProducerImage*: the *Docker image* with path `iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:${imageVersion}` that was defined as artifact in the DevOps Project only a few paragrahs earlier. 
 
-![](assets/go5-create-stage-to-publish-image.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-stage-to-publish-image.png 1173 815 "create stage-to-publish-image" %}  
 
 Press button *Save* to complete the stage definition.
 
@@ -925,22 +925,22 @@ Press button *Save* to complete the stage definition.
 
 The third and final stage to be defined is called `name: *trigger-person-producer-deployment-pipeline*. It is a stage of type *Trigger deployment*. The deployment pipeline that should be triggered by this stage is *deploy-person-producer-to-oke*.
 
-![](assets/go5-create-pipeline-stage-to-trigger-deployment-pipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-create-pipeline-stage-to-trigger-deployment-pipeline.png 1200 796 "create pipeline-stage-to-trigger-deployment-pipeline" %}  
 
 Press button *Save* to complete the stage definition.
 
-![](assets/go5-buildpipeline-container-image.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-buildpipeline-container-image.png 971 717 "buildpipeline container-image" %}  
 
 #### Run Build Pipeline and Create Container Image and Run Deployment Pipeline
 
 The Build Pipeline is complete. You can run it, set the value for parameter *imageVersion* and wait for the source code to be converted into a running Pod on OKE. You will typically make a change to the application source code, commit that change to the code repository and trigger the build pipeline. After a few minutes, when the two pipelines are done, the changed application will be running. For me at the time of writing the end to end flow from triggering the build pipeline to completion of the deployment on the OKE instance took around three minutes. 
 
 Midway during the execution of the build pipeline, the console looks as is shown below:
-![](assets/go5-midway-build-pipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-midway-build-pipeline.png 1200 564 "midway build-pipeline" %}  
 
 The output from the deployed application can be seen as the Pod logs in the Kubernetes Dashboard:
 
-![](assets/go5-pod-logs-in-dashboard.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-pod-logs-in-dashboard.png 1200 308 "pod logs-in-dashboard" %}  
 
 You can also check out the logs from the Pod using kubectl:
 
