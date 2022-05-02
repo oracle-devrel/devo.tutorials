@@ -20,9 +20,9 @@ redirect: https://www-sites.oracle.com/developer.oracle.com/tutorials/get-starte
 
 ## Introduction
 
-Ruby on Rails is a rapid development framework. It’s used by over a million websites, including AirBNB, Bloomberg, Github, Gitlab, Couchsurfing, and many more.
+Ruby on Rails is a rapid development framework. It’s used by over a million websites, including Airbnb, Bloomberg, GitHub, GitLab, CouchSurfing, and many more.
 
-The Ruby language is easy to understand as it’s close to English, making it great for beginners. In this tutorial we'll show you how to get started with a new Ruby on Rails project and how to bring your existing Ruby on Rails application to OCI.
+The Ruby language is easy to understand as it’s close to English, making it great for beginners. In this tutorial we'll show you how to get started with a new Ruby on Rails project and how to bring your existing Ruby on Rails application to Oracle Cloud Infrastructure (OCI).
 
 ## Set up environment automatically
 
@@ -32,7 +32,7 @@ Don't have time to read the whole article? Use the "Deploy Button" to provision 
 
 The button takes you to Oracle Resource Manager which runs Terraform code that will provision the full Ruby on Rails environment.
 
-The following ressources will be created:
+The following resources will be created:
 
 
 | #        | Service Name          |Additional Info  |
@@ -59,18 +59,20 @@ The private subnet will contain the following resources:
 Software packages installed on the VMs:
 
 - RBENV Package manager for ruby to make it easy to manage different ruby versions and gem packs
-- Nodejs
+- Node.js
 
-The bootstrap script in the gihub repo shows how the VMs are configured and all the packages that are installed:
+The bootstrap script in the GitHub repo shows how the VMs are configured and all the packages that are installed:
 
-You can check out [the script on Github](https://github.com/haj/oci-arch-rubyonrails-mds/blob/main/scripts/ror_bootstrap.sh). 
+You can check out [the script on Github](https://github.com/haj/oci-arch-rubyonrails-mds/blob/main/scripts/ror_bootstrap.sh).
 
 If you have deployed the environment using the deploy button, you can skip the next section. The bootstrap script has been run automatically when the VMs were provisioned. 
 
 
 ### How to setup environment automatically
 
-1. Click the deploy button [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/haj/oci-arch-rubyonrails-mds/archive/refs/tags/latest.zip).
+1. Click the "Deploy to Oracle" button below. 
+    
+    [![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?region=home&zipUrl=https://github.com/haj/oci-arch-rubyonrails-mds/archive/refs/tags/latest.zip)
 2. If you aren't already signed in, when prompted, enter the tenancy and user credentials.
 3. Review and accept the terms and conditions.
 4. Select the region where you want to deploy the stack.
@@ -81,7 +83,7 @@ If you have deployed the environment using the deploy button, you can skip the n
 
 ## How to setup environment manually
 
-If you prefer to setup the environment manually you need to provision the resources and then  install the ruby on rails environment.
+If you prefer to setup the environment manually you need to provision the resources and then install the Ruby on Rails environment.
 
 Provisioning the VM and MySQL database is not covered in this guide.
 
@@ -94,7 +96,7 @@ Once you have a VM and MySQL database ready you can proceed to the next step to 
 
 ### How to install Ruby on Rails on Ubuntu 20.04 with rbenv
 
-SSH to your VM and run the following commands. Make sure to run the commaned with a user that has sudo rights. On Ubuntu the `ubuntu` user is usually fine: 
+SSH to your VM and run the following commands. Make sure to run the command with a user that has sudo rights. On Ubuntu the `ubuntu` user is usually fine: 
 
 Update apt:
 
@@ -164,11 +166,11 @@ gem install rails
 gem install bundler
 ```
 
-Congratulations you have now installed Ruby on Rails on your VM!
+Congratulations, you have now installed Ruby on Rails on your VM!
 
 ## Create your Ruby on Rails application
 
-In this section we will create a rails applcation using the built-in scaffolding methods of rails. We will connect the rails app to the database provisioned. 
+In this section we will create a rails application using the built-in scaffolding methods of rails. We will connect the rails app to the database provisioned. 
 
 Let's create a directory where our app will reside and make the `ubuntu` user the owner of the directory:
 
@@ -203,7 +205,7 @@ Create a database schema. If you have already created a database schema you can 
 rake db:create
 ```
 
-Run all migration scripts to create the tables in the DB. This step needs to run everytime you makes change to table definitions:
+Run all migration scripts to create the tables in the DB. This step needs to run every time you makes change to table definitions:
 
 ```console
 rake db:migrate
