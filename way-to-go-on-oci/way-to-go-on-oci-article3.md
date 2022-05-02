@@ -223,7 +223,7 @@ fn update context oracle.image-compartment-id <compartment-ocid>
 
 Log into the Registry using the Auth Token as your password:
 
-```
+```console
 docker login iad.ocir.io
 ```
 
