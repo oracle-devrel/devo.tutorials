@@ -468,7 +468,7 @@ Click on the button *Create Custom Log* to create the *Agent Configuration*.
 
 #### 4. Enable the Management Agent plugin in the compute instance.
 
-The *Agent Configuration* has been created. It applies to the Cloud Agent running inside the Compute Instance that runs the Go application. However, before that agent will actually sent any logs, we have to ensure that the <!--FIXME: Missing text-->
+The *Agent Configuration* has been created. It applies to the Cloud Agent running inside the Compute Instance that runs the Go application. However, before that agent will actually sent any logs, we have to ensure that the *Management Agent* plugin is activated. Oracle Cloud Agent is a lightweight process that manages plugins running on compute instances. Plugins collect performance metrics, install OS updates, and perform other instance management tasks. Not all plugins are automatically activated. More details on the Cloud Agent and these plugins can be found in the [OCI Documentation on Cloud Agent](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/manage-plugins.htm)
 
 Type *instance* in the search bar in the console. Navigate to *Instances*. Drill down to the instance created earlier for running the Go application. Switch to the tab *Oracle Cloud Agent*. Compute Instances based on one of the predefined OCI images - like the Oracle Linux Developer image used for this instance - contain the Oracle Cloud Agent. This is a lightweight process that manages plugins running on the instance. Plugins collect performance metrics, install OS updates, and perform other instance management tasks. The *Management Agent* plugin needs to be enabled. It is this plugin that collects log entries inside the compute instance and sends them to OCI Logging. 
 
@@ -508,7 +508,7 @@ When you scroll down, there is a table with the most recently ingested log entri
 
 {% imgx aligncenter assets/way-to-go-on-oci-1-log-explorer-table-of-entries.png 1200 600 "Table with log entries, collected from the Compute Instance" "Table with log entries" %}
 
-To track down the specific log output from *my-server*, we can search for the log prefix assigned in the Go code: *greet-app:*. Click on the link *Explore with Log Search*. The Log Search panel is shown. An <!--FIXME: Missing text-->
+To track down the specific log output from *my-server*, we can search for the log prefix assigned in the Go code: *greet-app:*. Click on the link *Explore with Log Search*. The Log Search panel is shown. 
 
 Enter the string *greet-app:* in the field *Custom Filters* and press enter. This string is now a search filter. Press the *Search* button to perform search over the indicated time range of log entries for this filter.
 
