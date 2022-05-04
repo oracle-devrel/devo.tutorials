@@ -22,16 +22,16 @@ mrm: WWMK211117P00083
 redirect: https://developer.oracle.com/tutorials/get-started-with-node-express-on-oracle-cloud/
 ---
 {% slides %}
-In this tutorial, you use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux compute instance. Then, you install a Node Express application and access your new app from the internet. Finally, this tutorial covers all the steps necessary to set up a virtual network for your host and connect the host to the internet.
+In this tutorial, we'll use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux Compute instance. We'll install a Node Express application and access your new app from the internet. Finally, we'll cover all the steps necessary to set up a virtual network for your host and connect the host to the internet.
 
 Key tasks include how to:
 
-* Set up a compartment for your development work.
-* Install your Oracle Linux instance and connect it to your Virtual Cloud Network (VCN). 
-    * Set up an Oracle Cloud Infrastructure virtual cloud network and related network services required for your host to connect to the internet.
-    * Set up `ssh` encryption keys to access your Oracle Linux Server.
-* Configure ingress rules for your VCN.
-* Configure NodeJS with an Express framework on your instance.
+* Set up a compartment for your development work
+* Install your Oracle Linux instance and connect it to your Virtual Cloud Network (VCN)
+    * Set up an Oracle Cloud Infrastructure Virtual Cloud Network and related network services required for your host to connect to the internet
+    * Set up `ssh` encryption keys to access your Oracle Linux Server
+* Configure ingress rules for your VCN
+* Configure NodeJS with an Express framework on your instance
 
 Here is a simplified diagram of the setup for your Linux instance.
 
@@ -46,10 +46,8 @@ For additional information, see:
 
 To successfully complete this tutorial, you must have the following:
 
-### Requirements
-
-* An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
-* A MacOS, Linux, or Windows computer with `ssh` support installed.
+* An Oracle Cloud Infrastructure Free Tier account: [Start for Free]({{ site.urls.always_free }})
+* A MacOS, Linux, or Windows computer with `ssh` support installed
 
 ## Set up a Compartment for Development
 
@@ -60,7 +58,8 @@ Configure a compartment for your development.
 Create a compartment for the resources that you create in this tutorial.
 
 1. Log in to the Oracle Cloud Infrastructure **Console**.
-2. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Compartments**.
+2. Open the navigation menu and click **Identity & Security**. 
+3. Under **Identity**, click **Compartments**.
 3. Click **Create Compartment**.
 4. Fill in the following information:
     * **Name:** `<your-compartment-name>`
@@ -76,15 +75,17 @@ Use the **Create a VM Instance** wizard to create a new compute instance.
 
 The wizard does several things when installing the instance:
 
-* Creates and installs a compute instance running Oracle Linux.
-* Creates a VCN with the required subnet and components needed to connect your Oracle Linux instance to the internet.
-* Creates an `ssh` key pair you use to connect to your instance.
+* Creates and installs a compute instance running Oracle Linux
+* Creates a VCN with the required subnet and components needed to connect your Oracle Linux instance to the internet
+* Creates an `ssh` key pair you use to connect to your instance
 
 ### Review Installation Steps
 
-To get started installing your instance with the **Create a VM Instance** wizard, follow these steps:
+To get started with installing your instance using the **Create a VM Instance** wizard, follow these steps:
 
-1. From the main landing page, select **Create a VM Instance** wizard. ![Quick action menu from the main Free Tier landing page](assets/get-started-with-node-express-on-oracle-cloud-01action-menu.png)
+1. From the main landing page, select **Create a VM Instance**. 
+    
+    ![Quick action menu from the main Free Tier landing page](assets/get-started-with-node-express-on-oracle-cloud-01action-menu.png)
 
     The **Create Compute Instance** page is displayed. It has a section for **Placement**, Image and shape, **Networking**, **Add SSH keys**, and **Boot volume**.
 
@@ -95,11 +96,11 @@ To get started installing your instance with the **Create a VM Instance** wizard
     * **Name:** <name-for-the-instance>
     * **Create in compartment:** <your-compartment>
 
-    Enter a value for the name or leave the system supplied default.
+    Enter a value for the name or leave the default.
 
-3. Review the **Placement** settings. Take the default values provided by the wizard.
+3. Review the **Placement** settings. Accept the default values provided by the wizard.
 
-    > The following is sample data. The actual values change over time or differ in a different data center.
+    > The following is sample data. The actual values change over time or differ based on data center.
     {:.notice}
 
     **Placement**
@@ -111,9 +112,9 @@ To get started installing your instance with the **Create a VM Instance** wizard
     > For Free Tier, use **Always Free Eligible** option for availability domain.
     {:.notice}
 
-4. Review the Image and shape settings. Take the default values provided by the wizard.
+4. Review the Image and shape settings. Accept the default values provided by the wizard.
 
-    > The following is sample data. The actual values change over time or differ in a different data center.
+    > The following is sample data. The actual values change over time or differ based on data center.
     {:.notice}
 
     **Image**
@@ -131,9 +132,9 @@ To get started installing your instance with the **Create a VM Instance** wizard
         > **Note:** For Free Tier, use **Always Free Eligible** shape options.
         {:.notice}
 
-5. Review the **Networking** settings. Take the default values provided by the wizard.
+5. Review the **Networking** settings. Accept the default values provided by the wizard.
 
-    > The following is sample data. The actual values change over time or differ in a different data center.
+    > The following is sample data. The actual values change over time or differ based on data center.
     {:.notice}
 
     * **Virtual cloud network:** vcn-\<date>-\<time>
@@ -142,46 +143,45 @@ To get started installing your instance with the **Create a VM Instance** wizard
 
 6. Review the **Add SSH keys** settings. Take the default values provided by the wizard.
 
-    * Select the Generate a key pair for me option.
-    * Click Save Private Key and Save Public Key to save the private and public SSH keys for this compute instance.
+    * Select the _Generate a key pair for me_ option
+    * Click _Save Private Key_ and _Save Public Key_ to save the private and public SSH keys for this compute instance
 
     If you want to use your own SSH keys, select one of the options to provide your public key.
 
     > Put your private and public key files in a safe location. You cannot retrieve keys again after the compute instance has been created.
     {:.notice}
 
-7. Review the **Boot volume** settings. Take the default values provided by the wizard.
+7. Review the **Boot volume** settings. Accept the default values provided by the wizard.
 
     Leave all check boxes **unchecked**.
 
 8. Click **Create** to create the instance. Provisioning the system might take several minutes.
+
 You have successfully created an Oracle Linux instance.
 
 ## Enable Internet Access
 
-The **Create a VM Instance** wizard automatically creates a VCN for your instance. You add an ingress rule to your subnet to allow internet connections on port 3000.
+The **Create a VM Instance** wizard automatically creates a VCN for your instance. We'll add an ingress rule to the subnet to allow internet connections on port 3000.
 
 ### Create an Ingress Rule for your VCN
 
-Follow these steps to select your VCN's public subnet and add the ingress rule.
+Follow these steps to select your VCN's public subnet and add the ingress rule:
 
-1. Open the navigation menu and click **Networking**, and then click **Virtual Cloud Networks**.
-2. Select the VCN you created with your compute instance.
+1. Open the navigation menu and click **Networking**, then click **Virtual Cloud Networks**
+2. Select the VCN you created with your compute instance
 3. With your new VCN displayed, click **\<your-subnet-name>** subnet link.
 
     The public subnet information is displayed with the Security Lists at the bottom of the page. A link to the **Default Security List** for your VCN is displayed.
 
-4. Click the **Default Security List** link.
+4. Click the **Default Security List** link
 
     The default **Ingress Rules** for your VCN are displayed.
 
-5. Click **Add Ingress Rules**.
+5. Click **Add Ingress Rules**
 
-    An **Add Ingress Rules** dialog is displayed.
+    An **Add Ingress Rules** dialog is displayed
 
-6. Fill in the ingress rule with the following information.
-
-    Fill in the ingress rule as follows:
+6. Fill in the ingress rule with the following information:
 
     * **Stateless:** Checked
     * **Source Type:** CIDR
@@ -191,28 +191,26 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
     * **Destination Port Range:** 3000
     * **Description:** Allow HTTP connections
 
-7. Click **Add Ingress Rule**.
+7. Click **Add Ingress Rule**
 
-Now HTTP connections are allowed. Your VCN is configured for Node Express.
-
-You have successfully created an ingress rule that makes your instance available from the internet.
+Now HTTP connections are allowed. Your VCN is configured for Node Express, and you have successfully created an ingress rule that makes your instance available from the internet.
 
 ## Create a Node Express Application
 
-Next, set up an Express framework on your Oracle Linux instance and then create and run a NodeJS application.
+Next, set up an Express framework on your Oracle Linux instance, then create and run a NodeJS application.
 
 ### Install and Set up Node Express
 
 Follow these steps to set up your instance and build your application:
 
-1. Open the navigation menu and click **Compute**. Under **Compute**, click **Instances**.
-2. Click the link to the instance you created in the previous step. 
+1. Open the navigation menu and click **Compute**. Under **Compute**, click **Instances**
+2. Click the link to the instance you created in the previous step
 
-    From the **Instance Details** page look in the **Instance Access** section. Copy the public IP address the system created for you. You use this IP address to connect to your instance.
+    From the **Instance Details** page, look in the **Instance Access** section. Copy the public IP address the system created for you. You use this IP address to connect to your instance.
 
-3. Open a **Terminal** or **Command Prompt** window.
-4. Change into the directory where you stored the `ssh` encryption keys you created for this tutorial.
-5. Connect to your instance with this SSH command:
+3. Open a **Terminal** or **Command Prompt** window
+4. Change into the directory where you stored the `ssh` encryption keys you created for this tutorial
+5. Connect to your instance with this SSH command
 
     ```console
     $ ssh -i <your-private-key-file> opc@<x.x.x.x>
@@ -220,14 +218,14 @@ Follow these steps to set up your instance and build your application:
 
     Since you identified your public key when you created the instance, this command logs you into your instance. You can now issue `sudo` commands to install and start your server.
 
-6. Enable HTTP connection on port 3000.
+6. Enable HTTP connection on port 3000
 
     ```console
     $ sudo firewall-cmd --permanent --add-port=3000/tcp
     $ sudo firewall-cmd --reload
     ```
 
-7. Install the latest version of NodeJS.
+7. Install the latest version of NodeJS
 
     ```console
     $ sudo yum update
@@ -236,19 +234,19 @@ Follow these steps to set up your instance and build your application:
     $ node --version
     ```
 
-8. Create a directory for your application.
+8. Create a directory for your application
     
     ```console
     $ mkdir node-hello-app
     ```
 
-9. Change to the `node-hello-app` directory.
+9. Change to the `node-hello-app` directory
     
     ```console
     $ cd node-hello-app
     ```
 
-10. Use `npm` to create a `package.json` file:
+10. Use `npm` to create a `package.json` file
     
     ```console
     $ npm init
@@ -266,7 +264,7 @@ Follow these steps to set up your instance and build your application:
     * **author:** Example User username@example.com
     * **license:** UPL-1.0
 
-    Preview what you get in `package.json`.
+    Preview what you get in `package.json`
     
     ```console
     About to write to /home/opc/node-hello-app/package.json:
@@ -295,13 +293,13 @@ Follow these steps to set up your instance and build your application:
 
     Enter **yes** to approve your answers. 
 
-11. Install Express and save it in the dependencies list of `package.json`.
+11. Install Express and save it in the dependencies list of `package.json`
 
     ```console;
     $ npm install express --save
     ```
 
-12. Verify that express is added as a dependency in `package.json`.
+12. Verify that express is added as a dependency in `package.json`
 
     ```console
     $ cat package.json
@@ -311,7 +309,7 @@ Follow these steps to set up your instance and build your application:
     }
     ```
 
-13. Create a "Hello, World!" application.
+13. Create a "Hello, World!" application
 
     Create the file:
 
@@ -334,20 +332,20 @@ Follow these steps to set up your instance and build your application:
     })
     ```
 
-14. Run the NodeJS program:
+14. Run the NodeJS program
 
     ```console
     $ node app.js
     ```
 
-15. Test the application using the command line or a browser:
+15. Test the application using the command line or a browser
 
-    * To test with `curl`, from a new terminal, connect to your Ubuntu instance with your SSH keys, and then in the command line enter: `curl -X GET http://localhost:3000`
+    * To test with `curl`, from a new terminal, connect to your Ubuntu instance with your SSH keys, and then on the command line enter: `curl -X GET http://localhost:3000`
     * From a browser, connect to the public IP address assigned to your instance: http://\<x.x.x.x>:3000
 
-    The Node app returns `Hello World!` on your instance, or in your browser.
+    The Node app returns `Hello World!` in your instance or your browser.
 
-You have successfully created a local NodeJS application in an Express framework, on an Oracle Cloud Infrastructure instance.
+You have successfully created a local NodeJS application in an Express framework on an Oracle Cloud Infrastructure instance.
 
 **References:**
 
