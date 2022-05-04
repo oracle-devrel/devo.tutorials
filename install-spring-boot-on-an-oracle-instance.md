@@ -34,7 +34,7 @@ Key tasks include how to:
 * Configure Spring Boot on your instance.
 * Connect to your instance from the internet.
 
-Here is a simplified diagram of the setup for your Linux instance.
+Below is a simplified diagram of the setup for your Linux instance.
 
 ![A diagram of the components needed to run a Spring Boot app on Oracle Cloud Infrastructure](assets/install-spring-boot-on-an-oracle-instance-Spring_Diagram.png)
 
@@ -61,13 +61,13 @@ Configure a compartment for your development.
 Create a compartment for the resources that you create in this tutorial.
 
 1. Log in to the Oracle Cloud Infrastructure **Console**.
-2. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Compartments**.
-3. Click **Create Compartment**.
+2. Open the navigation menu and select **Identity & Security**. Under **Identity**, select **Compartments**.
+3. Select **Create Compartment**.
 4. Fill in the following information:
     * **Name:** `<your-compartment-name>`
     * **Description:** `Compartment for <your-description>.`
     * **Parent Compartment:** `<your-tenancy>(root)`
-5. Click **Create Compartment**.
+5. Select **Create Compartment**.
 
 **Reference:** [Create a compartment](https://docs.oracle.com/iaas/Content/Identity/Tasks/managingcompartments.htm#To)
 
@@ -85,22 +85,22 @@ The wizard does several things when installing the instance:
 
 To get started installing your instance with the **Create a VM Instance** wizard, follow these steps:
 
-1. From the main landing page, select **Create a VM Instance** wizard. ![Quick action menu from the main Free Tier landing page](assets/install-spring-boot-on-an-oracle-instance-01action-menu.png)
+1. From the main landing page, select **Create a VM instance** wizard. ![Quick action menu from the main Free Tier landing page](assets/install-spring-boot-on-an-oracle-instance-01action-menu.png)
 
     The **Create Compute Instance** page is displayed. It has a section for **Placement**, Image and shape, **Networking**, **Add SSH keys**, and **Boot volume**.
 
-2. Choose the **Name** and **Compartment**.
+2. Choose the **Name** and **Compartment** for the instance.
 
     **Initial Options**
 
     * **Name:** `<name-for-the-instance>`
     * **Create in compartment:** `<your-compartment>`
 
-    Enter a value for the name or leave the system supplied default.
+    Either enter a value for the **Name** or leave the system-supplied default.
 
-3. Review the **Placement** settings. Take the default values provided by the wizard.
+3. Review the **Placement** settings. Accept the default values provided by the wizard.
 
-    > The following is sample data. The actual values change over time or differ in a different data center.
+    > The following is sample data. The actual values change over time and differ from data center to data center.
     {:.notice}
 
     **Placement**
@@ -109,12 +109,12 @@ To get started installing your instance with the **Create a VM Instance** wizard
     * **Capacity type:** On-demand capacity.
     * **Fault domain:** Oracle chooses the best placement.
 
-    > For Free Tier, use **Always Free Eligible** option for availability domain.
+    > For Free Tier, use the **Always Free Eligible** option for **Availability domain**.
     {:.notice}
 
-4. Review the Image and shape settings. Take the default values provided by the wizard.
+4. Review the Image and shape settings. Accept the default values provided by the wizard.
 
-    > The following is sample data. The actual values change over time or differ in a different data center.
+    > The following is sample data. The actual values change over time and differ from data center to data center.
     {:.notice}
 
     **Image**
@@ -129,58 +129,59 @@ To get started installing your instance with the **Create a VM Instance** wizard
     * **Memory (GB):** 1
     * **Network bandwidth (Gbps):** 0.48
 
-    > For Free Tier, use **Always Free Eligible** shape options.
+    > For Free Tier, use **Always Free Eligible** for the **Shape** options.
     {:.notice}
 
-5. Review the **Networking** settings. Take the default values provided by the wizard.
+5. Review the **Networking** settings. Aceept the default values provided by the wizard.
 
-    > The following is sample data. The actual values change over time or differ in a different data center.
+    > The following is sample data. The actual values change over time and differ from data center to data center.
     {:.notice}
 
     * **Virtual cloud network:** `vcn-<date>-<time>`
     * **Subnet:** `vcn-<date>-<time>`
     * **Assign a public IPv4 address:** Yes
 
-6. Review the **Add SSH keys** settings. Take the default values provided by the wizard.
+6. Review the **Add SSH keys** settings. Accept the default values provided by the wizard.
 
-    * Select the Generate a key pair for me option.
-    * Click Save Private Key and Save Public Key to save the private and public SSH keys for this compute instance.
+    * Select the **Generate a key pair for me** option.
+    * Select both the **Save Private Key** and **Save Public Key** options to save the private and public SSH keys for this compute instance.
 
     If you want to use your own SSH keys, select one of the options to provide your public key.
 
-    > Put your private and public key files in a safe location. You cannot retrieve keys again after the compute instance has been created.
+    > **Put your private and public key files in a safe location.** You cannot retrieve your SSH keys after the compute instance has been created.
     {:.notice}
 
-7. Review the **Boot volume** settings. Take the default values provided by the wizard.
+7. Review the **Boot volume** settings. Accept the default values provided by the wizard.
 
     Leave all check boxes **unchecked**.
 
-8. Click **Create** to create the instance. Provisioning the system might take several minutes.
+8. Select **Create** to create the instance. Provisioning the system might take several minutes.
 You have successfully created an Oracle Linux instance.
 
 ## Enable Internet Access
 
-The **Create a VM Instance** wizard automatically creates a VCN for your instance. You add an ingress rule to your subnet to allow internet connections on port 8080.
+The **Create a VM Instance** wizard automatically creates a VCN for your instance. You must manually add an ingress rule to your subnet to allow internet connections on port 8080.
 
 ### Create an Ingress Rule for your VCN
 
 Follow these steps to select your VCN's public subnet and add the ingress rule.
 
-1. Open the navigation menu and click **Networking**, and then click **Virtual Cloud Networks**.
-2. Select the VCN you created with your compute instance.
-3. With your new VCN displayed, click `<your-subnet-name>` subnet link.
+1. Open the navigation menu and select **Networking**.
+2. Select **Virtual Cloud Networks**.
+3. Select the VCN you created with your compute instance.
+4. With your new VCN displayed, select `<your-subnet-name>` subnet link.
 
-    The public subnet information is displayed with the Security Lists at the bottom of the page. A link to the **Default Security List** for your VCN is displayed.
+    The public subnet information is displayed with the **Security Lists** at the bottom of the page. A link to the **Default Security List** for your VCN is displayed.
 
-4. Click the **Default Security List** link.
+5. Select the **Default Security List** link.
 
     The default **Ingress Rules** for your VCN are displayed.
 
-5. Click **Add Ingress Rules**.
+6. Select **Add Ingress Rules**.
 
     An **Add Ingress Rules** dialog is displayed.
 
-6. Fill in the ingress rule with the following information.
+7. Fill in the ingress rule with the following information.
 
     Fill in the ingress rule as follows:
 
@@ -192,7 +193,7 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
     * **Destination Port Range:** 8080
     * **Description:** Allow HTTP connections
 
-7. Click **Add Ingress Rule**.
+8. Select **Add Ingress Rule**.
 
     Now HTTP connections are allowed. Your VCN is configured for Spring Boot.
 
@@ -200,12 +201,12 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
 
 ## Install and Configure Spring Boot
 
-Next, install all the software needed for your Spring Boot application.
+Before installing the software required to run Spring Boot, you first configure the Instance you created.
 
 ### Configure the Port for your Instance
 
-1. Open the navigation menu and click **Compute**. Under **Compute**, click **Instances**.
-2. Click the link to the instance you created in the previous step.
+1. Open the navigation menu and select **Compute**. Under **Compute**, select **Instances**.
+2. Select the link to the Instance you created earlier.
 
     From the **Instance Details** page look under the **Instance Access** section. Write down the public IP address the system created for you. You use this IP address to connect to your instance.
 
