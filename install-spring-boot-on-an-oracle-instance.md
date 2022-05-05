@@ -22,7 +22,7 @@ redirect: https://developer.oracle.com/tutorials/install-spring-boot-on-an-oracl
 ---
 {% slides %}
 
-In this tutorial, you'll use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux compute instance, install a Spring Boot application, and then configure it to be accessible from the internet. This tutorial also covers all the steps necessary to set up a virtual network for your host and connect the host to the internet.
+In this tutorial, you'll use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux compute instance, install a Spring Boot application, and then configure it to be accessible from the internet. This tutorial also covers all the steps necessary to set up a virtual network for your host and connect that host to the internet.
 
 Key tasks include how to:
 
