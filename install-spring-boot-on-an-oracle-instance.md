@@ -27,9 +27,9 @@ In this tutorial, you'll use an Oracle Cloud Infrastructure Free Tier account to
 Key tasks include how to:
 
 * Set up a compartment for your development work.
-* Install your Oracle Linux instance and connect it to your Virtual Cloud Network (VCN). 
-    * Set up an Oracle Cloud Infrastructure virtual cloud network and related network services required for your host to connect to the internet.
-    * Set up `ssh` encryption keys to access your Oracle Linux Server.
+* Install your Oracle Linux instance and connect it to your Virtual Cloud Network (VCN).
+  * Set up an Oracle Cloud Infrastructure virtual cloud network and related network services required for your host to connect to the internet.
+  * Set up `ssh` encryption keys to access your Oracle Linux Server.
 * Configure ingress rules for your VCN.
 * Configure Spring Boot on your instance.
 * Connect to your instance from the internet.
@@ -117,12 +117,12 @@ To get started installing your instance with the **Create a VM Instance** wizard
     > The following is sample data. The actual values change over time and differ from data center to data center.
     {:.notice}
 
-    **Image**
+    **Image:**
 
     * **Image:** Oracle Linux 7.9
     * **Image build:** 2020.11.10-1
 
-    **Shape**
+    **Shape:**
 
     * **Shape:** VM.Standard.E2.1.Micro
     * **OCPU count:** 1
@@ -203,30 +203,30 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
 
 Before the Spring Boot application is ready to use, you first configure the instance you created previously and then install 3 software packages, Git, OpenJDK 8, and Maven 3.6.
 
-### Before you begin
+### Before you begin the Spring Boot set up
 
 #### Configure the port for your instance
 
 1. Open the navigation menu and select **Compute**. Under **Compute**, select **Instances**.
-2. Select the link to the Instance you created earlier.
+2. Select the link to the instance you created earlier.
 
     From the **Instance Details** page look under the **Instance Access** section. Save the public IP address the system created for you. You use this IP address to connect to your instance.
 
 3. Open a **Terminal** or **Command Prompt** window.
 4. Navigate to the directory where you stored the `ssh` encryption keys you created.
-5. Connect to your instance with the SSH command 
+5. Connect to your instance with the SSH command
 
     ```console
-    $ ssh -i _<your-private-key-file>_ opc@_<x.x.x.x>_
+    ssh -i _<your-private-key-file>_ opc@_<x.x.x.x>_
     ```
 
     Since you identified your public key when you created the instance, this command logs you into your instance. You can now issue `sudo` commands to install and start your server.
 
-6. Enable an HTTP connection on port 8080. 
+6. Enable an HTTP connection on port 8080.
 
     ```console
-    $ sudo firewall-cmd --permanent --add-port=8080/tcp
-    $ sudo firewall-cmd --reload
+    sudo firewall-cmd --permanent --add-port=8080/tcp
+    sudo firewall-cmd --reload
     ```
 
     The firewall is configured for Spring Boot.
@@ -238,29 +238,29 @@ Install Git v2 from the [IUS Community Project](https://ius.io/). On the site, n
 Downloading the Git RPM looks similar to the following:
 
  ```console
- $ cd
- $ mkdir temp
- $ cd ~/temp
- $ wget https://repo.ius.io/7/x86_64/packages/g/git224-core-2.24.2-1.el7.ius.x86_64.rpm                        
+ cd
+ mkdir temp
+ cd ~/temp
+ wget https://repo.ius.io/7/x86_64/packages/g/git224-core-2.24.2-1.el7.ius.x86_64.rpm                        
  ```
 
 Once the Git RPM download has completed, install the RPM.
 
 1. Install the RPM with `yum`.
-    
+
     ```console
-    $ sudo yum install git224-core-2.24.2-1.el7.ius.x86_64.rpm
+    sudo yum install git224-core-2.24.2-1.el7.ius.x86_64.rpm
     ```
 
 2. Test for sucessful install.
 
     ```console
-    $ git --version
+    git --version
     ```
 
     If the installation was successful, `git --version` will echo something similar to the following:
 
-    ```
+    ```console
     git version 2.24.2
     ```
 
@@ -271,16 +271,16 @@ Once the Git RPM download has completed, install the RPM.
 1. Install OpenJDK 8 using `yum`.
 
     ```console
-    $ sudo yum install java-1.8.0-openjdk-devel
-    $ java -version
+    sudo yum install java-1.8.0-openjdk-devel
+    java -version
     ```
 
-1. Set `JAVA_HOME` in `.bashrc`. 
+1. Set `JAVA_HOME` in `.bashrc`.
 
     1. Update .bashrc:
-    
+
        ```console
-       $ vi ~/.bashrc
+       vi ~/.bashrc
        ```
 
        In the file, append the following text and save the file:
@@ -290,10 +290,10 @@ Once the Git RPM download has completed, install the RPM.
        export JAVA_HOME=/etc/alternatives/java_sdk
        ```
 
-   1. Activate the preceding command in the current window.
-    
+    1. Activate the preceding command in the current window.
+
        ```console
-       $ source ~/.bashrc
+       source ~/.bashrc
        ```
 
 Java is installed.
@@ -306,31 +306,31 @@ Install Maven from an Apache mirror. Go to the main Maven site's [download page]
    For example:
 
     ```console
-    $ wget http://apache.mirrors.pair.com/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
+    wget http://apache.mirrors.pair.com/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
     ```
 
 2. Extract the program files.
 
     ```console
-    $ sudo tar xvfz apache-maven-3.6.3-bin.tar.gz
+    sudo tar xvfz apache-maven-3.6.3-bin.tar.gz
     ```
 
 3. Install the program files by moving the files to the `/opt` directory.
-    
+
     ```console
     sudo mv apache-maven-3.6.3 /opt/
     ```
 
-4. Add the Maven path `/opt/apache-maven-3.6.3/bin` to your `PATH` environment variable and source your `.bashrc`.
+4. Add the Maven path `/opt/apache-maven-3.6.3/bin` to your `PATH` environment variable and activate Maven by sourcing your `.bashrc`.
 
     ```console
-    $ vi ~/.bashrc
+    vi ~/.bashrc
     ```
 
     Add `export PATH=$PATH:/opt/apache-maven-3.6.3/bin` and save.
 
     ```console
-    $ source ~/.bashrc
+    source ~/.bashrc
     ```
 
 Maven is ready to use.
@@ -339,10 +339,10 @@ Maven is ready to use.
 
 Follow these steps to set up your Spring Boot application:
 
-1. From your home directory check out the Spring Boot Docker guide with Git:
+1. From your home directory, check out the Spring Boot Docker guide with Git:
 
     ```console
-    $ git clone http://github.com/spring-guides/gs-spring-boot-docker.git
+    git clone http://github.com/spring-guides/gs-spring-boot-docker.git
     ```
 
 2. Navigate to the `gs-spring-boot-docker/initial` directory.
@@ -375,13 +375,13 @@ Follow these steps to set up your Spring Boot application:
 
 5. Save the file.
 6. Use Maven to build the application.
-    
+
     ```console
-    $ mvn package
+    mvn package
     ```
 
     If the build is successful, Maven will echo:
-    
+
     ```console
     [INFO] BUILD SUCCESS
     ```
@@ -389,7 +389,7 @@ Follow these steps to set up your Spring Boot application:
 7. Run the application.
 
     ```console
-    $ java -jar target/gs-spring-boot-docker-0.1.0.jar
+    java -jar target/gs-spring-boot-docker-0.1.0.jar
     ```
 
 8. Test your application from the command line or a browser.
@@ -397,12 +397,12 @@ Follow these steps to set up your Spring Boot application:
     * From a new terminal, connect to your instance with your SSH keys and test with curl:
 
         ```console
-        $ curl -X GET http://localhost:8080
+        curl -X GET http://localhost:8080
         ```
 
-    * From your browser, connect to the public IP address assigned to your instance: **http://\<x.x.x.x>:8080**.
+    * From your browser, connect to the public IP address assigned to your instance: `http://<x.x.x.x>:8080`.
 
-    On either your instance or in your browser, you see 
+    On either your instance or in your browser, you see
     >**Spring Boot Hello World!**
 
 Congratulations! You have successfully created a Spring Boot application on your instance.
