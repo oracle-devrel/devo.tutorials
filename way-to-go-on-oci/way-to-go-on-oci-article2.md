@@ -65,7 +65,7 @@ The newly created Topic is shown in the console. Click on the name to navigate t
 
 Click on *Create* to create the subscription. 
 
-The new subscription is shown with the status *Pending*. The subscription only becomes active when the email address is confirmed. Check your mailbox. You should find an email from OCI which invites you to confirm your subscription. When you click the link in the email (or copy the url for the link to a browser window), you are taken to a web page which informs you that the subscription was confirmed. At this point, messages published to the topic will be relayed as email to the address you have subscribed with.
+The new subscription is shown with the status *Pending*. The subscription only becomes active when the email address is confirmed. Check your mailbox. You should find an email from OCI that invites you to confirm your subscription. When you click the link in the email (or copy the url for the link to a browser window), you are taken to a web page which informs you that the subscription was confirmed. At this point, messages published to the topic will be relayed as email to the address you have subscribed with.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-2-email-subscription-confirmation.png 1200 647 "Email invitation to confirm subscription on topic" "Email invitation to confirm subscription on topic" %}   
 
@@ -444,7 +444,7 @@ Click on either the plus icon or the *Add Stage* card. The two step *Add a stage
 
 The second page is shown. Define a name for the build stage: *build-source-to-executable*. Optionally type a description.  
 
-At present we cannot select a different build image, so we settle for the one available -- which is fine for our purpose. The default name and location for the build specification is correct: file `build_spec.yaml` in the root of the repository. 
+At present we cannot select a different build image, so we settle for the one available, which is fine for our purposes. The default name and location for the build specification is correct: file `build_spec.yaml` in the root of the repository. 
 
 Click on the *Select* button under *Primary code repository*. We can now specify from which code repository the build will get its sources. Select *OCI Code Repository* as the *Source Connection Type*. Then select the *go-on-oci-repo* repository. We will work with source on the main branch, so do not change that default. Type *myserver-sources* as the value for *Build source name*. This managed build stage can use sources from multiple repositories. In the build specification, we can refer to each of these sources using the label defined as *Build source name*. Click on *Save*. 
 
@@ -853,7 +853,7 @@ Requests to the public endpoint of the API Gateway and with the configured path 
 
 #### Connecting API Gateway to a private Compute Instance
 
-Because of our earlier work with the `go-app-vm` Compute instance, it has a public IP and is associated with a subnet that allows all kinds of inbound network traffic from any source on the public internet. However, in reality it will be more likely that we create a Compute instance which has no public IP and is associated only with a private subnet. In that case, the following are the high level steps to configure the API Gateway to route requests to the VM as a backend for an API route. There are three elements that need to be addressed.
+Because of our earlier work with the `go-app-vm` Compute instance, it has a public IP and is associated with a subnet that allows all kinds of inbound network traffic from any source on the public internet. However, in reality it will be more likely that we create a Compute instance that has no public IP and is associated only with a private subnet. In that case, the following are the high level steps to configure the API Gateway to route requests to the VM as a backend for an API route. There are three elements that need to be addressed.
 
 
 1. *Firewall on the VM* : as before, make sure that the appropriate ports are added to the firewall on the VM (as we have seen and done before)
