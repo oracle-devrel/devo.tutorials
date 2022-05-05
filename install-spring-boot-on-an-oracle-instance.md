@@ -22,7 +22,7 @@ redirect: https://developer.oracle.com/tutorials/install-spring-boot-on-an-oracl
 ---
 {% slides %}
 
-In this tutorial, you'll use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux compute instance. Then, install a Spring Boot application and access your new app from the internet. Finally, this tutorial covers all the steps necessary to set up a virtual network for your host and connect the host to the internet.
+In this tutorial, you'll use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux compute instance, install a Spring Boot application, and then configure it to be accessible from the internet. This tutorial also covers all the steps necessary to set up a virtual network for your host and connect the host to the internet.
 
 Key tasks include how to:
 
@@ -43,7 +43,7 @@ For additional information, see:
 * [Signing Up for Oracle Cloud Infrastructure](https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm)
 * [Launch your first Linux VM](https://docs.oracle.com/iaas/Content/GSG/Reference/overviewworkflow.htm)
 
-## Before You Begin
+## Before you begin
 
 To successfully complete this tutorial, you must have the following:
 
@@ -52,11 +52,11 @@ To successfully complete this tutorial, you must have the following:
 * An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
 * A MacOS, Linux, or Windows computer with `ssh` support installed.
 
-## Set up a Compartment for Development
+## Set up a compartment for development
 
 Configure a compartment for your development.
 
-### Create a Compartment
+### Create a compartment
 
 Create a compartment for the resources that you create in this tutorial.
 
@@ -81,7 +81,7 @@ The wizard does several things when installing the instance:
 * Creates a VCN with the required subnet and components needed to connect your Oracle Linux instance to the internet.
 * Creates an `ssh` key pair you use to connect to your instance.
 
-### Review Installation Steps
+### Review installation steps
 
 To get started installing your instance with the **Create a VM Instance** wizard, follow these steps:
 
@@ -158,11 +158,11 @@ To get started installing your instance with the **Create a VM Instance** wizard
 8. Select **Create** to create the instance. Provisioning the system might take several minutes.
 You have successfully created an Oracle Linux instance.
 
-## Enable Internet Access
+## Enable internet access
 
 The **Create a VM Instance** wizard automatically creates a VCN for your instance. You must manually add an ingress rule to your subnet to allow internet connections on port 8080.
 
-### Create an Ingress Rule for your VCN
+### Create an ingress rule for your VCN
 
 Follow these steps to select your VCN's public subnet and add the ingress rule.
 
@@ -199,20 +199,22 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
 
     You have successfully created an ingress rule that makes your instance available from the internet.
 
-## Install and Configure Spring Boot
+## Install and configure Spring Boot
 
-Before installing the software required to run Spring Boot, you first configure the Instance you created.
+Before the Spring Boot application is ready to use, you first configure the instance you created previously and then install 3 software packages, Git, OpenJDK 8, and Maven 3.6.
 
-### Configure the Port for your Instance
+### Before you begin
+
+#### Configure the port for your instance
 
 1. Open the navigation menu and select **Compute**. Under **Compute**, select **Instances**.
 2. Select the link to the Instance you created earlier.
 
-    From the **Instance Details** page look under the **Instance Access** section. Write down the public IP address the system created for you. You use this IP address to connect to your instance.
+    From the **Instance Details** page look under the **Instance Access** section. Save the public IP address the system created for you. You use this IP address to connect to your instance.
 
 3. Open a **Terminal** or **Command Prompt** window.
-4. Change into the directory where you stored the `ssh` encryption keys you created.
-5. Connect to your instance with this SSH command 
+4. Navigate to the directory where you stored the `ssh` encryption keys you created.
+5. Connect to your instance with the SSH command 
 
     ```console
     $ ssh -i _<your-private-key-file>_ opc@_<x.x.x.x>_
@@ -229,35 +231,42 @@ Before installing the software required to run Spring Boot, you first configure 
 
     The firewall is configured for Spring Boot.
 
-### Install Git
+#### Install Git
 
-Install Git v2 using the IUS Community Project ([https://ius.io/](https://ius.io/)). Navigate to the current version of Git core package and download to a `~/temp` directory.
+Install Git v2 from the [IUS Community Project](https://ius.io/). On the site, navigate to the current version of the Git core package and then download to a local `~/temp` directory.
 
-1. For example, downloading the Git RPM looks similar to the following.
+Downloading the Git RPM looks similar to the following:
 
-    ```console
-    $ cd
-    $ mkdir temp
-    $ cd ~/temp
-    $ wget https://repo.ius.io/7/x86_64/packages/g/git224-core-2.24.2-1.el7.ius.x86_64.rpm                        
-    ```
+ ```console
+ $ cd
+ $ mkdir temp
+ $ cd ~/temp
+ $ wget https://repo.ius.io/7/x86_64/packages/g/git224-core-2.24.2-1.el7.ius.x86_64.rpm                        
+ ```
 
-2. Install the RPM with `yum`.
+Once the Git RPM download has completed, install the RPM.
+
+1. Install the RPM with `yum`.
     
     ```console
     $ sudo yum install git224-core-2.24.2-1.el7.ius.x86_64.rpm
     ```
 
-3. Test result.
+2. Test for sucessful install.
 
     ```console
     $ git --version
+    ```
+
+    If the installation was successful, `git --version` will echo something similar to the following:
+
+    ```
     git version 2.24.2
     ```
 
-    Git is installed.
+ Git is installed.
 
-### Install JDK 8
+#### Install OpenJDK 8
 
 1. Install OpenJDK 8 using `yum`.
 
@@ -266,34 +275,35 @@ Install Git v2 using the IUS Community Project ([https://ius.io/](https://ius.io
     $ java -version
     ```
 
-2. Set `JAVA_HOME` in `.bashrc`. 
+1. Set `JAVA_HOME` in `.bashrc`. 
 
-    Update the file:
+    1. Update .bashrc:
     
-    ```console
-    $ vi ~/.bashrc
-    ```
+       ```console
+       $ vi ~/.bashrc
+       ```
 
-    In the file, append the following text and save the file:
+       In the file, append the following text and save the file:
 
-    ```bash
-    # set JAVA_HOME
-    export JAVA_HOME=/etc/alternatives/java_sdk
-    ```
+       ```bash
+       # set JAVA_HOME
+       export JAVA_HOME=/etc/alternatives/java_sdk
+       ```
 
-    Activate the preceding command in the current window.
+   1. Activate the preceding command in the current window.
     
-    ```console
-    $ source ~/.bashrc
-    ```
+       ```console
+       $ source ~/.bashrc
+       ```
 
 Java is installed.
 
-### Install Maven 3.6
+#### Install Maven 3.6
 
-Install Maven from an Apache mirror. Go to the main Maven site's ([https://maven.apache.org/](https://maven.apache.org/)) download page. Get the URL for the latest version and download with wget.
+Install Maven from an Apache mirror. Go to the main Maven site's [download page](https://maven.apache.org/). Get the URL for the latest version and download with wget.
 
-1. Download the Maven zip file, for example:
+1. Download the Maven zip file.
+   For example:
 
     ```console
     $ wget http://apache.mirrors.pair.com/maven/maven-3/3.6.3/binaries/apache-maven-3.6.3-bin.tar.gz
@@ -325,7 +335,7 @@ Install Maven from an Apache mirror. Go to the main Maven site's ([https://maven
 
 Maven is ready to use.
 
-### Build Your Spring Boot Application
+### Build your Spring Boot application
 
 Follow these steps to set up your Spring Boot application:
 
@@ -335,9 +345,9 @@ Follow these steps to set up your Spring Boot application:
     $ git clone http://github.com/spring-guides/gs-spring-boot-docker.git
     ```
 
-2. Change into the `gs-spring-boot-docker/initial` directory.
-3. Edit the `Application.java` file: `src/main/java/hello/Application.java`.
-4. Update the code with the following:
+2. Navigate to the `gs-spring-boot-docker/initial` directory.
+3. Edit the `Application.java` file located in `src/main/java/hello/`.
+4. Update `Application.java` with the following:
 
     ```java
     package hello;
@@ -370,7 +380,7 @@ Follow these steps to set up your Spring Boot application:
     $ mvn package
     ```
 
-    You get a message of success.
+    If the build is successful, Maven will echo:
     
     ```console
     [INFO] BUILD SUCCESS
@@ -384,21 +394,22 @@ Follow these steps to set up your Spring Boot application:
 
 8. Test your application from the command line or a browser.
 
-    - From a new terminal, connect to your instance with your SSH keys and test with curl:
+    * From a new terminal, connect to your instance with your SSH keys and test with curl:
 
         ```console
         $ curl -X GET http://localhost:8080
         ```
 
-    - From your browser connect to the public IP address assigned to your instance: **http://\<x.x.x.x>:8080**.
+    * From your browser, connect to the public IP address assigned to your instance: **http://\<x.x.x.x>:8080**.
 
-    On your instance or in your browser, you see **Spring Boot Hello World!**
+    On either your instance or in your browser, you see 
+    >**Spring Boot Hello World!**
 
 Congratulations! You have successfully created a Spring Boot application on your instance.
 
 ## What's Next
 
-You have successfully installed and deployed a Spring Boot app on Oracle Cloud Infrastructure using a Linux instance.
+You have successfully installed and deployed a Spring Boot application on Oracle Cloud Infrastructure using a Linux instance.
 
 To explore more information about development with Oracle products:
 
