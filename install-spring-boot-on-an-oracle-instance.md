@@ -28,11 +28,11 @@ Key tasks include how to:
 
 * Set up a compartment for your development work.
 * Install your Oracle Linux instance and connect it to your Virtual Cloud Network (VCN).
-  * Set up an Oracle Cloud Infrastructure virtual cloud network and related network services required for your host to connect to the internet.
-  * Set up `ssh` encryption keys to access your Oracle Linux Server.
-* Configure ingress rules for your VCN.
-* Configure Spring Boot on your instance.
-* Connect to your instance from the internet.
+    * Set up an Oracle Cloud Infrastructure virtual cloud network and related network services required for your host to connect to the internet.
+    * Set up `ssh` encryption keys to access your Oracle Linux Server.
+    * Configure ingress rules for your VCN.
+    * Configure Spring Boot on your instance.
+    * Connect to your instance from the internet.
 
 Below is a simplified diagram of the setup for your Linux instance.
 
@@ -201,7 +201,7 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
 
 ## Install and configure Spring Boot
 
-Before the Spring Boot application is ready to use, you first configure the instance you created previously and then install 3 software packages, Git, OpenJDK 8, and Maven 3.6.
+Before the Spring Boot application is ready to use, you first configure the instance you created previously and then install 3 software packages: Git, OpenJDK 8, and Maven 3.6.
 
 ### Before you begin the Spring Boot set up
 
@@ -403,7 +403,7 @@ Follow these steps to set up your Spring Boot application:
     * From your browser, connect to the public IP address assigned to your instance: `http://<x.x.x.x>:8080`.
 
     On either your instance or in your browser, you see
-    >**Spring Boot Hello World!**
+    > **Spring Boot Hello World!**
 
 Congratulations! You have successfully created a Spring Boot application on your instance.
 
