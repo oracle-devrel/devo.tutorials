@@ -101,7 +101,7 @@ For additional information, see:
 
 Next, you'll verify that Grafana has been configured properly and already has Prometheus as a datasource.  With this set, you'll be able monitor your Redis installation once it's been deployed.
 
-1. In a console, get a list of pods and identify the Grafana pods:
+1. In a console, get a list of pods and identify the ones associated with Grafana:
 
    ```console
    kubectl -n monitoring get pods | grep grafana
@@ -119,13 +119,13 @@ Next, you'll verify that Grafana has been configured properly and already has Pr
    kubectl -n monitoring port-forward prom-operator-grafana-77cdf86d94-m8pv5 3000:3000
    ```
 
-1. Access Grafana by pointing your browser to `http://localhost:3000`.
+1. Access Grafana by connecting to port 30 on your browser (`http://localhost:3000`).
 
    Login with admin/prom-operator. Use the default username and password if you have not yet changed them. Once you've logged in, you should be able to see the default Kubernetes dashboards.
 
 ## Deploy Redis Cluster
 
-1. Create a namespace for redis:
+1. Create a namespace for Redis:
 
    ```console
    kubectl create namespace redis
@@ -230,7 +230,7 @@ In this part, you'll be using the mimesis package to create a dataset based on t
    python names.py
    ```
 
-   This will create a file.csv in the current directory. You can [configure a PersistentVolume](https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/) to store and load the data, but for the purpose of this tutorial, you'll do a quick hack by installing Redis on the bastion.
+   This will create a `file.csv` in the current directory. You can [configure a PersistentVolume](https://kubernetes.io/docs/tasks/configure-pod-container/configure-persistent-volume-storage/) to store and load the data, but for the purpose of this tutorial, you'll do a quick hack by installing Redis on the bastion.
 
 #### Install and configure Redis on the bastion
 
@@ -324,10 +324,9 @@ Before you import your csv, you'll first need to access Grafana (`http://localho
 
 ## Installing the Prometheus Operator and Redis cluster using the Terraform helm provider
 
-Earlier in this tutorial, you learned how to manually install the Prometheus Operator and Redis Cluster through the cli, but it's not the only option available to you. You can also achieve the same results using the Terraform helm provider, but there are a few important things to keep in mind while doing so.  
+Earlier in this tutorial, you learned how to manually install the Prometheus Operator and Redis Cluster through the cli, but this isn't the only option available to you. You can also achieve the same results using the Terraform helm provider, but there are a few important things to keep in mind while doing so.  
 
-As you're enabling monitoring on Redis, you'll now need to ensure that the relevant custom resource definitions (CRDs) are created. Previously, the manual steps you performed made certain that the CRDs were created and in the proper order.
-
+As you're enabling monitoring on Redis, you'll now need to ensure that the relevant custom resource definitions (CRDs) are created. Previously, the manual steps you performed made certain that the CRDs were created and in the proper order.  
 However, when you use Terraform to do the provisioning, you'll need to explicitly set the order as follows:
 
 ```console
@@ -346,11 +345,11 @@ resource "helm_release" "prometheus-operator" {
   }
 ```
 
-Congratulations! After performing these steps, you'll have ensured that the prometheus-operator release is created first along with the necessary CRDs that the Redis release will need (like Alertmanager, Prometheus, PrometheusRule, and ServiceMonitor) for Prometheus to be able to monitor the Redis cluster.
+Congratulations! After performing these steps, you've ensured that the prometheus-operator release is created first, along with all the necessary CRDs that the Redis release will need (like Alertmanager, Prometheus, PrometheusRule, and ServiceMonitor) for Prometheus to be able to monitor the Redis cluster.
 
 ## What's Next
 
-You have successfully deployed a Redis cluser and enabled monitoring with Prometheus..
+You have successfully deployed a Redis cluser and enabled monitoring with Prometheus.
 
 To explore more information about development with Oracle products:
 
