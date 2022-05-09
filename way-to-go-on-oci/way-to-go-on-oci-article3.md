@@ -32,13 +32,13 @@ The articles describe how to get Going on OCI. To try out the examples, readers 
 ## Introduction
 
 The first part of this series describes provisioning of a Compute Instance based on the Oracle Linux Cloud Developer image, opening it up for inbound and outbound network activity, creating and running a Go application that serves HTTP requests, and connecting logging produced by the application to OCI Logging. Part two deals with software engineering, automation of build, and deployment of the application with the OCI DevOps service. This service is used for storing the Go source code, building the application executable, storing it as deployable artifact, and deploying that artifact to a Compute Instance. The second article also shows how to expose an HTTP endpoint for the application through an OCI API Gateway.
-<!--EDIT POINT-->
+
 This third part shows how to create serverless functions in Go and deploy them on OCI. The Go SDK for OCI is introduced -- first for local, stand alone Go applications and subsequently for use from functions -- leveraging resource principal authentication. This SDK is used to interact with the OCI Object Storage service for creating buckets and writing and reading files.  
 
-Initially the function is built and deployed manually. A route is added to the deployment in API Gateway for invoking the function from a client external to OCI. Then an OCI DevOps Deployment Pipeline is created for deploying the function from an image in the Container Image Registry. Finally, a build pipeline is set up to take sources in the code repository, build and publish a container image and then trigger the deployment pipeline for end to end build and deploy. 
+Initially the function is built and deployed manually. A route is added to the deployment in API Gateway for invoking the function from a client external to OCI. Then an OCI DevOps Deployment Pipeline is created for deploying the function from an image in the Container Image Registry. Finally, a build pipeline is set up to take sources in the code repository, build and publish a container image, and then trigger the deployment pipeline for end-to-end build and deploy. 
 
 ## OCI Functions in Go
-
+<!--EDIT POINT-->
 Serverless function in OCI are based on the technology of the open source Project Fn. The business logic of the function is written in your favorite language -- in this case Go -- and embedded in the Fn framework that handles the life cycle of the function and the interactions with the function. The Fn framework can be run anywhere: on your local machine, in a VM on any cloud or on premises. Oracle Cloud Infrastructure offers a fully managed PaaS service OCI Functions for serverless functions based on that same technology. 
 
 A Function is built into a container image. This image is pushed to a container image registry. To publish the function, this image is transferred to an Fn Server. Whenever the function is invoked, a container is started from the image and the request is processed. Containers are kept running for some time after handling an invocation, in a hot state ready to handle additional requests. When the number of concurrent requests increases, additional containers for the same function will be started by the Fn Server to ensure all requests can be handled. 
