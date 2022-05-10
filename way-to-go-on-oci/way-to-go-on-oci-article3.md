@@ -421,13 +421,12 @@ To make things a little bit more interesting, we will make a change to the funct
 #### Change Function Implementation
 
 Make a small but visible change to `func.go` in your local environment: ensure that the response from the new version of the function looks noticeably different from the current version. Save the change.  
-<!--FIXME: What is this text supposed to be?
-fn update context to local 
--->
+
+In the next sections, we will build a new version of the function container image from the changed source and eventually make it run on OCI Functions. 
 
 #### Build a new Function Container Image (locally)
 
-These commands will first modify the version label used to tag the function with an increase in the third digit. Next, the function container image is built using the changed sources. The third command lists the local container images, filtering on images with *greeter* in their name.
+These next commands will first modify the version label used to tag the function with an increase in the third digit (`bm` is short for `bump`). Next, the function container image is built using the changed sources. The third command lists the local container images, filtering on images with *greeter* in their name. Now please execute the commands.
 
 ```console
 fn bm
@@ -929,7 +928,7 @@ Read more about Resource Principal Authentication in the [OCI Documentation on R
 
 In this section, we discuss an OCI Function called *object-broker*. You will find the sources in the source repository for this article, in path `functions/object-broker`. As before, the function is defined using a `func.yaml` file with metadata, and a `func.go` file with the link between the function and the Fn framework. File `go.mod` defines the dependencies for the function. The logic for interacting with OCI Object Storage Service is in the file `object-organizer.go`. That defines a public func `CreateObject` that is called from `func.go`. 
 
-`CreateObject` creates an object with the specified name in the specified bucket. The first lines in the function `CreateObject` in `object-organizer.go` have undergone some modification in order to work with this *resource principal authentication*. The `auth.ResourcePrincipalConfigurationProvider()` used now does not require that an OCI configuration file and private key be included in the application. It assumes that the code runs inside OCI and <!--FIXME: Missing text -->
+`CreateObject` creates an object with the specified name in the specified bucket. The first lines in the function `CreateObject` in `object-organizer.go` have undergone some modification in order to work with this *resource principal authentication*. The `auth.ResourcePrincipalConfigurationProvider()` used now does not require that an OCI configuration file and private key be included in the application. It assumes that the code runs inside OCI and more specifically inside a resource (which can be a Function or for example a DevOps Build Server) that is known as a resource principal because it is included in a dynamic group and inherits permissions from that group membership. Before too long, you will get to the instructions for taking the measures required for this.
 
 ```go
 func CreateObject(objectName string, bucketName string, compartmentOCID string) (string, err) {
