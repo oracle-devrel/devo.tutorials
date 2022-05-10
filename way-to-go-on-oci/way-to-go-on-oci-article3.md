@@ -344,21 +344,21 @@ curl -X "GET" -H "Content-Type: application/json" -d '{"name":"Mickey Mouse"}' h
 This should result in the improved response. The build and deploy process are condensed to a single manual command in a prepared environment. Next we will look at an automated deployment process for functions using OCI DevOps, followed by the preceding automated build process based on source in a code repository. Then we will move onto functions that do a little bit more than return simple greetings.
 
 ## Automated Deployment of Functions
-<!--EDIT POINT-->
-In the previous installment in this article series we have seen the use of OCI DevOps Deployment Pipelines for deploying an application to a compute instance. Now we will use a pipeline for automated deployment of a function. The overall approach and ingredients are similar. We need an artifact, a (target) environment and the deployment pipeline with a Function Deployment stage, as well as IAM permissions for the pipeline to read the artifact and deploy the function.
 
+In the previous installment in this series, we saw the use of OCI DevOps Deployment Pipelines for deploying an application to a compute instance. Now we'll use a pipeline for automated deployment of a function. The overall approach and ingredients are similar. We need an artifact, a (target) environment, and the deployment pipeline with a Function Deployment stage, as well as IAM permissions for the pipeline to read the artifact and deploy the function.
 
 ![](assets/3tgo-ingredients-function-deployment-pipeline.png)  
 
 These ingredients in more detail:
-    1. an Artifact – the reference to in this case a specific Container Image in the OCI Container Image Registry, using the fully qualified path to the repository and the specific image and version
-    2. an Environment – the reference to the Function I want to (re)deploy. The Environment in case of Function deployment is not the compartment or an application in an compartment (as one might surmise) but currently the function itself that therefore already needs to exist before it can be deployed through an OCI DevOps Deployment Pipeline. (note that the Function does not have to be useful – it can be based on the Scratch container image)
-    3. a Deployment Pipeline with a Deployment Pipeline Stage of type Function Deployment that connects the artifact and the environment.
-    4. A dynamic group that contains the deployment pipeline, and IAM policies that allow the dynamic group to read artifacts (such as function container images) and to deploy functions (broadly speaking: manage OCI resources) 
+
+1. An **Artifact**: the reference to, in this case, a specific Container Image in the OCI Container Image Registry, using the fully qualified path to the repository and the specific image and version.
+2. An **Environment**: the reference to the Function I want to (re)deploy. The Environment in the case of Function deployment is not the compartment or an application in a compartment (as one might surmise), but the function itself which therefore already needs to exist before it can be deployed through an OCI DevOps Deployment Pipeline. (Note that the Function does not have to be useful -- it can be based on the Scratch container image.)
+3. A **Deployment Pipeline** with a Deployment Pipeline Stage of type _Function Deployment_ that connects the Artifact and the Environment.
+4. A dynamic group that contains the deployment pipeline, and IAM policies that allow the dynamic group to read artifacts (such as function container images) and to deploy functions (broadly speaking, manage OCI resources). 
 
 ### Create DevOps Artifact for the Function Container Image
 
-Navigate in the OCI Console to the home page for the DevOps Project *go-on-oci*. Open the *Artifacts* tab. Click on button *Add artifact*.  Note: what we define here is a link or a proxy from the DevOps Project to an actual artifact, not an artifact itself.
+In the OCI Console, navigate to the home page for the DevOps Project *go-on-oci*. Open the *Artifacts* tab. Click on button *Add artifact*.  Note that what we define here is a link or a proxy from the DevOps Project to an actual artifact, not the artifact itself.
 
 Enter *greeter-function* as the name of the DevOps artifact. The type should be set to *Container image repository*. The fully qualified path to the image consists of the region key, the repository namespace and prefix, the function name and the function version tag. In this case, use a placeholder for the version tag. The path is now defined as follows:
 
@@ -372,51 +372,51 @@ Set the drop down field *Replace parameters used in this artifact* to *Yes, subs
 
 Click on button *Add* to complete and save the definition of the artifact.
 
-### Define DevOps Environment for the Function
+### Define the DevOps Environment for the Function
 
-Open the *Environments* tab in the DevOps project. It contains the *go-on-oci-vm* environment that was created for the deployment of *myserver* to the compute instance (in the previous article). Click on button *Create environment*. 
+Open the *Environments* tab in the DevOps project. It contains the *go-on-oci-vm* environment that was created for the deployment of *myserver* to the Compute instance (in the previous article). Click on button *Create environment*. 
 
-In the first step *Basic information* click on the tile *Functions - Create an environment for a Function*. Enter *greeter-function-in-app-go-on-oci-app* as the name of the environment. Press *Next* to go to the second step with *Environment details*. Confirm the Region, Compartment, Application and Function -- you probably do not have to change any of these settings. If you do, ensure that function *greeter* in application *go-on-oci-app* is selected.
+In the first step, *Basic information*, click on the tile *Functions - Create an environment for a Function*. Enter *greeter-function-in-app-go-on-oci-app* as the name of the environment. Press *Next* to go to the second step with *Environment details*. Confirm the Region, Compartment, Application and Function -- you probably do not have to change any of these settings. If you do, ensure that function *greeter* in application *go-on-oci-app* is selected.
 
-Click on button *Create environment* to save the definition.
+Click on *Create environment* to save the definition.
 
 ![](assets/3tgo-define-environment-for-function.png)  
 
 ### Create the Deploy Pipeline for Deploying the Function
 
-On the DevOps Project's overview page, click on the button *Create pipeline*. The *Create pipeline* form is presented. Type a name (*deploy-greeter-function-to-go-on-oci-app*) and optionally a description. Then click on the button *Create pipeline*. The deployment pipeline is now created, though it is quite empty: not an environment into which it should deploy, no artifacts that are to be deployed and no configuration file to define the steps to execute. 
+On the DevOps Project's overview page, click on *Create pipeline*. The *Create pipeline* form is presented. Type a name (*deploy-greeter-function-to-go-on-oci-app*) and optionally a description. Then click on *Create pipeline*. The deployment pipeline is created, though it's quite empty: not an environment into which it should deploy, no artifacts that are to be deployed, and no configuration file to define the steps to execute. 
 
 In the pipeline editor that appears, click on the *Add Stage* tile (or on the plus icon). The next page shows a list of stage types. Click on the tile labeled *Uses the built-in Functions update strategy*. 
 
 Press button *Next*. 
 
-Type the stage name, for example *update-function-greeter*. Select the environment that was defined earlier for the function: *greeter-function-in-app-go-on-oci-app*. 
+Type the stage name, e.g. *update-function-greeter*. Select the environment that was defined earlier for the function: *greeter-function-in-app-go-on-oci-app*. 
 
 Under the heading *Artifact*, click on *Select Artifact*. A list of all artifacts in the DevOps project of type *Docker Image* is presented. Select the only entry, the one that was created earlier for the Function Container Image. 
 
-Note that the button *Select Artifact* is no longer enabled: only a single container image can be associated with this stage. 
+Note that the button *Select Artifact* is no longer enabled: only a single container image can be associated with this stage.
 
 ![](assets/3tgo-deployment-pipeline-stage-update-greeter-function.png)  
 
-Click on  button *Add*. The pipeline stage is created in the pipeline. And the pipeline is now ready to be executed, its definition is complete. Or is it? The artifact this pipeline makes use of is not unequivocally defined: the version label in the path for the container image contains the placeholder `${imageVersion}`. To ensure the proper version is used for deployment, this placeholder needs to be replaced with the right value. And that is arranged by defining a parameter in the pipeline that is called `imageVersion` and is set to an existing version label.
+Click on *Add*. The pipeline stage is created in the pipeline. And the pipeline is now ready to be executed -- its definition is complete. Or is it? The artifact this pipeline makes use of is not unequivocally defined: the version label in the path for the container image contains the placeholder `${imageVersion}`. To ensure the proper version is used for deployment, this placeholder needs to be replaced with the right value. And that is arranged by defining a parameter in the pipeline that is called `imageVersion` and is set to an existing version label.
 
-Click on tab *Parameters* for the pipeline. Define a new parameter. It is called `imageVersion`. Its default value can be anything but it might as well correspond to an existing version label for the greeter function container image. Save the parameter definition.
+Click on the *Parameters* tab for the pipeline. Define a new parameter called `imageVersion`. Its default value can be anything, but it might as well correspond to an existing version label for the greeter function container image. Save the parameter definition.
 
-Now it would seem that the pipeline is ready to be executed. We still have to make sure though that it is allowed to do its job. Before you try anything rash, read the next section.
+It would seem that the pipeline is ready to be executed, but we still have to make sure that it's allowed to do its job. Before you try anything rash, read the next section.
 
 ### Dynamic Group and Policies
 
-In the previous article, a dynamic group was defined for all deployment pipelines in the compartment. The new pipeline is automatically member of that group. We also defined a policy that granted permissions to the dynamic group to read all artifacts, which includes (Function) Container Images in the compartment's Container Image Registry repositories. Another policy that was also already created grants the dynamic group the very broad permission to manage all resources in the compartment. We can benefit from that broad scope of the policy, that also covers creation and update of functions.
+In the previous article, a dynamic group was defined for all deployment pipelines in the compartment. The new pipeline is automatically a member of that group. We also defined a policy that granted permissions to the dynamic group to read all artifacts, which includes (Function) Container Images in the compartment's Container Image Registry repositories. Another policy that was also already created grants the dynamic group the very broad permission to manage all resources in the compartment. We can benefit from the broad scope of that policy, as it also covers creation and update of functions.
 
 ### Run the Deployment Pipeline
 
-Run the Deployment Pipeline by pressing the button *Run pipeline*. 
+Run the Deployment Pipeline by pressing *Run pipeline*. 
 
 Once the deployment is complete, you will see the green markers that proclaim success. However, there is no other obvious indication of this success because the end result is exactly the situation we had achieved with manual deployment of the function from the Fn CLI command line.
 
 ![](assets/3tgo-function-deploymentpipeline-done.png)  
 
-To make things a little bit more interesting, we will make a change to the function's code. Then build the container image for the function (locally) and push the new function image to the container image registry. Then we will start the deployment pipeline once again. This time, when successful, it will render a new situation that we can experience by invoking the *my-api/greeting* route on the API Gateway. 
+To make things a little bit more interesting, we will make a change to the function's code. Then, build the container image for the function (locally) and push the new function image to the container image registry. Then we'll start the deployment pipeline once again; this time, when successful, it will render a new situation which we can experience by invoking the *my-api/greeting* route on the API Gateway.
 
 #### Change Function Implementation
 
@@ -427,31 +427,31 @@ fn update context to local
 
 #### Build a new Function Container Image (locally)
 
-These commands will first modify the version label used to tag the function with an increase in the third digit. Next, the function container image is built using the changed sources. The third command list the local container images, filtering on images with *greeter* in their name.
+These commands will first modify the version label used to tag the function with an increase in the third digit. Next, the function container image is built using the changed sources. The third command lists the local container images, filtering on images with *greeter* in their name.
 
-```
+```console
 fn bm
 fn build 
 docker images | grep greeter
 ```
 
-You should be able to find the newly built image with its fully qualified name, which includes the OCI region key, the namespace, the repository prefix, and the function name *greeter*, with the version label appended.  
+You should be able to find the newly built image with its fully qualified name, including the OCI region key, the namespace, the repository prefix, and the function name *greeter*, with the version label appended.  
 
-#### Tag Container Image with New Version Label and Push to Registry
+#### Tag Container Image with a New Version Label and Push to Registry
 
 Let's define a new identifier for the image, using this command that sets the version label to *0.1.0*:
 
-```
+```console
 docker tag <fully qualified image name>:<newly assigned bumped version label>  <fully qualified image name>:0.1.0
 ```
 
 Then push the new function container image to the OCI Container Image Registry repository, using:
 
-```
+```console
 docker push <fully qualified image name>:0.1.0
 ```
 
-Note: at this point we have not redeployed the function based on this new version of the container image. All we did is build the image and push it to the registry on OCI. Invoking the OCI Function will not show any difference.
+Note that at this point we have not redeployed the function based on this new version of the container image. All we did is build the image and push it to the registry on OCI. Invoking the OCI Function will not show any difference.
 
 #### Run the Deployment Pipeline (for the new Function Image)
 
@@ -463,26 +463,27 @@ When the pipeline is successfully completed, the new version of the function wit
 
 You can see the new function version in action by invoking it on the command line using Fn CLI:
 
-```
+```console
 fn invoke go-on-oci-app greeter
 ```
 
-(because the Fn CLI's context is still *go-on-oci* from the Oracle provider and configured for the *go-on-oci* compartment that contains the *greeter* function, this call will be directed to the OCI Function which at this point is based on new version of the container image)
+(Because the Fn CLI's context is still *go-on-oci* from the Oracle provider and configured for the *go-on-oci* compartment that contains the *greeter* function, this call will be directed to the OCI Function, which at this point is based on new version of the container image.)
 
-Alternatively you can curl to the route on the API Gateway (that invokes the function):
+Alternatively you can `curl` to the route on the API Gateway that invokes the function:
 
-```
+```console
 curl -X "GET" -H "Content-Type: application/json" -d '{"name":"Mickey Mouse"}' https://<API Gateway endpoint>/my-api/greeting
 ```
+
 ## Automated Build of Functions
 
-Until now, we built the function container image by hand in the local development environment using the Fn CLI. However, just as we did for the Go application in the previous article that was produced as executable by a Build Pipeline we will now turn the building of the function into an automated process. An OCI DevOps Build Pipeline is created to take sources from the Code Repository, run a managed build stage that produces a local container image and then publish this image as an artifact to the Container Image Registry repository. As a last step, the Build Pipeline triggers the Deployment Pipeline to publish the latest definition of the function to the runtime OCI Functions environment. 
+Until now, we've built the function container image by hand in the local development environment using the Fn CLI. However, just as we did in the previous article for the Go application that was produced as an executable by a Build Pipeline, we will now turn the building of the function into an automated process. An OCI DevOps Build Pipeline is created to take sources from the Code Repository, run a managed build stage that produces a local container image, and then publish this image as an artifact to the Container Image Registry repository. As a last step, the Build Pipeline triggers the Deployment Pipeline to publish the latest definition of the function to the runtime OCI Functions environment.
 
-When all elements are in place, the total interconnected set of OCI components looks as visualized in the next figure.
+When all the elements are in place, the total interconnected set of OCI components looks as visualized in the next figure.
 
 ![](assets/3tgo-tying-function-build-and-deploy-together.png)  
 
-The artifact and the deployment pipeline shown in this figure are already defined in the DevOps project, as are the Application and Function and  the Container Image Registry repository for the images for the function.  We will use the Code Repository set up in the previous article. All we need to create is the Build Pipeline *build-greeter-function* with its three stages.
+The artifact and the deployment pipeline shown in this figure are already defined in the DevOps project, as are the Application, Function, and Container Image Registry repository for the images for the function.  We will use the Code Repository set up in the previous article. All we need to create is the Build Pipeline *build-greeter-function* with its three stages.
 
 #### Create the Build Pipeline
 
@@ -492,23 +493,23 @@ Click on the link *build-greeter-function* in the list to navigate to the detail
 
 #### First Stage -- Managed Build
 
-The first stage in any build pipeline is a *Managed Build* stage. This stage provides instructions for the pipeline to get hold of a build server, copy specified sources from code repositories to the server and run through a number of actions on that server. At the time of writing, we can use a single image for the build server. It is an Oracle Linux image (8 GB memory, 1 OCPU) that has a number of pre installed tools and language run times. For building the function container image, it is relevant that the build server is equipped with both Docker and Fn CLI.
+The first stage in any build pipeline is a *Managed Build* stage. This stage provides instructions for the pipeline to get hold of a build server, copy specified sources from code repositories to the server, and run through a number of actions on that server. At the time of this writing, we can use a single image for the build server. It is an Oracle Linux image (8 GB memory, 1 OCPU) that has a number of pre installed tools and language run times. For building the function container image, it is relevant that the build server is equipped with both Docker and Fn CLI.
 
-Click on either the plus icon or the *Add Stage* card. The two step *Add a stage* wizard appears. On step one in the wizard, make sure that the *Managed Build* card is selected for the type of stage. Press *Next*.
+Click on either the plus icon or the *Add Stage* card. The two-step *Add a stage* wizard appears. On step one in the wizard, make sure that the *Managed Build* card is selected for the type of stage. Press *Next*.
 
-The second page is shown. Define a name for the build stage: *build-go-source-to-function-container-image*. Optionally type a description.  
+The second page is shown. Define a name for the build stage: *build-go-source-to-function-container-image*. Optionally add a description.  
 
-At present we cannot select a different build image, so we settle for the one available, which is fine for our purpose. 
+At present, we cannot select a different build image, so we settle for the one available, which is fine for our purposes.
 
 Set the *Build spec file path* to `/functions/greeter/go-function-build-spec.yaml`. This file contains the instructions for building the Go sources in the *greeter* function (or any other Go function) and finally building the function container image.  
 
-Click on the *Select* button under *Primary code repository*. We can now specify from which code repository the build will get its sources. Select *OCI Code Repository* as the *Source Connection Type*. Then select the *go-on-oci-repo* repository. We will work with sources on the main branch, so do not change that default. Type *go-on-oci-sources* as the value for *Build source name*. A managed build stage can use sources from multiple repositories. In the build specification, we can refer to each of these sources root locations using the label defined as *Build source name*. Click on *Save*. 
+Click on the *Select* button under *Primary code repository*. We can now specify from which code repository the build will get its sources. Select *OCI Code Repository* as the *Source Connection Type*. Then select the *go-on-oci-repo* repository. We will work with sources on the main branch, so do not change that default. Type *go-on-oci-sources* as the value for *Build source name*. A managed build stage can use sources from multiple repositories. In the build specification, we can refer to each of these sources' root locations using the label defined as *Build source name*. Click on *Save*. 
 
 ![](assets/3tgo-define-managed-build-stage-greeter-function.png)  
 
-Press button *Add*. This completes the definition of the managed build stage. This is all it takes to take sources and process into artifacts. The detailed instructions executed by this managed build stage and on the build server are defined in the `go-function-build-spec.yaml` file. It is this file that contains the instructions for the actual detailed steps executed on the build server.
+Press button *Add*. This completes the definition of the managed build stage. This is all that's needed to take sources and process them into artifacts. The detailed instructions executed by this managed build stage and on the build server are defined in the `go-function-build-spec.yaml` file. It is this file that contains the instructions for the actual detailed steps executed on the build server.
 
-```
+```yaml
 version: 0.1
 component: build
 timeoutInSeconds: 6000
@@ -606,58 +607,61 @@ outputArtifacts:
 ```
 
 The build specification consists of three parts: 
-    1. Set up who to run the script as, which shell to use, which variables to use
-    2. Build steps -- Shell commands to execute on the build server
-    3. Output Artifacts -- indicate which files at the end of all build steps are meaningful and to be made available to other steps in the pipeline (for example to publish as artifact)
+
+1. Set up who to run the script as, which shell to use, and which variables to use
+2. **Build steps**: Shell commands to execute on the build server
+3. **Output Artifacts** indicate which files at the end of all build steps are meaningful and to be made available to other steps in the pipeline (for example to publish as artifact)
 
 The build steps can be summarized as: 
-    1. Print environment variables and currently installed Go version (on the vanilla build server)
-    2. Install golangci-lint
-    3. Verify success and version of golangci-lint installation
-    4. Run `go mod tidy` to organize the go.mod file with dependencies
-    5. Run `go vet` to run a first inspection on the Go Sources
-    6. Run `go fmt` to format the sources according to generic formatting rules
-    7. Run `golangci-lint` to lint (check) the sources against various linting rules
-    8. Run unit tests
-    9. Build function sources into a Function Container Image using Fn CLI (store in local image registry) `
-    10. Tag the Function Container Image with the name *go-function-container-image*. This is the name used in the next stage to find the image to publish
 
-These steps are largely equivalent to the managed build defined in the previous article for the Go application that was finally turned into a binary executable that was deployed on a VM. Steps 9 and 10 are different -- these turn the Go application into an Fn Function Container Image that is the final product of the build.  
+1. Print environment variables and currently installed Go version (on the vanilla build server)
+2. Install `golangci-lint`
+3. Verify success and version of `golangci-lint` installation
+4. Run `go mod tidy` to organize the go.mod file with dependencies
+5. Run `go vet` to run a first inspection on the Go Sources
+6. Run `go fmt` to format the sources according to generic formatting rules
+7. Run `golangci-lint` to lint (check) the sources against various linting rules
+8. Run unit tests
+9. Build function sources into a _Function Container Image_ using the Fn CLI (store in local image registry)
+10. Tag the _Function Container Image_ with the name *go-function-container-image*. This is the name used in the next stage to find the image to publish
+
+These steps are largely equivalent to the managed build defined in the previous article for the Go application that was finally turned into a binary executable deployed on a VM. Steps 9 and 10 are different -- these turn the Go application into a _Function Container Image_ that is the final product of the build.
+
 #### Second Stage -- Publish Artifact
 
 In the overview page for the build pipeline, click on the plus icon at the bottom of the current managed build stage. In the context menu that pops up, click on *Add stage*. The stage wizard appears.
 
-Click on *Deliver artifacts*. Then click on *Next*. 
+Click on *Deliver artifacts*. Then click *Next*.
 
-Enter the name for this stage: *publish-greeter-function-container-image*. We need to select the artifact in the DevOps project that we want to publish. This artifact is the container image *go-on-oci/greeter:${imageVersion}*. Click on button *Select artifact(s)* and select the container image.
+Enter the name for this stage: *publish-greeter-function-container-image*. We need to select the artifact in the DevOps project that we want to publish. This artifact is the container image *go-on-oci/greeter:${imageVersion}*. Click on *Select artifact(s)* and select the container image.
 
-In the area *Associate artifacts with build result* we have to indicate for each of the artifacts selected which of the outcomes of a managed build stage is the source for publishing the artifact. The build specification defines an output labeled *go-function-container-image*. This output refers to the container image that is produced on the build server by the function build process. Enter this label *go-function-container-image* in the field *Build config/result artifact name*. The press the *Add* button to create the *Deliver Artifacts* stage. 
+In the area *Associate artifacts with build result*, we have to indicate for each of the artifacts selected which of the outcomes of a managed build stage is the source for publishing the artifact. The build specification defines an output labeled *go-function-container-image*. This output refers to the container image that is produced on the build server by the function build process. Enter the label *go-function-container-image* in the field *Build config/result artifact name*. The press the *Add* button to create the *Deliver Artifacts* stage.
 
-#### Third Stage -- Trigger Deployment Pipeline deploy-greeter-function-to-go-on-oci-app
+#### Third Stage -- Trigger Deployment Pipeline
 
 In the overview page for the build pipeline, click on the plus icon at the bottom of the *Deliver artifacts* stage. In the context menu that pops up, click on *Add stage*. The stage wizard appears.
 
 Click on *Trigger deployment*. Then click on *Next*. 
 
-Type a name for the stage: *trigger-deployment-of-greeter-function-to-go-on-oci-app* and optionally a description. Click on the button *Select deployment pipeline*. Select the pipeline *deploy-greeter-function-to-go-on-oci-app*. Details of the pipeline are shown, including parameters (*imageVersion*) and the artifact used by the deployment.
+Type a name for the stage: *trigger-deployment-of-greeter-function-to-go-on-oci-app*, and optionally a description. Click on the button *Select deployment pipeline*. Select the pipeline *deploy-greeter-function-to-go-on-oci-app*. Details of the pipeline are shown, including parameters (*imageVersion*) and the artifact used by the deployment.
 
-Click on button *Add* to complete the stage definition and add it to the build pipeline.
+Click on *Add* to complete the stage definition and add it to the build pipeline.
 
-This completes the build pipeline: it grabs sources, processes them into a deployable artifact, publishes the artifact to the image repository and triggers the deployment pipeline to take it from there. 
+This completes the build pipeline: it grabs sources, processes them into a deployable artifact, publishes the artifact to the image repository and triggers the deployment pipeline to take it from there.
 
 ![](assets/3tgo-complete-buildpipeline.png)  
 
 ### Run Build Pipeline and Trigger Deployment Pipeline
 
-Click on the button *Start manual run*. Define a value for parameter *imageVersion*, e.g. *0.2.0*. Click on the button to launch the build pipeline.
+Click on *Start manual run*. Define a value for parameter *imageVersion*, e.g. *0.2.0*. Click on the button to launch the build pipeline.
 
 It will now take a few minutes to complete the build pipeline and trigger the subsequent deployment of the newly built function image. 
 
 ![](assets/3tgo-run-of-buildpipeline.png)  
 
-When all is done and success is reported, you can send invoke the route on the API Gateway that leads to the *greeter* function to check if the response is indeed the new one expected.
+When all is done and success is reported, you can invoke the route on the API Gateway that leads to the *greeter* function to check if the response is indeed the new one expected.
 
-```
+```console
 curl -X "GET" -H "Content-Type: application/json" -d '{"name":"Mickey Mouse"}' https://<API Gateway endpoint>/my-api/greeting
 
 {"message":"Extremely hot greetings from your automatically built and deployed function dear  Mickey Mouse"}
@@ -665,49 +669,50 @@ curl -X "GET" -H "Content-Type: application/json" -d '{"name":"Mickey Mouse"}' h
 
 This is a moment for a little celebration. We have achieved an automated end-to-end process that takes Go application sources from the Code Repository and delivers -- after linting, vetting, testing and building -- a live running new version of a serverless OCI Function. To produce further updates to the function, all we need to do is commit the change and trigger the build pipeline. And as a next step, we can even trigger the build pipeline automatically when a (specific) commit happens in the Code Repository. 
 
-In the second part of this article, we will discuss using OCI services from Go applications in general and from Go functions in particular. The use of the Go SDK for OCI is introduced and interactions with the OCI Object Storage Service is demonstrated.
+In the second part of this article, we will discuss using OCI services from Go applications in general, and from Go functions in particular. The use of the Go SDK for OCI is introduced and interactions with the OCI Object Storage Service is demonstrated.
 
 ## Go SDK for OCI -- Interaction with OCI Object Storage from Go applications
 
-Oracle Cloud Infrastructure is the platform that can build and run applications developed in Go. Either in compute instances or as serverless functions and also containerized on a managed Kubernetes cluster (as we will discuss in part five of this series). It is good to realize that OCI is much more for Go development teams than a runtime platform. OCI offers many services that can be leveraged from applications. Services for storing files, relational or "NoSQL" data, for handling publication and consumption of messages. Services for transferring and analyzing data. And services that support operations on applications, such as monitoring. 
+Oracle Cloud Infrastructure is the platform that can build and run applications developed in Go. Either in compute instances or as serverless functions, and also containerized on a managed Kubernetes cluster (as we will discuss in part five of this series). It is good to realize that OCI is much more for Go development teams than a runtime platform. OCI offers many services that can be leveraged from applications. Services for storing files, relational or "NoSQL" data, for handling publication and consumption of messages. Services for transferring and analyzing data. And services that support operations on applications, such as monitoring.
 
-Interacting with OCI services can be done through the REST APIs available for every aspect of all services. Calling REST services with JSON payloads over HTTP is easy enough from a Go application. There is one complicating factor: these API calls need to be signed. The Oracle Cloud Infrastructure signature uses the "Signature" Authentication scheme (with an Authorization header). The signing process is not exactly trivial. See for details on this signing process [OCI Documentation -- OCI REST API Request Signatures ](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/signingrequests.htm#Request_Signatures) 
+Interacting with OCI services can be done through the REST APIs available for every aspect of all services. Calling REST services with JSON payloads over HTTP is easy enough from a Go application. There is one complicating factor: these API calls need to be signed. The Oracle Cloud Infrastructure signature uses the "Signature" Authentication scheme (with an Authorization header), and the signing process is not exactly trivial. For details on this signing process, see [OCI Documentation -- OCI REST API Request Signatures ](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/signingrequests.htm#Request_Signatures).
 
-Fortunately for developing Go applications that call out to OCI services we can make use of the Go SDK for OCI. This open source development kit facilitates signing the OCI API requests. Using the SDK, the calls to OCI services are made as local calls using strongly typed predefined structs instead of dealing with JSON request and response bodies. The Go SDK for OCI uses the same `config` file that we used earlier for the Fn CLI and the OCI CLI. The default location for this file is `$HOME/.oci`. This file directs the Go SDK to a specific tenancy and region for a user account using the private key half of the pair set up for the user. Go applications that use the Go SDK for OCI can simply build on this configuration without having to deal with any of the details. 
+Fortunately for development of Go applications that call out to OCI services, we can make use of the Go SDK for OCI. This open source development kit facilitates signing the OCI API requests. Using the SDK, the calls to OCI services are made as local calls using strongly-typed predefined structs instead of dealing with JSON request and response bodies. The Go SDK for OCI uses the same `config` file that we used earlier for the Fn CLI and the OCI CLI. The default location for this file is `$HOME/.oci`. This file directs the Go SDK to a specific tenancy and region for a user account using the private key half of the pair set up for the user. Go applications that use the Go SDK for OCI can simply build on this configuration without having to deal with any of the details. 
 
-The documentation for the Go SDK for OCI can be found here [OCI Documentation -- SDK for Go](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/gosdk.htm).
+The documentation for the Go SDK for OCI can be found in the [OCI Documentation -- SDK for Go](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/gosdk.htm).
 
-In this section, we will develop a simple Go application that uses the OCI Object Storage Service for creating files and reading files. At first, this is a stand alone application that can be compiled and run everywhere (as long as the OCI config file us available). Then we discuss running the Go application inside OCI -- on a VM or as Function. This special focus is relevant because when the Go SDK is used inside OCI, it can leverage the identity and privileges of the component running the application. That means that code running on OCI does not need to bring their own OCI config file. And therefore are even simpler.
+In this section, we will develop a simple Go application that uses the OCI Object Storage Service for creating and reading files. At first, this is a standalone application that can be compiled and run everywhere (as long as the OCI config file us available). Then we discuss running the Go application inside OCI -- on a VM or as Function. This special focus is relevant because when the Go SDK is used inside OCI, it can leverage the identity and privileges of the component running the application. That means that code running on OCI does not need to bring their own OCI config file, and thus is even simpler.
+
 ### Any Go Application talking to OCI Object Storage Service
 
-First, let us create the simplest Go application imaginable that connects to OCI through the SDK. Next, use this foundation to add the interaction with the Object Storage Service. 
+First, let us create a very simple Go application that can connect to OCI through the SDK. Next, we'll use this foundation to add the interaction with the Object Storage Service. 
+
 #### The Simplest Go Client of OCI
 
 The simplest Go application that talks to OCI using the Go SDK for OCI is created as follows:
 
-    1. create a directory for the application
-    2. create `go.mod` file with dependencies on Go SDK for OCI package
-    3. run `go mod tidy` to create `go.sum` file and download required packages
-    4. create file `oci-client.go` with the code for talking to OCI 
+1. Create a directory for the application
+2. Create `go.mod` file with dependencies on Go SDK for OCI package
+3. Run `go mod tidy` to create `go.sum` file and download required packages
+4. Create file `oci-client.go` with the code for talking to OCI 
 
-The assumption is that the OCI configuration file that was discussed earlier in this article is located in the default location with the default name: `$HOME/.oci/config`. If the file is in a different location, you can make use of function `ConfigurationProviderFromFile` in package *github.com/oracle/oci-go-sdk/v65/common* that accepts the custom location of the config file. 
+The assumption is that the OCI configuration file that was discussed earlier in this article is located in the default location with the default name: `$HOME/.oci/config`. If the file is in a different location, you can make use of the function `ConfigurationProviderFromFile` in the package *github.com/oracle/oci-go-sdk/v65/common*, which accepts the custom location of the config file. 
 
 The `go.mod` file contains this contents:
 
-```
+```go
 module oci-client
 
 go 1.16
 
 require github.com/oracle/oci-go-sdk/v65 v65.2.0
-
 ```
 
-The reference to `github.com/oracle/oci-go-sdk/v65` references the most recent (at the time of writing) version of the Go SDK. The sources are downloaded based on this reference. In the Go application this means that we can leverage the packages that are in the SDK, to access various services in the OCI portfolio. 
+The `github.com/oracle/oci-go-sdk/v65` bit references the most recent (at the time of writing) version of the Go SDK. The sources are downloaded based on this reference. In the Go application, this means that we can leverage the packages in the SDK to access various services in the OCI portfolio.
 
 File `oci-client.go` contains this code that uses the *common* and *identity* packages:
 
-```
+```go
 package main
 
 import (
@@ -730,8 +735,7 @@ func main() {
 
 ```
 
-
-The first line in the function acquires the client that can subsequently used for most interactions with OCI, such as the *GetCompartment* call that returns the details for the root compartment. 
+The first line in the function acquires the client that can subsequently be used for most interactions with OCI, such as the `GetCompartment` call that returns the details for the root compartment. 
 
 The application can be executed using `go run oci-client.go` and will produce very simple output:
 
@@ -739,31 +743,31 @@ The application can be executed using `go run oci-client.go` and will produce ve
 Name of Root Compartment: <name of your OCI tenancy>
 ```
 
-Even though the result is not especially remarkable, the fact that there is output is proof that the Go SDK for OCI is working and is ready to leveraged for more lofty activities.
+Even though the result is not especially remarkable, the fact that there is output is proof that the Go SDK for OCI is working and is ready to be leveraged for more lofty activities.
 
-Note that the code completely ignores the errors that can occur. If you run into errors, replace the underscores with a variable to capture the error and handle that error. 
+Note that the code completely ignores the errors that can occur. If you run into errors, replace the underscores with a variable to capture and handle that error. 
 
 #### Go Application Creating and Retrieving Objects in and from OCI Object Storage Service
 
-The OCI Object Storage Service cheap and persistent storage for different types of data. Objects, large and small, can programmatically be stored on this service to be retained for short or long periods of time and to be accessed programmatically or through direct URLs. Object Storage provides versioning, different retention rules, encryption of any stored data, object lifecycle management and automated time based removal and different storage tiers. 
+The OCI Object Storage Service offers cheap and persistent storage for different types of data. Objects, large and small, can programmatically be stored on this service to be retained for short or long periods of time, and to be accessed programmatically or through direct URLs. Object Storage provides versioning, different retention rules, encryption of any stored data, object lifecycle management, automated time-based removal, and different storage tiers. 
 
-Objects on Object Storage Service are organized in *buckets*. A bucket is a logical container of objects that lives in a specific compartment. Some operations can be performed on [all objects in] buckets.
+Objects on Object Storage Service are organized in *buckets*. A bucket is a logical container of objects that lives in a specific compartment. Some operations can be performed on all objects in a bucket.
 
-The Go SDK for OCI offers functions and types that make it easy and straightforward to work with the Object Storage Service from Go applications. Operations to manipulate buckets and create, delete and retrieve objects are readily available.    
+The Go SDK for OCI offers functions and types that make it easy and straightforward to work with the Object Storage Service from Go applications. Operations to manipulate buckets and create, delete, and retrieve objects are readily available.    
 
-For details on the Object Storage package in the Go SDK for OCI, check out this reference [Documentation for Object Storage Package in Go SDK for OCI](https://pkg.go.dev/github.com/oracle/oci-go-sdk/v65@v65.2.0/objectstorage).
+For details on the Object Storage package in the Go SDK for OCI, check out this reference: [Documentation for Object Storage Package in Go SDK for OCI](https://pkg.go.dev/github.com/oracle/oci-go-sdk/v65@v65.2.0/objectstorage).
 
-The source repository for this article contains folder `applications/store-n-retrieve` that has a simple Go application that connects to your OCI tenancy and creates a bucket followed by the creation of an object and retrieval of that same object. The application uses the same `DefaultConfigProvider` that was used the previous section to sign requests to OCI APIs using the $HOME/.oci/config file.
+The source repository for this article contains the folder `applications/store-n-retrieve`, which has a simple Go application that connects to your OCI tenancy and creates a bucket, followed by the creation of an object and retrieval of that same object. The application uses the same `DefaultConfigProvider` that was used the previous section to sign requests to OCI APIs using the `$HOME/.oci/config` file.
 
 The dependency of this application on the Go SDK for OCI is defined in `go.mod`.
 
 ![](assets/3tgo-goclientapp-object-storage.png)  
 
-The first part of the code creates an `ObjectStorageClient` instance. Many functions are defined on the underlying interface -- all supporting some form of interaction with the Object Storage Service. The `ObjectStorageClient` is created using `common.DefaultConfigProvider()` (just as before), using the default OCI configuration file with a reference to a file with the private key. 
+The first part of the code creates an `ObjectStorageClient` instance. Many functions are defined on the underlying interface -- all supporting some form of interaction with the Object Storage Service. The `ObjectStorageClient` is created using `common.DefaultConfigProvider()` (just as before), using the default OCI configuration file with a reference to a file containing the private key. 
 
 Function `getNamespace` is called to get the *namespace* for the current tenancy. Then `ensureBucketExists` is called with the name of bucket to create the bucket if it does not already exist. 
 
-```
+```go
 package main
 
 import (
@@ -805,7 +809,7 @@ func main() {
 
 The functions invoked in this snippet to retrieve the namespace and check the existence of the bucket (and create it if it does not exist) are quite straightforward. They are defined as follows:
 
-```
+```go
 func getNamespace(ctx context.Context, client objectstorage.ObjectStorageClient) (string, error) {
 	request := objectstorage.GetNamespaceRequest{}
 	response, err := client.GetNamespace(ctx, request)
@@ -852,9 +856,9 @@ func createBucket(ctx context.Context, client objectstorage.ObjectStorageClient,
 }
 ```
 
-The second part of this application creates an object in the bucket and subsequently retrieves that object. When the application is done executing it will have a lasting effect: the bucket has been created (if it did not already exist) and an object was created or updated (if the application has been run before). You can check in the details page for bucket *go-bucket* in the OCI console to see both the bucket and the object that was created.  
+The second part of this application creates an object in the bucket and subsequently retrieves that object. When the application is done executing, it will have a persistent effect: the bucket has been created (if it did not already exist) and an object was created or updated (if the application has been run before). You can check in the details page for bucket *go-bucket* in the OCI console to see both the bucket and the object that was created.  
 
-```
+```go
 ..................
 
 	contentToWrite := []byte("We would like to welcome you in our humble dwellings. /n We consider it a great honor. Bla, bla.")
@@ -919,15 +923,15 @@ Object read from OCI Object Storage contains this content: We would like to welc
 
 ### Go based OCI Functions talking to OCI Object Storage Service
 
-The previous section discussed any Go application interacting with OCI services through the SDK. So what more is there to say about OCI Functions in Go? Please read on, because it turns out we can make life simpler when the Go code you develop and from which you want to work with the Go SDK will be deployed as an OCI function or will run on a compute instance in OCI. In these cases, we can leverage *Resource Principal Authentication* (for Functions) and *Instance Principal Authentication* (for code running on a Compute Instance) which means that we do not have to include the OCI Configuration file and our code that talks to the SDK a bit simpler. 
+The previous section discussed any Go application interacting with OCI services through the SDK. So what more is there to say about OCI Functions in Go? Please read on, because it turns out we can make life simpler when the Go code you develop and from which you want to work with the Go SDK will be deployed as an OCI function or run on a compute instance in OCI. In these cases, we can leverage *Resource Principal Authentication* (for Functions) and *Instance Principal Authentication* (for code running on a Compute Instance), which means that we do not have to include the OCI Configuration file, and our code that talks to the SDK can be a bit simpler. 
 
-Read more about Resource Principal Authentication in [OCI Documentation on Resource Principal Authentication for Functions](https://docs.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsaccessingociresources.htm). 
+Read more about Resource Principal Authentication in the [OCI Documentation on Resource Principal Authentication for Functions](https://docs.oracle.com/en-us/iaas/Content/Functions/Tasks/functionsaccessingociresources.htm). 
 
-In this section, we discuss an OCI Function called *object-broker*. You will find the sources in the source repository for this article, in path `functions/object-broker`. As before, the function is defined using a `func.yaml` file will meta-data and a `func.go` with the link between the function and the Fn framework. File `go.mod` defines the dependencies for the function. The logic for interacting with OCI Object Storage Service is in file `object-organizer.go`. It defines a public func `CreateObject` that is called from `func.go`. 
+In this section, we discuss an OCI Function called *object-broker*. You will find the sources in the source repository for this article, in path `functions/object-broker`. As before, the function is defined using a `func.yaml` file with metadata, and a `func.go` file with the link between the function and the Fn framework. File `go.mod` defines the dependencies for the function. The logic for interacting with OCI Object Storage Service is in the file `object-organizer.go`. That defines a public func `CreateObject` that is called from `func.go`. 
 
-`CreateObject` creates an object with the specified name in the specified bucket.  The first lines in func `CreateObject` in `object-organizer.go` have undergone a little modification in order to work with this *resource principal authentication*. The *auth.ResourcePrincipalConfigurationProvider()* used now does not require an OCI configuration file and private key to be included in the application. It assumes that the code runs inside OCI and 
+`CreateObject` creates an object with the specified name in the specified bucket. The first lines in the function `CreateObject` in `object-organizer.go` have undergone some modification in order to work with this *resource principal authentication*. The `auth.ResourcePrincipalConfigurationProvider()` used now does not require that an OCI configuration file and private key be included in the application. It assumes that the code runs inside OCI and <!--FIXME: Missing text -->
 
-```
+```go
 func CreateObject(objectName string, bucketName string, compartmentOCID string) (string, err) {
 	configurationProvider, err := auth.ResourcePrincipalConfigurationProvider()
 	if err != nil {
@@ -936,9 +940,9 @@ func CreateObject(objectName string, bucketName string, compartmentOCID string) 
 	objectStorageClient, cerr := objectstorage.NewObjectStorageClientWithConfigurationProvider(configurationProvider)
 ```
 
-Let's turn our attention next to `func.go`. Func(tion) `myHandler` handles the function trigger. It invokes `CreateObject`, but not before it has determined the name of the object the request should produce and the bucket name for the bucket that is to contain the object. These names have a default value, but the function tries to find HTTP request query parameter values that provide specific values. Note this only works for an HTTP trigger to the function, and not for a call made using `fn invoke`.     
+Let's turn our attention next to `func.go`. Func(tion) `myHandler` handles the function trigger. It invokes `CreateObject`, but not before it has determined the name of the object the request should produce and the bucket name for the bucket that is to contain the object. These names have a default value, but the function tries to find HTTP request query parameter values that provide specific values. Note this only works for an HTTP trigger to the function, and not for a call made using `fn invoke`.
 
-```
+```go
 func myHandler(ctx context.Context, in io.Reader, out io.Writer) {
 	objectName := "defaultObjectName.txt"
 	bucketName := "the-bucket"
@@ -953,100 +957,98 @@ You may want to inspect details about the Fn Context in [Documentation for Proje
 
 The function needs to know in which OCI compartment the bucket should reside. Such runtime settings are typically defined on either the function of the application through a *configuration*. The values of configurations can be read in the function from a map in the context, as is shown in this line: 
 
-```
+```go
 	if compartmentOCID, ok := fnctx.Config()["compartmentOCID"]; ok { 
 ```
 
 #### Build and Deploy the Function using Fn CLI
 
-Assuming you are in a terminal in the local development environment where Fn CLI is installed and the current directory is `functions/object-broker`. You can perform a local build of the function with verbose output:
+Assuming you are in a terminal in the local development environment where the Fn CLI is installed and the current directory is `functions/object-broker`, you can perform a local build of the function with verbose output:
 
-```
+```console
 fn -v build
 ```
 
 When the build looks good, the next step to take is deployment of the function. If the Fn context is set to use the *go-on-oci* context (check with `fn list contexts`) then this will deploy the function to the `go-on-oci-app` application on OCI:
 
-```
+```console
 fn -v deploy --app go-on-oci-app
 ```
 
 The function can only do a meaningful job if the configuration has been defined for the compartment OCID value. You can do this through the console or using this next statement with the Fn CLI:
 
-```
+```console
 fn cf f go-on-oci-app object-broker compartmentOCID <compartment-ocid>
 ```
 
 Now the function is deployed and has its configuration. You may expect that a call to the function with this command will be successful:
 
-```
+```console
 fn invoke go-on-oci-app object-broker
 ```
 
-However, there is one final aspect to take care of: the function uses OCI Object Storage Service APIs to manipulate buckets and objects. However, it can not just do that! It needs to have been explicitly granted permissions for that. We use a dynamic group and two policies to achieve this. 
+However, there is one final aspect to handle: the function uses OCI Object Storage Service APIs to manipulate buckets and objects, but it needs to have been explicitly granted permissions to do that! We use a dynamic group and two policies to achieve this.
 
 #### Permissions for Functions to manipulate Objects and Buckets
 
-Just as we used dynamic groups to create a grantee representing the deployment pipelines and the build pipelines, we need to also create a dynamic group that contains the functions that we want to grant permissions to.To create the dynamic group, type *dyn* in the search bar. Click on the link *Dynamic Groups* in the search results pane.  
+Just as we used dynamic groups to create a grantee representing the deployment pipelines and the build pipelines, we need to also create a dynamic group that contains the functions to which we want to grant permissions. To create the dynamic group, type *dyn* in the search bar. Click on the link *Dynamic Groups* in the search results pane.
 
-On the overview page for dynamic groups, Click on the button *Create Dynamic Group*.
+On the overview page for dynamic groups and click on *Create Dynamic Group*.
 
 Enter the name for the Dynamic Group for the Deployment Pipeline(s), e.g. *functions-in-go-on-oci*, and optionally type a description. Define the following rule that selects all functions that are part of the compartment:
 
-``` 
+```
 All {resource.type = 'fnfunc', resource.compartment.id = '<compartment_id>'}
-
 ``` 
 
 Of course, replace `<compartment_id>` with the identifier of the compartment you are working in. Then press *Create*.
 
 To create a policy in the console: type *poli* in the search bar and click on *Policies | Identity* in the *Services* area in the search results popup. This takes you to the *Policies* overview page for the current compartment.
 
-The first policy statement defines the permission for the function to manage objects in the compartment. The second statement adds the permission for managing buckets. Define a name, a description and the following statements:
+The first policy statement defines the permission for the function to manage objects in the compartment. The second statement adds the permission for managing buckets. Define a name, a description, and the following statements:
 
 ```
 allow dynamic-group functions-in-go-on-oci to manage objects in compartment go-on-oci
 allow dynamic-group functions-in-go-on-oci to manage buckets in compartment go-on-oci
 ```
 
-When the policy with these statements is saved, the next figure is a depiction of the permissions that now apply to the function. 
+The next figure depicts the permissions that now apply to the function when the policy containing these statements is saved:
 
 ![](asserts/3tgo-iam-for-function-to-objects.png)  
 
-
 Now the function can be invoked and should be able to do its thing using the default names for bucket and object.
 
-```
+```console
 fn invoke go-on-oci-app object-broker
 ```
 
-Verify if the bucket is created and and contains the freshly created object, for example in the console using this [OCI URL to the buckets page](https://cloud.oracle.com/object-storage/buckets) .
+Verify that the bucket is created and and contains the freshly created object using the console from the [OCI URL to the buckets page](https://cloud.oracle.com/object-storage/buckets).
 
 #### Add Route in API Gateway to Trigger Function
 
-To be able to invoke function `object-broker` over HTTP from anywhere, we will again make use of the API Gateway. Type *gat* into the search bar in the console. Click on the link *Gateways | API Management*. Click on the link for *the-api-gateway*. Click on the link *Deployments*. In the list with deployments -- which contains a single deployment -- click on the link *myserver-api*. 
+To be able to invoke the `object-broker` function over HTTP from anywhere, we will again make use of the API Gateway. Type *gat* into the search bar in the console. Click on *Gateways | API Management*. Click on the link for *the-api-gateway*. Click on *Deployments*. In the list with deployments -- which contains a single deployment -- click on the link *myserver-api*. 
 
-Click on button *Edit* to open the deployment specification. Click on the link for the second step: *Routes*. Scroll down and click on the button *+ Another Route*.
+Click on *Edit* to open the deployment specification. Click on the link for the second step: *Routes*. Scroll down and click on *+ Another Route*.
 
-Type */object-broker* as the path for this new route. Select *GET* as the method and *Oracle Functions* as the Type (of backend). Select application *go-on-oci-app* and then set *Function Name* to *object-broker*. Press button *Next*. Then press button *Save Changes* to apply the changes and make the new route real.
+Type */object-broker* as the path for this new route. Select *GET* as the method and *Oracle Functions* as the Type (of backend). Select application *go-on-oci-app*, and then set *Function Name* to *object-broker*. Press *Next*, then press *Save Changes* to apply the changes and make the new route real.
 
-The end to end picture that is now configured from HTTP consumer through API Gateway to Function and finally bucket and object looks like this:
+The end-to-end picture that is now configured from HTTP consumer through API Gateway to Function and finally bucket and object looks like this:
 
 ![](assets/3tgo-apigw-objectbroker-fun.png)  
 
-Invoke the function from the browser or using curl on the command line using:
+Invoke the function from the browser or using `curl` on the command line using:
 
-```
+```console
 curl -X "GET" "http://<API Gateway endpoint>/my-api/object-broker?objectName=new-exciting-object.txt&bucketName=the-ultimate-collection"
 ```
 
 #### Automated Build and Deployment
 
-This function `object-broker` was now deployed manually on the command line, using the Fn CLI. That worked fine of course. However, if you were now to start development on this function, going through multiple development cycles, you would probably want to introduce automation in the build and deployment process.
+This function `object-broker` was deployed manually on the command line using the Fn CLI. That worked fine of course. However, if you were now to start development on this function, going through multiple development cycles, you would probably want to introduce automation in the build-and-deploy process.
 
-Just as we have done before, you can easily set up the required elements in OCI DevOps to achieve automated pipelines for the deployment (of the function container image in the container image registry) and the build (starting from the code repository and resulting in a freshly baked container image for the function). The main element that is specific to the function is the build specification file for the managed build stage in the build pipeline. This file is provided, as `go-function-build-spec.yaml` in the same directory as `func.go` and `func.yaml`. 
+Just as we have done before, you can easily set up the required elements in OCI DevOps to achieve automated pipelines for the deployment (of the function container image in the container image registry) and the build (starting from the code repository and resulting in a freshly-baked container image for the function). The main element that is specific to the function is the build specification file for the managed build stage in the build pipeline. This file is provided as `go-function-build-spec.yaml` in the same directory as `func.go` and `func.yaml`. 
 
-After creating a DevOps artifact for the Function Container Image, an environment for the Function and the two pipelines for build and deployment, the automated DevOps process set up would look like the next figure. 
+After creating a DevOps artifact for the Function Container Image, an environment for the Function, and the two pipelines for build and deployment, the automated DevOps process set up would look like this:
 
 ![](assets/3tgo-automated-build-and-deploy-of-object-broker.png)  
 
@@ -1054,11 +1056,11 @@ After creating a DevOps artifact for the Function Container Image, an environmen
 
 One focus area in this article was serverless functions, written in Go and running on Oracle Cloud Infrastructure. The automated build and deployment of these functions was discussed, as was the use of API Gateway to provide access to the function to external HTTP consumers. 
 
-The second main topic was the Go SDK for OCI for interacting with OCI services from Go applications. The article showed how in Go code, the Object Storage service can be accessed to store and retrieve files. 
+The second main topic was the Go SDK for OCI for interacting with OCI services from Go applications. The article showed how to use Go code to access the Object Storage service to store and retrieve files. 
 
-The two topics were combined in function *object-broker*. This OCI Function leverages *resource principal authentication* and permissions granted through a dynamic group. Through a runtime configuration, the function learns about current environment specific settings. 
+The two topics were combined in function *object-broker*. This OCI Function leverages *resource principal authentication* and permissions granted through a dynamic group. Through a runtime configuration, the function learns about current environment specific settings.
 
-In the next article, interacting with the Oracle Database is the main topic. Creating a connection from a Go application to a local Oracle Database as well as to an Autonomous Database running on OCI and performing SQL operations with these databases from the comfort of your Go application. Further topics include working with an Oracle Wallet for proper management of database credentials, including the wallet in the deployment process and combining interactions with the OCI Object Storage and the Autonomous Database services in a single application.   
+In the next article, interacting with the Oracle Database will be the main topic. Creating a connection from a Go application to a local Oracle Database, as well as to an Autonomous Database running on OCI, and performing SQL operations with these databases from the comfort of your Go application. Further topics include working with an Oracle Wallet for proper management of database credentials, including the wallet in the deployment process, and combining interactions with the OCI Object Storage and the Autonomous Database services in a single application.
 
 ## Resources
 
