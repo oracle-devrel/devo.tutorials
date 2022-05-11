@@ -25,68 +25,80 @@ redirect: https://developer.oracle.com/tutorials/tf-101/2-experiencing-terraform
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
-This short project will let you experience the power of Terraform.
+This next part in the series will give you all you need to begin harnessing the power of infrastructure-as-code (IaC) in your environment. Even if this is your first time using Terraform or you're just looking to get reacquainted, this will be the place for you. In this article, we'll cover the basics of how Terraform works and then explore an actual working example. During the journey, we'll point out several invaluable resources that will essential to your future work with Terraform and managing your Oracle Cloud Infrastructure (OCI) environment.
 
-* Create some Terraform code files
-* Learn how to examine what Terraform proposes be done
-* Let Terraform create a VCN and Subnet
-* Organize your Terraform code
-* Get a taste of OCI Cloud Shell
+After going through this tutorial, you'll be able to better understand why IaC is so amazing and how it has gained so much traction. You'll also learn how to harness IaC to improve the efficiency of managing your environment.
+
+Key topics covered in this tutorial:
+
+* Creating Terraform code files
+* Learning how to examine (interpet?) what Terraform proposes be done
+* Using Terraform to create a Virtual Cloud Network (VCN) and subnet
+* Organizing your Terraform code
+* An introduction to OCI Cloud Shell
+
+For additional information, see:
+
+* [Signing Up for Oracle Cloud Infrastructure](https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm)
+* [Getting started with Terraform](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformgettingstarted.htm)
+* [Getting started with OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm)
 
 ## Prerequisites
 
-You should have an Oracle Cloud Infrastructure (OCI) account setup.  [Click here]({{ site.urls.always_free }}) to create a new cloud account.
+To successfully complete this tutorial, you must have the following:
 
-We'll be using the [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm) in this tutorial, as it provides a great platform for quickly working with Terraform (as well as many other OCI interfaces and tools), having many of these tools pre-installed and ready-to-go.
+* An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
+* A MacOS, Linux, or Windows computer with `ssh` support installed.
+* [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm) - It provides a great platform for quickly working with Terraform as well as a host of other OCI interfaces and tools.
 
-[Click here](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm) for directions on how to open up the OCI Cloud Shell.  You'll need to have this open during this particular portion of the Terraform 101 tutorial series.
+## Getting started
 
-## Setting up the project
-
-Terraform is incredibly easy to use.  Here's what we're going to do in this lesson:
+Terraform is incredibly easy to use.  In this section, we'll learn how to:
 
 * Create a VCN
-* Create a Subnet in the VCN
-
-Follow the step-by-step directions, to see how easy/fast it is, then in subsequent lessons we'll go into greater detail around how to use Terraform.
+* Create a subnet in the VCN
 
 > NOTE: All commands will be used within OCI Cloud Shell.  If you haven't opened it up yet, now's the time to [open your own Cloud Shell session](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm)!
 {:.notice}
 
-## Setup the OCI provider
+### Set up the OCI provider
 
-Create a new directory for this project:
+1. Create a new directory for our project and then navigate into it:
 
-```console
-mkdir experiencing-tf
-cd experiencing-tf
-```
+   ```console
+   mkdir experiencing-tf
+   cd experiencing-tf
+   ```
 
-The `experiencing-tf` directory will have our Terraform files, as well as our Terraform state.  This will be our project directory.
+   > NOTE: The `experiencing-tf` directory will contain both our Terraform files and our Terraform state.  This will be our project directory. {:.notice}
 
-Using your favorite editor (`nano`, `vi`, etc.) add the following to `provider.tf` (`nano provider.tf`):
+2. Using your favorite editor (`nano`, `vi`, etc.), add the following to `provider.tf`:
 
-```terraform
-terraform {
-  required_version = ">= 1.0.0"
-}
+   ```terraform
+   terraform {
+     required_version = ">= 1.0.0"
+   }
 
-provider "oci" {
-  region       = var.region
-  tenancy_ocid = var.tenancy_ocid
-}
-```
+   provider "oci" {
+     region       = var.region
+     tenancy_ocid = var.tenancy_ocid
+   }
+   ```
 
-Let's start by creating a VCN.  To do so, edit `vcn.tf` (`nano vcn.tf`, note that this file doesn't exist yet - so it'll be a new file according to your text editor) and place the following contents in it:
+## Create a VCN
 
-```terraform
-resource oci_core_vcn "tf_101" {
-  cidr_block     = "192.168.1.0/24"
-  compartment_id = var.tenancy_ocid
-  display_name   = "tf-101"
-  dns_label      = "tf101"
-}
-```
+Now that we have our environment set up, let's create a VCN.
+
+1. Create a new file, `vcn.tf` with the following content:
+
+   ```terraform
+   resource oci_core_vcn "tf_101" {
+     cidr_block     = "192.168.1.0/24"
+     compartment_id = var.tenancy_ocid
+     display_name   = "tf-101"
+     dns_label      = "tf101"
+   }
+   ```
 
 The above tells Terraform that we want a VCN with a name of `tf-101`, using a CIDR block of `192.168.1.0/24`, deployed into the root (tenancy) compartment.
 
@@ -141,7 +153,7 @@ declare -x TF_VAR_tenancy_ocid=`echo $OCI_TENANCY`
 declare -x TF_VAR_region=`echo $OCI_REGION`
 ```
 
-## Action!
+## Action
 
 Now it's time to see this all work!  Initialize Terraform by running:
 
