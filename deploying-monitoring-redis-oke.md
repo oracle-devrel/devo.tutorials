@@ -12,6 +12,7 @@ MRM: WWMK211213P00053
 author: ali-mukadam
 redirect: https://developer.oracle.com/tutorials/deploying-monitoring-redis-oke/
 ---
+{% slides %}
 In the [previous post](https://medium.com/@lmukadam/extending-terraform-oke-with-a-helm-chart-a51ae0df29d4), you learned how to add a simple extension to the [terraform-oci-oke project](https://github.com/oracle-terraform-modules/terraform-oci-oke) so that it uses the [Redis helm chart](https://github.com/helm/charts/tree/master/stable/redis) to deploy a Redis cluster on Kubernetes.  
 
 In the current tutorial, you'll build on this background by exploring how set up Promtheus to monitor your Redis cluster.
@@ -153,7 +154,7 @@ Next, you'll verify that Grafana has been configured properly and already has Pr
 ## Import Redis Dashboard for Grafana
 
 1. Login to Grafana (`http://localhost:3000`).
-2. Select `**+**` on the left-hand menu to import a dashboard.
+2. Select **+** on the left-hand menu to import a dashboard.
 3. Enter the dashboard id `2751` in the Grafana.com dashboard field:
 
    {% imgx assets/redis-import-grafana.png  "Import screen in Grafana" %}
