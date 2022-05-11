@@ -48,7 +48,7 @@ Let's start with the basics. When there are IT resources to manage, what are som
 
 ### GUIs
 
-In many applications, most of us start with the GUI. If you work within the Oracle Cloud Infrastructure (OCI), you're probably already familiar with the [OCI Console](https://www.oracle.com/cloud/sign-in.html). Overally, GUIs are typically pretty fancy, fun, and easy to use. But while they can be entertaining and great for initially learning a system or platform, they're not always the most scalable or efficient. Also, GUIs require time and manual user intervention, unless you're using something to automate the pointing-and-clicking, such as [Selenium](https://www.selenium.dev) (a fairly niche edge case). Things only "work" when someone's there to click a button. It's difficult (read: *impossible*) to rapidly manage resources using a GUI. Just the time it takes to point, click, and wait for the browser to update isn't really ideal when you're trying to handle a critical situation.
+In many applications, most of us start with the GUI. If you work within the Oracle Cloud Infrastructure (OCI), you're probably already familiar with the [OCI Console](https://www.oracle.com/cloud/sign-in.html). Overall, GUIs are typically pretty fancy, fun, and easy to use. But while they can be entertaining and great for initially learning a system or platform, they're not always the most scalable or efficient. Also, GUIs require time and manual user intervention, unless you're using something to automate the pointing-and-clicking, such as [Selenium](https://www.selenium.dev) (a fairly niche edge case). Things only "work" when someone's there to click a button. It's difficult (read: *impossible*) to rapidly manage resources using a GUI. Just the time it takes to point, click, and wait for the browser to update isn't really ideal when you're trying to handle a critical situation.
 
 On occasion, another downside to consider with GUIs is how difficult it can be to roll back a system should things go sideways. Many of us know all too well how rolling back a change can involve lots of pointing-and-clicking just to undo the changes that were previously made. In the end, there's more time and human involvement spent in the UI than actually fixing the problem. It's definitely not the best all-around solution. For the most part, GUIs can be great for learning and playing around, but definitely not ideal for maintaining anything beyond a lab or sandbox environment.
 
@@ -94,5 +94,3 @@ To explore more information about development with Oracle products:
 
 * [Oracle Developers Portal](https://developer.oracle.com/)
 * [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
-
-{% endslides %}
