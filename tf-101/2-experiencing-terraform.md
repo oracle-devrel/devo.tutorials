@@ -25,14 +25,14 @@ redirect: https://developer.oracle.com/tutorials/tf-101/2-experiencing-terraform
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
-This next part in the series will give you all you need to begin harnessing the power of infrastructure-as-code (IaC) in your environment. Even if this is your first time using Terraform or you're just looking to get reacquainted, this will be the place for you. In this article, we'll cover the basics of how Terraform works and then explore an actual working example. During the journey, we'll point out several invaluable resources that will essential to your future work with Terraform and managing your Oracle Cloud Infrastructure (OCI) environment.
+This next part in the series will give you all you need to begin harnessing the power of infrastructure-as-code (IaC) in your environment. Even if this is your first time using Terraform or just looking to get reacquainted, this will be the place for you. In this article, we'll cover the basics of how Terraform works and then explore an actual working example. During the journey, we'll point out several resources essential to your future work with Terraform and managing your Oracle Cloud Infrastructure (OCI) environment.
 
-After going through this tutorial, you'll be able to better understand why IaC is so amazing and how it has gained so much traction. You'll also learn how to harness IaC to improve the efficiency of managing your environment.
+After going through this tutorial, you'll be able to better understand why IaC is amazing and how it has gained so much traction. You'll also learn how to harness IaC to improve the efficiency of managing your environment.
 
 Key topics covered in this tutorial:
 
 * Creating Terraform code files
-* Learning how to examine (interpet?) what Terraform proposes be done
+* Examining Terraform's resource configuration plans
 * Using Terraform to create a Virtual Cloud Network (VCN) and subnet
 * Organizing your Terraform code
 * An introduction to OCI Cloud Shell
@@ -45,32 +45,32 @@ For additional information, see:
 
 ## Prerequisites
 
-To successfully complete this tutorial, you must have the following:
+To successfully complete this tutorial, you will need the following:
 
 * An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
 * A MacOS, Linux, or Windows computer with `ssh` support installed.
-* [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm) - It provides a great platform for quickly working with Terraform as well as a host of other OCI interfaces and tools.
+* [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm) (It provides a great platform for quickly working with Terraform as well as a host of other OCI interfaces and tools.)
 
 ## Getting started
 
-Terraform is incredibly easy to use.  In this section, we'll learn how to:
+Terraform is incredibly easy to use. In this section, we'll learn how to:
 
 * Create a VCN
 * Create a subnet in the VCN
 
-> NOTE: All commands will be used within OCI Cloud Shell.  If you haven't opened it up yet, now's the time to [open your own Cloud Shell session](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm)!
+> NOTE: All commands will be used within OCI Cloud Shell. If you haven't started it up already, now's the time to [open your own Cloud Shell session](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellgettingstarted.htm)!
 {:.notice}
 
 ### Set up the OCI provider
 
-1. Create a new directory for our project and then navigate into it:
+1. Create a new directory for the project and then navigate into it:
 
    ```console
    mkdir experiencing-tf
    cd experiencing-tf
    ```
 
-   > NOTE: The `experiencing-tf` directory will contain both our Terraform files and our Terraform state.  This will be our project directory. {:.notice}
+   > NOTE: The `experiencing-tf` directory will contain both our Terraform files and our Terraform state. This will be our project directory. {:.notice}
 
 2. Using your favorite editor (`nano`, `vi`, etc.), add the following to `provider.tf`:
 
@@ -89,25 +89,29 @@ Terraform is incredibly easy to use.  In this section, we'll learn how to:
 
 Now that we have our environment set up, let's create a VCN.
 
-1. Create a new file, `vcn.tf` with the following content:
+Create a new file, `vcn.tf`, with the following content:
 
-   ```terraform
-   resource oci_core_vcn "tf_101" {
-     cidr_block     = "192.168.1.0/24"
-     compartment_id = var.tenancy_ocid
-     display_name   = "tf-101"
-     dns_label      = "tf101"
-   }
-   ```
+```terraform
+resource oci_core_vcn "tf_101" {
+  cidr_block     = "192.168.1.0/24"
+  compartment_id = var.tenancy_ocid
+  display_name   = "tf-101"
+  dns_label      = "tf101"
+}
+```
 
 The above tells Terraform that we want a VCN with a name of `tf-101`, using a CIDR block of `192.168.1.0/24`, deployed into the root (tenancy) compartment.
 
-> NOTE: To keep things simple, this example uses the tenancy (root) compartment, which is often times locked down in many tenancies.  If you're using a tenancy with limited permissions (one in which you cannot deploy to the root compartment), you'll need to put in your compartment OCID in place of the `var.tenancy_ocid` above.  Something like `compartment_id = "PUT_YOUR_COMPARTMENT_OCID_HERE"` should do the trick for now!
+> NOTE: To keep things simple, this example uses the tenancy (root) compartment, which is often times locked down in many tenancies.  
+> However, if you're using a tenancy with limited permissions (i.e., one in which you can't deploy to the root compartment), you'll need to replace each instance of `var.tenancy_ocid` above with your own compartment OCID.  
+> For example, `compartment_id = "<your_OCID>"`.
 {:.notice}
 
 ## Set up a subnet
 
-Next we'll create a subnet within our VCN.  To do this, go ahead and add the following to a new file called `subnets.tf` (`nano subnets.tf`):
+Next we'll create a subnet within our VCN.  
+
+To do this, add the following to a new file called `subnets.tf`:
 
 ```terraform
 resource oci_core_subnet "vlan1" {
@@ -120,9 +124,13 @@ resource oci_core_subnet "vlan1" {
 }
 ```
 
-This will tell Terraform to manage a Subnet that lives within the VCN we've previously defined, using the entire CIDR space.  We've prohibited the use of public IPs in this Subnet and have decided to give it the amazingly original name of `vlan1`.
+This will tell Terraform to manage a subnet that lives within the VCN we've previously defined, using the entire CIDR space. We've also prohibited the use of public IPs in this subnet and have given it the wonderfully original name, `vlan1`.
 
-Up to this point, we've referenced a couple of variables in our resource definitions above: `var.region` and `var.tenancy_ocid`.  We need to go ahead and define these in Terraform code.  To do so, edit `variables.tf` (`nano variables.tf`) and place the following in it:
+### Define resource definitions in Terraform
+
+Up to this point, we've referenced a couple of variables in our resource definitions: `var.region` and `var.tenancy_ocid`. Now, we need to go ahead and define these using Terraform code.  
+
+To do so, edit `variables.tf` and add the following content:
 
 ```terraform
 variable "tenancy_ocid" {
@@ -135,25 +143,31 @@ variable "region" {
 
 ## Set up an output
 
-Now that our inputs are defined, let's go ahead and setup an output, which will be the status of the VCN.  To do this, modify `outputs.tf` (`nano outputs.tf`) and place the following in it:
+Now that we've defined our inputs, let's go ahead and set up the status of the VCN as our output.  
 
-```terraform
-output "vcn_state" {
-  description = "The state of the VCN."
-  value       = oci_core_vcn.tf_101.state
-}
-```
+1. Edit `outputs.tf` and add the following content:
 
-Save the file and exit your text editor.  
+   ```terraform
+   output "vcn_state" {
+     description = "The state of the VCN."
+     value       = oci_core_vcn.tf_101.state
+   }
+   ```
 
-The OCI Cloud Shell session is prepopulated with lots of good values that make life super simple.  We need to put this in a format that Terraform cac easily use.  The following commands will setup a few environment variables that Terraform will be using:
+2. Save the file and exit the editor.  
+
+### Configure related environment variables
+
+Right out of the box, the OCI Cloud Shell session comes prepopulated with lots of great environment settings that make our job a whole lot easier. To be able to access them in our new workspace though, we'll need to put them in a format that Terraform can easily use.  
+The following commands will set up a few environment variables that Terraform will be using.
+In a terminal window, enter the following:
 
 ```console
 declare -x TF_VAR_tenancy_ocid=`echo $OCI_TENANCY`
 declare -x TF_VAR_region=`echo $OCI_REGION`
 ```
 
-## Action
+## Initialize Terraform
 
 Now it's time to see this all work!  Initialize Terraform by running:
 
@@ -161,11 +175,9 @@ Now it's time to see this all work!  Initialize Terraform by running:
 terraform init
 ```
 
-It looks something like:
+Terraform echoes something similar to the following:
 
 ```console
-$ terraform init
-
 Initializing the backend...
 
 Initializing provider plugins...
@@ -186,241 +198,260 @@ should now work.
 
 If you ever set or change modules or backend configuration for Terraform,
 rerun this command to reinitialize your working directory. If you forget, other
-commands will detect it and remind you to do so if necessary.
-$ 
+commands will detect it and remind you to do so if necessary. 
 ```
 
-At this point Terraform is ready for us to give it directions on what OCI resources we want it to manage.  Let's look at the plan that Terraform proposes:
+At this point, Terraform is ready for us to give it directions on what OCI resources we want it to manage.  In Terraform terms, this is called a *plan*.  
 
-```console
-$ terraform plan
-```
+### A closer look at Terraform's proposed plan
 
-The output will be something similar to the following:
+Let's look at the plan that Terraform proposes. The `terraform plan` command provides a preview of the actions that Terraform will take to configure resources according to our configuration file.
 
-```console
-$ terraform plan
+1. In a console, run:
 
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
-  + create
+   ```console
+   terraform plan
+   ```
 
-Terraform will perform the following actions:
+     Terraform echoes something similar to the following:
 
-  # oci_core_subnet.vlan1 will be created
-  + resource "oci_core_subnet" "vlan1" {
-      + availability_domain        = (known after apply)
-      + cidr_block                 = "192.168.1.0/24"
-      + compartment_id             = "ocid1.tenancy.oc1..<sanitized>"
-      + defined_tags               = (known after apply)
-      + dhcp_options_id            = (known after apply)
-      + display_name               = "vlan1"
-      + dns_label                  = "vlan1"
-      + freeform_tags              = (known after apply)
-      + id                         = (known after apply)
-      + ipv6cidr_block             = (known after apply)
-      + ipv6virtual_router_ip      = (known after apply)
-      + prohibit_internet_ingress  = (known after apply)
-      + prohibit_public_ip_on_vnic = true
-      + route_table_id             = (known after apply)
-      + security_list_ids          = (known after apply)
-      + state                      = (known after apply)
-      + subnet_domain_name         = (known after apply)
-      + time_created               = (known after apply)
-      + vcn_id                     = (known after apply)
-      + virtual_router_ip          = (known after apply)
-      + virtual_router_mac         = (known after apply)
-    }
+      ```console
+      Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+        + create
 
-  # oci_core_vcn.tf_101 will be created
-  + resource "oci_core_vcn" "tf_101" {
-      + cidr_block               = "192.168.1.0/24"
-      + cidr_blocks              = (known after apply)
-      + compartment_id           = "ocid1.tenancy.oc1..<sanitized>"
-      + default_dhcp_options_id  = (known after apply)
-      + default_route_table_id   = (known after apply)
-      + default_security_list_id = (known after apply)
-      + defined_tags             = (known after apply)
-      + display_name             = "tf-101"
-      + dns_label                = "tf101"
-      + freeform_tags            = (known after apply)
-      + id                       = (known after apply)
-      + ipv6cidr_blocks          = (known after apply)
-      + is_ipv6enabled           = (known after apply)
-      + state                    = (known after apply)
-      + time_created             = (known after apply)
-      + vcn_domain_name          = (known after apply)
-    }
+      Terraform will perform the following actions:
 
-Plan: 2 to add, 0 to change, 0 to destroy.
+        # oci_core_subnet.vlan1 will be created
+        + resource "oci_core_subnet" "vlan1" {
+            + availability_domain        = (known after apply)
+            + cidr_block                 = "192.168.1.0/24"
+            + compartment_id             = "ocid1.tenancy.oc1..<sanitized>"
+            + defined_tags               = (known after apply)
+            + dhcp_options_id            = (known after apply)
+            + display_name               = "vlan1"
+            + dns_label                  = "vlan1"
+            + freeform_tags              = (known after apply)
+            + id                         = (known after apply)
+            + ipv6cidr_block             = (known after apply)
+            + ipv6virtual_router_ip      = (known after apply)
+            + prohibit_internet_ingress  = (known after apply)
+            + prohibit_public_ip_on_vnic = true
+            + route_table_id             = (known after apply)
+            + security_list_ids          = (known after apply)
+            + state                      = (known after apply)
+            + subnet_domain_name         = (known after apply)
+            + time_created               = (known after apply)
+            + vcn_id                     = (known after apply)
+            + virtual_router_ip          = (known after apply)
+            + virtual_router_mac         = (known after apply)
+          }
 
-Changes to Outputs:
-  + vcn_state = (known after apply)
+        # oci_core_vcn.tf_101 will be created
+        + resource "oci_core_vcn" "tf_101" {
+            + cidr_block               = "192.168.1.0/24"
+            + cidr_blocks              = (known after apply)
+            + compartment_id           = "ocid1.tenancy.oc1..<sanitized>"
+            + default_dhcp_options_id  = (known after apply)
+            + default_route_table_id   = (known after apply)
+            + default_security_list_id = (known after apply)
+            + defined_tags             = (known after apply)
+            + display_name             = "tf-101"
+            + dns_label                = "tf101"
+            + freeform_tags            = (known after apply)
+            + id                       = (known after apply)
+            + ipv6cidr_blocks          = (known after apply)
+            + is_ipv6enabled           = (known after apply)
+            + state                    = (known after apply)
+            + time_created             = (known after apply)
+            + vcn_domain_name          = (known after apply)
+          }
 
-───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+      Plan: 2 to add, 0 to change, 0 to destroy.
 
-Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply"
-now.
-$ 
-```
+      Changes to Outputs:
+        + vcn_state = (known after apply)
 
-What we're able to see here is that Terraform is proposing to create two new resources: a VCN and a Subnet.  Both of these are expected and things appear to be in order, so we'll go ahead and apply it (tell Terraform to make the changes), by running:
+      ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-```console
-$ terraform apply
-```
+      Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply"
+      now.
+      ```
 
-We'll see something like what we saw for plan, but have a prompt asking if we'd like to continue:
+      This output tells us that Terraform is proposing the creation of two new resources: a VCN and a subnet.  Both of these are expected, and since everything else appears to be in order, we'll go ahead and tell Terraform to make the changes.
 
-```console
-<snip>
-Changes to Outputs:
-  + vcn_state = (known after apply)
+2. In a console, run:
 
-Do you want to perform these actions?
-  Terraform will perform the actions described above.
-  Only 'yes' will be accepted to approve.
+   ```console
+   terraform apply
+   ```
 
-  Enter a value: 
-```
+   We'll see something like what we saw for `terraform plan`, but this time there'll be a prompt asking if we'd like to continue:
 
-Once we accept the proposed changes, we'll see something like:
+   ```console
+   <snip>
+   Changes to Outputs:
+     + vcn_state = (known after apply)
 
-```console
-<snip>
-Do you want to perform these actions?
-  Terraform will perform the actions described above.
-  Only 'yes' will be accepted to approve.
+   Do you want to perform these actions?
+     Terraform will perform the actions described above.
+     Only 'yes' will be accepted to approve.
 
-  Enter a value: yes
+     Enter a value: 
+   ```
 
-oci_core_vcn.tf_101: Creating...
-oci_core_vcn.tf_101: Creation complete after 2s [id=ocid1.vcn.oc1.phx.<sanitized>]
-oci_core_subnet.vlan1: Creating...
-oci_core_subnet.vlan1: Creation complete after 2s [id=ocid1.subnet.oc1.phx.<sanitized>]
+3. Accept the proposed changes when prompted.  
+   Terraform will something similar to:
 
-Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+   ```console
+   <snip>
+   Do you want to perform these actions?
+     Terraform will perform the actions described above.
+     Only 'yes' will be accepted to approve.
 
-Outputs:
+     Enter a value: yes
 
-vcn_state = "AVAILABLE"
-$ 
-```
+   oci_core_vcn.tf_101: Creating...
+   oci_core_vcn.tf_101: Creation complete after 2s [id=ocid1.vcn.oc1.phx.<sanitized>]
+   oci_core_subnet.vlan1: Creating...
+   oci_core_subnet.vlan1: Creation complete after 2s [id=ocid1.subnet.oc1.phx.<sanitized>]
 
-Wow, that was easy!  One command to set up multiple resources... terrific!  
+   Apply complete! Resources: 2 added, 0 changed, 0 destroyed.
+
+   Outputs:
+
+   vcn_state = "AVAILABLE" 
+   ```
+
+   And that's it!  Just one command to set up multiple resources!  
 
 ## Cleaning Up
 
-Since we're at the end of this short session, we want to clean up after ourselves.  Let's go ahead and remove the VCN and Subnet.  This could be multiple clicks on the OCI Console, however since we're using Terraform, one command is all we need to run:
+Since we're at the end of this learning session, we need to clean up after ourselves and remove the test components we just created.  Let's go ahead and remove the VCN and subnet.  In the OCI Console, this would typically require multiple clicks. However, since we're using Terraform, one command is all we need.
 
-```console
-$ terraform destroy
-```
+1. In a console, run:
 
-You'll see something like the following:
+   ```console
+   terraform destroy
+   ```
 
-```console
-$ terraform destroy
-oci_core_vcn.tf_101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
-oci_core_subnet.vlan1: Refreshing state... [id=ocid1.subnet.oc1.phx.<sanitized>]
+   Terraform echoes something similar to the following:
 
-Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
-  - destroy
+   ```console
+   $ terraform destroy
+   oci_core_vcn.tf_101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
+   oci_core_subnet.vlan1: Refreshing state... [id=ocid1.subnet.oc1.phx.<sanitized>]
 
-Terraform will perform the following actions:
+   Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+     - destroy
 
-  # oci_core_subnet.vlan1 will be destroyed
-  - resource "oci_core_subnet" "vlan1" {
-      - cidr_block                 = "192.168.1.0/24" -> null
-      - compartment_id             = "ocid1.compartment.oc1..<sanitized>" -> null
-      - defined_tags               = {
-          - "Oracle-Tags.CreatedBy" = "<sanitized>"
-          - "Oracle-Tags.CreatedOn" = "2021-09-30T19:44:47.597Z"
-        } -> null
-      - dhcp_options_id            = "ocid1.dhcpoptions.oc1.phx.<sanitized>" -> null
-      - display_name               = "vlan1" -> null
-      - dns_label                  = "vlan1" -> null
-      - freeform_tags              = {} -> null
-      - id                         = "ocid1.subnet.oc1.phx.<sanitized>" -> null
-      - prohibit_internet_ingress  = true -> null
-      - prohibit_public_ip_on_vnic = true -> null
-      - route_table_id             = "ocid1.routetable.oc1.phx.<sanitized>" -> null
-      - security_list_ids          = [
-          - "ocid1.securitylist.oc1.phx.<sanitized>",
-        ] -> null
-      - state                      = "AVAILABLE" -> null
-      - subnet_domain_name         = "vlan1.tf101.oraclevcn.com" -> null
-      - time_created               = "2021-09-30 19:44:47.659 +0000 UTC" -> null
-      - vcn_id                     = "ocid1.vcn.oc1.phx.<sanitized>" -> null
-      - virtual_router_ip          = "192.168.1.1" -> null
-      - virtual_router_mac         = "00:00:17:28:74:9C" -> null
-    }
+   Terraform will perform the following actions:
 
-  # oci_core_vcn.tf_101 will be destroyed
-  - resource "oci_core_vcn" "tf_101" {
-      - cidr_block               = "192.168.1.0/24" -> null
-      - cidr_blocks              = [
-          - "192.168.1.0/24",
-        ] -> null
-      - compartment_id           = "ocid1.compartment.oc1..<sanitized>" -> null
-      - default_dhcp_options_id  = "ocid1.dhcpoptions.oc1.phx.<saanitized>" -> null
-      - default_route_table_id   = "ocid1.routetable.oc1.phx.<sanitized>" -> null
-      - default_security_list_id = "ocid1.securitylist.oc1.phx.<sanitized>" -> null
-      - defined_tags             = {
-          - "Oracle-Tags.CreatedBy" = "<sanitized>"
-          - "Oracle-Tags.CreatedOn" = "2021-09-30T19:44:46.481Z"
-        } -> null
-      - display_name             = "tf-101" -> null
-      - dns_label                = "tf101" -> null
-      - freeform_tags            = {} -> null
-      - id                       = "ocid1.vcn.oc1.phx.<sanitized>" -> null
-      - ipv6cidr_blocks          = [] -> null
-      - is_ipv6enabled           = false -> null
-      - state                    = "AVAILABLE" -> null
-      - time_created             = "2021-09-30 19:44:46.736 +0000 UTC" -> null
-      - vcn_domain_name          = "tf101.oraclevcn.com" -> null
-    }
+     # oci_core_subnet.vlan1 will be destroyed
+     - resource "oci_core_subnet" "vlan1" {
+         - cidr_block                 = "192.168.1.0/24" -> null
+         - compartment_id             = "ocid1.compartment.oc1..<sanitized>" -> null
+         - defined_tags               = {
+             - "Oracle-Tags.CreatedBy" = "<sanitized>"
+             - "Oracle-Tags.CreatedOn" = "2021-09-30T19:44:47.597Z"
+           } -> null
+         - dhcp_options_id            = "ocid1.dhcpoptions.oc1.phx.<sanitized>" -> null
+         - display_name               = "vlan1" -> null
+         - dns_label                  = "vlan1" -> null
+         - freeform_tags              = {} -> null
+         - id                         = "ocid1.subnet.oc1.phx.<sanitized>" -> null
+         - prohibit_internet_ingress  = true -> null
+         - prohibit_public_ip_on_vnic = true -> null
+         - route_table_id             = "ocid1.routetable.oc1.phx.<sanitized>" -> null
+         - security_list_ids          = [
+             - "ocid1.securitylist.oc1.phx.<sanitized>",
+           ] -> null
+         - state                      = "AVAILABLE" -> null
+         - subnet_domain_name         = "vlan1.tf101.oraclevcn.com" -> null
+         - time_created               = "2021-09-30 19:44:47.659 +0000 UTC" -> null
+         - vcn_id                     = "ocid1.vcn.oc1.phx.<sanitized>" -> null
+         - virtual_router_ip          = "192.168.1.1" -> null
+         - virtual_router_mac         = "00:00:17:28:74:9C" -> null
+       }
 
-Plan: 0 to add, 0 to change, 2 to destroy.
+     # oci_core_vcn.tf_101 will be destroyed
+     - resource "oci_core_vcn" "tf_101" {
+         - cidr_block               = "192.168.1.0/24" -> null
+         - cidr_blocks              = [
+             - "192.168.1.0/24",
+           ] -> null
+         - compartment_id           = "ocid1.compartment.oc1..<sanitized>" -> null
+         - default_dhcp_options_id  = "ocid1.dhcpoptions.oc1.phx.<saanitized>" -> null
+         - default_route_table_id   = "ocid1.routetable.oc1.phx.<sanitized>" -> null
+         - default_security_list_id = "ocid1.securitylist.oc1.phx.<sanitized>" -> null
+         - defined_tags             = {
+             - "Oracle-Tags.CreatedBy" = "<sanitized>"
+             - "Oracle-Tags.CreatedOn" = "2021-09-30T19:44:46.481Z"
+           } -> null
+         - display_name             = "tf-101" -> null
+         - dns_label                = "tf101" -> null
+         - freeform_tags            = {} -> null
+         - id                       = "ocid1.vcn.oc1.phx.<sanitized>" -> null
+         - ipv6cidr_blocks          = [] -> null
+         - is_ipv6enabled           = false -> null
+         - state                    = "AVAILABLE" -> null
+         - time_created             = "2021-09-30 19:44:46.736 +0000 UTC" -> null
+         - vcn_domain_name          = "tf101.oraclevcn.com" -> null
+       }
 
-Changes to Outputs:
-  - vcn_state = "AVAILABLE" -> null
+   Plan: 0 to add, 0 to change, 2 to destroy.
 
-Do you really want to destroy all resources?
-  Terraform will destroy all your managed infrastructure, as shown above.
-  There is no undo. Only 'yes' will be accepted to confirm.
+   Changes to Outputs:
+     - vcn_state = "AVAILABLE" -> null
 
-  Enter a value: 
-```
+   Do you really want to destroy all resources?
+     Terraform will destroy all your managed infrastructure, as shown above.
+     There is no undo. Only 'yes' will be accepted to confirm.
 
-After entering `yes` in the prompt, Terraform will destroy the resources for us:
+     Enter a value: 
+   ```
 
-```console
-<snip>
-Do you really want to destroy all resources?
-  Terraform will destroy all your managed infrastructure, as shown above.
-  There is no undo. Only 'yes' will be accepted to confirm.
+1. After entering `yes` at the prompt, Terraform will destroy the resources for us:
 
-  Enter a value: yes
+   ```console
+   <snip>
+   Do you really want to destroy all resources?
+     Terraform will destroy all your managed infrastructure, as shown above.
+     There is no undo. Only 'yes' will be accepted to confirm.
 
-oci_core_subnet.vlan1: Destroying... [id=ocid1.subnet.oc1.phx.<sanitized>]
-oci_core_subnet.vlan1: Destruction complete after 1s
-oci_core_vcn.tf_101: Destroying... [id=ocid1.vcn.oc1.phx.<sanitized>]
-oci_core_vcn.tf_101: Destruction complete after 1s
+     Enter a value: yes
 
-Destroy complete! Resources: 2 destroyed.
-$
-```
+   oci_core_subnet.vlan1: Destroying... [id=ocid1.subnet.oc1.phx.<sanitized>]
+   oci_core_subnet.vlan1: Destruction complete after 1s
+   oci_core_vcn.tf_101: Destroying... [id=ocid1.vcn.oc1.phx.<sanitized>]
+   oci_core_vcn.tf_101: Destruction complete after 1s
 
-## Summary
+   Destroy complete! Resources: 2 destroyed.
+   ```
 
-If this was your first time using Terraform, that was a *LOT* to take in!  It was worth it, as we got a lot done:
+> **Fun facts:**  
+>
+> * It took Terraform under 10 seconds to provision a VCN and subnet (try it yourself by running `time terraform apply -auto-approve`), *and*
+> * under 7 seconds to destroy (try it yourself by running `time terraform destroy -auto-approve`) those same resources.  
+>  
+> Try to beat that doing it by hand in the OCI Console! {:.notice}
 
-* Created five (5) Terraform code files that defined our inputs, outputs and resources we want Terraform to manage
-* Learned how to examine what Terraform proposes be done (`terraform plan`)
-* Let Terraform create a VCN and Subnet for us (very quickly)
-* Fun facts: It took Terraform under 10 seconds to provision a VCN and Subnet (try it yourself by running `time terraform apply -auto-approve`) and under 7 seconds to destroy (try it yourself by running `time terraform destroy -auto-approve`) those same resources.  Try to beat that doing it by hand in the OCI Console!
+## What's Next
+
+If this was your first time using Terraform, that was a *LOT* to take in! Let's review everything we covered in this session:
+
+* Created 5 Terraform code files that defined the inputs, outputs, and resources we wanted Terraform to manage
+* Learned how to review Terraform's resource configuration plans (`terraform plan`)
+* Let Terraform create a VCN and subnet for us (very quickly)
 * Organized our Terraform code into logical files (so it's easy to navigate the code)
 * Got a taste for how handy and easy it is to use the OCI Cloud Shell
 
-Hopefully this short tutorial gave you a glimpse into the basic flow around using Terraform and how powerful it can be.  This was a super simple example, but was a solid first start at using Terraform.  The [next lesson](3-understanding-terraform-basics.md) digs into some of the core concepts and components in a Terraform project.
+Hopefully, this short tutorial gave you a glimpse into the basic Terraform workflow and how powerful a tool it can be.  This was just a simple example, but it was a solid first start at using Terraform.  
+
+The next lesson, [*Understanding Terraform Basics*]((3-understanding-terraform-basics.md)), digs into some of the core concepts and components in a Terraform project.
+
+To explore more information about development with Oracle products:
+
+* [Oracle Developers Portal](https://developer.oracle.com/)
+* [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
+
 {% endslides %}
