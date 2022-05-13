@@ -26,42 +26,44 @@ redirect: https://developer.oracle.com/tutorials/tf-101/3-understanding-terrafor
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
-In our [first lesson](1-why-iac), we covered why you should care about IaC.  We also touched on just a few of the many tools in this space.  Finally, we've decided to narrow our focus down to Terraform.  The [last lesson](2-experiencing-terraform) took you through a really quick and simple scenario using Terraform.  It was short but powerful, and hopefully helped you understand a bit of why Terraform (and IaC) is so cool.  This lesson will take you through some of the basic concepts you should know to effectively work with Terraform.
+In our [first lesson](1-why-iac), we covered why you should care about Infrastructure as Code (IaC).  We also touched on just a few of the many tools in this space and finally, we've decided to narrow our focus down to Terraform.  
+The [last lesson](2-experiencing-terraform) took you through a really quick and simple scenario using Terraform, setting up a virtual cloud network (VCN) and a subnet.  It was short but powerful, and hopefully helped you understand a bit of why Terraform (and IaC) is such a great tool.  
+This lesson will dive a little deeper and take you through some of the basic concepts you'll need to effectively work with Terraform.
+
+Key tasks include how to:
+
+## Prerequisites
+
+To successfully complete this tutorial, you will need to have the following:
+
+* An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
+* A MacOS, Linux, or Windows computer with `ssh` support installed.
+* Terraform CLI
 
 ## Major Terraform Components
 
-In the IaC world, resources are defined using code.  Terraform follows a *declarative* language model, meaning that you tell it where you want to be after it executes and it figures out what's needed to get there. Terraform doesn't need to be told "do this, then do this, then finish with this", as is common with many procedural languages. You simply tell it where you want it to end and it'll map out the path.  Most of the time it's able to figure out the right steps.  Occasionally it'll need some help, but we'll talk a little about that in another tutorial.
+In the IaC world, resources are defined using code.  Terraform follows a *declarative* language model, meaning that you tell it where you want to be after it executes and it figures out what's needed to get there. Terraform doesn't need to be told "do this, then do this, then finish with this", as is common with many procedural languages. You simply tell it where you want it to end and it'll map out the path.  Most of the time it's able to figure out the right steps.  Occasionally it'll need some help, but we'll talk a little about that in a later tutorial in this series.
 
-Terraform has a couple of core components that you should know about:
+Terraform has several core components that you should become familiar with:
 
-* Terraform executable
-* Terraform provider(s)
+* [Terraform executable](#terraform-executable)
+* [Terraform provider(s)](#terraform-providers)
 * Terraform code
 * Terraform state
 
-## Terraform executable
+### Terraform executable
 
-The Terraform executable can be easily downloaded and installed on many different platforms.  Check out the [Terraform downloads page](https://www.terraform.io/downloads.html) for the Terraform CLI binaries for different platforms.
+The Terraform executable can be easily downloaded and installed on a variety of different platforms.  Check out the [Terraform's download page](https://www.terraform.io/downloads.html) to locate the Terraform CLI binaries for your system.
 
-If you're using Linux, it's possible that Terraform might exist in your favorite package manager (look at `yum install terraform` or `apt-get install terraform`). Oracle Linux makes it super simple to install Terraform (check out the [Oracle docs](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraforminstallation.htm) for more info).  Using Oracle Linux is super easy (just use Yum). If you're not using Oracle Linux, you'll likely need to configure your package manager (see [RHEL/Fedora Yum docs](https://www.terraform.io/docs/cli/install/yum.html) or [Debian/Ubuntu APT docs](https://www.terraform.io/docs/cli/install/apt.html)).
+#### Linux
+
+If you're using Linux, it's possible that Terraform might exist in your favorite package manager (look at `yum install terraform` or `apt-get install terraform`). Oracle Linux makes it simple and painless to [install Terraform](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraforminstallation.htm).  Using Oracle Linux is super easy (just use Yum). If you're not using Oracle Linux, you'll likely need to configure your package manager (see [RHEL/Fedora Yum docs](https://www.terraform.io/docs/cli/install/yum.html) or [Debian/Ubuntu APT docs](https://www.terraform.io/docs/cli/install/apt.html)).
+
+#### MacOS
 
 On MacOS, simply download the binary and place it somewhere in your path.  So long as `terraform -v` works from a terminal, you should be ready to go! You can also use [homebrew](https://brew.sh), which makes it as easy as `brew install terraform`.
 
-There are many different commands that Terraform accepts.  Here are some of the more common ones frequently used:
-
-`terraform init`
-: This must be run at least once for a Terraform project.  This is when Terraform downloads any needed providers, sets up the state (if it doesn't already exist), etc.
-
-`terraform plan`
-: Prompts Terraform to do a dry run, to determine what it would do if it was to apply.  No changes are made.  It simply tells you what it thinks should be done.  It's a good idea to always run `terraform plan` and review the output (before applying), to make sure that you fully understand what Terraform is saying must be done.
-
-`terraform apply`
-: Changes are made with this command.  It'll by default show you the same output as `terraform plan`, asking you if you'd like to continue.  There are ways to short-circuit this and always apply, but when running Terraform by hand, it's a good idea to always review what things it plans to do (before it does them).
-
-`terraform console`
-: Gives you an interactive console where you can enter different Terraform commands. Particularly useful for building and testing logic in Terraform code.
-
-## Terraform provider(s)
+### Terraform provider(s)
 
 Providers allow Terraform to interact with different platforms.  This is what bridges the gap between the Terraform code and a given platform (such as OCI).  One or more providers can be used at any time.  The OCI provider translates the Terraform code to how Terraform needs to interact with the OCI API, for instance.  Many clouds have Terraform providers, allowing you to define resources that are specific to a cloud using a standard format, tool and language.
 
@@ -117,17 +119,33 @@ It's highly recommended to at least skim the [Terraform configuration language d
 
 In the code, you'll likely define a combination of variables (user provided input), locals (local variables), outputs (values shown as output after running Terraform), providers, and resources.  Most all of the other code elements are engineered to support the management of resources.  This is really what gets changed in OCI (or another environment, depending on the providers you're using and the resources you're managing) when Terraform is run.  Whether declaring a single resource or iteratively creating many resources via a loop construct, resources are typically what we're trying to manage with Terraform.
 
+## Terraform commands
+
+There are many different commands that Terraform accepts.  Here are some of the more common ones frequently used:
+
+`terraform init`
+: This must be run at least once for a Terraform project.  This is when Terraform downloads any needed providers, sets up the state (if it doesn't already exist), etc.
+
+`terraform plan`
+: Prompts Terraform to do a dry run, to determine what it would do if it was to apply.  No changes are made.  It simply tells you what it thinks should be done.  It's a good idea to always run `terraform plan` and review the output (before applying), to make sure that you fully understand what Terraform is saying must be done.
+
+`terraform apply`
+: Changes are made with this command.  It'll by default show you the same output as `terraform plan`, asking you if you'd like to continue.  There are ways to short-circuit this and always apply, but when running Terraform by hand, it's a good idea to always review what things it plans to do (before it does them).
+
+`terraform console`
+: Gives you an interactive console where you can enter different Terraform commands. Particularly useful for building and testing logic in Terraform code.
+
 ## A Terraform Project
 
 A typical Terraform project can be broken into familiar constructs typical to many applications:
 
-  * Inputs
-  * Outputs
-  * Logic
+* Inputs
+* Outputs
+* Logic
 
 ### Inputs
 
-Terraform receives input via the usage of variables.  Variables may be set via command-line parameters, static files or environment variables.  There are a lot of facets to mastering the usage of variables, so we'll cover these in greater detail in [another lesson](4-variables).  For now, know that each variable must be given a name (defined with a variable block) and value (set to a value), like the following simple example:
+Terraform receives input through variables.  Variables may be set via command-line parameters, static files, or environment variables.  There are a lot of facets to mastering the usage of variables, so we'll cover these in greater detail in [separate lesson](4-variables).  For now, know that each variable must be given a unique name and value, like in the following example:
 
 ```terraform
 variable "region" {}
