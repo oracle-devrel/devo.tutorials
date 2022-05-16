@@ -54,7 +54,7 @@ To successfully complete this tutorial, you will need to have the following:
 
 ## Major Terraform Components
 
-In the IaC world, resources are defined using code.  Terraform follows a *declarative* language model, meaning that you tell it where you want to be after it executes and it figures out what's needed to get there. Terraform doesn't need to be told "do this, then that, then finish with this", as is common with many procedural languages. You simply tell it where you want it to end up and it'll map out the path to get there.  Most of the time, Terraform is able to figure out the right steps on its own.  Occasionally, it'll need some help, but we'll talk a little more about that in a later tutorial in this series.
+In the IaC world, resources are defined using code.  Terraform follows a *declarative* language model, meaning that you tell it where you want to be after it executes and it figures out what's needed to get there. Terraform doesn't need to be told "do this, then that, then finish with this," as is common with many procedural languages. You simply tell it where you want it to end up and it'll map out the path to get there.  Most of the time, Terraform is able to figure out the right steps on its own.  Occasionally, it'll need some help, but we'll talk a little more about that in a later tutorial in this series.
 
 Terraform has several core components that you should become familiar with:
 
@@ -65,7 +65,7 @@ Terraform has several core components that you should become familiar with:
 
 ### Terraform executable
 
-The Terraform executable can be easily downloaded and installed on a variety of different platforms.  Check out the [Terraform's download page](https://www.terraform.io/downloads.html) to locate the Terraform CLI binaries for your system.
+The Terraform executable can be easily downloaded and installed on a variety of different platforms.  Check out [Terraform's download page](https://www.terraform.io/downloads.html) to locate the Terraform CLI binaries for your system.
 
 #### Linux
 
@@ -77,7 +77,7 @@ However, if you're not using Oracle Linux, you'll likely need to configure your 
 
 In MacOS, simply download the binary and place it somewhere in your path.  To verify that your system can locate the executable and confirm that Terraform is up and running, just run `terraform -v` in a terminal window. If it echoes the current Terraform version number, you should be good to go!  
 
-If you like, you can also use [homebrew](https://brew.sh) to get things going with Terraform. All you need to do is run `brew install terraform` in a terminal window.
+If you like, you can also use [Homebrew](https://brew.sh) to get things going with Terraform. All you need to do is run `brew install terraform` in a terminal window.
 
 ### Terraform providers
 
@@ -152,7 +152,7 @@ Terraform has a broad set of capabilities, and as you might imagine, there are m
 
 `terraform plan`
 : Prompts Terraform to do a dry run, non-destructively determining what it would do if it was to apply the configuration settings.  Terraform simply tells you what it thinks *should* be done and lets you review the outcomes without any changes being made.  
-It's always a good idea for you to run `terraform plan` and review the output before applying. This way you can make sure that you fully understand what Terraform is intending to do.
+It's always a good idea to run `terraform plan` and review the output before applying. This way you can make sure that you fully understand what Terraform is intending to do.
 
 `terraform apply`
 : **Changes are made with this command.**  By default, it will show you the same output as `terraform plan`, but will additionally prompt you to enact the proposed changes.  
@@ -189,7 +189,7 @@ To dig in deeper, check out the excellent [Terraform variables documentation](ht
 
 There are times when Terraform needs to direct data about the environment back to the display. For example, when a compute instance is deployed, a private IP address may be specified.  If it's not specified, OCI will pick an IP address for us from the subnet the instance is being deployed in.  Wouldn't it be nice to be able to see this private IP address? Outputs provide a way to make that information visible to you. Many different attributes are exported by Terraform resources, allowing you to easily examine them through the use of outputs.
 
-To Terraform, outputs are technically referred to as "output variables."  The current values of these variables are included at the end of the output for the `terraform apply` command. Note that these values are not displayed when you run `terraform plan`.  
+In Terraform, outputs are technically referred to as "output variables."  The current values of these variables are included at the end of the output for the `terraform apply` command. Note that these values are not displayed when you run `terraform plan`.  
 
 Let's take a look at an example of an output:
 
@@ -202,7 +202,7 @@ output "vcn_state" {
 
 #### Outputs definition file
 
-While outputs can be defined in any Terraform code file, it’s best that you get into the practice of separating Terraform code into logical files so the code base is easier to navigate.  For this purpose, it's recommended that you use the `outputs.tf` file for these definitions.
+While outputs can be defined in any Terraform code file, it’s best to get into the practice of separating Terraform code into logical files so the code base is easier to navigate.  For this purpose, it's recommended that you use the `outputs.tf` file for these definitions.
 
 #### Terraform functions as output definitions
 
@@ -232,7 +232,7 @@ When interacting with an environment, there are three main components Terraform 
 2. Environment being managed
 3. Terraform state
 
-The first two components (code and environment) are topics you should already be familiar with by now. What's left to cover is how Terraform use these resources to develop an accurate picture of available resources.
+The first two components (code and environment) are topics you should already be familiar with. What's left to cover is how Terraform use these resources to develop an accurate picture of available resources.
 
 Terraform uses a lot of intelligence to map out relationships between managed resources.  Many applications rely on a local database to store information needed by the application.  Terraform's no different, and is very transparent in how it manages its application content, by default storing what's needed in a local JSON file.
 
