@@ -54,7 +54,7 @@ To successfully complete this tutorial, you will need to have the following:
 
 ## Major Terraform Components
 
-In the IaC world, resources are defined using code.  Terraform follows a *declarative* language model, meaning that you tell it where you want to be after it executes and it figures out what's needed to get there. Terraform doesn't need to be told "do this, then that, then finish with this", as is common with many procedural languages. You simply tell it where you want it to end and it'll map out the path.  Most of the time, Terraform is able to figure out the right steps on its own.  Occasionally, it'll need some help, but we'll talk a little more about that in a later tutorial in this series.
+In the IaC world, resources are defined using code.  Terraform follows a *declarative* language model, meaning that you tell it where you want to be after it executes and it figures out what's needed to get there. Terraform doesn't need to be told "do this, then that, then finish with this", as is common with many procedural languages. You simply tell it where you want it to end up and it'll map out the path to get there.  Most of the time, Terraform is able to figure out the right steps on its own.  Occasionally, it'll need some help, but we'll talk a little more about that in a later tutorial in this series.
 
 Terraform has several core components that you should become familiar with:
 
@@ -75,7 +75,7 @@ However, if you're not using Oracle Linux, you'll likely need to configure your 
 
 #### MacOS
 
-On MacOS, simply download the binary and place it somewhere in your path.  To verify that your system can locate the executable and confirm that Terraform is up and running, just run `terraform -v` in a terminal window. If it echoes the current Terraform version number, you should be good to go!  
+In MacOS, simply download the binary and place it somewhere in your path.  To verify that your system can locate the executable and confirm that Terraform is up and running, just run `terraform -v` in a terminal window. If it echoes the current Terraform version number, you should be good to go!  
 
 If you like, you can also use [homebrew](https://brew.sh) to get things going with Terraform. All you need to do is run `brew install terraform` in a terminal window.
 
@@ -222,25 +222,43 @@ With this added functionality, accessing outputs can be particularly useful when
 
 Another aspect of Terraform's versatility is its ability to provide a wealth of functions to embed logic and perform complex computations.  Need to iterate through a list or map?  You're covered!  How about concatenating strings (or string manipulations in general)?  Got it.  If-then-else logic?  Yep, it's in there.  Need to do some CIDR calculations?  There are functions for that too.  
 
-If you'd like to learn more, take a look at these resources on [Terraform functions](https://www.terraform.io/docs/language/functions/index.html), [Terraform conditional expressions](https://www.terraform.io/docs/language/expressions/conditionals.html), and the [Terraform `for` expressions](https://www.terraform.io/docs/language/expressions/for.html) for more information.  It's well worth checking out, even if you're just gaining some basic familiarity with what's available and possible.
+If you'd like to learn more, take a look at these resources on [Terraform functions](https://www.terraform.io/docs/language/functions/index.html), [Terraform conditional expressions](https://www.terraform.io/docs/language/expressions/conditionals.html), and the [Terraform `for` expressions](https://www.terraform.io/docs/language/expressions/for.html). It's well worth checking out, even if you're just trying to get some familiarity with what's available and possible.
 
 ## Terraform State
 
 When interacting with an environment, there are three main components Terraform needs (in addition to the Terraform binary):
 
 1. Terraform code
-2. Terraform state
-3. Environment being managed
+2. Environment being managed
+3. Terraform state
 
-Terraform uses a lot of intelligence to map out relationships between managed resources.  Many applications rely on a local database to store information needed by the application.  Terraform's no different, and is very transparent in how it manages its application content, storing what's needed in a local JSON file (by default).
+The first two components (code and environment) are topics you should already be familiar with by now. What's left to cover is how Terraform use these resources to develop an accurate picture of available resources.
 
-The state is where Terraform caches a copy of what it knows about the environment.  Details about the managed resources are stored here, in verbose form.  Inputs (variable values) are also cached here.  State files should be carefully guarded as it's possible to have secrets or other sensitive data stored in them.  Even though a variable might be marked as sensitive, Terraform can store the contents in the state file.  Although it might not show via `terraform apply`, it might be there "in the open" in the state file.
+Terraform uses a lot of intelligence to map out relationships between managed resources.  Many applications rely on a local database to store information needed by the application.  Terraform's no different, and is very transparent in how it manages its application content, by default storing what's needed in a local JSON file.
 
-When Terraform runs, it will update the state (with what actually exists in the environment being managed) and compare the state against the code.  Any deltas (variances between the code and state) will be marked as requiring a remediation (change that must be made to bring the current resource state to where the code is asking for it).
+The *state* is where Terraform caches a copy of what it knows about the environment.  Details about the managed resources are stored there in verbose form, along with Inputs (variable values).  
 
-It's important to always use the latest copy of the state, as `terraform apply` might update the state file.  This is particularly important when sharing the management responsibilities for a single environment among multiple people.  Each environment has a *single* state file.  If the state file becomes corrupted or out-of-sync, Terraform can do weird and unexpected things.  It's really not good --- carefully guard your state file!
+> **NOTE:** State files should be carefully guarded as it's possible to have secrets or other sensitive data stored in them.  Even though a variable might be marked as sensitive, Terraform can still store its contents in the state file.  Although it might not show via `terraform apply`, it might be right there in plain text in the state file. {:.warn}
 
-The state is stored locally within the project directory by default (`terraform.tfstate`).  Backends may be defined which would tell Terraform to store the state in a different location.  Many different kinds of backends are supported - check out the [backend documentation](https://www.terraform.io/docs/language/settings/backends/index.html) for more information.  For this tutorial, we'll be sticking with keeping the state local.  For production deployments, many customers will find the use of [OCI Resource Manager](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/home.htm) of benefit, as it maintains the Terraform state file for each stack automatically.  Others might leverage OCI Object Storage as a backend, while some might prefer using git.
+### Updates and Deltas
+
+When Terraform runs, it will update the state with what actually exists in the managed environment and compare that state against the code.  Any deltas (variances between the code and state) will be marked as requiring a remediation (changes that must be made to bring the current resource state in line with the code is asking for it).
+
+### Keeping the Terraform state in sync
+
+It's important to always use the latest copy of the state, as `terraform apply` might update the state file.  This is particularly important when sharing the management responsibilities for a single environment among multiple people.  Each environment has a *single* state file.  If the state file becomes corrupted or out of sync, Terraform can do weird and unexpected things.  So, carefully guard your state file!
+
+### Where the Terraform state lives
+
+By default, the state (`terraform.tfstate`) is stored locally within the project directory.  But, keep in mind that there are cases where backends may be defined in such a way that Terraform is required to store the state in a different location.  
+
+For the remaining parts of the tutorial, though, we'll stick to keeping the state local.  
+
+### Backends - common use scenarios
+
+For production deployments, many Terraform users find the [OCI Resource Manager](https://docs.oracle.com/en-us/iaas/Content/ResourceManager/home.htm) beneficial, as it maintains the Terraform state file for each stack automatically.  However, you might find that [OCI Object Storage](https://www.oracle.com/cloud/storage/object-storage/) works better for you as a backend. Or, you might prefer using git. Whichever way you prefer, Terraform has you covered.
+
+Terraform supports many different kinds of backends are supported. For a full list, check out the [backend documentation](https://www.terraform.io/docs/language/settings/backends/index.html) for more information.  
 
 ## What's next
 
