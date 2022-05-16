@@ -21,11 +21,11 @@ redirect: https://developer.oracle.com/tutorials/tf-101/
 
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
-Difficulty: Beginner
+**Difficulty:** Beginner
 
-Heard about infrastructure-as-code (IaC) but am not sure why you should care?  Tired of pointing-and-clicking to manage your OCI infrastructure?  Tired of being left out of the Terraform talk at the water cooler?
+Heard about infrastructure-as-code (IaC) but am not sure why you should care?  Tired of pointing-and-clicking to manage your OCI infrastructure?  This set of tutorials is for you!  
 
-This set of tutorials is for you!  Here's what we'll cover:
+Here's what we'll cover:
 
 1. [Why Infrastructure as Code?](1-why-iac)
 2. [Experiencing Terraform](2-experiencing-terraform)
