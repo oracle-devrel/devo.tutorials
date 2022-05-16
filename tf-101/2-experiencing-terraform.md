@@ -213,71 +213,71 @@ Let's look at the plan that Terraform proposes. The `terraform plan` command pro
    terraform plan
    ```
 
-     Terraform echoes something similar to the following:
+   Terraform echoes something similar to the following:
 
-      ```console
-      Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
-        + create
+   ```console
+   Terraform used the selected providers to generate the following execution plan. Resource actions are indicated with the following symbols:
+     + create
 
-      Terraform will perform the following actions:
+   Terraform will perform the following actions:
 
-        # oci_core_subnet.vlan1 will be created
-        + resource "oci_core_subnet" "vlan1" {
-            + availability_domain        = (known after apply)
-            + cidr_block                 = "192.168.1.0/24"
-            + compartment_id             = "ocid1.tenancy.oc1..<sanitized>"
-            + defined_tags               = (known after apply)
-            + dhcp_options_id            = (known after apply)
-            + display_name               = "vlan1"
-            + dns_label                  = "vlan1"
-            + freeform_tags              = (known after apply)
-            + id                         = (known after apply)
-            + ipv6cidr_block             = (known after apply)
-            + ipv6virtual_router_ip      = (known after apply)
-            + prohibit_internet_ingress  = (known after apply)
-            + prohibit_public_ip_on_vnic = true
-            + route_table_id             = (known after apply)
-            + security_list_ids          = (known after apply)
-            + state                      = (known after apply)
-            + subnet_domain_name         = (known after apply)
-            + time_created               = (known after apply)
-            + vcn_id                     = (known after apply)
-            + virtual_router_ip          = (known after apply)
-            + virtual_router_mac         = (known after apply)
-          }
+     # oci_core_subnet.vlan1 will be created
+     + resource "oci_core_subnet" "vlan1" {
+         + availability_domain        = (known after apply)
+         + cidr_block                 = "192.168.1.0/24"
+         + compartment_id             = "ocid1.tenancy.oc1..<sanitized>"
+         + defined_tags               = (known after apply)
+         + dhcp_options_id            = (known after apply)
+         + display_name               = "vlan1"
+         + dns_label                  = "vlan1"
+         + freeform_tags              = (known after apply)
+         + id                         = (known after apply)
+         + ipv6cidr_block             = (known after apply)
+         + ipv6virtual_router_ip      = (known after apply)
+         + prohibit_internet_ingress  = (known after apply)
+         + prohibit_public_ip_on_vnic = true
+         + route_table_id             = (known after apply)
+         + security_list_ids          = (known after apply)
+         + state                      = (known after apply)
+         + subnet_domain_name         = (known after apply)
+         + time_created               = (known after apply)
+         + vcn_id                     = (known after apply)
+         + virtual_router_ip          = (known after apply)
+         + virtual_router_mac         = (known after apply)
+       }
 
-        # oci_core_vcn.tf_101 will be created
-        + resource "oci_core_vcn" "tf_101" {
-            + cidr_block               = "192.168.1.0/24"
-            + cidr_blocks              = (known after apply)
-            + compartment_id           = "ocid1.tenancy.oc1..<sanitized>"
-            + default_dhcp_options_id  = (known after apply)
-            + default_route_table_id   = (known after apply)
-            + default_security_list_id = (known after apply)
-            + defined_tags             = (known after apply)
-            + display_name             = "tf-101"
-            + dns_label                = "tf101"
-            + freeform_tags            = (known after apply)
-            + id                       = (known after apply)
-            + ipv6cidr_blocks          = (known after apply)
-            + is_ipv6enabled           = (known after apply)
-            + state                    = (known after apply)
-            + time_created             = (known after apply)
-            + vcn_domain_name          = (known after apply)
-          }
+     # oci_core_vcn.tf_101 will be created
+     + resource "oci_core_vcn" "tf_101" {
+         + cidr_block               = "192.168.1.0/24"
+         + cidr_blocks              = (known after apply)
+         + compartment_id           = "ocid1.tenancy.oc1..<sanitized>"
+         + default_dhcp_options_id  = (known after apply)
+         + default_route_table_id   = (known after apply)
+         + default_security_list_id = (known after apply)
+         + defined_tags             = (known after apply)
+         + display_name             = "tf-101"
+         + dns_label                = "tf101"
+         + freeform_tags            = (known after apply)
+         + id                       = (known after apply)
+         + ipv6cidr_blocks          = (known after apply)
+         + is_ipv6enabled           = (known after apply)
+         + state                    = (known after apply)
+         + time_created             = (known after apply)
+         + vcn_domain_name          = (known after apply)
+       }
 
-      Plan: 2 to add, 0 to change, 0 to destroy.
+   Plan: 2 to add, 0 to change, 0 to destroy.
 
-      Changes to Outputs:
-        + vcn_state = (known after apply)
+   Changes to Outputs:
+     + vcn_state = (known after apply)
 
-      ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   ───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
 
-      Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply"
-      now.
-      ```
+   Note: You didn't use the -out option to save this plan, so Terraform can't guarantee to take exactly these actions if you run "terraform apply"
+   now.
+   ```
 
-      This output tells us that Terraform is proposing the creation of two new resources: a VCN and a subnet.  Both of these are expected, and since everything else appears to be in order, we'll go ahead and tell Terraform to make the changes.
+   This output tells us that Terraform is proposing the creation of two new resources: a VCN and a subnet.  Both of these are expected, and since everything else appears to be in order, we'll go ahead and tell Terraform to make the changes.
 
 2. In a console, run:
 
@@ -433,7 +433,8 @@ Since we're at the end of this learning session, we need to clean up after ourse
 > * It took Terraform under 10 seconds to provision a VCN and subnet (try it yourself by running `time terraform apply -auto-approve`), *and*
 > * under 7 seconds to destroy (try it yourself by running `time terraform destroy -auto-approve`) those same resources.  
 >  
-> Try to beat that doing it by hand in the OCI Console! {:.notice}
+> Try to beat that doing it by hand in the OCI Console!  
+> {:.notice}
 
 ## What's Next
 
