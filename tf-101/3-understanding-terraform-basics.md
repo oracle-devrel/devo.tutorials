@@ -29,6 +29,7 @@ redirect: https://developer.oracle.com/tutorials/tf-101/3-understanding-terrafor
 In our [first lesson](1-why-iac), we covered why you should care about Infrastructure as Code (IaC).  We also touched on a few of the many tools in this space, and finally, we decided to narrow our focus down to Terraform.  
 
 The [last lesson](2-experiencing-terraform) took you through a really quick and simple scenario using Terraform, setting up a virtual cloud network (VCN) and a subnet.  It was short but powerful, and hopefully helped you understand a bit of why Terraform (and IaC) is such a great tool.  
+
 This lesson will dive a little deeper and take you through some of the basic concepts you'll need to effectively work with Terraform.
 
 Key topics covered in this tutorial:
