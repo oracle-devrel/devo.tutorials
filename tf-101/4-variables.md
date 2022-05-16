@@ -34,9 +34,9 @@ Variables provide a way to easily decouple a value and its reference from your T
 
 Here are some common use-cases for parameterizing code:
 
-*	Multiple deployments of the same topology—this could be for deploying separate development, staging and production environments that share identical topologies (but have unique names, compartments, CIDR blocks, etc.).
-*	Passing secret/sensitive data in via variables—rather than hard-coding credentials, keys and other sensitive data in the Terraform code, this can be passed via variables.
-*	Writing extensible modules in Terraform—particularly where variables are used as inputs to the module, determining its behavior or setting resource attributes.
+*	Multiple deployments of the same topology -- this could be for deploying separate development, staging and production environments that share identical topologies (but have unique names, compartments, CIDR blocks, etc.).
+*	Passing secret/sensitive data in via variables -- rather than hard-coding credentials, keys and other sensitive data in the Terraform code, this can be passed via variables.
+*	Writing extensible modules in Terraform -- particularly where variables are used as inputs to the module, determining its behavior or setting resource attributes.
 
 > **Warning:** NEVER commit secrets, credentials, keys or any other sensitive data to a git repo!
 {:.alert}

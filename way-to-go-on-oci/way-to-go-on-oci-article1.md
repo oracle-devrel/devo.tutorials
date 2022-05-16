@@ -1,9 +1,9 @@
 ---
-title: The Way to Go on OCI - Part 1 - How to get Going on OCI Compute 
+title: How to get Going on Oracle Cloud Compute 
 published: false
 parent:
-- tutorials
 - way-to-go-on-oci
+- tutorials
 tags:
 - open-source
 - devops
