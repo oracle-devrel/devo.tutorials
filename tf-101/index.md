@@ -23,7 +23,9 @@ redirect: https://developer.oracle.com/tutorials/tf-101/
 
 **Difficulty:** Beginner
 
-Heard about infrastructure-as-code (IaC) but am not sure why you should care?  Tired of pointing-and-clicking to manage your OCI infrastructure?  This set of tutorials is for you!  
+Heard about Infrastructure as Code (IaC) but not sure if it's for you?  Tired of pointing-and-clicking to manage your OCI infrastructure or just looking to reacquaint yourself?  
+
+This set of tutorials is for you!  
 
 Here's what we'll cover:
 
