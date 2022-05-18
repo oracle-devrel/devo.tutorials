@@ -24,18 +24,16 @@ author: ali-mukadam
 
 [Grafana]: https://blogs.oracle.com/oracle-systems/post/oracle-pca-x9-2-monitoring-and-alerting-with-grafana
 
-You may have been following Oracle's open-source development of Verrazzano and were curious to know what it was about. Technically speaking, [Verrazzano](https://verrazzano.io/) is an "end-to-end container platform to deploy cloud native and traditional applications in multi-cloud and hybrid environments." If that’s a lot to take in, it’s because Verrazzano, (v8o for short) packs in a lot! But in essence, Verrazzano is a bridge between on-premises and the cloud, enabling you to deploy your container applications to any of the Kubernetes clusters where Verrazzano is installed.
+You may have been following Oracle's open-source development of Verrazzano and were curious to know what it was about. Technically speaking, [Verrazzano](https://verrazzano.io/) is an "end-to-end container platform to deploy cloud native and traditional applications in multi-cloud and hybrid environments." If that’s a lot to take in, it’s because Verrazzano, (v8o for short) packs a lot in! But in essence, Verrazzano is a bridge between on-premises and the cloud, enabling you to deploy your container applications to any of the Kubernetes clusters where Verrazzano is installed.
 
-In this first part of the series, we'll cover the single-cluster deployment of Verrazzano on the [Oracle Container Engine](https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top) (OKE).  
+In this first part of the series, we'll first cover the single-cluster deployment of Verrazzano on the [Oracle Container Engine](https://docs.oracle.com/en-us/iaas/Content/ContEng/home.htm#top) (OKE) and then learn how to deploy an example application and monitor its activity.
 
 Topics include learning how to:
 
 - Create a Kubernetes cluster
 - Install the Verrazzano platform operator
-- Install Verrazzano
-- Access Verrazano
-
-After this, you'll be able to deploy your application of choice.
+- Install and access Verrazzano
+- Deploy, access, and monitor an example application
 
 For additional information, see:
 
@@ -50,11 +48,11 @@ To successfully complete this tutorial, you will need to have the following:
 - An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }})
 - A MacOS, Linux, or Windows computer with `ssh` support installed
 - Git
-- [Terraform 1.0.0] or newer
+- [Terraform 1.0.0] or later
 
 ## Creating the OKE cluster
 
-Time to dig in! Let's start by creating the OKE cluster by using the [Terraform OKE module](https://github.com/oracle-terraform-modules/terraform-oci-oke). Fortunately, since we're only taking Verrazzano for a spin, we just need the bare minimum of features.  
+Time to dig in! Let's start by creating the OKE cluster using the [Terraform OKE module](https://github.com/oracle-terraform-modules/terraform-oci-oke). Fortunately, since we're only taking Verrazzano for a spin, we just need the bare minimum of features.  
 
 For this, we've prepared a [quickstart](https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/main/docs/quickstart.adoc) guide to get you going.
 
@@ -64,7 +62,7 @@ For this, we've prepared a [quickstart](https://github.com/oracle-terraform-modu
    - a copy of the file, `terraform.tfvars.example`
       > **NOTE:** Be sure that you rename the copy to `terraform.tfvars`. {:.alert}  
 
-1. Before moving ahead, confirm that the following features/resources are enabled/created:  
+2. Before moving ahead, confirm that the following features/resources are enabled/created:  
 
    ```terraform
    create_bastion_host = true
@@ -76,9 +74,9 @@ For this, we've prepared a [quickstart](https://github.com/oracle-terraform-modu
    }
    ```
 
-1. Now that we have the environment just as we need it, continue with the rest of the quickstart to run `terraform init` and `tarraform apply`.
+3. Now that we have the environment just as we need it, continue with the rest of the quickstart to run `terraform init` and `tarraform apply`.
 
-1. Once the cluster is created, we can use the output to conveniently copy the command that tells us how to ssh to the operator host:
+4. Once the cluster is created, we can use the output to conveniently copy the command that tells us how to ssh to the operator host:
 
    ```console
    ssh_to_operator = "ssh -i ~/.ssh/id_rsa -J opc@xyz.xyz.xyz.xyz opc@10.0.0.12"
@@ -151,7 +149,7 @@ We've successfully installed Verrazzano, so how do we access it? We'll first nee
 
    This command will return a list of URLs. For example, a Verrazzano console URL may look similar to: `https://verrazzano.default.168.138.102.88.nip.io`.
 
-2. Once you have the console URL, copy it into your browser. At this point, you'll be prompted to login:
+2. Once you have the console URL, copy it into your browser. At this point, you'll be prompted to log in:
 
    {% imgx aligncenter assets/verrazzano-login.png 1024 557 Verrazzano Login Screen %}
 
@@ -263,9 +261,9 @@ From here, you can create your own visualizations and dashboards.
 
 ### Checking in on the Kubernetes cluster with Rancher
 
-What if we want to peek at the Kubernetes cluster itself? Again, Verrazzano has your back.  
+What if we want a peek at the Kubernetes cluster itself? Again, Verrazzano has your back.  
 
-1. From the Verrazzano console, locate the link to Rancher and select it.  
+1. From the Verrazzano console, locate the link to **Rancher** and select it.  
 
    **username:**
    : The default username is: `admin`
@@ -286,9 +284,9 @@ What if we want to peek at the Kubernetes cluster itself? Again, Verrazzano has 
 
 ## What's next
 
-Verrazzano packs in a nice set of capabilities that helps you with the operational side of Kubernetes. From monitoring to logging and security, there is a lot productivity that a Kubernetes or an application administrator can gain.
+Verrazzano packs in a nice set of capabilities that helps you with the operational side of Kubernetes. From monitoring to logging and security, there's a lot productivity that a Kubernetes or an application administrator can gain.
 
-Hopefully, you've found this article helpful. In the [next part](2-deploy-multi-cluster-verrazzano-oke.md) of this series, we'll begin exploring other features of Verrazzano, including multi-cluster deployment and network security.
+Hopefully, you've found this article helpful and piqued your interest in what Verrazzano has to offer. In the [next part](2-deploy-multi-cluster-verrazzano-oke.md) of this series, we'll begin exploring other features of Verrazzano, including multi-cluster deployment and network security.
 
 For more information about development with Oracle products:
 
