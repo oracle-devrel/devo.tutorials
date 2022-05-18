@@ -24,18 +24,30 @@ redirect: https://developer.oracle.com/tutorials/multi-cluster-verrazzano-oke/2-
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
+In the [previous article](1-deploying-verrazzano-on-oke), we were introduced to Verrazzano and took it for a quick spin on an Oracle Container Engine for Kubernetes (OKE). As promised, in this article, we're going to deploy a multi-cluster Verrazzano on OKE. And just to make things a little more interesting, we'll also do that using different OCI regions.
 
-In a [previous article](1-deploying-verrazzano-on-oke), we took a brief look at Verrazzano and took it for a quick spin on Oracle Container Engine for Kubernetes (OKE). In this article, we are going to deploy a multi-cluster Verrazzano on OKE. To make things interesting, we will also do that using different OCI regions.
+But first, we'll make a small digression into WebLogic and Kubernetes to set the stage for how we'll be handling this in each of the next two tutorials.
 
-First, a little digression into WebLogic and Kubernetes and then we'll discuss Verrazzano.
+Key topics covered in this tutorial:
 
-## From WebLogic to Kubernetes to Verrazzano
+* An introduction to WebLogic and Kubernetes
+* A discussion about infrastructure
+* Creating Verrazzano clusters
+
+For additional information, see:
+
+* [Signing Up for Oracle Cloud Infrastructure](https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm)
+* [Getting started with Terraform](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformgettingstarted.htm)
+
+## Getting started
+
+### From WebLogic to Kubernetes to Verrazzano
 
 A few years ago, when I had to explain Kubernetes to folks internally, especially those with a WebLogic background, I made some (grossly simplified) analogies with WebLogic:
 
 {% imgx aligncenter assets/SumRnmK8ZrOCVzWwaAETC3Q.png 1200 401 "WebLogic and Kubernetes analogy" "WebLogic and Kubernetes analogy" %}
 
-Explaining Kubernetes using familiar concepts greatly helped with understanding. In a WebLogic cluster, the Admin server handles the administration, deployment and other less silky but nevertheless important tasks, whereas the managed servers were meant for deploying and running the applications and responding to requests. Of course, you could always run your applications on the single Admin server (somewhat equivalent to [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) of the master nodes) but this is not recommended. 
+Explaining Kubernetes using familiar concepts greatly helped with understanding. In a WebLogic cluster, the Admin server handles the administration, deployment and other less silky but nevertheless important tasks, whereas the managed servers were meant for deploying and running the applications and responding to requests. Of course, you could always run your applications on the single Admin server (somewhat equivalent to [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) of the master nodes) but this is not recommended.
 
 The managed servers, on the other hand, could be scaled out and configured to run your applications. Together, the admin and managed servers form a cluster. You can run your applications across your entire cluster or on specific managed servers. If your application is deployed to the cluster and a managed server in the cluster fails (JVM, host, reboot etc), other managed servers in the cluster will automatically handle the job. If the managed server where your singleton service is running fails, WebLogic has got you covered as well with Automatic Service Migration. Check [this document](https://www.oracle.com/technetwork/middleware/weblogic/weblogic-automatic-service-migratio-133948.pdf) for a more detailed read. Essentially, it's a bit like a ReplicaSet in Kubernetes. Applications on Kubernetes were initially stateless until the addition of StatefulSets. You can now also run stateful applications across the entire cluster.
 
@@ -47,10 +59,9 @@ Verrazzano took the concept of Admin and managed servers in WebLogic and applied
 
 {% imgx aligncenter assets/5i_215fK15AiaYSz.png 535 413 "Verrazzano multi-cluster" "Verrazzano multi-cluster" %}
 
-
 Where you had a single Admin server for WebLogic, you now have a single Admin cluster based on Kubernetes for Verrazzano. Where your applications would be deployed on managed servers, your Verrazzano workloads will now be deployed on managed Kubernetes clusters, possibly closer to your users.
 
-## Infrastructure Planning
+### Infrastructure Planning
 
 In order to achieve this, the Verrazzano managed clusters (a Verrazzano cluster is a Kubernetes cluster administered and managed by the Verrazzano container platform) need to be able to communicate with the Verrazzano Admin cluster and vice-versa. In WebLogic, the managed servers would usually be part of the same network (unless you were doing [stretch clusters](https://docs.oracle.com/en/middleware/standalone/weblogic-server/14.1.1.0/wlcag/active-active-stretch-cluster-active-passive-database-tier.html#GUID-66D13F44-200A-45AB-9676-2BF18610554D)) and this would usually be straightforward.
 
@@ -64,8 +75,7 @@ We will use our newly-minted Singapore region for the Admin cluster and then Mum
 
 {% imgx aligncenter assets/rnXSnetqM6oAOJk6bfkyQ.png 671 549 "Verrazzano Clusters spread across OCI Asia Pacific regions" "Verrazzano Clusters spread across OCI Asia Pacific regions" %}
 
-
-## Networking Infrastructure
+### Networking Infrastructure
 
 {% imgx aligncenter assets/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote Peering with different regions" "Remote Peering with different regions" %}
 
@@ -588,7 +598,6 @@ This means our four OKE Clusters are being simultaneously created in 4 different
 
 {% imgx aligncenter assets/1vdOhprGm48QCzDjYBkUQQ.png 855 183 "Showing outputs after creating clusters" %}
 
-
 The ssh convenience commands to the various operator hosts will also be printed.
 
 Next, navigate to the DRGs in **_each managed cluster_**'s region i.e. Mumbai, Tokyo, Sydney. Click on Remote Peering Attachment and create a Remote Peering Connection (call it rpc_to_admin). However, in the Admin region (Singapore in our selected region), create 3 Remote Peering Connections:
@@ -612,7 +621,7 @@ At this point, our VCNs are peered but there are three more things we need to do
 3. Merge the kubeconfigs
 
 Actually, the configuration of the routing rules have already been done. "How," you ask? Well, one of the [recent features](https://github.com/oracle-terraform-modules/terraform-oci-oke/releases) we added is the [ability to configure and update routing tables](https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/279). In your main.tf, look in the the Admin cluster module, you will find a parameter that is usually an empty list:
-    
+
 ```terraform
 nat_gateway_route_rules = []
 ```
@@ -684,7 +693,7 @@ Finally, for convenience, we want to be able to execute most of our operations f
 
 1. Navigate to each managed cluster's page and click on Access cluster.
 2. Copy the second command which allows you get the kubeconfig for that cluster
-    
+
 ```console
 oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.... --file $HOME/.kube/configsyd --region ap-sydney-1 --token-version 2.0.0  --kube-endpoint PRIVATE_ENDPOINT
 
@@ -735,13 +744,13 @@ done
 ```
 
 We are now ready to merge:
-    
+
 ```bash
 KUBECONFIG=./admin:./sydney:./mumbai:./tokyo kubectl config view --flatten > ./config
 ```
 
 Let's get a list of the contexts:
-    
+
 ```console
 kubectl config get-contexts
 ```
@@ -756,7 +765,7 @@ sydney    cluster-cmgb37morjq   user-cmgb37morjqtokyo
 tokyo     cluster-coxskjynjra   user-coxskjynjra
 ```
 
-This is all rather verbose. Instead we will use [kubectx ](https://github.com/ahmetb/kubectx)(I'm a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
+This is all rather verbose. Instead we will use [kubectx](https://github.com/ahmetb/kubectx)(I'm a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
 
 ```console
 wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx
@@ -771,7 +780,6 @@ Now when we run kubectx:
 The current context, i.e. the current Verrazzano cluster, is highlighted in yellow. We can also easily change contexts in order to perform Verrazzano installations and other operations e.g.
 
 {% imgx aligncenter assets/nCSAOCAmUaD-AYTnUDhDpA.png 390 160 "Changing context to Sydney" "Changing context to Sydney" %}
-
 
 This concludes setting up OKE, networking connectivity and routing and some operational convenience to run multi-cluster Verrazzano in different regions. With this, I would like to thank my colleague and friend Shaun Levey for his ever perceptive insights into the intricacies of OCI Networking.
 
