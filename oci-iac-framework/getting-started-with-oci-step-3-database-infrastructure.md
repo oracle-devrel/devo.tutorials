@@ -18,7 +18,7 @@ description: How to deploy database infrastructure on top of the OCLOUD framewor
 toc: true
 author: kubemen
 mrm: WWMK211201P00070
-redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-3-database-infrastructure/
+xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-3-database-infrastructure/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

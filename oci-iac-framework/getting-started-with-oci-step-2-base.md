@@ -19,7 +19,7 @@ description: How to deploy a landing zone in OCI
 toc: true
 author: kubemen
 mrm: WWMK211125P00022
-redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-2-base/
+xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-2-base/
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

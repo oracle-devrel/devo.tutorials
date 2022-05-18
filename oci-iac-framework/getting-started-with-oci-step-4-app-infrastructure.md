@@ -18,7 +18,7 @@ description: How to deploy application infrastructure on top of the OCLOUD frame
 author: kubemen
 draft: true
 mrm: WWMK211125P00022
-redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-4-app-infrastructuree/
+xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-4-app-infrastructuree/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

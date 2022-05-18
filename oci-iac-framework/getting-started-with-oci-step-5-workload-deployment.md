@@ -19,7 +19,7 @@ description: How to deploy and configure your code on the OCLOUD framework landi
 toc: true
 author: kubemen
 mrm: WWMK211125P00022
-redirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-5-workload-deployment/
+xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-5-workload-deployment/
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

@@ -20,7 +20,7 @@ description: How to deploy Verrazzano an OKE cluster.
 color: purple
 mrm: WWMK211123P00031
 author: ali-mukadam
-redirect: https://developer.oracle.com/tutorials/multi-cluster-verrazzano-oke/2-deploy-multi-cluster-verrazzano-oke/
+xredirect: https://developer.oracle.com/tutorials/multi-cluster-verrazzano-oke/2-deploy-multi-cluster-verrazzano-oke/
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
