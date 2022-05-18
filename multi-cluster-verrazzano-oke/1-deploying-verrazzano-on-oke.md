@@ -60,7 +60,8 @@ For this, we've prepared a [quickstart](https://github.com/oracle-terraform-modu
 
    - the providers, *and*  
    - a copy of the file, `terraform.tfvars.example`
-      > **NOTE:** Be sure that you rename the copy to `terraform.tfvars`. {:.alert}  
+      > **NOTE:** Be sure that you rename the copy to `terraform.tfvars`.  
+      {:.alert}  
 
 2. Before moving ahead, confirm that the following features/resources are enabled/created:  
 
@@ -82,7 +83,8 @@ For this, we've prepared a [quickstart](https://github.com/oracle-terraform-modu
    ssh_to_operator = "ssh -i ~/.ssh/id_rsa -J opc@xyz.xyz.xyz.xyz opc@10.0.0.12"
    ```
 
-> **NOTE:** For the rest of the tutorial, all `kubectl` commands are executed on the operator host. {:.alert}
+> **NOTE:** For the rest of the tutorial, all `kubectl` commands are executed on the operator host.
+{:.alert}
 
 ## Installing the Verrazzano operator
 
@@ -101,7 +103,8 @@ Verrazzano provides a Kubernetes operator to manage the life cycle of Verrazzano
    Waiting for deployment "verrazzano-platform-operator" rollout to finish: 0 of 1 updated replicas are available...
    ```
 
-   > **NOTE:** Be patient! The operator make take a couple of minutes to deploy. {:.alert}
+   > **NOTE:** Be patient! The operator make take a couple of minutes to deploy.
+   {:.alert}
 
 3. Verify that the operator is running:
 
