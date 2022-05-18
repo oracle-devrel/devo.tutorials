@@ -21,7 +21,7 @@ author: tim-clegg
 published: true
 redirect_from: "/collections/tutorials/4-variables/"
 mrm: WWMK211117P00010
-redirect: https://developer.oracle.com/tutorials/tf-101/4-variables/
+xredirect: https://developer.oracle.com/tutorials/tf-101/4-variables/
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

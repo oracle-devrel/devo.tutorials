@@ -20,7 +20,7 @@ toc: true
 author: tim-clegg
 redirect_from: "/collections/tutorials/7-destroying/"
 mrm: WWMK211117P00010
-redirect: https://developer.oracle.com/tutorials/tf-101/7-destroying/
+xredirect: https://developer.oracle.com/tutorials/tf-101/7-destroying/
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
