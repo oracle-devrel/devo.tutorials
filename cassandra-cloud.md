@@ -13,7 +13,7 @@ date: 2021-12-03 19:45
 description: Cassandra, an open-source NoSQL database, plays well with Oracle Cloud
   Infrastructure. Let Olivier show you how to configure it.
 author: Olivier Francois Xavier Perard
-redirect: https://developer.oracle.com/tutorials/cassandra-cloud/
+xredirect: https://developer.oracle.com/tutorials/cassandra-cloud/
 ---
 This walk-through guides you through configuring your environment to run Cassandra in Oracle Cloud Infrastructure (OCI).
 

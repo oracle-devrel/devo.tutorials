@@ -14,7 +14,7 @@ date: 2022-04-27 09:00
 description:
 author: hassan-ajan
 published: true
-redirect: https://www-sites.oracle.com/developer.oracle.com/tutorials/get-started-with-rubyonrails/
+xredirect: https://www-sites.oracle.com/developer.oracle.com/tutorials/get-started-with-rubyonrails/
 ---
 {% imgx assets/rails-logo.png "Ruby on Rails Logo" %}
 

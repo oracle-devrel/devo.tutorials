@@ -1,5 +1,4 @@
 ---
-redirect: https://developer.oracle.com/tutorials/helm-repository-chartmuseum-object/
 title: Hosting a private Helm Repository on OCI (Oracle Cloud Infrastructure) with
   ChartMuseum and OCI Object Storage
 parent:
@@ -20,6 +19,7 @@ ali-mukadam:
     Technical Director, Asia Pacific Center of Excellence.
     For the past 16 years, Ali has held technical presales, architect and industry consulting roles in BEA Systems and Oracle across Asia Pacific, focusing on middleware and application development. Although he pretends to be Thor, his real areas of expertise are Application Development, Integration, SOA (Service Oriented Architecture) and BPM (Business Process Management). An early and worthy Docker and Kubernetes adopter, Ali also leads a few open source projects (namely [terraform-oci-oke](https://github.com/oracle-terraform-modules/terraform-oci-oke)) aimed at facilitating the adoption of Kubernetes and other cloud native technologies on Oracle Cloud Infrastructure.
   linkedin: alimukadam
+xredirect: https://developer.oracle.com/tutorials/helm-repository-chartmuseum-object/
 ---
 In another article, we deployed a helm chart (Redis) into Oracle Container Engine (OKE) which we pulled from the stable repository. By default, the stable repo is hosted at [here](https://kubernetes-charts.storage.googleapis.com/). 
 

@@ -22,7 +22,7 @@ author:
     and BPM (Business Process Management).
   linkedin: alimukadam
 mrm: WWMK211125P00012
-redirect: https://developer.oracle.com/tutorials/modernize-healthcare-graalvm/
+xredirect: https://developer.oracle.com/tutorials/modernize-healthcare-graalvm/
 ---
 
 {% imgx alignright assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}

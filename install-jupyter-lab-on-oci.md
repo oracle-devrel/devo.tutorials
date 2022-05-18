@@ -16,7 +16,7 @@ description: This tutorial will guide you through setting up your environment to
 date: 2021-10-07 14:27
 redirect_from: "/collections/tutorials/install-jupyter-lab-on-oci/"
 mrm: WWMK211117P00079
-redirect: https://developer.oracle.com/tutorials/install-jupyter-lab-on-oci/
+xredirect: https://developer.oracle.com/tutorials/install-jupyter-lab-on-oci/
 ---
 {% slides %}
 

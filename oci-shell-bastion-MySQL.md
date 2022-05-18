@@ -14,7 +14,7 @@ description: Recently, Oracle added a Bastion Service to OCI. This tutorial walk
   you through using this service with OCI Cloud Shell.
 author: lefred
 mrm: WWMK211125P00026
-redirect: https://developer.oracle.com/tutorials/oci-shell-bastion-mysql/
+xredirect: https://developer.oracle.com/tutorials/oci-shell-bastion-mysql/
 ---
 
 Recently, Oracle added a Bastion Service to OCI. And you may also have noticed that the OCI Dashboard offers you the possibility to use a browser based terminal: Cloud Shell.

@@ -13,7 +13,7 @@ categories:
 date: 2021-09-21 12:00
 redirect_from: "/collections/tutorials/deploy-cassandra-on-oci/"
 mrm: WWMK211125P00030
-redirect: https://developer.oracle.com/tutorials/deploy-cassandra-on-oci/
+xredirect: https://developer.oracle.com/tutorials/deploy-cassandra-on-oci/
 ---
 {% slides 2 %}
 This tutorial will guide you through the steps needed to set up your environment to run Cassandra in Oracle Cloud Infrastructure.

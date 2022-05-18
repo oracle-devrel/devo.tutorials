@@ -20,7 +20,7 @@ author:
   twitter: lefred
   github: lefred
 mrm: WWMK211123P00031
-redirect: https://developer.oracle.com/tutorials/deploy-apache-superset-with-mds-on-oci/
+xredirect: https://developer.oracle.com/tutorials/deploy-apache-superset-with-mds-on-oci/
 ---
 
 It's easy to deploy solutions on OCI (Oracle Cloud Infrastructure) using Terraform and Resource Manager’s Stack. I’ve published several resources available on [this page](https://lefred.be/deploy-to-oci/).

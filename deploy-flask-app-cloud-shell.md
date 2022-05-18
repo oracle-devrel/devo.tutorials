@@ -13,7 +13,7 @@ description: Setting up a Kubernetes cluster using Oracle Cloud, and deploying a
   application with Flask framework using Cloud Shell.
 redirect_from: "/collections/tutorials/deploy-flask-app-cloud-shell/"
 mrm: WWMK210625P00048
-redirect: https://developer.oracle.com/tutorials/deploy-flask-app-cloud-shell/
+xredirect: https://developer.oracle.com/tutorials/deploy-flask-app-cloud-shell/
 ---
 {% slides %}
 

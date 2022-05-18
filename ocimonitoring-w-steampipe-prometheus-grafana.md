@@ -16,7 +16,7 @@ author:
   name: Martin Berger
   github: martinberger-ch
 mrm: WWMK211125P00018
-redirect: https://developer.oracle.com/tutorials/ocimonitoring-w-steampipe-prometheus-grafana/
+xredirect: https://developer.oracle.com/tutorials/ocimonitoring-w-steampipe-prometheus-grafana/
 ---
 {% slides %}
 # An Installation Guide for OCI Monitoring

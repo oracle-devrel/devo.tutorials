@@ -10,7 +10,7 @@ description: Ignacio walks you through Oracle MTS, a translation service, using 
   and even provides a benchmarking function to test its speed.
 MRM: WWMK211210P00028
 author: ignacio-martinez
-redirect: https://developer.oracle.com/tutorials/oracle-translation-nlp-analysis/
+xredirect: https://developer.oracle.com/tutorials/oracle-translation-nlp-analysis/
 ---
 
 ## Introduction

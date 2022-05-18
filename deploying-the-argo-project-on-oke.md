@@ -24,7 +24,7 @@ author:
   linkedin: https://www.linkedin.com/in/alimukadam/
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 mrm: WWMK211125P00029
-redirect: https://developer.oracle.com/tutorials/deploying-the-argo-project-on-oke/
+xredirect: https://developer.oracle.com/tutorials/deploying-the-argo-project-on-oke/
 ---
 {% imgx alignright assets/argo-icon-color-800.png 400 400 "ARGO Logo" %}
 

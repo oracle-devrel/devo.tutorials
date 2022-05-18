@@ -15,7 +15,7 @@ description: This tutorial walks you through the process for exporting data from
   SQL Server and then importing it into MySQL Database Service in OCI.
 author: frederic-descamps
 mrm: WWMK211125P00015
-redirect: https://developer.oracle.com/tutorials/microsoft-sql-to-mds/
+xredirect: https://developer.oracle.com/tutorials/microsoft-sql-to-mds/
 ---
 After checking out how we can import data from [PostgreSQL](https://blogs.oracle.com/mysql/post/how-to-import-data-from-postgresql-to-mysql-database-service) and [Amazon Redshift](https://blogs.oracle.com/mysql/how-to-import-data-from-amazon-redshift-to-mysql-database-service), let's see how we can export data from Microsoft SQL Server and import it into MySQL Database Service (MDS) in Oracle Cloud Infrastructure (OCI).
 

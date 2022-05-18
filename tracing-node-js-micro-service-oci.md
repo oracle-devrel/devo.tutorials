@@ -20,7 +20,7 @@ mrm: WWMK220224P00058
 author:
   name: Javier Mugueta
   home: https://javiermugueta.blog/author/javiermugueta/
-redirect: https://developer.oracle.com/tutorials/tracing-node-js-micro-service-oci/
+xredirect: https://developer.oracle.com/tutorials/tracing-node-js-micro-service-oci/
 ---
 OCI Application Performance Monitoring (APM) provides a comprehensive set of features to monitor applications and diagnose performance issues.
 

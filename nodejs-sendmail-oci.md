@@ -22,7 +22,7 @@ mrm: WWMK220204P00005
 author:
   name: Javier Mugueta
   home: https://javiermugueta.blog/author/javiermugueta/
-redirect: https://developer.oracle.com/tutorials/nodejs-sendmail-ocii/
+xredirect: https://developer.oracle.com/tutorials/nodejs-sendmail-ocii/
 ---
 Oracle Cloud Infrastructure [Email Delivery](https://docs.oracle.com/en-us/iaas/Content/Email/Concepts/overview.htm) is an email sending service that provides a fast and reliable managed solution for sending high-volume emails that need to reach your recipients’ inbox. Email Delivery provides the tools necessary to send application-generated email for mission-critical communications such as receipts, fraud detection alerts, multi-factor identity verification, and password resets.
 

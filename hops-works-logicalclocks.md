@@ -11,7 +11,7 @@ description: This walk-through will guide you through setting up your environmen
   to run HopsWorks with OCI.
 author: olivier
 mrm: WWMK211125P00017
-redirect: https://developer.oracle.com/tutorials/hops-works-logicalclocks/
+xredirect: https://developer.oracle.com/tutorials/hops-works-logicalclocks/
 ---
 {% slides %}
 In this walk-through you'll configure your environment to run HopsWorks in Oracle Cloud Infrastructure.

@@ -10,7 +10,7 @@ date: 2021-12-15 13:34
 description: Redis, Prometheus, OKE, oh my!
 MRM: WWMK211213P00053
 author: ali-mukadam
-redirect: https://developer.oracle.com/tutorials/deploying-monitoring-redis-oke/
+xredirect: https://developer.oracle.com/tutorials/deploying-monitoring-redis-oke/
 ---
 {% slides %}
 In the [previous post](https://medium.com/@lmukadam/extending-terraform-oke-with-a-helm-chart-a51ae0df29d4), you learned how to add a simple extension to the [terraform-oci-oke project](https://github.com/oracle-terraform-modules/terraform-oci-oke) so that it uses the [Redis helm chart](https://github.com/helm/charts/tree/master/stable/redis) to deploy a Redis cluster on Kubernetes.  

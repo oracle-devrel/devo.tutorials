@@ -14,7 +14,7 @@ thumbnail: assets/coherence-micronaut-diagram.png
 author:
   name: Aleks Seovic
   github: https://github.com/aseovic
-redirect: https://developer.oracle.com/tutorials/coherence-micronaut-sock-shopp/
+xredirect: https://developer.oracle.com/tutorials/coherence-micronaut-sock-shopp/
 ---
 Welcome! 
 

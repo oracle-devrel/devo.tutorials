@@ -10,7 +10,7 @@ description: MongoDB and Oracle Cloud Infrastructure play well together --- Oliv
   shows you how to configure your envionment to connect them.
 MRM: WWMK211208P00082
 author: olivier
-redirect: https://developer.oracle.com/tutorials/deploy-mongodb-oci-linux-vm/
+xredirect: https://developer.oracle.com/tutorials/deploy-mongodb-oci-linux-vm/
 ---
 If you've ever wanted a guide for running MongoDB Enterprise/Community in your Oracle Cloud Infrastructure (OCI) environment, we have good news for you! 
 

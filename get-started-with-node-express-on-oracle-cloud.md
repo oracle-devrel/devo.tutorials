@@ -19,7 +19,7 @@ description: Use an Oracle Cloud Infrastructure Free Tier account to set up an O
   from the internet.
 redirect_from: "/collections/tutorials/get-started-with-node-express-on-oracle-cloud/"
 mrm: WWMK211117P00083
-redirect: https://developer.oracle.com/tutorials/get-started-with-node-express-on-oracle-cloud/
+xredirect: https://developer.oracle.com/tutorials/get-started-with-node-express-on-oracle-cloud/
 ---
 {% slides %}
 In this tutorial, we'll use an Oracle Cloud Infrastructure Free Tier account to set up an Oracle Linux Compute instance. We'll install a Node Express application and access your new app from the internet. Finally, we'll cover all the steps necessary to set up a virtual network for your host and connect the host to the internet.
