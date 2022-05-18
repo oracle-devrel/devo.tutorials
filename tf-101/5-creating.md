@@ -27,7 +27,7 @@ redirect: https://developer.oracle.com/tutorials/tf-101/5-creating/
 
 The next few lessons in this tutorial will guide you through an adventure where resources are created, modified, and then finally destroyed using Terraform. While you got a little taste for this in the [Experiencing Terraform lesson](2-experiencing-terraform.md), we'll cover the topics in greater detail here, pointing out more details along the way.
 
-Let's start using Terraform on Oracle Cloud Infrastructure (OCI) by deploying a virtual cloud network (VCN), a foundational OCI resource in which you can deploy other OCI resources to.
+Let's start using Terraform on Oracle Cloud Infrastructure (OCI) by deploying a Virtual Cloud Network (VCN), a foundational OCI resource in which you can deploy other OCI resources to.
 
 ## Prerequisites
 
@@ -121,13 +121,13 @@ Make sure to set the the `compartment_id` value to the OCID of the compartment y
 
 ## Setting up OCI Authentication
 
-If we were using Terraform outside of OCI Cloud Shell, we'd need to worry about how Terraform will authenticate with the OCI API. By running it inside of Cloud Shell, we don't need to worry about these details—it'll be authenticated automatically for us!
+If we were using Terraform outside of OCI Cloud Shell, we'd need to worry about how Terraform will authenticate with the OCI API. By running it inside of Cloud Shell, we don't need to worry about these details -- it'll be authenticated automatically for us!
 
 ## Initialize configuration
 
 Terraform needs different files to be able to be able to properly function reliably. This is largely hidden out of view so that you don’t need to be mired down in the nitty-gritty details. It’s still a good idea to have a high-level idea of what’s going on, so let's touch on a few things that Terraform needs.
 
-Terraform doesn’t ship with any providers, so one of the first things that Terraform does is to examine any referenced providers and then download them as needed. In this case, we've told Terraform to use the OCI Terraform provider, but it doesn’t have this provider—yet. This is taken care of during the Terraform initialization process.
+Terraform doesn’t ship with any providers, so one of the first things that Terraform does is to examine any referenced providers and then download them as needed. In this case, we've told Terraform to use the OCI Terraform provider, but it doesn’t have this provider -— yet. This is taken care of during the Terraform initialization process.
 
 Terraform uses a state file to cache the state of resources. It compares the state file against the Terraform code base (what you want implemented) and what’s actually configured in OCI.  Looking at the differences between the three sources, Terraform maps out a plan of attack around how to get the as-built (what exists in OCI) to what you want (what’s in your code). The Terraform initialization process checks for a state file. If it does not find one, it goes ahead and creates it.
 
