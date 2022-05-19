@@ -24,7 +24,7 @@ redirect: https://developer.oracle.com/tutorials/multi-cluster-verrazzano-oke/2-
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
-In the [previous article](1-deploying-verrazzano-on-oke), we were introduced to Verrazzano and took it for a quick spin on an Oracle Container Engine for Kubernetes (OKE). As promised, in this article, we're going to deploy a multi-cluster Verrazzano on OKE. And just to make things a little more interesting, we'll also do that using different OCI regions.
+In the [previous article](1-deploying-verrazzano-on-oke), we were introduced to Verrazzano and took it for a quick spin on an Oracle Container Engine for Kubernetes (OKE). As promised, in this article, we're going to deploy a multi-cluster Verrazzano on OKE. And just to make things a little more interesting, we'll also do that using different Oracle Cloud Infrastructure (OCI) regions.
 
 But first, we'll make a small digression into WebLogic and Kubernetes to set the stage for how we'll be handling this in each of the next two tutorials.
 
@@ -43,29 +43,43 @@ For additional information, see:
 
 ### From WebLogic to Kubernetes to Verrazzano
 
-A few years ago, when I had to explain Kubernetes to folks internally, especially those with a WebLogic background, I made some (grossly simplified) analogies with WebLogic:
+To better frame our understanding of what Kubernetes is and how it fits in with Verrazzano, let's take a step back and apply some simple analogies to its components.
+
+A good touchstone for us is the WebLogic space, and we can draw from a lot of familiar concepts to help with our understanding here.
 
 {% imgx aligncenter assets/SumRnmK8ZrOCVzWwaAETC3Q.png 1200 401 "WebLogic and Kubernetes analogy" "WebLogic and Kubernetes analogy" %}
 
-Explaining Kubernetes using familiar concepts greatly helped with understanding. In a WebLogic cluster, the Admin server handles the administration, deployment and other less silky but nevertheless important tasks, whereas the managed servers were meant for deploying and running the applications and responding to requests. Of course, you could always run your applications on the single Admin server (somewhat equivalent to [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) of the master nodes) but this is not recommended.
+In WebLogic, a cluster consists of an Admin Server and a group of Managed Servers. In this set up, the Admin Server handles the administration, deployment, and other less silky but nevertheless important tasks, while Managed Servers are utilized for deploying and running the applications, as well as responding to requests.  This allows you to run your applications either across your entire cluster or on specific Managed Servers.  
 
-The managed servers, on the other hand, could be scaled out and configured to run your applications. Together, the admin and managed servers form a cluster. You can run your applications across your entire cluster or on specific managed servers. If your application is deployed to the cluster and a managed server in the cluster fails (JVM, host, reboot etc), other managed servers in the cluster will automatically handle the job. If the managed server where your singleton service is running fails, WebLogic has got you covered as well with Automatic Service Migration. Check [this document](https://www.oracle.com/technetwork/middleware/weblogic/weblogic-automatic-service-migratio-133948.pdf) for a more detailed read. Essentially, it's a bit like a ReplicaSet in Kubernetes. Applications on Kubernetes were initially stateless until the addition of StatefulSets. You can now also run stateful applications across the entire cluster.
+> **NOTE:** You could always run your applications on the single Admin Server (in a way that's somewhat equivalent to [taints and tolerations](https://kubernetes.io/docs/concepts/scheduling-eviction/taint-and-toleration/) of the master nodes), but it's not recommended.
+> {:.alert}
 
-What if, for the purpose of high availability, you needed to run your Kubernetes applications in geographically distributed clusters. You could try your luck with [kubefed](https://github.com/kubernetes-sigs/kubefed), whose progress is painfully slow and is still in beta (this is not a criticism — _Ed_). Or you could try deploying the same applications to different clusters, implement a kind of global health check and then use an [intelligent load balancer](https://docs.oracle.com/en-us/iaas/Content/TrafficManagement/Concepts/overview.htm) to switch the traffic from one cluster to another. All these approaches are still error-prone and risky and have several limitations.
+Under this set up, if your application is deployed to the cluster and a Managed Server in the cluster fails (JVM, host, reboot, etc.), other Managed Servers in the cluster will automatically handle the job.  
+
+But, what if the Managed Server where your singleton service is running fails? WebLogic has you covered with Automatic Service Migration (ASM). For a more detailed read on ASM, check out the [WebLogic ASM guide](https://www.oracle.com/technetwork/middleware/weblogic/weblogic-automatic-service-migratio-133948.pdf).  
+
+Now that we have a better sense of the basic cluster infrastructure, let's start connecting this back to Kubernetes. What's the best equivalent in Kubernetes? Essentially, ASM is a bit like a `ReplicaSet`. Initially, applications on Kubernetes were stateless until the addition of StatefulSets, but now you can also run stateful applications across the entire cluster.
+
+### Geographically distributed clusters
+
+What if, for the purpose of high availability, you needed to run your Kubernetes applications in geographically distributed clusters. You could try your luck with [kubefed](https://github.com/kubernetes-sigs/kubefed), although it's currently still in beta and has admittedly been experiencing some growing pains. Or, you could try deploying the same applications to different clusters, implement a kind of global health check, and then use an [intelligent load balancer](https://docs.oracle.com/en-us/iaas/Content/TrafficManagement/Concepts/overview.htm) to switch the traffic from one cluster to another. All these approaches are valid, but still fairly limited, error-prone, and risky.
 
 Enter Verrazzano multi-clustering.
 
-Verrazzano took the concept of Admin and managed servers in WebLogic and applied it to Kubernetes clusters:
+How did Verrazzano make our lives a whole lot better? It took the concept of Admin and Managed Servers in WebLogic and applied it to Kubernetes clusters:
 
 {% imgx aligncenter assets/5i_215fK15AiaYSz.png 535 413 "Verrazzano multi-cluster" "Verrazzano multi-cluster" %}
 
-Where you had a single Admin server for WebLogic, you now have a single Admin cluster based on Kubernetes for Verrazzano. Where your applications would be deployed on managed servers, your Verrazzano workloads will now be deployed on managed Kubernetes clusters, possibly closer to your users.
+Where you previously had a single Admin Server for WebLogic, you now have a single Admin *cluster* based on Kubernetes for Verrazzano. And where your applications were deployed on managed servers, your Verrazzano workloads are deployed on managed Kubernetes clusters, possibly closer to your users.
 
 ### Infrastructure Planning
 
-In order to achieve this, the Verrazzano managed clusters (a Verrazzano cluster is a Kubernetes cluster administered and managed by the Verrazzano container platform) need to be able to communicate with the Verrazzano Admin cluster and vice-versa. In WebLogic, the managed servers would usually be part of the same network (unless you were doing [stretch clusters](https://docs.oracle.com/en/middleware/standalone/weblogic-server/14.1.1.0/wlcag/active-active-stretch-cluster-active-passive-database-tier.html#GUID-66D13F44-200A-45AB-9676-2BF18610554D)) and this would usually be straightforward.
+In order to achieve this, Verrazzano-managed clusters (i.e., Kubernetes clusters administered and managed by the Verrazzano container platform) need to be able to communicate with the Verrazzano Admin cluster and vice-versa. In WebLogic, the Managed Servers would usually be part of the same network (unless you were using [stretch clusters](https://docs.oracle.com/en/middleware/standalone/weblogic-server/14.1.1.0/wlcag/active-active-stretch-cluster-active-passive-database-tier.html#GUID-66D13F44-200A-45AB-9676-2BF18610554D)) and this administration would be fairly straightforward.
 
-However, our aim here is to deploy the different Verrazzano clusters in different cloud regions on OCI and we need to think and plan about networking and security. Note that you can also use Verrazzano to manage clusters deployed in other clouds or on-premise but the networking and security configurations would vary (VPN/FastConnect etc).
+Our ultimate goal though, is to deploy the different Verrazzano clusters in different cloud regions on OCI, so we need to start thinking about our plan for networking and security.  
+
+> **NOTE:**  You can also use Verrazzano to manage clusters deployed in other clouds or on-premises, but the networking and security configurations would vary (VPN/FastConnect etc).
+{:.alert}
 
 Below is a map of OCI regions to help us pick a set of regions:
 
