@@ -354,6 +354,7 @@ Making a Go application talk to a local (or any traditionally connected) Oracle 
 ### Run free Autonomous Database on OCI
 
 To run an Autonomous Database Instance is almost simpler than running a local database. An ATP instance can be created in several ways (including through OCI CLI and Terraform), but most straightforward for a first time is probably through the OCI browser console. Note: Tim Hall provides a good description in his article [Oracle Cloud : Autonomous Transaction Processing (ATP) - Create Service](https://oracle-base.com/articles/vm/oracle-cloud-autonomous-transaction-processing-atp-create-service) — and there are many more to be found. 
+To run an Autonomous Database Instance is almost simpler than running a local database. An ATP instance can be created in several ways (including through OCI CLI and Terraform), but most straightforward for a first time is probably through the OCI browser console. Tim Hall provides a good description in his article [Oracle Cloud : Autonomous Transaction Processing (ATP) - Create Service](https://oracle-base.com/articles/vm/oracle-cloud-autonomous-transaction-processing-atp-create-service) — and there are many more to be found. So please go ahead and create your always free ATP instance.
 
 Let's create your always free ATP instance: 
 
