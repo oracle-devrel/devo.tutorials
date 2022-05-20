@@ -21,7 +21,7 @@ xredirect: https://developer.oracle.com/tutorials/tf-101/
 
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
-**Difficulty:** Beginner
+**Difficulty:** Beginner.
 
 Heard about Infrastructure as Code (IaC) but not sure if it's for you?  Tired of pointing-and-clicking to manage your OCI infrastructure or just looking to reacquaint yourself?  
 
