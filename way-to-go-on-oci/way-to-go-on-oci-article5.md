@@ -3,7 +3,6 @@ title: Hooking Go applications into OCI Streaming, using OCI Key Vault and Go De
 parent:
 - tutorials
 - way-to-go-on-oci
-redirect_from: "/tutorials/way-to-go-on-oci/go-on-oci-streaming-vault-oke-article-5"
 tags:
 - open-source
 - devops
@@ -15,16 +14,8 @@ thumbnail: assets/landing-zone.png
 date: 2022-05-01 11:00
 description: Hooking Go applications into OCI Streaming, using OCI Key Vault and Go Deployment on OKE
 toc: true
-author:
-  name: Lucas Jellema
-  bio: developer, solution architect, blogger, Oracle Groundbreaker Ambassador, Oracle ACE Director
-  home: https://technology.amis.nl
-  twitter: lucasjellema
-  github: lucasjellema
-  linkedin: lucasjellema
-  location: The Netherlands
-  email: lucasjellema@gmail.com
-redirect: /tutorials/way-to-go-on-oci/go-on-oci-streaming-vault-oke-article-5
+author: lucas-jellema
+xredirect: /tutorials/way-to-go-on-oci/go-on-oci-streaming-vault-oke-article-5
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -55,7 +46,7 @@ Streaming can be used for messaging, ingesting high-volume data such as applicat
 
 We will first create a Stream (aka Topic), try it out in the OCI console and then create a local Go application that can publish messages to the Stream (using the Go SDK for OCI once again).
 
-### Create Stream 
+### Create Stream
 
 Creating a Stream in the Console is dead easy. Producing a Test Message too and Consuming the Test Messages as well. Getting going this way takes all of three minutes, if not less.
 
@@ -83,7 +74,7 @@ The console will indicate that the message was produced successfully. Press the 
 
 Click on the button *Load Messages*. All recently (last 60 seconds) published messages on the stream are displayed. The test message that was published moments ago should show up.
 
-{% imgx aligncenter assets/way-to-go-on-oci-article-5-loadmessages.png 922 224 "Inspect the last 60 seconds worth' of messages on the stream " %}  
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-loadmessages.png 922 224 "Inspect the last 60 seconds worth' of messages on the stream" %}  
 
 
 ### Go Message Producer
@@ -253,7 +244,7 @@ Vaults are first and foremost associated with secrets that contain sensitive inf
 We will create a *Vault* and create a simple secret that we read from a Go application. Next we will create a secret that contains an Oracle Wallet and a second secret with a JSON document with additional database connection details. Using this secret, we create an application that can work with an(y) Oracle Database and only learns at runtime when it accesses the secret how to connect to the database. Change the secret, restart the application and a different database is connected to.
 
 
-### Create an OCI Vault. 
+### Create an OCI Vault.
 
 Type *vau* in the search box in the OCI Console. Then click on the link *Vault | Identity & Security*. The overview page with all vaults in the current compartment is shown - probably without any entries.
 
@@ -561,7 +552,7 @@ docker build -t person-producer:1.0.1 -f DockerfileAlpine .
 ```
 
 The 1.0.1 image does not have the private parts that we do not want to ship.  
-###  Push the Container Image to the OCI Container Image Registry
+### Push the Container Image to the OCI Container Image Registry
 
 The container image needs to be pushed to the OCI Container Image Registry before it can be deployed to an OKE Cluster. The steps for pushing are as described below.
 
@@ -871,7 +862,7 @@ The output from running the pipeline is reassuring - green checkmarks:
 Check on the Stream to find new messages being published, or check in the Kubernetes Dashboard on the state of the Deployment and the Pod. Or simply check in `kubectl` with `kubectl get pods` to find a very recently kicked off Pod for `personproducer-deployment`.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-overview-personproducer-deployment-pipeline.png 593 654 "Overview of the DevOps Deployment Pipeline creating K8S deployment resource on OKE Cluster from person-producer container image" %}  
-### Create an OCI DevOps Build Pipeline 
+### Create an OCI DevOps Build Pipeline
 As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository, publishes the container image to the registry and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code. 
 
 The steps are straightforward:
@@ -921,7 +912,7 @@ Select the artifact to publish as the *PersonProducerImage*: the *Docker image* 
 
 Press button *Save* to complete the stage definition.
 
-#### Add a stage to Trigger the Deployment Pipeline 
+#### Add a stage to Trigger the Deployment Pipeline
 
 The third and final stage to be defined is called `name: *trigger-person-producer-deployment-pipeline*. It is a stage of type *Trigger deployment*. The deployment pipeline that should be triggered by this stage is *deploy-person-producer-to-oke*.
 
