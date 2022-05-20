@@ -19,24 +19,35 @@ xredirect: /tutorials/way-to-go-on-oci/go-on-oci-streaming-vault-oke-article-5
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-This is the fifth and therefore last part of a five part series about Go and Oracle Cloud Infrastructure. This series discusses how Go applications can be created and run on Oracle Cloud Infrastructure - in Compute Instances (VMs), containerized on Kubernetes or as serverless Functions. The articles show how to automate the build and deployment of these Go applications using OCI DevOps. An important topic is how to use OCI services from Go applications - both those running on OCI as well as Go code running elsewhere. Some of the OCI services discussed are Object Storage, Streaming, Key Vault and Autonomous Database. 
+Welcome! This is the fifth and final part of a five-part series about *Go and Oracle Cloud Infrastructure.* The series discusses how Go applications can be created and run on Oracle Cloud Infrastructure, either in Compute Instances (VMs) containerized on Kubernetes, or as serverless Functions. From start to finish, we'll walk you through the process of automating the building and deployment of these Go applications using OCI DevOps.  
 
-In order to follow along with these articles, readers should have at least basic knowledge of how to create Go applications. It is assumed that readers have access to their own Go development environment. Some of the examples and screenshots will specifically mention VS Code as development tool. However, other editors and IDEs can be used as well. The Go code presented in these articles demonstrates a number of mechanisms in their simplest form for maximum clarity and with the least dependencies. Readers should not expect meaningful functionality or production ready code. 
+A particular focus will be on showing you how to use Oracle Cloud Infrastructure (OCI) services from Go applications, both those running on OCI as well as those running Go code elsewhere. Throughout this series, we'll discuss various OCI services, including Object Storage, Streaming, Key Vault, and Autonomous Database.
 
-The articles describe how to get Going on OCI and to try out the examples, readers will need to have access to an OCI tenancy with permissions to create the OCI resources discussed in these articles. Most of the resources used are available in the *Aways Free Tier* (Compute Instance, VCN, Autonomous Database, Object Storage, Logging, Resource Manager) or have a free allotment tier for limited monthly usage (Functions, API Gateway, Streaming, Vault, DevOps). 
+Just like it says on the tin, the ultimate goal of this series is to make sure that you have everything you need to get Going on OCI!
 
+## Prerequisites
+
+In order to follow along with these articles, you should at least have a basic understanding of how to create Go applications. We'll also assume that you have access to your own Go development environment. And while some of the examples and screenshots specifically mention VS Code as a development tool, don't worry, you're perfectly fine using any other editors and IDEs you feel more comfortable with.
+
+### Examples
+
+To work with the examples presented throughout the series, you'll also need to have access to an OCI tenancy with permissions to create the OCI resources discussed in these articles. Fortunately, most of the resources used are either available to you in the *Always Free Tier* (Compute Instance, VCN, Autonomous Database, Object Storage, Logging, Resource Manager) or have a free allotment tier for limited monthly usage (Functions, API Gateway, Streaming, Vault, DevOps).
+
+### Worth mentioning
+
+For the sake of clarity, we've done our best to present mechanisms in their simplest form and with the least amount of dependencies. While this allows us to demonstrate some of the diverse ways in which you can use Go on OCI, it also means that you shouldn't expect meaningful functionality or production ready code.
 
 ## Introduction
 
-The first part of these series describes provisioning of a Compute Instance based on the Oracle Linux Cloud Developer image, opening it up for inbound and outbound network activity, creating and running a Go application that serves HTTP requests and connecting logging produced by the application to OCI Logging. 
+In the first part of this series, we begin by describing how you can provision a Compute Instance based on the Oracle Linux Cloud Developer image and then open it up for both inbound and outbound network activity. We go on to show you how to create and run a Go application that serves HTTP requests, and later how to connect its logging to OCI Logging.
 
-Part two deals with software engineering, automation of build and deployment of the application with the OCI DevOps service. This service is used for storing the Go source code, building the application executable and storing it as deployable artifact, deploying that artifact to a Compute Instance. The article also shows how to expose an HTTP endpoint for the application through an OCI API Gateway. 
+Part two deals with software engineering and demonstrates how you can use the OCI DevOps service to automate the build and deployment of your application. We illustrate how the OCI DevOps services is used for storing the Go source code, building the application executable, and then storing it as an artifact which can deployed to a Compute Instance. The article wraps up by showing you how to expose an HTTP endpoint for the application through an OCI API Gateway.
 
-Part three shows how to create serverless functions in Go and deploy them on OCI. The Go SDK for OCI is introduced - first for local, stand alone Go applications and subsequently for use from functions - leveraging resource principal authentication. This SDK is used to interact with the OCI Object Storage service for creating buckets and writing and reading files. 
+Part three shows how to create serverless functions in Go and deploy them on OCI. The Go SDK for OCI is introduced - first for local, stand alone Go applications and subsequently for use from functions - leveraging resource principal authentication. This SDK is used to interact with the OCI Object Storage service for creating buckets and writing and reading files.
 
-The fourth article discusses the interaction from your Go application with an Oracle Database. This can be a local or on premises database or a database running on some cloud vendor's IaaS instances or an Oracle Cloud Infrastructure Autonomous Database.    
+The fourth article discusses the interaction from your Go application with an Oracle Database. This can be a local or on premises database or a database running on some cloud vendor's IaaS instances or an Oracle Cloud Infrastructure Autonomous Database.
 
-This fifth and last article in this series adds two more OCI services for Go applications to interact with: OCI Streaming - a high volume streaming message broker that allows for decoupled interactions between different microservices and other components - and the OCI Key Vault for managing secrets - such as Oracle Wallet with database credentials. This article also introduces a third type of application platform - next to VM and serverless function - in the shape of the managed OCI Kubernetes Enginer (OKE), and it shows how DevOps Deployment Pipelines can deploy our Go applications to OKE in an automated way.   
+This fifth and last article in this series adds two more OCI services for Go applications to interact with: OCI Streaming - a high volume streaming message broker that allows for decoupled interactions between different microservices and other components - and the OCI Key Vault for managing secrets - such as Oracle Wallet with database credentials. This article also introduces a third type of application platform - next to VM and serverless function - in the shape of the managed OCI Kubernetes Enginer (OKE), and it shows how DevOps Deployment Pipelines can deploy our Go applications to OKE in an automated way.
 
 ## Publishing Messages from Go application to OCI Streaming
 
@@ -50,7 +61,7 @@ We will first create a Stream (aka Topic), try it out in the OCI console and the
 
 Creating a Stream in the Console is dead easy. Producing a Test Message too and Consuming the Test Messages as well. Getting going this way takes all of three minutes, if not less.
 
-Type *str* in the OCI Console search box. Then click on *Streaming | Messaging*. 
+Type *str* in the OCI Console search box. Then click on *Streaming | Messaging*.
 
 Click on button *Create Stream*.
 
@@ -66,16 +77,15 @@ Then press button *Create Stream*. Now the Stream will be created, which takes a
 
 ### Try out the new Stream
 
-When the Stream has been created and is active, click on button *Produce Test Message*. Type a message and press *Produce*. 
+When the Stream has been created and is active, click on button *Produce Test Message*. Type a message and press *Produce*.
 
-{% imgx aligncenter assets/way-to-go-on-oci-article-5-producemessage.png 1097 591 "Publish a simple first test message on the new stream" %} 
+{% imgx aligncenter assets/way-to-go-on-oci-article-5-producemessage.png 1097 591 "Publish a simple first test message on the new stream" %}
 
-The console will indicate that the message was produced successfully. Press the *Cancel* link to close the popup window. 
+The console will indicate that the message was produced successfully. Press the *Cancel* link to close the popup window.
 
 Click on the button *Load Messages*. All recently (last 60 seconds) published messages on the stream are displayed. The test message that was published moments ago should show up.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-loadmessages.png 922 224 "Inspect the last 60 seconds worth' of messages on the stream" %}  
-
 
 ### Go Message Producer
 
@@ -83,30 +93,29 @@ The file `producer.go` in the directory `applications/message-producer` in the s
 
 The code is quite straightforward:
 
-
 ```go
 package main
 
 import (
-	"github.com/oracle/oci-go-sdk/v65/common"
-	"github.com/oracle/oci-go-sdk/v65/streaming"
+ "github.com/oracle/oci-go-sdk/v65/common"
+ "github.com/oracle/oci-go-sdk/v65/streaming"
 )
 
 const (
-	streamMessagesEndpoint = "<the messages endpoint for the stream>"
-	streamOCID             = "<the OCID of the stream>"
+ streamMessagesEndpoint = "<the messages endpoint for the stream>"
+ streamOCID             = "<the OCID of the stream>"
 )
 
 func main() {
-	streamClient, _ := streaming.NewStreamClientWithConfigurationProvider(common.DefaultConfigProvider(), streamMessagesEndpoint)
-	putMsgReq := streaming.PutMessagesRequest{StreamId: common.String(streamOCID),
-			PutMessagesDetails: streaming.PutMessagesDetails{
-				// two messages are put on the Stream in the single request 
-				Messages: []streaming.PutMessagesDetailsEntry{
-					{Key: []byte("key dummy-0" ), Value: []byte("my happy message-")},
-					{Key: []byte("key dummy-1-"), Value: []byte("hello dolly and others-")}}},
-		}
-	streamClient.PutMessages(context.Background(), putMsgReq)
+ streamClient, _ := streaming.NewStreamClientWithConfigurationProvider(common.DefaultConfigProvider(), streamMessagesEndpoint)
+ putMsgReq := streaming.PutMessagesRequest{StreamId: common.String(streamOCID),
+   PutMessagesDetails: streaming.PutMessagesDetails{
+    // two messages are put on the Stream in the single request 
+    Messages: []streaming.PutMessagesDetailsEntry{
+     {Key: []byte("key dummy-0" ), Value: []byte("my happy message-")},
+     {Key: []byte("key dummy-1-"), Value: []byte("hello dolly and others-")}}},
+  }
+ streamClient.PutMessages(context.Background(), putMsgReq)
 }
 ```
 
@@ -116,10 +125,9 @@ Execute `go run producer.go`. Use the OCI Streaming console to inspect the arriv
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-messages-published-by-producer.png 962 573 "Messages published to stream by the producer application" %}  
 
-
 ### Consume Messages from a Stream in a Go application
 
-A stream is not much use if we can only produce messages to it: messages need to be consumed before they expire. If they do not, they have been pointless. 
+A stream is not much use if we can only produce messages to it: messages need to be consumed before they expire. If they do not, they have been pointless.
 
 The next application - to be found in the source code repository in directory `applications\message-consumer` - does exactly this. From Go code, using the Go SDK for OCI, it creates a client for OCI Streaming. Then it makes a *cursor request*. A cursor is pointer to a location in a stream and represents a specific consumer. The application uses the cursor to make requests for messages. If more messages are available on the stream beyond the current cursor's offset, then the next batch of messages is delivered (and the offset is moved). When all messages have been retrieved through the cursor, the request will result in a response without messages. The client can continue polling (with) the cursor for new messages on the stream.  
 
@@ -127,45 +135,45 @@ The next application - to be found in the source code repository in directory `a
 package main
 
 import (
-	"context"
-	"fmt"
+ "context"
+ "fmt"
 
-	"github.com/oracle/oci-go-sdk/v65/common"
-	"github.com/oracle/oci-go-sdk/v65/streaming"
+ "github.com/oracle/oci-go-sdk/v65/common"
+ "github.com/oracle/oci-go-sdk/v65/streaming"
 )
 
 const (
-	streamMessagesEndpoint = "https://cell-1.streaming.us-ashburn-1.oci.oraclecloud.com"
-	streamOCID             = "ocid1.stream.oc1.iad.amaaaaaa6sde7caa56brreqvzptc37wytom7pjk7vx3qaflagk2t3syvk67q"
+ streamMessagesEndpoint = "https://cell-1.streaming.us-ashburn-1.oci.oraclecloud.com"
+ streamOCID             = "ocid1.stream.oc1.iad.amaaaaaa6sde7caa56brreqvzptc37wytom7pjk7vx3qaflagk2t3syvk67q"
 )
 
 func main() {
-	streamClient, _ := streaming.NewStreamClientWithConfigurationProvider(common.DefaultConfigProvider(), streamMessagesEndpoint)
-	partition := "0" 
-	createCursorRequest := streaming.CreateCursorRequest{
-		StreamId: common.String(streamOCID),
-		CreateCursorDetails: streaming.CreateCursorDetails{Type: streaming.CreateCursorDetailsTypeTrimHorizon,
-			Partition: &partition, // mandatory: which partition to read from; note: with a GroupCursor, OCI Streaming assigns partitions to consumers (represented by cursors)
-		}}
-	createCursorResponse, _ := streamClient.CreateCursor(context.Background(), createCursorRequest)
+ streamClient, _ := streaming.NewStreamClientWithConfigurationProvider(common.DefaultConfigProvider(), streamMessagesEndpoint)
+ partition := "0" 
+ createCursorRequest := streaming.CreateCursorRequest{
+  StreamId: common.String(streamOCID),
+  CreateCursorDetails: streaming.CreateCursorDetails{Type: streaming.CreateCursorDetailsTypeTrimHorizon,
+   Partition: &partition, // mandatory: which partition to read from; note: with a GroupCursor, OCI Streaming assigns partitions to consumers (represented by cursors)
+  }}
+ createCursorResponse, _ := streamClient.CreateCursor(context.Background(), createCursorRequest)
   // using the cursor, go retrieve messages 
-	consumeMessagesLoop(streamClient, streamOCID, *createCursorResponse.Value)
+ consumeMessagesLoop(streamClient, streamOCID, *createCursorResponse.Value)
 }
 
 func consumeMessagesLoop(streamClient streaming.StreamClient, streamOcid string, cursorValue string) {
-	getMessagesFromCursorRequest := streaming.GetMessagesRequest{Limit: common.Int(5), // optional: how many messages to collect in one request
-		StreamId: common.String(streamOcid),
-		Cursor:   common.String(cursorValue)}
-	for i := 0; i < 15; i++ {
+ getMessagesFromCursorRequest := streaming.GetMessagesRequest{Limit: common.Int(5), // optional: how many messages to collect in one request
+  StreamId: common.String(streamOcid),
+  Cursor:   common.String(cursorValue)}
+ for i := 0; i < 15; i++ {
     // fetch a next batch of maximum Limit (==5) messages
-		getMessagesFromCursorRequest.Cursor = common.String(cursorValue)
-		// (Try to) fetch new messages from the cursor (starting from just after the offset of the previous call)
-		getMessagesFromCursorResponse, _ := streamClient.GetMessages(context.Background(), getMessagesFromCursorRequest)
-		for _, message := range getMessagesFromCursorResponse.Items {
-			fmt.Println("Key : " + string(message.Key) + ", value : " + string(message.Value) + ", Partition " + *message.Partition)
-		}
-		cursorValue = *getMessagesFromCursorResponse.OpcNextCursor
-	}
+  getMessagesFromCursorRequest.Cursor = common.String(cursorValue)
+  // (Try to) fetch new messages from the cursor (starting from just after the offset of the previous call)
+  getMessagesFromCursorResponse, _ := streamClient.GetMessages(context.Background(), getMessagesFromCursorRequest)
+  for _, message := range getMessagesFromCursorResponse.Items {
+   fmt.Println("Key : " + string(message.Key) + ", value : " + string(message.Value) + ", Partition " + *message.Partition)
+  }
+  cursorValue = *getMessagesFromCursorResponse.OpcNextCursor
+ }
 }
 ```
 
@@ -196,36 +204,36 @@ When `AFTER_OFFSET` or `AT_OFFSET` are defined, the value for offset must be pro
 For example - where message retrieval should start after offset 5:
 
 ```go
-	partition := "0"
-	offset := common.Int64(5)
-	createCursorRequest := streaming.CreateCursorRequest{
-		StreamId: common.String(streamOCID),
-		CreateCursorDetails: streaming.CreateCursorDetails{Type: streaming.CreateCursorDetailsTypeAfterOffset,
-			Offset:    &offset,
-			Partition: &partition,
-		}}
+ partition := "0"
+ offset := common.Int64(5)
+ createCursorRequest := streaming.CreateCursorRequest{
+  StreamId: common.String(streamOCID),
+  CreateCursorDetails: streaming.CreateCursorDetails{Type: streaming.CreateCursorDetailsTypeAfterOffset,
+   Offset:    &offset,
+   Partition: &partition,
+  }}
 ```
 
 Instead of explicitly defining individual, isolated consumers (aka cursor) that link up with a specific partition, we can use the concept of consumer groups and leave it to the Streaming Service to associate partitions with specific consumers (aka cursors because each consumer is represented by an active cursor). In that case, the body of function `main` becomes:
 
 ```go
 func main() {
-	streamClient, _ := streaming.NewStreamClientWithConfigurationProvider(common.DefaultConfigProvider(), streamMessagesEndpoint)
-	// Type can be CreateGroupCursorDetailsTypeTrimHorizon, CreateGroupCursorDetailsTypeAtTime, CreateGroupCursorDetailsTypeLatest
-	createGroupCursorRequest := streaming.CreateGroupCursorRequest{
-		StreamId: common.String(streamOCID),
-		CreateGroupCursorDetails: streaming.CreateGroupCursorDetails{Type: streaming.CreateGroupCursorDetailsTypeTrimHorizon,
-			CommitOnGet:  common.Bool(true), // when false, a consumer must manually commit their cursors (to move the offset).
-			GroupName:    common.String("consumer-group-1"),
-			InstanceName: common.String("go-instance-1"), // A unique identifier for the instance joining the consumer group. If an instanceName is not provided, a UUID will be generated
-			TimeoutInMs:  common.Int(1000),
-		}}
-	createGroupCursorResponse, _ := streamClient.CreateGroupCursor(context.Background(), createGroupCursorRequest)
-	consumeMessagesLoop(streamClient, streamOCID, *createGroupCursorResponse.Value)
+ streamClient, _ := streaming.NewStreamClientWithConfigurationProvider(common.DefaultConfigProvider(), streamMessagesEndpoint)
+ // Type can be CreateGroupCursorDetailsTypeTrimHorizon, CreateGroupCursorDetailsTypeAtTime, CreateGroupCursorDetailsTypeLatest
+ createGroupCursorRequest := streaming.CreateGroupCursorRequest{
+  StreamId: common.String(streamOCID),
+  CreateGroupCursorDetails: streaming.CreateGroupCursorDetails{Type: streaming.CreateGroupCursorDetailsTypeTrimHorizon,
+   CommitOnGet:  common.Bool(true), // when false, a consumer must manually commit their cursors (to move the offset).
+   GroupName:    common.String("consumer-group-1"),
+   InstanceName: common.String("go-instance-1"), // A unique identifier for the instance joining the consumer group. If an instanceName is not provided, a UUID will be generated
+   TimeoutInMs:  common.Int(1000),
+  }}
+ createGroupCursorResponse, _ := streamClient.CreateGroupCursor(context.Background(), createGroupCursorRequest)
+ consumeMessagesLoop(streamClient, streamOCID, *createGroupCursorResponse.Value)
 }
 ```
 
-As long as there is only a single instance in the group, all messages on all partitions are handed to this consumer's cursor. When multiple instances are added to the group, they will each get one or more partitions assigned to them (if enough partitions are available for the stream) and receive messages from those partitions. Multiple consumers can work in parallel on processing the messages on the stream without any message being processed more than once. 
+As long as there is only a single instance in the group, all messages on all partitions are handed to this consumer's cursor. When multiple instances are added to the group, they will each get one or more partitions assigned to them (if enough partitions are available for the stream) and receive messages from those partitions. Multiple consumers can work in parallel on processing the messages on the stream without any message being processed more than once.
 
 ## Create an OCI Vault and Store Secrets
 
@@ -243,8 +251,7 @@ Vaults are first and foremost associated with secrets that contain sensitive inf
 
 We will create a *Vault* and create a simple secret that we read from a Go application. Next we will create a secret that contains an Oracle Wallet and a second secret with a JSON document with additional database connection details. Using this secret, we create an application that can work with an(y) Oracle Database and only learns at runtime when it accesses the secret how to connect to the database. Change the secret, restart the application and a different database is connected to.
 
-
-### Create an OCI Vault.
+### Create an OCI Vault
 
 Type *vau* in the search box in the OCI Console. Then click on the link *Vault | Identity & Security*. The overview page with all vaults in the current compartment is shown - probably without any entries.
 
@@ -259,7 +266,7 @@ When the new vault's status is *Active*, click on the name of the vault to navig
 
 ### Create a Secret
 
-We now have a vault and a master key to encrypt any secrets we will store in the vault. We are ready to start defining secrets in the vault. Let's start with a very simple one. 
+We now have a vault and a master key to encrypt any secrets we will store in the vault. We are ready to start defining secrets in the vault. Let's start with a very simple one.
 
 Click on the link for tab *Secrets*. Then click on button *Create Secret*. A page is presented where a new secret can be created.
 
@@ -268,37 +275,38 @@ Type the name for the secret - for example *greeting-of-the-day*. Select the mas
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-createsecretgreeting.png 1200 564 "Create a secret to be encrypted and held within the vault" %}  
 
 ### Read Secret from Go application
+
 The secret that you just defined is now urgently required in our Go application. Let's explore how from our application we can get hold of the values of secrets. File `secret-reader.go` in directory `applications/secret-reader` in the source code repository contains the probably most straightforward example of how to retrieve a secret from an OCI Vault from Go. It uses the Go SDK for OCI and the only piece of information it needs - in addition to the `$HOME/.oci/config` file is the OCID for the secret to be retrieved. Note: the assumption is that whichever user's credentials are configured in the config file has read permissions on the secret.
 
 ```go
 package main
 
 import (
-	"context"
-	b64 "encoding/base64"
-	"fmt"
+ "context"
+ b64 "encoding/base64"
+ "fmt"
 
-	"github.com/oracle/oci-go-sdk/v65/common"
-	"github.com/oracle/oci-go-sdk/v65/secrets"
+ "github.com/oracle/oci-go-sdk/v65/common"
+ "github.com/oracle/oci-go-sdk/v65/secrets"
 )
 
 const (
-	secretOCID = "<OCID of the Secret to be Read from a Vault"
+ secretOCID = "<OCID of the Secret to be Read from a Vault"
 )
 
 func main() {
-	secretsClient, _ := secrets.NewSecretsClientWithConfigurationProvider(common.DefaultConfigProvider())
-	secretReq := secrets.GetSecretBundleRequest{SecretId: common.String(secretOCID)}
-	secretResponse, _ := secretsClient.GetSecretBundle(context.Background(), secretReq)
-	contentDetails := secretResponse.SecretBundleContent.(secrets.Base64SecretBundleContentDetails)
-	decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
-	fmt.Println("Secret Contents:", string(decodedSecretContents))
+ secretsClient, _ := secrets.NewSecretsClientWithConfigurationProvider(common.DefaultConfigProvider())
+ secretReq := secrets.GetSecretBundleRequest{SecretId: common.String(secretOCID)}
+ secretResponse, _ := secretsClient.GetSecretBundle(context.Background(), secretReq)
+ contentDetails := secretResponse.SecretBundleContent.(secrets.Base64SecretBundleContentDetails)
+ decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
+ fmt.Println("Secret Contents:", string(decodedSecretContents))
 }
 ```
 
 Run the application - after you have changed the value of *secretOCID* - using `go run secret-reader.go`. This should result in the content of the secret that you have just created being printed on the command line.
 
-To see the effect of managing configuration settings separate from the application source code, update the secret in the OCI Console and run the application again. You should now see the changed content - because without further instructions the application will always retrieve the latest version of the secret. Not only does the code not contain the highly sensitive value of the secret - it also remains unchanged when the value of the secret is updated. In this case, we had to restart the application to get the updated value. How to refresh the updated values of configuration settings in live applications is an interesting topic - for another moment. Let's first create secrets that actually contain sensitive information. 
+To see the effect of managing configuration settings separate from the application source code, update the secret in the OCI Console and run the application again. You should now see the changed content - because without further instructions the application will always retrieve the latest version of the secret. Not only does the code not contain the highly sensitive value of the secret - it also remains unchanged when the value of the secret is updated. In this case, we had to restart the application to get the updated value. How to refresh the updated values of configuration settings in live applications is an interesting topic - for another moment. Let's first create secrets that actually contain sensitive information.
 
 ### Store Oracle Database connection details and Wallet in Vault
 
@@ -306,7 +314,7 @@ Information that we stored hard coded in our source code and stored completely e
 
 Storing the database connection details - the `autonomousDB` *struct* in the file *data-service.go* in application *data-service* discussed in the previous article - a secret is not very difficult at all. Create a string formatted as JSON from the data in the struct:
 
-```
+```json
 { "service":        "k8j2fvxbaujdcfy_goonocidb_medium.adb.oraclecloud.com",
   "username":       "demo",
   "server":         "adb.us-ashburn-1.oraclecloud.com",
@@ -315,7 +323,7 @@ Storing the database connection details - the `autonomousDB` *struct* in the fil
 }
 ```
 
-Go to the vault page for *go-on-oc-vault* in the OCI console. In the *Secrets* tab, click on *Create Secret*. Enter the name for the secret: *autonomousDB-demo-credentials*. Select the master encryption key. Paste the JSON content with database connection details as the *Secret Contents* - with type template still on *Plain-Text*. The click on button *Create Secret*. 
+Go to the vault page for *go-on-oc-vault* in the OCI console. In the *Secrets* tab, click on *Create Secret*. Enter the name for the secret: *autonomousDB-demo-credentials*. Select the master encryption key. Paste the JSON content with database connection details as the *Secret Contents* - with type template still on *Plain-Text*. The click on button *Create Secret*.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-create-secret-autonomousdb-credentials.png 1200 697 "Create a Secret with a JSON string with database credentials" %}  
 
@@ -323,25 +331,25 @@ In the Go application, define a type to hold the database credentials:
 
 ```go
 type DatabaseConnectDetails struct {
-	Service        string `json:service`
-	Username       string `json:username`
-	Server         string `json:server`
-	Port           string `json:port`
-	Password       string `json:password`
-	WalletLocation string `json:walletLocation`
+ Service        string `json:service`
+ Username       string `json:username`
+ Server         string `json:server`
+ Port           string `json:port`
+ Password       string `json:password`
+ WalletLocation string `json:walletLocation`
 }
 ```
 
-and write code to decode the content from the secret into a variable based on this type 
+and write code to decode the content from the secret into a variable based on this type
 
 ```go
     secretReq := secrets.GetSecretBundleRequest{SecretId: common.String(secretOCID)}
-	secretResponse, _ := secretsClient.GetSecretBundle(context.Background(), secretReq)
-	contentDetails := secretResponse.SecretBundleContent.(secrets.Base64SecretBundleContentDetails)
+ secretResponse, _ := secretsClient.GetSecretBundle(context.Background(), secretReq)
+ contentDetails := secretResponse.SecretBundleContent.(secrets.Base64SecretBundleContentDetails)
     decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
-	var dbCredentials DatabaseConnectDetails
+ var dbCredentials DatabaseConnectDetails
     json.Unmarshal(decodedSecretContents, &dbCredentials)
-	fmt.Println("database connect details for user: " + dbCredentials.Username)
+ fmt.Println("database connect details for user: " + dbCredentials.Username)
 ```
 
 Next we need to also store the wallet file *cwallet.sso* in a secret. This file contains binary content. In order to store this content as a secret we turn it into a string representation by encoding as base64. On the Linux command line this can easily be done, for example with the command:
@@ -354,15 +362,15 @@ File `cwallet-sso-base64.txt` contains the content we want to use for the secret
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-createsecret-for-cwallet.png 1200 648 "Create a secret to hold the base64 encoded contents of the database wallet" %}  
 
-
 The contents of this secret can be retrieved from the Go code in the same way as before. However, this time the application needs to write a local `cwallet.sso` file with the contents from the secret:
 
 ```go
-	decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
-	_ = os.WriteFile("./cwallet.sso", decodedSecretContents, 0644)
+ decodedSecretContents, _ := b64.StdEncoding.DecodeString(*contentDetails.Content)
+ _ = os.WriteFile("./cwallet.sso", decodedSecretContents, 0644)
 ```
 
 This allows the application - using only the OCID values for the two secrets with database connection details and the database wallet file - to initiate communications with the database it needs to use in its current environment. Nothing hard coded, nothing exposed.
+
 ### Go application connecting with Oracle Database based on Secrets from Vault
 
 Directory `applications/safe-database-client` in the source code repository for the article contains the code for a simple Oracle Database client application. It is very similar to what we discussed in article four regarding the application `applications/go-orcl-db`. The main difference: this application does not contain a wallet file or any database connection details. However, it does require two references to OCI Secrets - one OCID refers to the secret with the JSON string with connection details and the other OCID is for a secret that contains the base64 encoded representation of the `cwallet.sso` file.  
@@ -371,18 +379,18 @@ The code in file `oracle-database-client-app.go` has two variables that you need
 
 ```go
 const (
-	autonomousDatabaseConnectDetailsSecretOCID = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caabn37hbdsu7dczk6wpxvr7euq7j5fmti2zkjcpwzlmowq"
-	autonomousDatabaseCwalletSsoSecretOCID     = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caazzhfhfsy2v6tqpr3velezxm4r7ld5alifmggjv3le2cq"
+ autonomousDatabaseConnectDetailsSecretOCID = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caabn37hbdsu7dczk6wpxvr7euq7j5fmti2zkjcpwzlmowq"
+ autonomousDatabaseCwalletSsoSecretOCID     = "ocid1.vaultsecret.oc1.iad.amaaaaaa6sde7caazzhfhfsy2v6tqpr3velezxm4r7ld5alifmggjv3le2cq"
 )
 ```
 
-Using these  values, two secrets are retrieved from the vault. One is used to write the file `cwallet.sso` in the local directory, the other is used to construct an instance of type `DatabaseConnectDetails` that contains login details for the database: username, password, host, port, service. The connection is created - as was the case in the previous article - in the file `godror-based-oracle-database-client.go`. 
+Using these  values, two secrets are retrieved from the vault. One is used to write the file `cwallet.sso` in the local directory, the other is used to construct an instance of type `DatabaseConnectDetails` that contains login details for the database: username, password, host, port, service. The connection is created - as was the case in the previous article - in the file `godror-based-oracle-database-client.go`.
 
 You can run the application on the command line with `go run *.go`. It will connect to the Autonomous Database and perform some small SQL feats. The relevance of this example is that the application does not require any information at all about the database it is going to interact with.
 
 Note: in order to run an application on OCI that needs to read secrets from an OCI Vault, you need to make sure that through Resource Principal or Instance Principal authentication the following policy applies to the host that runs the code:
 
-```
+```console
 allow dynamic-group my-secret-group to read secret-family in compartment go-on=oci where target.secret.name = 'my-secret'
 ```
 
@@ -398,7 +406,7 @@ The code for this application is in directory `applications/from-stream-to-datab
 
 You need to create a secret in the OCI vault - with Stream details in a JSON string similar to this one (make sure to set the values that apply to your environment):
 
-```
+```json
 {
  "streamMessagesEndpoint" : "https://cell-1.streaming.us-ashburn-1.oci.oraclecloud.com" ,
  "streamOCID"             : "ocid1.stream.oc1.iad.amaaaaaa6sde7caa56brreqvzptc37wytom7pjk7vx3qaflagk2t3syvk67q"
@@ -411,13 +419,13 @@ You can call the secret *stream-connection-details*.
 
 Use the OCID for this new secret to set the value for `const streamDetailsSecretOCID` in file `consumer.go` in `applications/from-stream-to-database/consumer.go`. The `main` function in this file subscribes to the stream and starts a series of iterations in which it polls the stream for new messages. Whenever a message is consumed, it is supposed to hold details for a person in a valid JSON message that is decoded into a Person instance and passed to `PersistPerson`.
 
-You can publish messages to the stream in the OCI Console. Go to the page for the stream in the console. Click on button *Produce Test Message*. Type or paste a valid JSON message with Person details that looks as the next message. 
+You can publish messages to the stream in the OCI Console. Go to the page for the stream in the console. Click on button *Produce Test Message*. Type or paste a valid JSON message with Person details that looks as the next message.
 
-```
+```json
 {
-	"name" : "John Doe",
-	"age" : 34,
-	"comment" : "Nice chap, good looking; not too bright"
+ "name" : "John Doe",
+ "age" : 34,
+ "comment" : "Nice chap, good looking; not too bright"
 }
 ```
 
@@ -425,7 +433,7 @@ Then press button *Produce* to publish the message on the topic and make it avai
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-producepersontestmessage.png 1113 711 "Produce a test person mesage on the Stream" %}  
 
-Feel free to publish the message multiple times. It will not result in multiple database records (the name is used as identifier) but you will see some effect in the logging of the application. Of course if you make changes in the name - however small - between the messages, you will get many more records created in the database. 
+Feel free to publish the message multiple times. It will not result in multiple database records (the name is used as identifier) but you will see some effect in the logging of the application. Of course if you make changes in the name - however small - between the messages, you will get many more records created in the database.
 
 Note: the code is not very robust. It will likely choke on messages with a different format, just so you know.
 
@@ -434,15 +442,16 @@ Note: the code is not very robust. It will likely choke on messages with a diffe
 One runtime platform for our Go applications on OCI that we have not discussed yet is Kubernetes. Or more specifically: Oracle Container Engine for Kubernetes or OKE for short. We have taken our executable compiled from the Go source code and deployed them on a compute instance and we have turned the source code into a serverless function. We have not yet containerized a standalone application and deployed it on an OKE cluster instance. That is what we will do in this final section of this article series.
 
 The steps in short:
-* build and run the enhanced *Person Producer* application locally 
-* create a light weight container image for the *Person Producer* application
-* run a local container to prove the image is complete and correct
-* push the container image to the OCI Container Image Registry
-* optionally: pull the container image from the registry and run a container in the Cloud Shell or on the *go-app-vm* compute instance or on some other environment, to ascertain to the images was pushed correctly to the image registry
-* create an OKE cluster instance (using the quick start wizard and consisting of a single node)
-* run the *Person Producer* application on the OKE cluster instance (manual deployment from *kubectl*, passing the OCID of the stream to publish to as an environment variable)
-* create an OCI DevOps deployment pipeline to publish the *Person Producer* container image to the OKE cluster instance -- and run the pipeline
-* create an OCI DevOps build pipeline to build the *Person Producer* from the source code repository, publish the image to the container image registry and trigger the deployment pipeline
+
+- build and run the enhanced *Person Producer* application locally
+- create a light weight container image for the *Person Producer* application
+- run a local container to prove the image is complete and correct
+- push the container image to the OCI Container Image Registry
+- optionally: pull the container image from the registry and run a container in the Cloud Shell or on the *go-app-vm* compute instance or on some other environment, to ascertain to the images was pushed correctly to the image registry
+- create an OKE cluster instance (using the quick start wizard and consisting of a single node)
+- run the *Person Producer* application on the OKE cluster instance (manual deployment from *kubectl*, passing the OCID of the stream to publish to as an environment variable)
+- create an OCI DevOps deployment pipeline to publish the *Person Producer* container image to the OKE cluster instance -- and run the pipeline
+- create an OCI DevOps build pipeline to build the *Person Producer* from the source code repository, publish the image to the container image registry and trigger the deployment pipeline
 
 When all is said and done, the end result can be visualized as follows:
 
@@ -490,7 +499,7 @@ The result of this command is a standalone binary executable file of about 6MB.
 
 The container image is built from a Dockerfile called `DockerfileAlpine`; it is located in the same directory as `person-producer.go`. It has the following content:
 
-```
+```docker
 FROM alpine:latest
 
 WORKDIR /app
@@ -508,10 +517,11 @@ COPY person-producer  ./
 CMD ["./person-producer"]
 ```
 
-The container image is created from the latest *alpine* image. A directory called */app* is created and used for copying various files to. The files that are copied to `/app` are: `config` (the OCI Configuration file), `oci_api_key.pem` (the private key file referenced from the OCI Configuration file) and `person-producer` (the binary executable produced using `go build`). The `RUN apk` line adds the required certificates to the image. The last line `CMD ["./person-producer"]` makes the application start up when a container based on this image starts running 
+The container image is created from the latest *alpine* image. A directory called */app* is created and used for copying various files to. The files that are copied to `/app` are: `config` (the OCI Configuration file), `oci_api_key.pem` (the private key file referenced from the OCI Configuration file) and `person-producer` (the binary executable produced using `go build`). The `RUN apk` line adds the required certificates to the image. The last line `CMD ["./person-producer"]` makes the application start up when a container based on this image starts running
 
-Copy the file `$HOME/.oci/config` and the referenced *.pem file as *oci_api_key.pem* to the current directory. Update file `config` and set the parameter `key_file` to:
-```
+Copy the file `$HOME/.oci/config` and the referenced *.pem file as*oci_api_key.pem* to the current directory. Update file `config` and set the parameter `key_file` to:
+
+```text
 key_file=/app/oci_api_key.pem
 ```
 
@@ -541,7 +551,7 @@ OCI_CONFIG_FILE (only relevant when not doing instance principal authentication)
 ....
 ```
 
-And if you check in the OCI console for the Stream details you will find new Person messages that are published by the application running in the container. 
+And if you check in the OCI console for the Stream details you will find new Person messages that are published by the application running in the container.
 
 This gives us confidence in the container image. It is almost ready to be used outside the local environment. But not quite.
 
@@ -552,17 +562,18 @@ docker build -t person-producer:1.0.1 -f DockerfileAlpine .
 ```
 
 The 1.0.1 image does not have the private parts that we do not want to ship.  
+
 ### Push the Container Image to the OCI Container Image Registry
 
 The container image needs to be pushed to the OCI Container Image Registry before it can be deployed to an OKE Cluster. The steps for pushing are as described below.
 
-A repository inside the container registry is a collection point for versions of a container image. Such a repository is created when an image is pushed - based on the name of the image. The name is typically composed of `<region key>/<namespace>/<prefix>/<image-name>:<version tag>`. The *prefix* and *image-name* together become the name of the repository; this name is not tied to a compartment. However, in order to organize the Container Image Registry in a similar way as you have organized compartments you may consider to create the repository expicitly in a a specific compartment, through the OCI Console or using the OCI CLI or even an API or Terraform operation. When you create the repository beforehand, you can create it in the context of a specific compartment. The name of the compartment (or even the names of levels of nested compartments) become part of the prefix of the container images. 
+A repository inside the container registry is a collection point for versions of a container image. Such a repository is created when an image is pushed - based on the name of the image. The name is typically composed of `<region key>/<namespace>/<prefix>/<image-name>:<version tag>`. The *prefix* and *image-name* together become the name of the repository; this name is not tied to a compartment. However, in order to organize the Container Image Registry in a similar way as you have organized compartments you may consider to create the repository expicitly in a a specific compartment, through the OCI Console or using the OCI CLI or even an API or Terraform operation. When you create the repository beforehand, you can create it in the context of a specific compartment. The name of the compartment (or even the names of levels of nested compartments) become part of the prefix of the container images.
 
 For example: create a repository in the OCI Container Image Registry in the context of compartment `go-on-oci` and call the repository `person-producer`. Next when the container image is pushed as `<region key>/<namespace>/go-on-oci/person-producer:<version tag>`, this image will be stored in the repository. If you do not create the repository beforing pushing the image, a repository is created automatically in the context of the root compartment, with a name of `go-on-oci/person-producer`. Everything will still work fine. The repository structure is just a little less nice.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-create-image-repository.png 1200 347 "Create Container Image Registry Repository for person-producer images in compartment go-on-oci" %}  
 
-After either creating the repository or not creating the repository (your choice), on the command line of your development environment do a docker login to `<region key>.ocir.io` where you have to provide your region key. We did this in the third article in the series. You wil need the login name and the authentication token. 
+After either creating the repository or not creating the repository (your choice), on the command line of your development environment do a docker login to `<region key>.ocir.io` where you have to provide your region key. We did this in the third article in the series. You wil need the login name and the authentication token.
 
 ```console
 docker login iad.ocir.io
@@ -580,7 +591,7 @@ In my case, the command is as follows:
 docker tag person-producer:1.0.1 iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:1.0.1
 ```
 
-With the login done and this tag in place, the container image can be pushed. 
+With the login done and this tag in place, the container image can be pushed.
 
 ```console
 docker push <region key>/<namespace>/<prefix>/person-producer:1.0.1
@@ -592,47 +603,44 @@ In my case, the command resolves to:
 docker push iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:1.0.1
 ```
 
-You can check the success of the push by checking the OCI Container Image Registry through the OCI console. 
-
+You can check the success of the push by checking the OCI Container Image Registry through the OCI console.
 
 ### Optionally: Run a Container from the Image in Cloud Shell
 
 An easy way to verify the existence of the container image is on OCI Cloud Shell. Simply open the Cloud Shell from the OCI Console. Then run:
 
-```
+```console
 docker run -e INSTANCE_PRINCIPAL_AUTHENTICATION=NO iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:1.0.1
-``` 
+```
 
-The image will be downloaded. Then running it quickly exits because no OCI configuration file is found. This does show that the image was pushed successfully to the image registry. 
-
+The image will be downloaded. Then running it quickly exits because no OCI configuration file is found. This does show that the image was pushed successfully to the image registry.
 
 ### Create an OKE Cluster Instance
 
 Creating an Kubernetes cluster may sound like a daunting task. At least it always sounds somewhat intimidating to me. However, on OCI it is really the simplest of things. You run a simple wizard. The main choices you have: how many nodes (Compute Instances or VMs) should there be in the cluster (this can easily be changed later on) and what should be the shape of these VMs. After you have made that decision - or even accepted the default settings - you can leave it to the wizard to take care of the network configuration, the compute instances and the node pool formed by the instances and finally the Kubernetes cluster on top of the node pool. It takes a few minutes - and then the OKE instance is available, ready to accept deployments.
 
-Type *ok* in the search box and click on link *Kubernetes Clusters (OKE) | Containers & Artifacts*. Then click on button *Create cluster*. 
+Type *ok* in the search box and click on link *Kubernetes Clusters (OKE) | Containers & Artifacts*. Then click on button *Create cluster*.
 
 A popup window appears with two radio buttons: *Quick create* and *Custom create*. Accept the first one - *Quick create* - and click on *Launch workflow*.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-quickstart-oke.png 1200 389 "Create an OKE Cluster the Quickstart way" %}  
 
-In step one of a two step wizard, select *Public Endpoint* and *Private Workers*. You can accept the shape *VM.Standard.E3.Flex* - or pick any different one. You can accept three as the number of nodes, but just one node is enough for our purposes. Click button *Next*. 
+In step one of a two step wizard, select *Public Endpoint* and *Private Workers*. You can accept the shape *VM.Standard.E3.Flex* - or pick any different one. You can accept three as the number of nodes, but just one node is enough for our purposes. Click button *Next*.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-quickcreate-oke-step1.png 1200 564 "Configure the OKE Cluster Quickstart wizard" %}  
 
 Step two provides an overview of what the wizard will do on our behalf. Time for a final inspection. If you like the proposed action, then press button *Creat cluster*.
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-quickcreate-oke-step2.png 1200 754 "Overview o intended operations by the OKE Cluster Quickstart wizard " %}  
 
-The wizard will create all required resources - quite a bit of network configuration, creating a new compute instance and provisioning the OKE master. A progress page is shown to indicate the status of the actions. 
+The wizard will create all required resources - quite a bit of network configuration, creating a new compute instance and provisioning the OKE master. A progress page is shown to indicate the status of the actions.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-progress-page-oke-wizard.png 1105 902 "Progress overview of the actions performed by the OKE Cluster Quickstart wizard " %}  
 
-
-Once all actions are complete, you can inspect the details for the new Kubernetes cluster, the node pool, the network resources and the compute instance. The screenshot shows the details for the node pool and the node(s) in the pool. 
+Once all actions are complete, you can inspect the details for the new Kubernetes cluster, the node pool, the network resources and the compute instance. The screenshot shows the details for the node pool and the node(s) in the pool.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-nodepool-for-oke.png 1200 564 "The Node Pool (with a single node) for the OKE Cluster " %}  
 
-Note: the dynamic group *go-on-oci-instances* that was defined in the first article in this series was created in such a way that it includes all compute instances in the compartment. That means that if you are still working in that same compartment and the OKE cluster is also running now in that compartment that now the node in the OKE instance is member of the dynamic group and inherits all OCI IAM permissions granted to the group. Containers running in Pods on the OKE instance and scheduled on this node also inherit these privileges when they use instance principal authentication. 
+Note: the dynamic group *go-on-oci-instances* that was defined in the first article in this series was created in such a way that it includes all compute instances in the compartment. That means that if you are still working in that same compartment and the OKE cluster is also running now in that compartment that now the node in the OKE instance is member of the dynamic group and inherits all OCI IAM permissions granted to the group. Containers running in Pods on the OKE instance and scheduled on this node also inherit these privileges when they use instance principal authentication.
 
 ### Connect to the OKE Cluster instance
 
@@ -654,10 +662,9 @@ kubectl get nodes
 
 In addition to cluster access in Cloud Shell, we probably want to have local interaction from our laptop. It should have kubectl running already, as well as OCI CLI with configuration settings that provide access to the OCI tenancy.
 
-In the OKE Cluster Details window in OCI Console, click the *Access Cluster* button again to display the *Access Your Cluster* dialog box and click on *Local Access* this time. 
+In the OKE Cluster Details window in OCI Console, click the *Access Cluster* button again to display the *Access Your Cluster* dialog box and click on *Local Access* this time.
 
 Copy the first statement (for public IP endpoint) in step 2 and execute it locally. At this point, kubectl should be set up and ready for action. The file `$HOME/.kube/config` is create or extended with an extra context. The current-context is set to this newly created one for the OKE cluster. Running
-
 
 ```console
 kubectl get nodes
@@ -671,21 +678,21 @@ The Kubernetes Dashboard is a well known UI for monitoring and managing the Kube
 
 The Dashboard itself is a Kubernetes application – collection of resources that needs to be created on the cluster. And for which a predefined collection of yaml files is available that can be applied with a single command:
 
-```
+```console
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.5.0/aio/deploy/recommended.yaml
 ```
 
 Check for example on the pods that were created in the newly created namespace *kubernetes-dashboard*:
 
-```
+```console
 kubectl -n kubernetes-dashboard get pods
 ```
 
-Now you can access the dashboard in the browser, using: http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=default
+Now you can access the dashboard in the browser, using: <http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/workloads?namespace=default>
 
 When GUI appears in the browser, you will be prompted for a kubeconfig file or a token. Let's create a token. First, use YAML file `oke-admin-service-account.yaml` to create a service account and the clusterrolebinding in the cluster  (as described in the [OCI Documentation for Accessing an OKE Cluster Instance](https://docs.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengstartingk8sdashboard.htm)):
 
-```
+```console
 kubectl apply -f oke-admin-service-account.yaml
 ```
 
@@ -697,7 +704,7 @@ kubectl -n kube-system describe secret $(kubectl -n kube-system get secret | gre
 
 This will result in a token be written to the console output:
 
-```
+```console
 Name:         oke-admin-token-4dg6k
 Namespace:    kube-system
 Labels:       <none>
@@ -721,7 +728,7 @@ File `person-producer-deployment.yaml` contains the specification of the Kuberne
 
 Here is the contents of the deployment specification:
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -752,25 +759,25 @@ You need to update the value for the *env* key *STREAM_DETAILS_SECRET_OCID* - to
 
 The OKE Cluster cannot just start pulling container images from the registry. It need to use proper authentication details to login to the registry. These details are represented in this deployment specification by the secret *ocirsecret*. However, that secret does not exist yet on the OKE cluster. To create it, execute the following command in kubectl:
 
-```
+```console
 kubectl create secret docker-registry <secret-name> --docker-server=<region-key>.ocir.io --docker-username='<tenancy-namespace>/<oci-username>' --docker-password='<oci-auth-token>' --docker-email='<email-address>'
 ```
 
 This create a secret in Kubernetes that can be used when needed to pull container images. For me, the command resolved to something like:
 
-```
+```console
 kubectl create secret docker-registry ocirsecret --docker-server=iad.ocir.io --docker-username='idtwlqf2hanz/jellema@chimney.nl' --docker-password='y&aya1PCjJFW8xk1.7o' --docker-email='jellema@chimney.nl'
 ```
 
 After creating the secret, you can apply the deployment specification using kubectl, creating the deployment and the pod and pulling the image to run the container:
 
-```
+```console
 kubectl apply -f person-producer-deployment.yaml
-``` 
-
-The somewhat understated output from this action reads: 
-
 ```
+
+The somewhat understated output from this action reads:
+
+```console
 deployment.apps/personproducer-deployment created
 ```
 
@@ -780,7 +787,7 @@ That means that the Pod is starting, the container image is being pulled and the
 
 Note: if the logging reveals problems for the application with permissions on OCI resources - specifically retrieving the secret with stream details or producing messages to the stream itself, you may need to check if policy statements have been defined for dynamic group `go-on-oci-instances` to allow all compute instances - including the node of the OKE cluster and by extension any application running in a container on this VM to read secrets and work with streams in the compartment:
 
-```
+```console
 allow dynamic-group go-on-oci-instances to read secret-family in compartment go-on-oci 
 
 allow dynamic-group go-on-oci-instances to manage streams in compartment go-on-oci
@@ -788,15 +795,15 @@ allow dynamic-group go-on-oci-instances to manage streams in compartment go-on-o
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-policies-on-streams-secrets-for-dyngroup-instances.png 887 571 "IAM Policies for the Dynamic Group with Compute Instances for accessing secrets and streams" %}  
 
-
 ### Create and Run OCI DevOps Deployment Pipeline to publish the Application to the OKE cluster
 
-A Deployment Pipeline will take a Kubernetes manifest that manipulates K8S resources - for example for creating a Pod or a Deployment - and apply it to a designated OKE cluster. The manifest contains a reference to a container image - probably in the OCI Container Image Registry but possibly in a public or other private registry. The manifest can contain placeholders defined as `${parameterName}`. These are replaced when the pipeline is executed by the values supplied for these parameters. The pipeline can for example be used to deploy specific, varying versions of images and also to set values in the manifest that translate to environment variables inside the container. In this example, the value for *STREAM_DETAILS_SECRET_OCID* is provided by a pipeline parameter. This value is replaced before the deployment starts in the manifest and that value is available as environment variable to be read by the *person-producer* application. 
+A Deployment Pipeline will take a Kubernetes manifest that manipulates K8S resources - for example for creating a Pod or a Deployment - and apply it to a designated OKE cluster. The manifest contains a reference to a container image - probably in the OCI Container Image Registry but possibly in a public or other private registry. The manifest can contain placeholders defined as `${parameterName}`. These are replaced when the pipeline is executed by the values supplied for these parameters. The pipeline can for example be used to deploy specific, varying versions of images and also to set values in the manifest that translate to environment variables inside the container. In this example, the value for *STREAM_DETAILS_SECRET_OCID* is provided by a pipeline parameter. This value is replaced before the deployment starts in the manifest and that value is available as environment variable to be read by the *person-producer* application.
+
 #### Create Inline Artifact with Kubernetes Manifest for creating Deployment
 
 Create an artifact in the DevOps Project called *person-producer-deployment-yaml* of type *Kubernetes manifest* and with *Artifact source* set to: *inline*. Then paste this Kubernetes manifest definition for creating a deployment based on a container image:
 
-```
+```yaml
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -846,7 +853,7 @@ You can accept or change the Kubernetes namespace. Press *Save* to create the st
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-define-deployment-pipeline-oke.png 1200 498 "Define a Deployment Pipeline for deploying a Container Image to the OKE Cluster" %}  
 
-Now define two Pipeline Parameters. One is called *STREAM_DETAILS_SECRET_OCID* - and its default value should be the OCID of the secret that contains the Stream details (message endpoint and stream OCID). The second parameter is called *imageVersion*. Its default value can be *1.0.1*. This parameter determines the version of the container image *person-producer* to get from the image registry and deploy onto the OKE cluster. 
+Now define two Pipeline Parameters. One is called *STREAM_DETAILS_SECRET_OCID* - and its default value should be the OCID of the secret that contains the Stream details (message endpoint and stream OCID). The second parameter is called *imageVersion*. Its default value can be *1.0.1*. This parameter determines the version of the container image *person-producer* to get from the image registry and deploy onto the OKE cluster.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-deployment-pipeline-parameters.png 1200 338 "Define the deployment pipeline parameters - for the image version and the secret ocid" %}  
 
@@ -862,17 +869,20 @@ The output from running the pipeline is reassuring - green checkmarks:
 Check on the Stream to find new messages being published, or check in the Kubernetes Dashboard on the state of the Deployment and the Pod. Or simply check in `kubectl` with `kubectl get pods` to find a very recently kicked off Pod for `personproducer-deployment`.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-overview-personproducer-deployment-pipeline.png 593 654 "Overview of the DevOps Deployment Pipeline creating K8S deployment resource on OKE Cluster from person-producer container image" %}  
+
 ### Create an OCI DevOps Build Pipeline
-As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository, publishes the container image to the registry and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code. 
+
+As a final step we create DevOps Build Pipeline that builds the Container Image for the `person-producer` application from the Go sources in the code repository, publishes the container image to the registry and triggers the deployment pipeline. That means that with committing a code change, we can run a pipeline that takes care of the end to end redeployment on the Kubernetes cluster of the changed application code.
 
 The steps are straightforward:
-* create a DevOps artifact for the container image `person-producer`
-* create the build pipeline
-* add parameter *imageVersion*, to determine the version for the container image to produce 
-* add managed build stage -- that builds and tags the container image locally (on the build server)
-* add a stage to publish the freshly built image to the container image registry
-* add a final stage to trigger the deployment pipeline *deploy-person-producer-to-oke*
-* make a change to the application source code, commit the change to the code repository and trigger the build pipeline; wait for a few minutes and inspect the Stream for messages that carry the change made in the source code of the application
+
+- create a DevOps artifact for the container image `person-producer`
+- create the build pipeline
+- add parameter *imageVersion*, to determine the version for the container image to produce
+- add managed build stage -- that builds and tags the container image locally (on the build server)
+- add a stage to publish the freshly built image to the container image registry
+- add a final stage to trigger the deployment pipeline *deploy-person-producer-to-oke*
+- make a change to the application source code, commit the change to the code repository and trigger the build pipeline; wait for a few minutes and inspect the Stream for messages that carry the change made in the source code of the application
 
 #### Define DevOps Artifact
 
@@ -894,7 +904,7 @@ Add a stage to the build pipeline, of type *Managed Build*. This stage will take
 
 Set the stage name to *build-container-image-for-go-application*. Set the *build spec file path* to `/applications/person-message-producer/build_spec.yaml`. This refers to the file `build_spec.yaml` in the root of the application directory for application *person-message-producer*. This file contains the build steps that take the Go sources, perform automated build steps on them and finally build a light weight, stand alone executable suitable for the Alpine Linux container image. The last step performs the `docker build` into a container image, with the local tag `fresh-person-producer-container-image`. The output from the stage of type *DOCKER_IMAGE* is labeled `person-producer-image` and references the `fresh-person-producer-container-image`. This output is used in the next stage that publishes the container image to the container image registry.
 
-Select the source code repository `go-on-oci-sources` and set the *Build source name* to `go-on-oci-sources`. 
+Select the source code repository `go-on-oci-sources` and set the *Build source name* to `go-on-oci-sources`.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-add-managed-build-stage-for-container-image.png 1200 560 "Add a managed build stage  for building the Go application into a container image" %}  
 
@@ -904,9 +914,9 @@ Press button *Save* to complete the stage definition.
 
 Add a second stage in the build pipeline, of type *Deliver artifacts*. This stage will take care of taking the output of the managed build stage and pushing the container image to the registry, with the right version tag based on the build pipeline's parameter.
 
-Set the stage name to *push-container-image*. 
+Set the stage name to *push-container-image*.
 
-Select the artifact to publish as the *PersonProducerImage*: the *Docker image* with path `iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:${imageVersion}` that was defined as artifact in the DevOps Project only a few paragrahs earlier. 
+Select the artifact to publish as the *PersonProducerImage*: the *Docker image* with path `iad.ocir.io/idtwlqf2hanz/go-on-oci/person-producer:${imageVersion}` that was defined as artifact in the DevOps Project only a few paragrahs earlier.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-create-stage-to-publish-image.png 1173 815 "Create build stage to publish the container image to the registry" %}  
 
@@ -924,7 +934,7 @@ Press button *Save* to complete the stage definition.
 
 #### Run Build Pipeline and Create Container Image and Run Deployment Pipeline
 
-The Build Pipeline is complete. You can run it, set the value for parameter *imageVersion* and wait for the source code to be converted into a running Pod on OKE. You will typically make a change to the application source code, commit that change to the code repository and trigger the build pipeline. After a few minutes, when the two pipelines are done, the changed application will be running. For me at the time of writing the end to end flow from triggering the build pipeline to completion of the deployment on the OKE instance took around three minutes. 
+The Build Pipeline is complete. You can run it, set the value for parameter *imageVersion* and wait for the source code to be converted into a running Pod on OKE. You will typically make a change to the application source code, commit that change to the code repository and trigger the build pipeline. After a few minutes, when the two pipelines are done, the changed application will be running. For me at the time of writing the end to end flow from triggering the build pipeline to completion of the deployment on the OKE instance took around three minutes.
 
 Midway during the execution of the build pipeline, the console looks as is shown below:
 {% imgx aligncenter assets/way-to-go-on-oci-article-5-midway-build-pipeline.png 1200 564 "Build Pipeline in progress" %}  
@@ -947,7 +957,7 @@ The five articles that make up the series "Way to Go on OCI" have provided Go de
 
 ## Resources
 
-[Source code repository for the sources discussed in this article series](https://github.com/lucasjellema/go-on-oci-article-sources) 
+[Source code repository for the sources discussed in this article series](https://github.com/lucasjellema/go-on-oci-article-sources)
 
 [Oracle Cloud Infrastructure Blog - Automating a pod identity solution with Oracle Container Engine for Kubernetes (OKE) - by Ed Shnekendorf](https://blogs.oracle.com/cloud-infrastructure/post/automating-a-pod-identity-solution-with-oracle-container-engine-for-kubernetes-oke) - this article describes the use of instance principals for the nodes (OCI Compute Instances) in the OKE cluster to provide permissions for the Pods running on the node to access OCI services]
 
