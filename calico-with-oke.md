@@ -134,7 +134,7 @@ If you want to dive right in and test Calico as a network pod policy engine, the
 
 Alternatively, if you'd prefer a more directed approach, you can always try the [security tutorials](https://docs.projectcalico.org/security/) on the Calico website.
 
-## What's next  
+## What's next
 
 Congratulations! You've successfully installed Calico on your OKE Cluster.
 
