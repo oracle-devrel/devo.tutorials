@@ -275,15 +275,15 @@ A popular alternative to *go-ora* is the Go package *godror* (formerly called go
 
 The *GoDrOr* driver uses Oracle Database Programming Interface for C (ODPI-C). It's an open source library of C code -- maintained by Oracle Corporation -- that simplifies the use of common Oracle Call Interface (OCI) features for Oracle Database drivers and user applications. When using *GoDrOr* we do not need to install ODPI-C or be even aware of its existence. However, the environment in which our Go application, including the driver, is running on needs to contain Oracle Client libraries.
 
-<!--EDIT POINT-->The simplest Oracle Client is the free Oracle Instant Client, see [Oracle Website Overview Page for ](https://www.oracle.com/database/technologies/instant-client.html). Only the "Basic" or "Basic Light" package is required. Oracle Client libraries are also available in any Oracle Database installation or full Oracle Client installation. Detailed installation instructions for Linux can be found in the [Oracle Database Documentation for Release 21c -- Database Client Installation Guide for Linux -- Installing Oracle Instant Client](https://docs.oracle.com/en/database/oracle/oracle-database/21/lacli/installing-instant-client.html). 
+The simplest Oracle Client is the free Oracle Instant Client (see the [Oracle Instant Client overview page](https://www.oracle.com/database/technologies/instant-client.html)). Only the "Basic" or "Basic Light" package is required. Oracle Client libraries are also available in any Oracle Database installation or full Oracle Client installation. Detailed installation instructions for Linux can be found in the [Oracle Database Documentation for Release 21c -- Database Client Installation Guide for Linux -- Installing Oracle Instant Client](https://docs.oracle.com/en/database/oracle/oracle-database/21/lacli/installing-instant-client.html). 
 
-ODPI-C dynamically loads available Oracle Client libraries at runtime. The Oracle Client libraries are looked for in the same directory that the ODPI-C library (or application binary) is located in. If they are not found, then they are searched for in the standard operating system search path, for example PATH on Windows or LD_LIBRARY_PATH on Linux. Finally, on platforms other than Windows, $ORACLE_HOME/lib is also searched. For details on ensuring the ODPI-C can find the Oracle Client libraries, please check out [ODIP-C GitHub Home -- ODPI-C Installation](https://oracle.github.io/odpi/doc/installation.html).
+ODPI-C dynamically loads available Oracle Client libraries at runtime. The Oracle Client libraries are searched for in the same directory as the ODPI-C library (or application binary). If they are not found, they're searched for in the standard operating system search path, e.g. `PATH` on Windows or `LD_LIBRARY_PATH` on Linux. Finally, on platforms other than Windows, `$ORACLE_HOME/lib` is also searched. For details on ensuring the ODPI-C can find the Oracle Client libraries, please check out [ODIP-C GitHub Home -- ODPI-C Installation](https://oracle.github.io/odpi/doc/installation.html).
 
 #### Modifying the Go application to work with GoDrOr
 
 The changes we have to make to the application in order to switch from using *go-ora* to *godror* are minimal.
 
-First, the *godror* driver is added to the Go application with 
+First, the *godror* driver is added to the Go application with: 
 
 ```console
 github.com/godror/godror
@@ -291,7 +291,7 @@ github.com/godror/godror
 
 This downloads the package and adds a *require* entry to the `go.mod` file. 
 
-Next, create a new file called `godror-based-oracle-database-client.go` in the same application directory -- which is very similar to `pure-oracle-database-client.go` that contains details for connecting through the *go-ora* driver.
+Next, create a new file called `godror-based-oracle-database-client.go` in the same application directory -- which is very similar to `pure-oracle-database-client.go`, which contains details for connecting through the *go-ora* driver.
 
 The contents of this new file:
 
@@ -318,9 +318,12 @@ func GetSqlDBWithGoDrOrDriver(dbParams map[string]string) *sql.DB {
 }
 ```
 
-The import for the *godror* package is different compared to the import of *go-ora*. The rest of the code is exactly the same as before. Note: when we use the Oracle Wallet and change to encrypted communications to the Autonomous Database, there will be more differences between the code used with the two drivers.
+The import for the *godror* package is different compared to the import of *go-ora*. The rest of the code is exactly the same as before. 
 
-Finally, to make the application stop using *go-ora* and start using *godror*, all that is needed is to comment out or remove one line and add another in function `main`, calling `GetSqlDBWithGoDrOrDriver`:
+> Note: when we use the Oracle Wallet and change to encrypted communications with the Autonomous Database, there will be more differences between the code used with the two drivers.
+{:.notice}
+
+Finally, to make the application stop using *go-ora* and start using *godror*, we just need to comment out or remove one line and add another in function `main`, calling `GetSqlDBWithGoDrOrDriver`:
 
 ```go
 func main() {
@@ -328,13 +331,13 @@ func main() {
 	db := GetSqlDBWithGoDrOrDriver(localDB)
 ```
 
-Run the application again with `go run *.go` and you will find the same output as before. The fact that now the Oracle Instant Client is involved is not noticeable. The behavior is apparently unchanged, even though there could be non functional differences, for example in performance of certain operations. 
+Run the application again with `go run *.go` and you will find the same output as before. The fact that the Oracle Instant Client is involved now is not noticeable. The behavior is apparently unchanged, even though there could be non-functional differences such as the performance of certain operations. 
 
 ### Database Transaction Management
 
-What is not immediately obvious from our previous discussion is that we never actually committed data to the database. All SQL actions took place in a single database session. The two DDL operations that created and dropped the table implicitly committed the transaction but none of the insert statements were committed. Some databases have an *autocommit* setting -- some even as their default -- that turns every DML operation into a transaction that is automatically committed. Not so with the Oracle Database. In order to commit the changes made to database records, these changes are explicitly committed -- or rolled back in case their lasting effects are not desirable after all. 
+What is not immediately obvious from our previous discussion is that we never actually committed data to the database. All SQL actions took place in a single database session. The two DDL operations that created and dropped the table implicitly committed the transaction, but none of the insert statements were committed. Some databases have an *autocommit* setting -- some even as their default -- that turns every DML operation into a transaction that is automatically committed. Not so with the Oracle Database. In order to commit the changes made to database records, these changes must be explicitly committed -- or rolled back in case their lasting effects are not desirable after all. 
 
-In our Go application we can work with database transactions explicitly -- by beginning a transaction (sql.Tx) on a database, executing DML statements on that transaction and finally either committing or rolling back the transaction. For example:
+In our Go application we can work with database transactions explicitly -- by beginning a transaction (sql.Tx) on a database, executing DML statements on that transaction, and finally either committing or rolling back the transaction. For example:
 
 ```go
   ctx := context.Background()
@@ -347,23 +350,26 @@ In our Go application we can work with database transactions explicitly -- by be
 
 ## Go Application talking to OCI Autonomous Database
 
-Making a Go application talk to a local (or any traditionally connected) Oracle Database was not so hard. Databases that are configured for encrypted communications from clients that use the Oracle Wallet -- such as Oracle Autonomous Database instances on OCI -- are not that much harder to interact with. We need to extend our code to work with the Oracle Wallet file and of course we need to run an Autonomous Database instance and acquire the associated Oracle Wallet.
+Making a Go application talk to a local (or any traditionally connected) Oracle Database was not so hard. Databases that are configured for encrypted communications from clients that use the Oracle Wallet -- such as Oracle Autonomous Database instances on OCI -- are no more difficult to interact with. We need to extend our code to work with the Oracle Wallet file, and of course we need to run an Autonomous Database instance and acquire the associated Oracle Wallet.
 
 ### Run free Autonomous Database on OCI
 
-To run an Autonomous Database Instance is almost simpler than running a local database. An ATP instance can be created in several ways (including through OCI CLI and Terraform), but most straightforward for a first time is probably through the OCI browser console. Note: Tim Hall provides a good description in his article [Oracle Cloud : Autonomous Transaction Processing (ATP) -- Create Service](https://oracle-base.com/articles/vm/oracle-cloud-autonomous-transaction-processing-atp-create-service) — and there are many more to be found. 
+To run an Autonomous Database Instance is almost simpler than running a local database. An ATP instance can be created in several ways (including through OCI CLI and Terraform), but the most straightforward method for your first time is probably through the OCI browser console. 
+
+> Note: Tim Hall provides a good description in his article [Oracle Cloud : Autonomous Transaction Processing (ATP) -- Create Service](https://oracle-base.com/articles/vm/oracle-cloud-autonomous-transaction-processing-atp-create-service), and there are many more to be found. 
+{:.notice}
 
 Let's create your always free ATP instance: 
 
-Type *aut* in console's search box, navigate to *Autonomous Database | Features*, click on button *Create Autonomous Database*. 
+Type *aut* in console's search box, navigate to *Autonomous Database | Features*, click on button **Create Autonomous Database**. 
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-nav-autonomous-db.png 1200 395 "Start creation of Autonomous Database in the OCI console" %}  
 
-In the creation form provide a display name (why not *go-on-oci-db*?) and database name, select *Transaction Processing* as the workload type, toggle the *Always Free* toggle to active, provide a password for ADMIN (and remember it well), accept Network Access Type *Secure access from everywhere* and make sure checkbox *Require mutual TLS (mTLS) authentication* is checked. 
+In the creation form, provide a display name (maybe *go-on-oci-db*) and database name, select *Transaction Processing* as the workload type, toggle the *Always Free* toggle to active, provide a password for ADMIN (and remember it well), accept Network Access Type *Secure access from everywhere* and make sure checkbox *Require mutual TLS (mTLS) authentication* is checked.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-create-autonomous-db.png 1200 1789 "Configure the new always free Autonomous Database" %}  
 
-After pressing the button *Create Autonomous Database* to go and create the database, the provisioning status is presented:
+After pressing the button **Create Autonomous Database** to create the database, the provisioning status is presented:
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-provisioningATP.png 1200 564 "OCI is provisioning the ATP instance" %}  
 
@@ -371,42 +377,42 @@ It takes less than a minute for the database to be available.
 
 #### Download Database Wallet with Connect Details
 
-We need the database wallet that contains the SSL certificates needed for the mTLS interaction. Download the wallet for the ATP instance. First click the *DB Connection* button in the ATP page in the OCI Console, then click on *Download wallet*.
+We need the database wallet that contains the SSL certificates required for the mTLS interaction. Download the wallet for the ATP instance. First click the **DB Connection** button in the ATP page in the OCI Console, then click on **Download wallet**.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-downloaddbwallet.png 1200 564 "Download the ATP client credentials ni an Oracle Wallet" %}  
 
-Provide a password for the wallet -- that may be needed for reading the wallet later on. Hang on to this password as well. Note: I have not needed this password for the steps dscribed in this article. 
+Provide a password for the wallet; this may be needed for reading the wallet later on. Hang on to this password as well, though I have not needed this password for the steps described in this article. 
 
-Save the zip file -- we will soon use it.
+Save the zip file, we'll use it soon.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-downloadwallet2.png 1200 547 "Define password for the wallet" %}  
 
 #### Create Demo user account in Autonomous Database
 
-You may want to create a *demo* user account in the autonomous database. You can do with these steps:
+You may want to create a *demo* user account in the autonomous database. You can do this with these steps:
 
-On the ATP details page, click on button *Database Actions*. Connect as user *admin* and use the password that you used when configuring ATP. In the *Database Actions Launchpad*, click on the tile *SQL*. The SQL Worksheet is opened.
+1. On the ATP details page, click on button **Database Actions**. Connect as user *admin* and use the password that you used when configuring ATP. 
+2. In the *Database Actions Launchpad*, click on the tile **SQL**. The SQL Worksheet is opened.
 
-{% imgx aligncenter assets/way-to-go-on-oci-article-4-dbactions-sqldeveloper.png 1200 757 "Open the browser based SQL Worksheet from the Database Actions button in the ATP console" %}  
+	{% imgx aligncenter assets/way-to-go-on-oci-article-4-dbactions-sqldeveloper.png 1200 757 "Open the browser based SQL Worksheet from the Database Actions button in the ATP console" %}  
+3. Paste the statements below into the worksheet and the icon for running the script (or use the F5 button on your keyboard). These statements create a user (schema) to work with in the following sections, just as we did in the local database:
 
-Paste the statements below into the worksheet and the icon for running the script (or use the F5 button on your keyboard). These statements create a user (schema) to work with in the following sections, just as we did in the local database:
-
-```sql
-create user demo identified by thePassword1 default tablespace users temporary tablespace temp 
-/
-grant connect, resource to demo 
-/
-ALTER USER DEMO QUOTA UNLIMITED ON DATA
-/
-```
+	```sql
+	create user demo identified by thePassword1 default tablespace users temporary tablespace temp 
+	/
+	grant connect, resource to demo 
+	/
+	ALTER USER DEMO QUOTA UNLIMITED ON DATA
+	/
+	```
 
 ### Modify Go application with ATP and Oracle Wallet connection details
 
-When the Oracle Database that I want to interact with needs to be connected to with the use of an Oracle Wallet then I need to pass the file system location of the Oracle Wallet to the driver. More precisely: I need to specify the directory path to the directory that contains the file `cwallet.sso` that is part of the wallet. The wallet typically is provided initially in a zip-archive. This archive should be extracted (or at least this file should) and the path to the directory that contains the file is what will be called the walletLocation. At this point, extract `cwallet.sso` from the wallet zip file and move this file to a location that is accessible from the Go application -- it might even be in the same directory as the Go application itself. This may not be best practice for production grade applications (!) but for the purposes of this article it will suffice.
+When the Oracle Database that I want to interact with needs to be connected to with the use of an Oracle Wallet, then I need to pass the file system location of the Oracle Wallet to the driver. More precisely, I need to specify the path to the directory that contains the file `cwallet.sso` that is part of the wallet. The wallet is typically provided in a zip-archive. This archive should be extracted (or at least this file should) and the path to the directory that contains the file is what will be called the `walletLocation`. At this point, extract `cwallet.sso` from the wallet zip file and move this file to a location that is accessible from the Go application -- it might even be in the same directory as the Go application itself. This is not the best practice for production grade applications, but for the purposes of this article it will suffice.
 
 The connection details for the autonomous database that need to be provided consist of the same set of elements used earlier for the local database. The database service name can be found in the `tnsnames.ora` file in the wallet zip file or on the ATP DB Connection page in the OCI Console as *service_name*. The value for the *server* property is available as the *host* in these locations.
 
-When the properties are gathered, the following map definition can be added in file `oracle-database-client-app.go` -- right under *localDB*:
+When the properties are gathered, the following map definition can be added in file `oracle-database-client-app.go`, right under `localDB`:
 
 ```go
 
@@ -434,7 +440,7 @@ func GetSqlDBWithPureDriver(dbParams map[string]string) *sql.DB {
     ...
 ```
 
-To run the application against the Autonomous Database and do its TEMP_TABLE acrobatics in the cloud, we need to change the `main` function every so slightly:
+To run the application against the Autonomous Database and do its `TEMP_TABLE` acrobatics in the cloud, we need to change the `main` function slightly:
 
 ```go
 func main() {
@@ -445,12 +451,11 @@ func main() {
 
 That is: replace the `localDB` reference in the call to `GetSqlDBWithPureDriver` with `autonomousDB`. 
 
-Now run the application once more `go run *.go`. The results will be exactly the same as before against the local database. Only they will probably take a bit longer to be produced -- as now latency is introduced in each of the database interactions.  
-
+Now run the application again with `go run *.go`. The results will be exactly the same as before against the local database, but they will probably take a bit longer to be produced as now latency is introduced in each of the database interactions.  
 
 #### Go interaction with Autonomous Database using Driver godror
 
-The *godror* driver uses a slightly different set up for working with an Oracle Wallet compared to *go-ora*. The function `GetSqlDBWithGoDrOrDriver` in file `godror-based-oracle-database-client.go` is extended to handle this case.
+The *godror* driver uses a slightly different setup for working with an Oracle Wallet compared to *go-ora*. The function `GetSqlDBWithGoDrOrDriver` in file `godror-based-oracle-database-client.go` is extended to handle this case:
 
 ```go
 func GetSqlDBWithGoDrOrDriver(dbParams map[string]string) *sql.DB {
@@ -469,7 +474,7 @@ func GetSqlDBWithGoDrOrDriver(dbParams map[string]string) *sql.DB {
     ...
 ```
 
-To run the application with the *godror* driver against the Autonomous Database and do its TEMP_TABLE acrobatics in the cloud, we need to change the `main` function every so slightly:
+To run the application with the *godror* driver against the Autonomous Database and do its `TEMP_TABLE` acrobatics in the cloud, we need to change the `main` function slightly:
 
 ```go
 func main() {
@@ -478,24 +483,23 @@ func main() {
     ...
 ```
 
-Now run the application once more `go run *.go`. The results will again be exactly the same as before -- as with the *go-ora* driver. It seems however in my environment that actions through *go-ora* are substantially faster than the same actions through *godror*.   
-
+Now run the application again with `go run *.go`. The results will again be exactly the same as with the *go-ora* driver, but it seems (at least in my environment) that actions through *go-ora* are substantially faster than the same actions through *godror*.
 
 ## Deploy Go Application talking to Autonomous Database to OCI
 
-The Code Repository contains an application called *data-service*, in directory `/applications/data-service`. This application is an extension of the *myserver* application that we worked with in episodes one and two of this article series. The application still handles HTTP requests -- as it did before -- and this time also implements a simple data API. Using PUT, POST and DELETE requests, the application can be used to create, update and remove person records from a table called `PEOPLE` in an Oracle Database. Using GET requests, the current details for any person can be retrieved.
+The Code Repository contains an application called *data-service*, in directory `/applications/data-service`. This application is an extension of the *myserver* application that we worked with in articles one and two of this series. The application still handles HTTP requests as it did before, and this time also implements a simple data API. Using PUT, POST and DELETE requests, the application can be used to create, update and remove person records from a table called `PEOPLE` in an Oracle Database. Using GET requests, the current details for any person can be retrieved.
 
-We will first take a brief look at the interesting elements in the application, and then run it locally. The next step is making this application run on OCI -- in a compute instance. You will find that there is nothing very special about an application that has Autonomous Database interaction when it comes to deployment on OCI. Or at least: not until the next installment in this series where we will use OCI Key Vault to securely hold the Oracle Wallet details that thanks to the instance principal based authorization the application can retrieve at runtime. For now however, the wallet is included in the source code repository and processed in the build and deployment pipelines. That is not a good practice -- and will be rectified in the next article. 
+We will first take a brief look at the interesting elements in the application, and then run it locally. The next step is making this application run on OCI in a Compute instance. You will find that there is nothing very special about an application that has Autonomous Database interaction when it comes to deployment on OCI. Or, at least not until the next installment in this series where we will use OCI Key Vault to securely hold the Oracle Wallet details that -- thanks to the instance principal based authorization -- the application can retrieve at runtime. For now, however, the wallet is included in the source code repository and processed in the build and deployment pipelines. That is not a good practice and will be rectified in the next article. 
 
-Once the application is deployed, we verify if we can access it -- with direct access to the compute instance. To apply a good best practice regarding (not) publicly exposing services directly, we then extend the API Gateway with one more route that leads to the *data-service* and specifically its database founded capabilities.
+Once the application is deployed, we verify if we can access it with direct access to the compute instance. To apply a good best practice regarding (not) publicly exposing services directly, we then extend the API Gateway with one more routes that lead to the *data-service*, and specifically its database-founded capabilities.
 
-The final situation we achieve on OCI at the end of this section looks as is shown in the following figure:
+The final situation we achieve on OCI at the end of this section looks like this:
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-data-service-devops-oci-vm.png 997 702 "Overview of build, deploy and run of Data Service on OCI" %}  
 
 ### Inspect data-service and configure for your ATP instance
 
-File `data-server.go` is new in the application. It contains all logic for interacting with the database and handling any HTTP request to the application that comes in on path `data` -- the `DATA_PATH `. The registration in function `main` of the `DataHandler` function integrates the data handling capabilities.
+File `data-server.go` is new in the application. It contains all logic for interacting with the database and handling any HTTP request to the application that comes in on path `data`; the `DATA_PATH`. The registration in function `main` of the `DataHandler` function integrates the data handling capabilities.
 
 ```go
 	http.HandleFunc(DATA_PATH, DataHandler)
@@ -515,12 +519,12 @@ func main() {
 	InitializeDataServer(db)
 	...
 ```
-At the start of the *my-server* application, a database connection is created and data server is set up. he application uses the *godror* driver. Note that we make use of the fact that the compute instance that is the deployment target was created -- back in part one of the series -- on the Oracle Linux Cloud Developer image and has the Oracle Instant Client preinstalled.  
+At the start of the *my-server* application, a database connection is created and data server is set up. The application uses the *godror* driver. Note that we make use of the fact that the Compute instance that is the deployment target was created (back in part one of the series) on the Oracle Linux Cloud Developer image and has the Oracle Instant Client preinstalled.  
 
-All the application needs for you to add in order to run:
+All the application needs added in order to run is:
 
-    1. Copy your `cwallet.sso` file to the root directory of the application
-    2. Define your Autonomous Database connection details in `data-server.go` 
+1. Copy your `cwallet.sso` file to the root directory of the application
+2. Define your Autonomous Database connection details in `data-server.go` 
 
 You can then locally run the application, using
 
@@ -532,7 +536,7 @@ The application starts and reports for duty.
 
 In a separate terminal window, you use `curl` statements to interact with the Person API. These HTTP requests will cause two records to be created -- for Mickey Mouse and Bugs Bunny. Mickey's record is updated once. Both records are retrieved once. Then both are deleted. The final GET request returns no data. 
 
-Feel free to add curl requests or not execute all. You can check -- for example in the SQL Worksheet -- if the Person API has created the database records that are expected.
+Feel free to add curl requests or not execute all. You can check, in the SQL Worksheet for example, if the Person API has created the database records that are expected.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-person-api-persistant-data-in-sqlworksheet.png 1200 379 "Querying table PEOPLE in SQL Worksheet to see new records" %}  
 
@@ -557,41 +561,37 @@ curl -X "GET"  localhost:8080/data?name=Mickey+Mouse
 
 ### Commit, Push and Build leading to Deploy and Run
 
-This variant of the *myserver* application is ready to use and the code is already in the OCI DevOps Code Repository -- as all code from the article source repository on GitHub was committed to the OCI Code Repository in the second article in this series. However, you have added file `cwallet.sso` (the Oracle Wallet for your Autonomous Database instance) and you have updated file `data-server.go` to provide database connection details. Before the build pipeline can be used on OCI to build and subsequently deploy the application, you first need to add the new file, *commit* both the changed and this added file and *push* the changes to the OCI DevOps Code Repository.
+This variant of the *myserver* application is ready to use and the code is already in the OCI DevOps Code Repository, as all code from the article source repository on GitHub was committed to the OCI Code Repository in the second article in this series. However, you have added file `cwallet.sso` (the Oracle Wallet for your Autonomous Database instance) and you have updated file `data-server.go` to provide database connection details. Before the build pipeline can be used on OCI to build and subsequently deploy the application, you first need to add the new file, *commit* both the changed and this added file, and *push* the changes to the OCI DevOps Code Repository.
 
-After these git add, commit and push actions, the Code Repository *go-on-oci-repo* should contain your `cwallet.sso` and the `data-service.go` that you modified. 
+After these `git add`, `commit` and `push` actions, the Code Repository *go-on-oci-repo* should contain your `cwallet.sso` and the `data-service.go` that you modified.
 
-You can now reuse the build pipeline *build-myserver* that was setup in article two when we first discussed OCI DevOps Build Pipelines. However, the current pipeline expects the build specification file in the default location -- and that will not do for the amended *myserver* application. 
+You can now reuse the build pipeline *build-myserver* that was setup in article two when we first discussed OCI DevOps Build Pipelines. However, the current pipeline expects the build specification file in the default location, and that will not do for the amended *myserver* application.
 
-Open the details page of the Build Pipeline *build-myserver* in the OCI Console. Open the details for the managed build stage. Click on **Edit**.
+1. Open the details page of the Build Pipeline *build-myserver* in the OCI Console. Open the details for the managed build stage. Click on **Edit**.
 
-{% imgx aligncenter assets/way-to-go-on-oci-article-4-update-build-pipeline-buildpsec.png 1127 901 "Edit the managed build stage definition in the build pipeline" %}  
+	{% imgx aligncenter assets/way-to-go-on-oci-article-4-update-build-pipeline-buildpsec.png 1127 901 "Edit the managed build stage definition in the build pipeline" %}  
 
-Change the value in the field *Build spec file path* to `/applications/data-service/build_spec.yaml` -- the build specification that is modified to build the extended version of *myserver*. Click on **Save**. 
+2. Change the value in the field *Build spec file path* to `/applications/data-service/build_spec.yaml`, the build specification that is modified to build the extended version of *myserver*. Click on **Save**. 
 
-{% imgx aligncenter assets/way-to-go-on-oci-article-4-updatebuildspec-inbuild-pipeline.png 558 817 "Update the build spec file path -- to build the data-service application" %}  
+	{% imgx aligncenter assets/way-to-go-on-oci-article-4-updatebuildspec-inbuild-pipeline.png 558 817 "Update the build spec file path -- to build the data-service application" %}  
 
-Start a build run. Set a new version for the parameter *MYSERVER_VERSION* if you want to.
+3. Start a build run. Set a new version for the parameter `MYSERVER_VERSION` if you want to.
 
-The pipeline will produce a new artifact -- a zip file with the executable built from the Go sources in directory `/applications/data-service` and containing the wallet file and `website` subdirectory. The pipeline will trigger the deployment pipeline that will bring the artifact to the compute instance, copy the application to the `/tmp/yourserver` directory and run the application. It starts listening for HTTP requests on the port specified by the deployment pipeline parameter *HTTP_SERVER_PORT* (or on 8080 if the parameter is not set). 
+The pipeline will produce a new artifact -- a zip file with the executable built from the Go sources in directory `/applications/data-service` and containing the wallet file and `website` subdirectory. The pipeline will trigger the deployment pipeline that will bring the artifact to the Compute instance, copy the application to the `/tmp/yourserver` directory, and run the application. It starts listening for HTTP requests on the port specified by the deployment pipeline parameter *HTTP_SERVER_PORT* (or on 8080 if the parameter is not set). 
 
-You can access the Person API on the public IP address for the VM -- if that is still exposed:
+You can access the Person API on the public IP address for the VM, if that is still exposed:
 
 ```console
 curl -X "GET"  <public IP for Compute Instance>:8095/data?name=Mickey+Mouse
 ```
 
-You can create a route on API Gateway to provide proper public access to the Person API. Make sure that you add all methods that the API handles to the route definition.
+You can create a route on the API Gateway to provide proper public access to the Person API. Make sure that you add all methods that the API handles to the route definition.
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-dataapi-route-on-apigw.png 730 877 "Define route /person on API Gateway deployment for the data service on the compute instance" %}  
 
-When the deployment is updated, the Person API is available properly at:
+When the deployment is updated, the Person API is available at `https://<public endpoind of API Gateway>/my-api/person?name=Mickey+Mouse`.
 
-```
-https://<public endpoind of API Gateway>/my-api/person?name=Mickey+Mouse
-```
-
-{% imgx aligncenter assets/way-to-go-on-oci-article-4-apigw-computeinstance-atp.png 1017 309 "The end to end flow from HTTP consumer via API Gateway to compute instance and from there to Autonomous Database" %}  
+{% imgx aligncenter assets/way-to-go-on-oci-article-4-apigw-computeinstance-atp.png 1017 309 "The end-to-end flow from HTTP consumer via API Gateway to Compute instance, and from there to Autonomous Database" %}  
 
 Curl and other HTTP tools like Postman can be used to interact with the API, using all methods to create, update, retrieve and delete person records.
 
@@ -599,9 +599,9 @@ Curl and other HTTP tools like Postman can be used to interact with the API, usi
 
 ## Go Application on OCI interacting with Autonomous Database and Object Storage service
 
-The final step in this article combines the interaction with OCI Object Storage service (introduced in the previous article) with operations on an Autonomous Database instance in a single Go application that is first ran locally and then deployed to and executed on a compute instance in OCI and exposed through API Gateway. The functionality provided: send an HTTP GET request with the names of an object and a bucket on Object Storage; the object should be a JSON file that contains data on people in the following format:
+The final step in this article combines the interaction with the OCI Object Storage service (introduced in the previous article) with operations on an Autonomous Database instance in a single Go application that is first ran locally and then deployed to and executed on a compute instance in OCI and exposed through API Gateway. The functionality provided: send an HTTP GET request with the names of an object and a bucket on Object Storage; the object should be a JSON file that contains data on people in the following format:
 
-```
+```json
 [
     {
         "name": "Jasper",
@@ -616,14 +616,14 @@ The final step in this article combines the interaction with OCI Object Storage 
 ]
 ```
 
-The file will be read and records will be created in table PEOPLE in the Autonomous Database for each of the JSON entries.
+The file will be read and records will be created in table `PEOPLE` in the Autonomous Database for each of the JSON entries.
 
-All the application needs for you to add in order to run:
+All you need to add to the application in order to run:
 
-    1. Copy your `cwallet.sso` file to the root directory of the application
-    2. Define your Autonomous Database connection details in `data-server.go` 
-    3. Edit `my-server.go` -- set the correct value for compartmentOCID
-    4. Upload the file `website/sample-persons.json` to a bucket on Object Storage service (feel free to edit the file or to upload a different file with similarly shaped contents)
+1. Copy your `cwallet.sso` file to the root directory of the application
+2. Define your Autonomous Database connection details in `data-server.go` 
+3. Edit `my-server.go` -- set the correct value for compartmentOCID
+4. Upload the file `website/sample-persons.json` to a bucket on the Object Storage service (feel free to edit the file or to upload a different file with similar contents)
 
 You can then locally run the application, using
 
@@ -633,7 +633,7 @@ go run *.go
 
 The application starts and reports for duty. 
 
-In a separate terminal window, you use `curl` statements to interact with the new persons file processor API. An HTTP request should pass in the name of the bucket and the object that contains the JSON data to process. The service will fetch the file, parse its contents and create or update records the PEOPLE table in the autonomous database. 
+In a separate terminal window, you use `curl` statements to interact with the new Persons file processor API. An HTTP request should pass in the name of the bucket and the object that contains the JSON data to process. The service will fetch the file, parse its contents and create or update records the `PEOPLE` table in the autonomous database. 
 
 ```console
 curl "localhost:8080/people?objectName=sample-persons.json&bucketName=the-bucket"
@@ -649,7 +649,7 @@ And you can do the same in the SQL Developer Worksheet:
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-personnelfileprocessed-in-sqldeveloper.png 1200 607 "Records in table PEOPLE when the sample-persons.json file has been processed" %}  
 
-You may be interested in the function `PeopleJSONProcessor` that handles the record creation (or update) in table *PEOPLE*. It uses an Oracle specific Bulk DML approach -- syntax supported by the *godror* driver -- where arrays of values for each of the bind parameters are passed in and all records are created in a single DML statement -- quite efficiently.
+You may be interested in the function `PeopleJSONProcessor`, which handles the record creation (or update) in table `PEOPLE`. It uses an Oracle-specific Bulk DML approach -- syntax supported by the *godror* driver -- where arrays of values for each of the bind parameters are passed in and all records are created in a single DML statement. Quite efficient.
 
 ```go
 func PeopleJSONProcessor(peopleJson []byte) {
@@ -672,58 +672,60 @@ func PeopleJSONProcessor(peopleJson []byte) {
 }
 ```
 
-Now let us bring this application to OCI, to the compute instance we have also used in the previous section. Some steps are needed as preparation:
+Now let us bring this application to OCI, to the Compute instance we have also used in the previous section. Some steps are needed as preparation:
 
-    1. Edit file `object-processor.go` -- change the value of const RUN_WITH_INSTANCE_PRINCIPAL_AUTHENTICATION from false to true (this flag is false when running locally and true when running on a Compute Instance in OCI where Instance Principal authentication and authorization is used) 
-    2. Git actions: add `cwallet.sso` and commit this new file along with the changed files `my-server.go`, `object-processor.go` and `data-service.go`; push the commit to OCI Code Repository  
-    3. Make sure an IAM policy exists that allows the dynamic group `go-on-oci-instances` to read objects in the compartment -- to make it possible for the application running on the VM to call out to Object Storage Service to read the JSON file with *person* records . The policy statement could read: `Allow dynamic-group go-on-oci-instances to read objects in compartment go-on-oci`
+1. Edit file `object-processor.go`: change the value of const `RUN_WITH_INSTANCE_PRINCIPAL_AUTHENTICATION` from false to true (this flag is false when running locally and true when running on a Compute Instance in OCI where Instance Principal authentication and authorization is used) 
+2. Git actions: add `cwallet.sso` and commit this new file along with the changed files `my-server.go`, `object-processor.go` and `data-service.go`; push the commit to OCI Code Repository  
+3. Make sure an IAM policy exists that allows the dynamic group `go-on-oci-instances` to read objects in the compartment; this makes it possible for the application running on the VM to call out to Object Storage Service to read the JSON file with *person* records . The policy statement could read: `Allow dynamic-group go-on-oci-instances to read objects in compartment go-on-oci`
 
-After these git add, commit and push actions, the Code Repository *go-on-oci-repo* should contain your `cwallet.sso` and the `data-service.go` that you modified. 
+After these `git add`, `commit` and `push` actions, the Code Repository *go-on-oci-repo* should contain your `cwallet.sso` and the `data-service.go` that you modified. 
 
-You can now reuse the build pipeline *build-myserver* that we used  before. Just as we did earlier, we have to update the reference to the build specification file.
+You can now reuse the build pipeline *build-myserver* that we used before. Just as we did earlier, we have to update the reference to the build specification file.
 
-Open the details page of the Build Pipeline *build-myserver* in the OCI Console. Open the details for the managed build stage. Click on **Edit**. Change the value in the field *Build spec file path* to `/applications/people-file-processor/build_spec.yaml` -- the build specification that is modified to build the extended version of *myserver*. Click on **Save**. 
+1. Open the details page of the Build Pipeline *build-myserver* in the OCI Console
+2. Open the details for the managed build stage
+3. Click on **Edit**
+4. Change the value in the field *Build spec file path* to `/applications/people-file-processor/build_spec.yaml`, the build specification that is modified to build the extended version of *myserver*
+5. Click on **Save**
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-updatebuildpipeline-buildspec-people-processor.png 1200 764 "Update the build spec file path -- this time to make the managed build stage act on application people-file-processor" %} 
 
 Start a build run. Set a new version for the parameter *MYSERVER_VERSION* if you want to.
 
-The pipeline will produce a new artifact -- a zip file with the executable built from the Go sources in directory `/applications/people-file-processor` and containing the wallet file and `website` subdirectory. The pipeline will trigger the deployment pipeline that will bring the artifact to the compute instance, copy the application to the `/tmp/yourserver` directory and run the application. It starts listening for HTTP requests on the port specified by the deployment pipeline parameter *HTTP_SERVER_PORT* (or on 8080 if the parameter is not set). 
+The pipeline will produce a new artifact -- a zip file with the executable built from the Go sources in directory `/applications/people-file-processor` and containing the wallet file and `website` subdirectory. The pipeline will trigger the deployment pipeline that will bring the artifact to the Compute instance, copy the application to the `/tmp/yourserver` directory, and run the application. It starts listening for HTTP requests on the port specified by the deployment pipeline parameter *HTTP_SERVER_PORT* (or on 8080 if the parameter is not set). 
 
-You can access the API on the public IP address for the VM -- if that is still exposed. Better to add a route on API Gateway, to expose access to the personnel file processor. Navigate to the details for `the-api-gateway`. Open the tab *Deployments*. Click on **Edit**. Open the second step -- for **Routes**. Add a new route. 
+You can access the API on the public IP address for the VM -- if that is still exposed. It's better to add a route on the API Gateway to expose access to the personnel file processor: 
+
+1. Navigate to the details for `the-api-gateway`
+2. Open the tab *Deployments*
+3. Click on **Edit**
+4. Open the second step for **Routes** and add a new route. 
 
 Define the *Path* as `/personnel-file-handler`. The *GET* method should be supported. The type of the route is *HTTP*. The *URL* is: `http://<Public IP for Compute Instance>:8095/people`. Check the value of the *HTTP_SERVER_PORT* on the deployment pipeline *deploy-myserver-on-go-app-vm*. If it is not set to *8095*, then modify the URL value to use the proper port number for the application.  
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-create-route-for-personnel-file-processor-on-apigw.png 1181 902 "Create route on API Gateway for the people path on the data service" %}  
 
-Press **Next**, then **Save changes**. It will take a moment for the API Gateway's Deployment to be refreshed. Once it has, the service that reads a file from an Object Storage bucket, processes the JSON content and creates records in table PEOPLE in the Autonomous Database instance for the entries in this file can be triggered with a simple HTTP GET request to:
+Press **Next**, then **Save changes**. It will take a moment for the API Gateway's Deployment to be refreshed. Once it has, the service that reads a file from an Object Storage bucket, processes the JSON content and creates records in table `PEOPLE` in the Autonomous Database instance for the entries in this file can be triggered with a simple HTTP GET request to `https://<public endpoind of API Gateway>/my-api/personnel-file-handler?objectName=sample-persons.json&bucketName=the-bucket`.
 
-```
-https://<public endpoind of API Gateway>/my-api/personnel-file-handler?objectName=sample-persons.json&bucketName=the-bucket
-```
+The effect of making the call can be inspected through the *person* API that reads records from that same table in that same database: `https://<public endpoind of API Gateway>/my-api/person?name=Jasper`.
 
-The effect of making the call can be inspected through the *person* API that reads records from that same table in that same database:
+The end-to-end picture of what is now deployed on OCI is shown in the next figure.
 
-```
-https://<public endpoind of API Gateway>/my-api/person?name=Jasper
-```
+{% imgx aligncenter assets/way-to-go-on-oci-article-4-endtoend-apigw-vm-object-atp.png 1141 384 "End to end flow: the HTTP request via API Gateway triggers the my-server application that retrieves a file from Object Storage and creates records in the Autonomous Database for all person entries in the file" "End to end flow: the HTTP request via API Gateway triggers the my-server application that retrieves a file from Object Storage and creates records in the Autonomous Database for all person entries in the file" %}  
 
-The end to end picture of what is now deployed on OCI is shown in the next figure.
+What is _not_ shown in the picture and is important to note:
 
-{% imgx aligncenter assets/way-to-go-on-oci-article-4-endtoend-apigw-vm-object-atp.png 1141 384 "End to end flow: the HTTP request via API Gateway triggers the my-server application that retrieves a file from Object Storage and creates records in the Autonomous Database for all person entries in the file" %}  
-
-What is not shown in the picture and quite important to realize:
 * the Oracle Wallet file deployed with the application (in the artifact built from the source in Code Repository)
 * hard coded reference to the compartment in the application
 * the policy that grants permission to the compute instance to read objects
 
-In the next article we look at OCI Key Vault -- a service that offers a much better way to store the Oracle Wallet and make it available to the application at deployment time (or even runtime). 
+In the next article we look at OCI Key Vault, a service that offers a much better way to store the Oracle Wallet and make it available to the application at deployment time (or even runtime). 
 
 ## Conclusion
 
-This article demonstrated how from Go applications, one can interact with an Oracle Database -- either a traditional one or the autonomous kind. We have seen how a connection from a Go application to a local Oracle Database as well as to an Autonomous Database is made -- using a driver and possibly supporting libraries -- and how DDL and DML SQL operations can be performed with these databases from the comfort of the Go application. Using an Oracle Wallet for proper management of (autonomous) database credentials was discussed. An application running on an OCI Compute Instance, interacting through the Go SDK for OCI with the Object Storage Service and manipulating the Autonomous Database -- automatically deployed through OCI DevOps provided the finale of the article.
+This article demonstrated how one can interact with an Oracle Database from Go applications, either a traditional one or the autonomous kind. We have seen how a connection from a Go application to a local Oracle Database -- as well as to an Autonomous Database is made -- using a driver and possibly supporting libraries, and how DDL and DML SQL operations can be performed with these databases from the comfort of the Go application. Using an Oracle Wallet for proper management of (autonomous) database credentials was discussed. An application running on an OCI Compute Instance, interacting through the Go SDK for OCI with the Object Storage Service, and manipulating the Autonomous Database -- automatically deployed through OCI DevOps -- provided the finale of the article.
 
-The fifth and last article in this series series adds two more OCI services for Go applications to interact with: OCI Streaming -- a high volume streaming message broker that allows for decoupled interactions between different microservices and other components -- and the OCI Key Vault for managing secrets -- such as Oracle Wallet with database credentials. This article also introduces a third type of application platform -- next to VM and serverless function -- in the shape of the managed OCI Kubernetes Enginer (OKE), and it shows how DevOps Deployment Pipelines can deploy our Go applications to OKE in an automated way.
+The fifth and last article in this series series adds two more OCI services with which Go applications can interact: OCI Streaming -- a high volume streaming message broker that allows for decoupled interactions between different microservices and other components -- and the OCI Key Vault for managing secrets such as Oracle Wallet with database credentials. This article also introduces a third type of application platform next to VM and serverless function, in the shape of the managed OCI Kubernetes Enginer (OKE), and it shows how DevOps Deployment Pipelines can deploy our Go applications to OKE in an automated way.
 
 ## Resources
 
