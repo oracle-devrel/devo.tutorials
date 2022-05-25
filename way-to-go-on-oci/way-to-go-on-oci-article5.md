@@ -286,7 +286,7 @@ As long as there is only a single instance in the group, all messages on all par
 
 ## Create an OCI Vault and Store Secrets
 
-It is common for applications to use configuration settings as part of their operation. These settings can help determine part of the behavior of the application, instructing it on how to deal endpoints, file system locations, or credentials for making connections. Not unsurprisingly, configuration settings can also be environment dependent. For instance, the same application in a test environment uses different values than it would in the production environment. And as you might imagine, some of the configuration settings are sensitive, such as passwords or private keys.
+It is common for applications to use configuration settings as part of their operation. These settings can help determine part of the behavior of the application, instructing it on how to deal with endpoints, file system locations, or credentials for making connections. Not unsurprisingly, configuration settings can also be environment dependent. For instance, the same application in a test environment uses different values than it would in the production environment. And as you might imagine, some of the configuration settings are sensitive, such as passwords or private keys.
 
 So far, the Go applications discussed in this series haven't worked explicitly with configuration settings. For example purposes, some applications contain hard-coded references to compartment, bucket, and stream, or are committed to the code repository with a database wallet and hard-coded database connection details. This certainly isn't ideal, and in practice you'll want to avoid doing the same for your own applications.
 
@@ -495,7 +495,7 @@ This allows the application, using only the OCID values for the two secrets (the
 
 ### Connecting a Go application to an Oracle Database using Secrets from Vault
 
-The code for a simple Oracle Database client can be found in the application Directory (`applications/safe-database-client`) of this article's source-code repository. If you've been following along with the series, the client code is very similar to what we discussed in article four's `applications/go-orcl-db`. The main difference here is that this application contains neither a wallet file nor any database connection details. And at this point, you can probably see where this is all going. What the database client does require are references to two OCI Secrets. The first OCID refers to the secret with connection details (in JSON string format)while the second OCID refers to the secret that contains the base64-encoded representation of the `cwallet.sso` file.  
+The code for a simple Oracle Database client can be found in the application Directory (`applications/safe-database-client`) of this article's source-code repository. If you've been following along with the series, the client code is very similar to what we discussed in article four's `applications/go-orcl-db`. The main difference here is that this application contains neither a wallet file nor any database connection details. And at this point, you can probably see where this is all going. What the database client does require are references to two OCI Secrets. The first OCID refers to the secret with connection details (in JSON string format) while the second OCID refers to the secret that contains the base64-encoded representation of the `cwallet.sso` file.  
 
 #### Provide the OCIDs
 
@@ -515,7 +515,7 @@ With these values, the application will be able to retrieve the two secrets from
 You can run the application on the command line with:
 
 ```console
-go run *.go`  
+go run *.go  
 ```
 
 The client will connect to the Autonomous Database and perform some small SQL feats. The nice thing about this example is that the application doesn't require any information whatsoever about the database it's going to interact with.
@@ -586,7 +586,7 @@ The secret will contain the stream details in a JSON string similar to the follo
 
       {% imgx aligncenter assets/way-to-go-on-oci-article-5-producepersontestmessage.png 1113 711 "Produce a test person mesage on the Stream" %}  
 
-   There's no need real need to worry, so feel free to publish the message multiple times. It won't result in multiple database records since the name is used as identifier. The only difference you're likely to see will be in the logging of the application. Of course, if you make changes in the name between the messages, no matter how small, you'll wind up with a lot of additional records in the database.
+   There's no real need to worry, so feel free to publish the message multiple times. It won't result in multiple database records since the name is used as identifier. The only difference you're likely to see will be in the logging of the application. Of course, if you make changes in the name between the messages, no matter how small, you'll wind up with a lot of additional records in the database.
 
 >**NOTE:** The code is not very robust. It will likely choke on messages with a different format, so make sure you stay consistent with what's been presented.
 {:.warn}
@@ -900,7 +900,7 @@ As long as we don't change the name or location of the config file from its defa
 #### Interacting with the new cluster
 
 **Local interaction:**
-In addition to cluster access in Cloud Shell, we probably want to have local interaction from our laptop. It should have kubectl running already, as well as OCI CLI with configuration settings that provide access to the OCI tenancy.
+In addition to cluster access in Cloud Shell, we probably want to have local interaction from our laptop. It should have `kubectl` running already, as well as OCI CLI with configuration settings that provide access to the OCI tenancy.
 
 1. In the OKE Cluster Details window in OCI Console, select **Access Cluster** again to display the **Access Your Cluster** dialog box.
 1. This time, select  **Local Access**.
