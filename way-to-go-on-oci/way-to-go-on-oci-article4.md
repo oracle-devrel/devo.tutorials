@@ -1,5 +1,5 @@
 ---
-title: Working in Go applications with Oracle Database and OCI Autonomous Database
+title: Working in Go applications with Oracle Database and Oracle Cloud Autonomous Database
 parent:
 - way-to-go-on-oci
 - tutorials
