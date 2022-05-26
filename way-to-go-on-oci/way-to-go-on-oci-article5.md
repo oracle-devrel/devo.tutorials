@@ -15,7 +15,7 @@ date: 2022-05-26 12:00
 description: Hooking Go applications into OCI Streaming, using OCI Key Vault and Go Deployment on OKE
 toc: true
 author: lucas-jellema
-draft: true
+draft: false
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -74,7 +74,7 @@ Even with everything they can do, creating a Stream in the Console is remarkably
 
 Let's look at how to set this up.
 
-1. In the OCI Console search field, enter **str** and then select **Streaming | Messaging**.
+1. In the OCI Console search field, enter **str** and then select **Streaming \| Messaging**.
 
 1. Select **Create Stream**.
 
@@ -250,7 +250,7 @@ Multiple values for *Type* can be defined to specify where the cursor should sta
 * `TRIM_HORIZON:` The oldest message in the partition that is within the retention period window.
 
 >**NOTE:** When `AFTER_OFFSET` or `AT_OFFSET` are defined, the value for offset **must** be provided. When `AT_TIME` is set as type, a value for time is mandatory.
-{:.warn}
+{:.alert}
 
 **Example -** Where message retrieval should start after offset 5:
 
@@ -312,7 +312,7 @@ In this section, we'll create a Vault and a simple secret that we can read from 
 
 Let's create the vault.
 
-1. In the OCI console, enter **vau** in the search field and then select the link **Vault | Identity & Security**.  
+1. In the OCI console, enter **vau** in the search field and then select the link **Vault \| Identity & Security**.  
 
      The overview page with all of vaults in the current compartment is shown, most likely without any entries.
 
@@ -605,7 +605,7 @@ The secret will contain the stream details in a JSON string similar to the follo
           There's no real need to worry, so feel free to publish the message multiple times. It won't result in multiple database records since the name is used as identifier. The only difference you're likely to see will be in the logging of the application. Of course, if you make changes in the name between the messages, no matter how small, you'll wind up with a lot of additional records in the database.
 
 >**NOTE:** The code is not very robust. It will likely choke on messages with a different format, so make sure you stay consistent with what's been presented.
-{:.warn}
+{:.alert}
 
 ## Deploy Person Producer on OKE
 
@@ -737,7 +737,7 @@ What this code accomplishes:
     ```
 
     >**NOTE:** Normally, adding the OCI config and private key file should never be done in a container image that leaves your machine. We're only doing so now to test the image locally. Once we're certain everything is working properly, we'll rebuild the image without these files and only then push it to the container image registry.
-    {:.warn}
+    {:.alert}
 
 1. Build the container image locally using this command:
 
@@ -857,7 +857,7 @@ After you've made that decision (or accepted the default settings), you can leav
 
 #### OCI wizard
 
-1. Enter *ok* in the search box and then select the link **Kubernetes Clusters (OKE) | Containers & Artifacts**.
+1. Enter *ok* in the search box and then select the link **Kubernetes Clusters (OKE) \| Containers & Artifacts**.
 1. Select **Create cluster**.
     A popup window appears with two radio buttons: *Quick create* and *Custom create*.  
 1. Accept the first one (*Quick create*) and then select **Launch workflow**.

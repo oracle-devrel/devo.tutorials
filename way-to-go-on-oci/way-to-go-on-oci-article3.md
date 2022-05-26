@@ -19,7 +19,7 @@ date: 2022-05-26 10:00
 description: Building OCI Functions in Go and using the Go SDK for OCI to leverage OCI services.
 toc: true
 author: lucas-jellema
-draft: true
+draft: false
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
@@ -150,7 +150,7 @@ Now, let's create this Function on OCI instead of just in our development enviro
 
 #### Create Application
 
-Let's first create the application through the OCI Console. Type *app* in the search box and click on *Applications | Functions* in the Services Area. 
+Let's first create the application through the OCI Console. Type *app* in the search box and click on *Applications \| Functions* in the Services Area. 
 
 Click on button *Create Application*. Type the name for the application: *go-on-oci-app*. Select the VCN that was created in part one of the article series and its one public subnet. Then click on *Create* to create the application. 
 
@@ -181,7 +181,7 @@ oci iam compartment list
 
 If the user account used for deploying the function has the necessary IAM permissions, then deployment will create the repository for the function images in the Container Image Registry. In case those privileges are not available or you want to prepare the repository, you can do so as follows.
 
-1. Type *regi* in the search bar. Click on link *Container Registry | Containers & Artifacts*. 
+1. Type *regi* in the search bar. Click on link *Container Registry \| Containers & Artifacts*. 
 2. Click *Create repository*. Type the name of the repository: *go-on-oci/greeter*. This is comprised of the repository prefix and the name of the function, in which the repository will contain the images. Set the Access to *Public*. 
 
     ![](assets/3tgo-create-repository.png)  
@@ -268,7 +268,7 @@ This image describes the situation we have arrived at:
 
 ![](assets/3tgo-local-dev-oci-functions.png)  
 
-You can check in the OCI Console for the evidence of what just happened. Type *greeter* in the search box in the console. Under *Resources* there will be an entry *greeter | Functions*. Click on the link to go to the page showing details for the function. You will find references to the function image, the memory setting and the endpoint for invoking the function. Under metrics you should find evidence of the call to the function made using the Fn CLI. 
+You can check in the OCI Console for the evidence of what just happened. Type *greeter* in the search box in the console. Under *Resources* there will be an entry *greeter \| Functions*. Click on the link to go to the page showing details for the function. You will find references to the function image, the memory setting and the endpoint for invoking the function. Under metrics you should find evidence of the call to the function made using the Fn CLI. 
 
 In the search results for *greeter*, you'll also find the Container Repository *go-on-oci/greeter*. When you navigate to the repository, you'll find details for the image(s) published to it.
 
@@ -284,7 +284,7 @@ A better way to allow consumers to invoke functions is through an API Gateway. W
 
 The API Gateway needs to be allowed to invoke the function, using a policy that provides permission for the API Gateway to invoke functions. 
 
-Create the policy for API Gateway to invoke functions. To go create a policy in the console: type *poli* in the search bar and click on *Policies | Identity* in the *Services* area of the search results popup. This takes you to the *Policies* overview page for the current compartment.
+Create the policy for API Gateway to invoke functions. To go create a policy in the console: type *poli* in the search bar and click on *Policies \| Identity* in the *Services* area of the search results popup. This takes you to the *Policies* overview page for the current compartment.
 
 The policy defines the permission for the API Gateways to access resources in the compartment. Create a new policy, type a name (*invoke-function-for-api-gateway*), a description, and the following statement:
 
@@ -297,7 +297,7 @@ Replace `<compartment-name>` with the name of the compartment, which is probably
 
 #### Define the Route for the Function in the Deployment on the API Gateway
 
-With the permissions taken care of, we can now define the route on the API Gateway. Type *gat* into the search bar in the console. Click on *Gateways | API Management*. Click on the link for *the-api-gateway*. Click on *Deployments*. In the list of deployments (which contains a single deployment), click on the link *myserver-api*. 
+With the permissions taken care of, we can now define the route on the API Gateway. Type *gat* into the search bar in the console. Click on *Gateways \| API Management*. Click on the link for *the-api-gateway*. Click on *Deployments*. In the list of deployments (which contains a single deployment), click on the link *myserver-api*. 
 
 Click on button *Edit* to open the deployment specification. Click on the link for the second step: *Routes*. Scroll down and click on the button *+ Another Route*.
 
@@ -1003,7 +1003,7 @@ All {resource.type = 'fnfunc', resource.compartment.id = '<compartment_id>'}
 
 Of course, replace `<compartment_id>` with the identifier of the compartment you are working in. Then press *Create*.
 
-To create a policy in the console: type *poli* in the search bar and click on *Policies | Identity* in the *Services* area in the search results popup. This takes you to the *Policies* overview page for the current compartment.
+To create a policy in the console: type *poli* in the search bar and click on *Policies \| Identity* in the *Services* area in the search results popup. This takes you to the *Policies* overview page for the current compartment.
 
 The first policy statement defines the permission for the function to manage objects in the compartment. The second statement adds the permission for managing buckets. Define a name, a description, and the following statements:
 
@@ -1026,7 +1026,7 @@ Verify that the bucket is created and and contains the freshly created object us
 
 #### Add Route in API Gateway to Trigger Function
 
-To be able to invoke the `object-broker` function over HTTP from anywhere, we will again make use of the API Gateway. Type *gat* into the search bar in the console. Click on *Gateways | API Management*. Click on the link for *the-api-gateway*. Click on *Deployments*. In the list with deployments -- which contains a single deployment -- click on the link *myserver-api*. 
+To be able to invoke the `object-broker` function over HTTP from anywhere, we will again make use of the API Gateway. Type *gat* into the search bar in the console. Click on *Gateways \| API Management*. Click on the link for *the-api-gateway*. Click on *Deployments*. In the list with deployments -- which contains a single deployment -- click on the link *myserver-api*. 
 
 Click on *Edit* to open the deployment specification. Click on the link for the second step: *Routes*. Scroll down and click on *+ Another Route*.
 

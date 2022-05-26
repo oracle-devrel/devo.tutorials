@@ -15,7 +15,7 @@ date: 2022-05-26 11:00
 description: Working with on premises Oracle Database and OCI Autonomous Database in Go applications, either on OCI Compute Instances or anywhere else.
 toc: true
 author: lucas-jellema
-draft: true
+draft: false
 ---
 {% imgx alignright assets/way-to-go-on-oci-article-4-endtoend-apigw-vm-object-atp.png 1141 384 "End state on OCI with Go service on Compute Instance, exposed through API Gateway, interacting with Autonomous Database and Object Storage "  %}
 
@@ -361,7 +361,7 @@ To run an Autonomous Database Instance is almost simpler than running a local da
 
 Let's create your always free ATP instance: 
 
-Type *aut* in console's search box, navigate to *Autonomous Database | Features*, click on button **Create Autonomous Database**. 
+Type *aut* in console's search box, navigate to *Autonomous Database \| Features*, click on button **Create Autonomous Database**. 
 
 {% imgx aligncenter assets/way-to-go-on-oci-article-4-nav-autonomous-db.png 1200 395 "Start creation of Autonomous Database in the OCI console" %}  
 

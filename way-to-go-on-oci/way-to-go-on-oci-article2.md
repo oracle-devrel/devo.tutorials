@@ -17,7 +17,7 @@ date: 2022-05-26 09:00
 description: How to build, deploy, test and expose Go applications on Oracle Cloud Infrastructure with DevOps, Resource Manager, Compute and API Gateway.
 toc: true
 author: lucas-jellema
-draft: true
+draft: false
 ---
 {% imgx alignright assets/way-to-go-on-oci-article-2-thumbnail-overview.png 400 400 "Go Build & Deployment on OCI" %}
 
@@ -184,7 +184,7 @@ Of course, replace `<compartment_id>` with the identifier of the compartment you
 
 It is convenient to define the dynamic group in this broad fashion, simply including all resources in the compartment of type deployment pipeline. In a realistic environment, I recommend defining dynamic groups and policies that are as fine-grained as possible as to not grant more permissions than are needed.
 
-Next, to create a policy in the console: type *poli* in the search bar and click on *Policies | Identity* in the *Services* area in the search results popup. This takes you to the *Policies* overview page for the current compartment.
+Next, to create a policy in the console: type *poli* in the search bar and click on *Policies \| Identity* in the *Services* area in the search results popup. This takes you to the *Policies* overview page for the current compartment.
 
 
 The first policy defines the permission for the deployment pipelines to access resources in the compartment. Create a new policy, type a name, a description and the following statement:
@@ -451,7 +451,7 @@ Press button *Add*. This completes the definition of the managed build stage. Th
 
 Well, hang on, I hear you think. We may have indicated the sources to use, but we certainly did not say what to do with those sources. Whether any linting, testing, compilation and packaging into a zip file should be performed. And in fact -- we did stipulate exactly what should happen on the build server. It is right there -- in the `build-spec.yaml` file. We have not talked about that file yet and we certainly did not create it. But it pushed into the code repository and sitting there in the root directory of the project. It is this file that contains the instructions for the actual detailed steps executed on the build server.
 
-```
+```yaml
 version: 0.1
 component: build
 timeoutInSeconds: 6000
@@ -623,7 +623,7 @@ It is convenient to define the dynamic group in this broad fashion -- simply inc
 
 #### Define Policies that Bestow Rights on the Dynamic Group
 
-To create a policy in the console, type *poli* in the search bar and click on *Policies | Identity* in the *Services* area of the search results popup. This takes you to the *Policies* overview page for the current compartment.
+To create a policy in the console, type *poli* in the search bar and click on *Policies \| Identity* in the *Services* area of the search results popup. This takes you to the *Policies* overview page for the current compartment.
 
 The first policy defines the permission for the build pipelines to deliver artifacts to the Artifact Registry. Define a name, a description and the following statement:
 
@@ -780,7 +780,7 @@ Without going into all features the API Gateway offers, we will create an API Ga
 
 ### Create API Gateway
 
-Type *gat* into the search bar in the console. Click on the link *Gateways | API Management*.
+Type *gat* into the search bar in the console. Click on the link *Gateways \| API Management*.
 
 Click on the button *Create Gateway*. Enter a name for the new gateway, for example *the-api-gateway*. Accept the type *Public*. Select the same VCN used for the Compute instance and the same public subnet and do not enable network security groups. Accept the default setting under Certificate. Press *Create Gateway*. 
 
