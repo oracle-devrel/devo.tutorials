@@ -144,7 +144,7 @@ You may want a GitHub account if you want to branch the project as I did for ext
 OK, maybe not the very next step -- but eventually this could become my own little Siri or Alexa, running in OCI, tied to systems in my house, capable of giving me whatever information I need by just asking. Sort of like a certain comic book character who came to life on screen not too long ago...
 
 You can try all this for yourself by setting up a free tier account, and reviewing [the article](https://medium.com/geekculture/create-chatbot-with-nodejs-cf3d8bc3f302) for the chatbot code. 
-Join us on our [public Slack](https://bit.ly/devrel_slack)) if you do some cool stuff with it!
+Join us on our [public Slack](https://bit.ly/devrel_slack) if you do some cool stuff with it!
 
 
 
