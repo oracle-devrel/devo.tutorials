@@ -15,6 +15,7 @@ date: 2022-05-26 11:00
 description: Working with on premises Oracle Database and OCI Autonomous Database in Go applications, either on OCI Compute Instances or anywhere else.
 toc: true
 author: lucas-jellema
+draft: true
 ---
 {% imgx alignright assets/way-to-go-on-oci-article-4-endtoend-apigw-vm-object-atp.png 1141 384 "End state on OCI with Go service on Compute Instance, exposed through API Gateway, interacting with Autonomous Database and Object Storage "  %}
 
