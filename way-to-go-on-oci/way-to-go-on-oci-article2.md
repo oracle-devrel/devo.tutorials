@@ -1,9 +1,8 @@
 ---
 title: Go Software Engineering and Automation with Oracle Cloud Infrastructure DevOps
 parent:
-- way-to-go-on-oci
 - tutorials
-redirect_from: "/tutorials/way-to-go-on-oci/go-on-oci-devops-article-2"
+- way-to-go-on-oci
 tags:
 - open-source
 - devops
@@ -14,11 +13,10 @@ tags:
 - iac
 categories:  [clouddev, cloudapps]
 thumbnail: assets/way-to-go-on-oci-article-2-thumbnail-overview.png
-date: 2022-05-01 11:00
+date: 2022-05-26 11:00
 description: How to build, deploy, test and expose Go applications on Oracle Cloud Infrastructure with DevOps, Resource Manager, Compute and API Gateway.
 toc: true
 author: lucas-jellema
-published: false
 ---
 {% imgx alignright assets/way-to-go-on-oci-article-2-thumbnail-overview.png 400 400 "Go Build & Deployment on OCI" %}
 

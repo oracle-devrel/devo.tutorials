@@ -1,8 +1,8 @@
 ---
 title: Hooking Go applications into OCI Streaming, using OCI Key Vault and Go Deployment on OKE
 parent:
-- way-to-go-on-oci
 - tutorials
+- way-to-go-on-oci
 tags:
 - open-source
 - devops
@@ -11,12 +11,10 @@ tags:
 - iac
 categories:  [clouddev, cloudapps]
 thumbnail: assets/landing-zone.png
-date: 2022-05-01 11:00
+date: 2022-05-26 11:00
 description: Hooking Go applications into OCI Streaming, using OCI Key Vault and Go Deployment on OKE
 toc: true
 author: lucas-jellema
-xredirect: /tutorials/way-to-go-on-oci/go-on-oci-streaming-vault-oke-article-5
-published: false
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

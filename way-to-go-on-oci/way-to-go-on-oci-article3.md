@@ -1,8 +1,8 @@
 ---
 title: Oracle Cloud Infrastructure Functions in Go and Using the OCI Go SDK for accessing OCI services from Go
 parent:
-- way-to-go-on-oci
 - tutorials
+- way-to-go-on-oci
 tags:
 - open-source
 - devops
@@ -15,11 +15,10 @@ tags:
 - iac
 categories:  [clouddev, cloudapps]
 thumbnail: assets/landing-zone.png
-date: 2022-05-01 11:00
+date: 2022-05-26 11:00
 description: Building OCI Functions in Go and using the Go SDK for OCI to leverage OCI services.
 toc: true
 author: lucas-jellema
-published: false
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

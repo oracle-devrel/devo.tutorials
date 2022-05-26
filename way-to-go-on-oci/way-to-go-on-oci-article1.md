@@ -1,9 +1,8 @@
 ---
 title: How to get Going on Oracle Cloud Compute 
-published: false
 parent:
-- way-to-go-on-oci
 - tutorials
+- way-to-go-on-oci
 tags:
 - open-source
 - devops
@@ -12,7 +11,7 @@ tags:
 - go
 categories:  [clouddev, cloudapps]
 thumbnail: assets/way-to-go-on-oci-1-end-of-article1.png
-date: 2022-05-01 11:00
+date: 2022-05-26 11:00
 description: How to build and run Go applications on Oracle Cloud Infrastructure Compute Instances. How to produce logging from the Go application and capture the logging into OCI Logging.
 toc: true
 author: lucas-jellema
