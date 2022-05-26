@@ -85,7 +85,7 @@ Below is a map of OCI regions to help us pick a set of regions:
 
 {% imgx aligncenter assets/syLSX57E1bT7_EzYZU_qLGg.png 1200 508 "Map of OCI regions" "Map of OCI regions" %}
 
-We will use our newly-minted Singapore region for the Admin cluster and then Mumbai, Tokyo and Sydney as managed clusters in a star architecture:
+We'll use our newly-minted Singapore region for the Admin cluster and then Mumbai, Tokyo, and Sydney as managed clusters in a star architecture:
 
 {% imgx aligncenter assets/rnXSnetqM6oAOJk6bfkyQ.png 671 549 "Verrazzano Clusters spread across OCI Asia Pacific regions" "Verrazzano Clusters spread across OCI Asia Pacific regions" %}
 
@@ -93,556 +93,577 @@ We will use our newly-minted Singapore region for the Admin cluster and then Mum
 
 {% imgx aligncenter assets/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote Peering with different regions" "Remote Peering with different regions" %}
 
-We need the clusters to communicate securely using the OCI Backbone so this means we need to set up DRGs in each region, attach them to their VCN and use remote peering. Since the VCNs and the clusters will be eventually be connected, we also need to ensure their respective IP address ranges (VCN, pod and service) do not overlap.
+We need the clusters to communicate securely using the OCI Backbone, so this means we need to set up DRGs in each region, attach them to their VCN and use remote peering. Since the VCNs and the clusters will be eventually be connected, we also need to ensure their respective IP address ranges (VCN, pod and service) do not overlap.
 
 ## Creating the Verrazzano clusters
 
-We are going to the use [terraform-oci-oke module](https://github.com/oracle-terraform-modules/terraform-oci-oke) to create our clusters. We could create them individually by cloning the module 4 times and then changing the region parameters. However, you will be pleased to know that 1 of the things we recently improved in the 4.0 release of the module is reusability. We'll take advantage of this!
-
-Create a new terraform project and define your variables as follows:
-
-```terraform
-# Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
-# Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
-
-# OCI Provider parameters
-variable "api_fingerprint" {
-  default     = ""
-  description = "Fingerprint of the API private key to use with OCI API."
-  type        = string
-}
-
-variable "api_private_key_path" {
-  default     = ""
-  description = "The path to the OCI API private key."
-  type        = string
-}
-
-variable "verrazzano_regions" {
-  # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
-  description = "A map Verrazzano regions."
-  type        = map(string)
-}
-
-variable "tenancy_id" {
-  description = "The tenancy id of the OCI Cloud Account in which to create the resources."
-  type        = string
-}
-
-variable "user_id" {
-  description = "The id of the user that terraform will use to create the resources."
-  type        = string
-  default     = ""
-}
-
-# General OCI parameters
-variable "compartment_id" {
-  description = "The compartment id where to create all resources."
-  type        = string
-}
-
-variable "label_prefix" {
-  default     = "none"
-  description = "A string that will be prepended to all resources."
-  type        = string
-}
-```
-
-In your terraform.tfvars, along with your identity parameters, define your regions:
-
-```terraform
-verrazzano_regions = {  
-  home  = "your-tenancy-home-region" #replace with your tenancy's home region  
-  admin = "ap-singapore-1"  
-  syd   = "ap-sydney-1"  
-  mum   = "ap-mumbai-1"  
-  tok   = "ap-tokyo-1"  
-}
-```
-
-In your provider.tf, define the providers for the different regions using aliases:
-
-```terraform
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.verrazzano_regions["admin"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "admin"
-}
-
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.verrazzano_regions["home"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "home"
-}
-
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.verrazzano_regions["syd"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "syd"
-}
-
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.verrazzano_regions["mum"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "mum"
-}
-
-provider "oci" {
-  fingerprint      = var.api_fingerprint
-  private_key_path = var.api_private_key_path
-  region           = var.verrazzano_regions["tok"]
-  tenancy_ocid     = var.tenancy_id
-  user_ocid        = var.user_id
-  alias            = "tok"
-}
-```
-
-Finally, in your main.tf, create the different clusters (note that some of the parameters here have the same values, and you could use the default ones, but I wanted to show it was possible to configure these by regions too):
-
-```terraform
-module "vadmin" {
-  source  = "oracle-terraform-modules/oke/oci"
-  version = "4.0.1"
-
-  home_region = var.verrazzano_regions["home"]
-  region      = var.verrazzano_regions["admin"]
-
-  tenancy_id = var.tenancy_id
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = "v8o"
-
-  # ssh keys
-  ssh_private_key_path = "~/.ssh/id_rsa"
-  ssh_public_key_path  = "~/.ssh/id_rsa.pub"
-
-  # networking
-  create_drg                   = true
-  internet_gateway_route_rules = []
-  nat_gateway_route_rules = [
-    {
-      destination       = "10.1.0.0/16"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = "drg"
-      description       = "To Sydney"
-    },
-    {
-      destination       = "10.2.0.0/16"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = "drg"
-      description       = "To Mumbai"
-    },
-    {
-      destination       = "10.3.0.0/16"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = "drg"
-      description       = "To Tokyo"
-    },
-  ]
-
-  vcn_cidrs     = ["10.0.0.0/16"]
-  vcn_dns_label = "admin"
-  vcn_name      = "admin"
-
-  # bastion host
-  create_bastion_host = true
-  upgrade_bastion     = false
-
-  # operator host
-  create_operator                    = true
-  enable_operator_instance_principal = true
-  upgrade_operator                   = false
-
-  # oke cluster options
-  cluster_name                = "admin"
-  control_plane_type          = "private"
-  control_plane_allowed_cidrs = ["0.0.0.0/0"]
-  kubernetes_version          = "v1.20.11"
-  pods_cidr                   = "10.244.0.0/16"
-  services_cidr               = "10.96.0.0/16"
-
-  # node pools
-  node_pools = {
-    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
-  }
-  node_pool_name_prefix = "np-admin"
-
-  # oke load balancers
-  load_balancers          = "both"
-  preferred_load_balancer = "public"
-  public_lb_allowed_cidrs = ["0.0.0.0/0"]
-  public_lb_allowed_ports = [80, 443]
-
-  # freeform_tags
-  freeform_tags = {
-    vcn = {
-      verrazzano = "admin"
-    }
-    bastion = {
-      access     = "public",
-      role       = "bastion",
-      security   = "high"
-      verrazzano = "admin"
-    }
-    operator = {
-      access     = "restricted",
-      role       = "operator",
-      security   = "high"
-      verrazzano = "admin"
-    }
-  }
-
-  providers = {
-    oci      = oci.admin
-    oci.home = oci.home
-  }
-}
-
-module "vsyd" {
-  source  = "oracle-terraform-modules/oke/oci"
-  version = "4.0.1"
-
-  home_region = var.verrazzano_regions["home"]
-  region      = var.verrazzano_regions["syd"]
-
-  tenancy_id = var.tenancy_id
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = "v8o"
-
-  # ssh keys
-  ssh_private_key_path = "~/.ssh/id_rsa"
-  ssh_public_key_path  = "~/.ssh/id_rsa.pub"
-
-  # networking
-  create_drg                   = true
-  internet_gateway_route_rules = []
-  nat_gateway_route_rules = [
-    {
-      destination       = "10.0.0.0/16"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = "drg"
-      description       = "To Admin"
-    }
-  ]
-
-  vcn_cidrs     = ["10.1.0.0/16"]
-  vcn_dns_label = "syd"
-  vcn_name      = "syd"
-
-  # bastion host
-  create_bastion_host = false
-  upgrade_bastion     = false
-
-  # operator host
-  create_operator                    = false
-  enable_operator_instance_principal = true
-  upgrade_operator                   = false
-
-  # oke cluster options
-  cluster_name                = "syd"
-  control_plane_type          = "private"
-  control_plane_allowed_cidrs = ["0.0.0.0/0"]
-  kubernetes_version          = "v1.20.11"
-  pods_cidr                   = "10.245.0.0/16"
-  services_cidr               = "10.97.0.0/16"
-
-  # node pools
-  node_pools = {
-    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150 }
-  }
-
-  # oke load balancers
-  load_balancers          = "both"
-  preferred_load_balancer = "public"
-  public_lb_allowed_cidrs = ["0.0.0.0/0"]
-  public_lb_allowed_ports = [80, 443]
-
-  # freeform_tags
-  freeform_tags = {
-    vcn = {
-      verrazzano = "syd"
-    }
-    bastion = {
-      access     = "public",
-      role       = "bastion",
-      security   = "high"
-      verrazzano = "syd"
-    }
-    operator = {
-      access     = "restricted",
-      role       = "operator",
-      security   = "high"
-      verrazzano = "syd"
-    }
-  }
-
-  providers = {
-    oci      = oci.syd
-    oci.home = oci.home
-  }
-}
-
-module "vmum" {
-  source  = "oracle-terraform-modules/oke/oci"
-  version = "4.0.1"
-
-  home_region = var.verrazzano_regions["home"]
-  region      = var.verrazzano_regions["mum"]
-
-  tenancy_id = var.tenancy_id
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = "v8o"
-
-  # ssh keys
-  ssh_private_key_path = "~/.ssh/id_rsa"
-  ssh_public_key_path  = "~/.ssh/id_rsa.pub"
-
-  # networking
-  create_drg                   = true
-  internet_gateway_route_rules = []
-  nat_gateway_route_rules = [
-    {
-      destination       = "10.0.0.0/16"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = "drg"
-      description       = "To Admin"
-    }
-  ]
-
-  vcn_cidrs     = ["10.2.0.0/16"]
-  vcn_dns_label = "mum"
-  vcn_name      = "mum"
-
-  # bastion host
-  create_bastion_host = false
-  upgrade_bastion     = false
-
-  # operator host
-  create_operator                    = false
-  enable_operator_instance_principal = true
-  upgrade_operator                   = false
-
-  # oke cluster options
-  cluster_name                = "mum"
-  control_plane_type          = "private"
-  control_plane_allowed_cidrs = ["0.0.0.0/0"]
-  kubernetes_version          = "v1.20.11"
-  pods_cidr                   = "10.246.0.0/16"
-  services_cidr               = "10.98.0.0/16"
-
-  # node pools
-  node_pools = {
-    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150 }
-  }
-
-  # oke load balancers
-  load_balancers          = "both"
-  preferred_load_balancer = "public"
-  public_lb_allowed_cidrs = ["0.0.0.0/0"]
-  public_lb_allowed_ports = [80, 443]
-
-  # freeform_tags
-  freeform_tags = {
-    vcn = {
-      verrazzano = "mum"
-    }
-    bastion = {
-      access     = "public",
-      role       = "bastion",
-      security   = "high"
-      verrazzano = "mum"
-    }
-    operator = {
-      access     = "restricted",
-      role       = "operator",
-      security   = "high"
-      verrazzano = "mum"
-    }
-  }
-
-  providers = {
-    oci      = oci.mum
-    oci.home = oci.home
-  }
-}
-
-module "vtok" {
-  source  = "oracle-terraform-modules/oke/oci"
-  version = "4.0.1"
-
-  home_region = var.verrazzano_regions["home"]
-  region      = var.verrazzano_regions["tok"]
-
-  tenancy_id = var.tenancy_id
-
-  # general oci parameters
-  compartment_id = var.compartment_id
-  label_prefix   = "v8o"
-
-  # ssh keys
-  ssh_private_key_path = "~/.ssh/id_rsa"
-  ssh_public_key_path  = "~/.ssh/id_rsa.pub"
-
-  # networking
-  create_drg                   = true
-  internet_gateway_route_rules = []
-  nat_gateway_route_rules = [
-    {
-      destination       = "10.0.0.0/16"
-      destination_type  = "CIDR_BLOCK"
-      network_entity_id = "drg"
-      description       = "To Admin"
-    }
-  ]
-
-  vcn_cidrs     = ["10.3.0.0/16"]
-  vcn_dns_label = "tok"
-  vcn_name      = "tok"
-
-  # bastion host
-  create_bastion_host = false
-  upgrade_bastion     = false
-
-  # operator host
-  create_operator                    = false
-  enable_operator_instance_principal = true
-  upgrade_operator                   = false
-
-  # oke cluster options
-  cluster_name                = "tok"
-  control_plane_type          = "private"
-  control_plane_allowed_cidrs = ["0.0.0.0/0"]
-  kubernetes_version          = "v1.20.11"
-  pods_cidr                   = "10.247.0.0/16"
-  services_cidr               = "10.99.0.0/16"
-
-  # node pools
-  node_pools = {
-    np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150 }
-  }
-
-  # oke load balancers
-  load_balancers          = "both"
-  preferred_load_balancer = "public"
-  public_lb_allowed_cidrs = ["0.0.0.0/0"]
-  public_lb_allowed_ports = [80, 443]
-
-  # freeform_tags
-  freeform_tags = {
-    vcn = {
-      verrazzano = "tok"
-    }
-    bastion = {
-      access     = "public",
-      role       = "bastion",
-      security   = "high"
-      verrazzano = "tok"
-    }
-    operator = {
-      access     = "restricted",
-      role       = "operator",
-      security   = "high"
-      verrazzano = "tok"
-    }
-  }
-
-  providers = {
-    oci      = oci.tok
-    oci.home = oci.home
-  }
-}
-```
-
-For convenience, let's print out the operator host in each region:
-
-```terraform
-output "ssh_to_admin_operator" {
-  description = "convenient command to ssh to the Admin operator host"
-  value       = module.vadmin.ssh_to_operator
-}
-
-output "ssh_to_au_operator" {
-  description = "convenient command to ssh to the Sydney operator host"
-  value       = module.vsyd.ssh_to_operator
-}
-
-output "ssh_to_in_operator" {
-  description = "convenient command to ssh to the Mumbai operator host"
-  value       = module.vmum.ssh_to_operator
-}
-
-output "ssh_to_jp_operator" {
-  description = "convenient command to ssh to the Tokyo operator host"
-  value       = module.vtok.ssh_to_operator
-}
-```
-
-Run terraform init, plan and the plan should indicate the following:
-
-```console
-Plan: 292 to add, 0 to change, 0 to destroy.Changes to Outputs:  
-+ ssh_to_admin_operator = (known after apply)  
-+ ssh_to_au_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"  
-+ ssh_to_in_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"  
-+ ssh_to_jp_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"
-```
-
-Run terraform apply and relax, because soon after you should see the following:
-
-{% imgx aligncenter assets/Eeiu_1isUl47wVZAAd1eoA.png 975 88 "Simultaneous creation of 4 OKE clusters in different regions" "Simultaneous creation of 4 OKE clusters in different regions" %}
-
-This means our four OKE Clusters are being simultaneously created in 4 different OCI regions. In about 15 minutes, you'll have all four clusters created:
-
-{% imgx aligncenter assets/1vdOhprGm48QCzDjYBkUQQ.png 855 183 "Showing outputs after creating clusters" %}
-
-The ssh convenience commands to the various operator hosts will also be printed.
-
-Next, navigate to the DRGs in **_each managed cluster_**'s region i.e. Mumbai, Tokyo, Sydney. Click on Remote Peering Attachment and create a Remote Peering Connection (call it rpc_to_admin). However, in the Admin region (Singapore in our selected region), create 3 Remote Peering Connections:
-
-{% imgx aligncenter assets/sub6pYSaRFEQumzQLQdDxwg.png 1200 339 "3 RPCs in the Admin region" "3 RPCs in the Admin region" %}
-
-We need to peer them. Click on the rpc_to_syd. Open a new tab in your browser and access the OCI Console and change region to Sydney. Then, navigate to the DRG and the rpc_to_syd page. Copy the RPC's OCID (not the DRG), switch to the Admin tab and click on “Establish Connection”:
-
-{% imgx aligncenter assets/2g_Oih2j9NBRy_cUoUW9Eg.png 619 216 "Establishing RPC" "Establishing RPC" %}
-
-Once you've provided the RPC ID and the region as above, click on “Establish Connection” button to perform the peering. Repeat the same procedure for the Tokyo and Mumbai regions until all the managed cluster regions are peered with the Admin region. When the peering is performed and completed, you will see its status will change to “Pending” and eventually “Peered”:
-
-{% imgx aligncenter assets/DX7Nv3MRwczRYbmc5aXzlA.png 1200 405 "RPCs in Pending state" "RPCs in Pending state" %}
-
-{% imgx aligncenter assets/TSN09Afrj1KwHSEjFeYQ.png 1110 471 "RPCs in Peered state" "RPCs in Peered state" %}
+We're going to the use [terraform-oci-oke module](https://github.com/oracle-terraform-modules/terraform-oci-oke) to create our clusters. We could create them individually by cloning the module 4 times and then changing the region parameters, but there's now a much simpler way to do it. You'll be pleased to know that one of the things we improved in the 4.0 release of the module is *reusability*. We'll take advantage of this!
+
+### Create a new Terraform project
+
+1. Let's create a new Terraform project and define our variables as follows:
+
+   ```JSON
+   # Copyright 2017, 2021 Oracle Corporation and/or affiliates.  All rights reserved.
+   # Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl
+
+   # OCI Provider parameters
+   variable "api_fingerprint" {
+     default     = ""
+     description = "Fingerprint of the API private key to use with OCI API."
+     type        = string
+   }
+
+   variable "api_private_key_path" {
+     default     = ""
+     description = "The path to the OCI API private key."
+     type        = string
+   }
+
+   variable "verrazzano_regions" {
+     # List of regions: https://docs.cloud.oracle.com/iaas/Content/General/Concepts/regions.htm#ServiceAvailabilityAcrossRegions
+     description = "A map Verrazzano regions."
+     type        = map(string)
+   }
+
+   variable "tenancy_id" {
+     description = "The tenancy id of the OCI Cloud Account in which to create the resources."
+     type        = string
+   }
+
+   variable "user_id" {
+     description = "The id of the user that terraform will use to create the resources."
+     type        = string
+     default     = ""
+   }
+
+   # General OCI parameters
+   variable "compartment_id" {
+     description = "The compartment id where to create all resources."
+     type        = string
+   }
+
+   variable "label_prefix" {
+     default     = "none"
+     description = "A string that will be prepended to all resources."
+     type        = string
+   }
+   ```
+
+2. In `terraform.tfvars`, along with the identity parameters, let's define our regions:
+
+   ```JSON
+   verrazzano_regions = {  
+     home  = "your-tenancy-home-region" #replace with your tenancy's home region  
+     admin = "ap-singapore-1"  
+     syd   = "ap-sydney-1"  
+     mum   = "ap-mumbai-1"  
+     tok   = "ap-tokyo-1"  
+   }
+   ```
+
+3. In `provider.tf`, let's define the providers for the different regions using aliases:
+
+   ```JSON
+   provider "oci" {
+     fingerprint      = var.api_fingerprint
+     private_key_path = var.api_private_key_path
+     region           = var.verrazzano_regions["admin"]
+     tenancy_ocid     = var.tenancy_id
+     user_ocid        = var.user_id
+     alias            = "admin"
+   }
+
+   provider "oci" {
+     fingerprint      = var.api_fingerprint
+     private_key_path = var.api_private_key_path
+     region           = var.verrazzano_regions["home"]
+     tenancy_ocid     = var.tenancy_id
+     user_ocid        = var.user_id
+     alias            = "home"
+   }
+
+   provider "oci" {
+     fingerprint      = var.api_fingerprint
+     private_key_path = var.api_private_key_path
+     region           = var.verrazzano_regions["syd"]
+     tenancy_ocid     = var.tenancy_id
+     user_ocid        = var.user_id
+     alias            = "syd"
+   }
+
+   provider "oci" {
+     fingerprint      = var.api_fingerprint
+     private_key_path = var.api_private_key_path
+     region           = var.verrazzano_regions["mum"]
+     tenancy_ocid     = var.tenancy_id
+     user_ocid        = var.user_id
+     alias            = "mum"
+   }
+
+   provider "oci" {
+     fingerprint      = var.api_fingerprint
+     private_key_path = var.api_private_key_path
+     region           = var.verrazzano_regions["tok"]
+     tenancy_ocid     = var.tenancy_id
+     user_ocid        = var.user_id
+     alias            = "tok"
+   }
+   ```
+
+4. Finally, in `main.tf`, we'll create the different clusters (note that some of the parameters here have the same values, and you could use the default ones, but I wanted to show it was possible to configure these by regions too):
+
+   ```JSON
+   module "vadmin" {
+     source  = "oracle-terraform-modules/oke/oci"
+     version = "4.0.1"
+
+     home_region = var.verrazzano_regions["home"]
+     region      = var.verrazzano_regions["admin"]
+
+     tenancy_id = var.tenancy_id
+
+     # general oci parameters
+     compartment_id = var.compartment_id
+     label_prefix   = "v8o"
+
+     # ssh keys
+     ssh_private_key_path = "~/.ssh/id_rsa"
+     ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+
+     # networking
+     create_drg                   = true
+     internet_gateway_route_rules = []
+     nat_gateway_route_rules = [
+       {
+         destination       = "10.1.0.0/16"
+         destination_type  = "CIDR_BLOCK"
+         network_entity_id = "drg"
+         description       = "To Sydney"
+       },
+       {
+         destination       = "10.2.0.0/16"
+         destination_type  = "CIDR_BLOCK"
+         network_entity_id = "drg"
+         description       = "To Mumbai"
+       },
+       {
+         destination       = "10.3.0.0/16"
+         destination_type  = "CIDR_BLOCK"
+         network_entity_id = "drg"
+         description       = "To Tokyo"
+       },
+     ]
+
+     vcn_cidrs     = ["10.0.0.0/16"]
+     vcn_dns_label = "admin"
+     vcn_name      = "admin"
+
+     # bastion host
+     create_bastion_host = true
+     upgrade_bastion     = false
+
+     # operator host
+     create_operator                    = true
+     enable_operator_instance_principal = true
+     upgrade_operator                   = false
+
+     # oke cluster options
+     cluster_name                = "admin"
+     control_plane_type          = "private"
+     control_plane_allowed_cidrs = ["0.0.0.0/0"]
+     kubernetes_version          = "v1.20.11"
+     pods_cidr                   = "10.244.0.0/16"
+     services_cidr               = "10.96.0.0/16"
+
+     # node pools
+     node_pools = {
+       np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150, label = { app = "frontend", pool = "np1" } }
+     }
+     node_pool_name_prefix = "np-admin"
+
+     # oke load balancers
+     load_balancers          = "both"
+     preferred_load_balancer = "public"
+     public_lb_allowed_cidrs = ["0.0.0.0/0"]
+     public_lb_allowed_ports = [80, 443]
+
+     # freeform_tags
+     freeform_tags = {
+       vcn = {
+         verrazzano = "admin"
+       }
+       bastion = {
+         access     = "public",
+         role       = "bastion",
+         security   = "high"
+         verrazzano = "admin"
+       }
+       operator = {
+         access     = "restricted",
+         role       = "operator",
+         security   = "high"
+         verrazzano = "admin"
+       }
+     }
+
+     providers = {
+       oci      = oci.admin
+       oci.home = oci.home
+     }
+   }
+
+   module "vsyd" {
+     source  = "oracle-terraform-modules/oke/oci"
+     version = "4.0.1"
+
+     home_region = var.verrazzano_regions["home"]
+     region      = var.verrazzano_regions["syd"]
+
+     tenancy_id = var.tenancy_id
+
+     # general oci parameters
+     compartment_id = var.compartment_id
+     label_prefix   = "v8o"
+
+     # ssh keys
+     ssh_private_key_path = "~/.ssh/id_rsa"
+     ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+
+     # networking
+     create_drg                   = true
+     internet_gateway_route_rules = []
+     nat_gateway_route_rules = [
+       {
+         destination       = "10.0.0.0/16"
+         destination_type  = "CIDR_BLOCK"
+         network_entity_id = "drg"
+         description       = "To Admin"
+       }
+     ]
+
+     vcn_cidrs     = ["10.1.0.0/16"]
+     vcn_dns_label = "syd"
+     vcn_name      = "syd"
+
+     # bastion host
+     create_bastion_host = false
+     upgrade_bastion     = false
+
+     # operator host
+     create_operator                    = false
+     enable_operator_instance_principal = true
+     upgrade_operator                   = false
+
+     # oke cluster options
+     cluster_name                = "syd"
+     control_plane_type          = "private"
+     control_plane_allowed_cidrs = ["0.0.0.0/0"]
+     kubernetes_version          = "v1.20.11"
+     pods_cidr                   = "10.245.0.0/16"
+     services_cidr               = "10.97.0.0/16"
+
+     # node pools
+     node_pools = {
+       np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150 }
+     }
+
+     # oke load balancers
+     load_balancers          = "both"
+     preferred_load_balancer = "public"
+     public_lb_allowed_cidrs = ["0.0.0.0/0"]
+     public_lb_allowed_ports = [80, 443]
+
+     # freeform_tags
+     freeform_tags = {
+       vcn = {
+         verrazzano = "syd"
+       }
+       bastion = {
+         access     = "public",
+         role       = "bastion",
+         security   = "high"
+         verrazzano = "syd"
+       }
+       operator = {
+         access     = "restricted",
+         role       = "operator",
+         security   = "high"
+         verrazzano = "syd"
+       }
+     }
+
+     providers = {
+       oci      = oci.syd
+       oci.home = oci.home
+     }
+   }
+
+   module "vmum" {
+     source  = "oracle-terraform-modules/oke/oci"
+     version = "4.0.1"
+
+     home_region = var.verrazzano_regions["home"]
+     region      = var.verrazzano_regions["mum"]
+
+     tenancy_id = var.tenancy_id
+
+     # general oci parameters
+     compartment_id = var.compartment_id
+     label_prefix   = "v8o"
+
+     # ssh keys
+     ssh_private_key_path = "~/.ssh/id_rsa"
+     ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+
+     # networking
+     create_drg                   = true
+     internet_gateway_route_rules = []
+     nat_gateway_route_rules = [
+       {
+         destination       = "10.0.0.0/16"
+         destination_type  = "CIDR_BLOCK"
+         network_entity_id = "drg"
+         description       = "To Admin"
+       }
+     ]
+
+     vcn_cidrs     = ["10.2.0.0/16"]
+     vcn_dns_label = "mum"
+     vcn_name      = "mum"
+
+     # bastion host
+     create_bastion_host = false
+     upgrade_bastion     = false
+
+     # operator host
+     create_operator                    = false
+     enable_operator_instance_principal = true
+     upgrade_operator                   = false
+
+     # oke cluster options
+     cluster_name                = "mum"
+     control_plane_type          = "private"
+     control_plane_allowed_cidrs = ["0.0.0.0/0"]
+     kubernetes_version          = "v1.20.11"
+     pods_cidr                   = "10.246.0.0/16"
+     services_cidr               = "10.98.0.0/16"
+
+     # node pools
+     node_pools = {
+       np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150 }
+     }
+
+     # oke load balancers
+     load_balancers          = "both"
+     preferred_load_balancer = "public"
+     public_lb_allowed_cidrs = ["0.0.0.0/0"]
+     public_lb_allowed_ports = [80, 443]
+
+     # freeform_tags
+     freeform_tags = {
+       vcn = {
+         verrazzano = "mum"
+       }
+       bastion = {
+         access     = "public",
+         role       = "bastion",
+         security   = "high"
+         verrazzano = "mum"
+       }
+       operator = {
+         access     = "restricted",
+         role       = "operator",
+         security   = "high"
+         verrazzano = "mum"
+       }
+     }
+
+     providers = {
+       oci      = oci.mum
+       oci.home = oci.home
+     }
+   }
+
+   module "vtok" {
+     source  = "oracle-terraform-modules/oke/oci"
+     version = "4.0.1"
+
+     home_region = var.verrazzano_regions["home"]
+     region      = var.verrazzano_regions["tok"]
+
+     tenancy_id = var.tenancy_id
+
+     # general oci parameters
+     compartment_id = var.compartment_id
+     label_prefix   = "v8o"
+
+     # ssh keys
+     ssh_private_key_path = "~/.ssh/id_rsa"
+     ssh_public_key_path  = "~/.ssh/id_rsa.pub"
+
+     # networking
+     create_drg                   = true
+     internet_gateway_route_rules = []
+     nat_gateway_route_rules = [
+       {
+         destination       = "10.0.0.0/16"
+         destination_type  = "CIDR_BLOCK"
+         network_entity_id = "drg"
+         description       = "To Admin"
+       }
+     ]
+
+     vcn_cidrs     = ["10.3.0.0/16"]
+     vcn_dns_label = "tok"
+     vcn_name      = "tok"
+
+     # bastion host
+     create_bastion_host = false
+     upgrade_bastion     = false
+
+     # operator host
+     create_operator                    = false
+     enable_operator_instance_principal = true
+     upgrade_operator                   = false
+
+     # oke cluster options
+     cluster_name                = "tok"
+     control_plane_type          = "private"
+     control_plane_allowed_cidrs = ["0.0.0.0/0"]
+     kubernetes_version          = "v1.20.11"
+     pods_cidr                   = "10.247.0.0/16"
+     services_cidr               = "10.99.0.0/16"
+
+     # node pools
+     node_pools = {
+       np1 = { shape = "VM.Standard.E4.Flex", ocpus = 2, memory = 32, node_pool_size = 2, boot_volume_size = 150 }
+     }
+
+     # oke load balancers
+     load_balancers          = "both"
+     preferred_load_balancer = "public"
+     public_lb_allowed_cidrs = ["0.0.0.0/0"]
+     public_lb_allowed_ports = [80, 443]
+
+     # freeform_tags
+     freeform_tags = {
+       vcn = {
+         verrazzano = "tok"
+       }
+       bastion = {
+         access     = "public",
+         role       = "bastion",
+         security   = "high"
+         verrazzano = "tok"
+       }
+       operator = {
+         access     = "restricted",
+         role       = "operator",
+         security   = "high"
+         verrazzano = "tok"
+       }
+     }
+
+     providers = {
+       oci      = oci.tok
+       oci.home = oci.home
+     }
+   }
+   ```
+
+5. For convenience, let's print out the operator host in each region:
+
+   ```JSON
+   output "ssh_to_admin_operator" {
+     description = "convenient command to ssh to the Admin operator host"
+     value       = module.vadmin.ssh_to_operator
+   }
+
+   output "ssh_to_au_operator" {
+     description = "convenient command to ssh to the Sydney operator host"
+     value       = module.vsyd.ssh_to_operator
+   }
+
+   output "ssh_to_in_operator" {
+     description = "convenient command to ssh to the Mumbai operator host"
+     value       = module.vmum.ssh_to_operator
+   }
+
+   output "ssh_to_jp_operator" {
+     description = "convenient command to ssh to the Tokyo operator host"
+     value       = module.vtok.ssh_to_operator
+   }
+   ```
+
+### Create OKE clusters
+
+1. Run `terraform init` and then `terraform plan`.
+   The output of *plan* should indicate the following:
+
+   ```console
+   Plan: 292 to add, 0 to change, 0 to destroy.Changes to Outputs:  
+   + ssh_to_admin_operator = (known after apply)  
+   + ssh_to_au_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"  
+   + ssh_to_in_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"  
+   + ssh_to_jp_operator    = "ssh -i ~/.ssh/id_rsa -J opc@ opc@"
+   ```
+
+1. Run `terraform apply` and then `terraform relax`.
+   Shortly after, you should see the following:
+
+   {% imgx aligncenter assets/Eeiu_1isUl47wVZAAd1eoA.png 975 88 "Simultaneous creation of 4 OKE clusters in different regions" "Simultaneous creation of 4 OKE clusters in different regions" %}
+
+   This means our four OKE Clusters are being simultaneously created in 4 different OCI regions. In about 15 minutes, you'll have all four clusters created:
+
+   {% imgx aligncenter assets/1vdOhprGm48QCzDjYBkUQQ.png 855 183 "Showing outputs after creating clusters" %}
+
+   The ssh convenience commands to the various operator hosts will also be printed.
+
+### Establish connections
+
+1. **Create remote peering connections**
+   1. Navigate to the DRGs in ***each*** **managed cluster's** region (Mumbai, Tokyo, and Sydney).
+   2. Select **Remote Peering Attachment** and create a Remote Peering Connection (call it rpc_to_admin).
+   3. In the *Admin region* (Singapore in our selected region), create 3 Remote Peering Connections:
+
+      {% imgx aligncenter assets/sub6pYSaRFEQumzQLQdDxwg.png 1200 339 "3 RPCs in the Admin region" "3 RPCs in the Admin region" %}
+
+      Now, we need to peer them.
+
+1. **Peer the connections**
+   1. Select **rpc_to_syd**.
+   1. Open a new tab in your browser and access the OCI Console and change region to Sydney. Then, navigate to the DRG and the rpc_to_syd page. Copy the RPC's OCID (not the DRG), switch to the Admin tab and click on “Establish Connection”:
+
+      {% imgx aligncenter assets/2g_Oih2j9NBRy_cUoUW9Eg.png 619 216 "Establishing RPC" "Establishing RPC" %}
+
+1. **Establish connection**
+    1. Once you've provided the *RPC ID* and the *region* as above, select **Establish Connection** to perform the peering.
+    1. Repeat the same procedure for the Tokyo and Mumbai regions until all the managed cluster regions are peered with the Admin region. When the peering is performed and completed, you will see its status will change to “Pending” and eventually “Peered”:
+
+       {% imgx aligncenter assets/DX7Nv3MRwczRYbmc5aXzlA.png 1200 405 "RPCs in Pending state" "RPCs in Pending state" %}
+
+       {% imgx aligncenter assets/TSN09Afrj1KwHSEjFeYQ.png 1110 471 "RPCs in Peered state" "RPCs in Peered state" %}
+
+### Configure
 
 At this point, our VCNs are peered but there are three more things we need to do:
 
 1. Configure routing tables so that the Verrazzano managed clusters can communicate to the Admin cluster and vice-versa
-2. Configure NSGs for the control plane CIDRs to accept requests from Admin VCN
-3. Merge the kubeconfigs
+1. Configure NSGs for the control plane CIDRs to accept requests from Admin VCN
+1. Merge the `kubeconfigs`
 
-Actually, the configuration of the routing rules have already been done. "How," you ask? Well, one of the [recent features](https://github.com/oracle-terraform-modules/terraform-oci-oke/releases) we added is the [ability to configure and update routing tables](https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/279). In your main.tf, look in the the Admin cluster module, you will find a parameter that is usually an empty list:
+In the first step, we're asked to configure the routing table. Previously, you would have had to manually configure rules, but now, they're automagically done for you! "How," you ask? Well, one of the [features](https://github.com/oracle-terraform-modules/terraform-oci-oke/releases) we've added is the [ability to configure and update routing tables](https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/279).  
 
-```terraform
+Let's explore this in a little more detail. In your `main.tf`, take a look in the the Admin cluster module. Usually, the `nat_gateway_route_rules`  parameter is an empty list:
+
+```JSON
 nat_gateway_route_rules = []
 ```
 
-Instead, in our Admin module definition, we had already changed this to:
+However, in our Admin module definition, notice that we had already changed this to:
 
-```terraform
+```JSON
 nat_gateway_route_rules = [
 {
   destination       = "10.1.0.0/16"
@@ -667,7 +688,7 @@ nat_gateway_route_rules = [
 
 Similarly, in the managed cluster definitions, we had also set the routing rules to reach the Admin cluster in Singapore:
 
-```terraform
+```JSON
 nat_gateway_route_rules = [  
   {  
     destination       = "10.0.0.0/16"  
@@ -678,9 +699,14 @@ nat_gateway_route_rules = [
 ]
 ```
 
-Note that you can also update these later. Let's say you add another managed region in Hyderabad (VCN CIDR: 10.4.0.0). In the routing rules for Admin, you will add ome more entry to route traffic to Hyderabad:
+>**NOTE:** You can always update these rules later.
+{:.notice}
 
-```terraform
+**Example - updating routing rules:**
+
+Let's say you add another managed region in Hyderabad (VCN CIDR: 10.4.0.0). In the routing rules for Admin, you'll need to add one more entry to route traffic to this new region:
+
+```JSON
 nat_gateway_route_rules = [  
 {  
   destination       = "10.4.0.0/16"  
@@ -691,7 +717,7 @@ nat_gateway_route_rules = [
 ]
 ```
 
-After updating the custom rules, run terraform apply again and the routing rules in the Admin region will be updated.
+After updating the custom rules, run `terraform apply` again and the routing rules in the Admin region will be updated.
 
 Navigate to the Network Visualizer page to check your connectivity and routing rules:
 
@@ -703,7 +729,7 @@ Next, in each region managed VCN's control plane NSG, add an ingress to accept T
 
 ## Operational Convenience
 
-Finally, for convenience, we want to be able to execute most of our operations from the Admin operator host. We first need to obtain the kubeconfig of each cluster and merge them together on the admin operator. You have to do this step manually today but we will try to improve this in the future:
+Finally, for convenience, we want to be able to execute most of our operations from the Admin operator host. We first need to obtain the kubeconfig of each cluster and merge them together on the admin operator. You have to do this step manually today but we'll try to improve this in the future:
 
 1. Navigate to each managed cluster's page and click on Access cluster.
 2. Copy the second command which allows you get the kubeconfig for that cluster
@@ -779,7 +805,7 @@ sydney    cluster-cmgb37morjq   user-cmgb37morjqtokyo
 tokyo     cluster-coxskjynjra   user-coxskjynjra
 ```
 
-This is all rather verbose. Instead we will use [kubectx](https://github.com/ahmetb/kubectx)(I'm a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
+This is all rather verbose. Instead we'll use [kubectx](https://github.com/ahmetb/kubectx)(I'm a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
 
 ```console
 wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx
@@ -797,4 +823,4 @@ The current context, i.e. the current Verrazzano cluster, is highlighted in yell
 
 This concludes setting up OKE, networking connectivity and routing and some operational convenience to run multi-cluster Verrazzano in different regions. With this, I would like to thank my colleague and friend Shaun Levey for his ever perceptive insights into the intricacies of OCI Networking.
 
-In [Part 2](3-deploy-multi-cluster-verrazzano-oke), we will look at how to install Verrazzano in a multi-cluster configuration.
+In [Part 2](3-deploy-multi-cluster-verrazzano-oke), we'll look at how to install Verrazzano in a multi-cluster configuration.
