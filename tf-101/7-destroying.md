@@ -25,11 +25,11 @@ xredirect: https://developer.oracle.com/tutorials/tf-101/7-destroying/
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 
-So far we've had some fun creating and changing OCI resources.  Our tutorial is coming to a close, so it's time to remove the resources we've added and clean-up after ourselves.  Terraform makes this amazingly easy.  Let's explore this now.
+So far, we've had some fun creating and changing OCI resources. Our tutorial is coming to a close though, so it's time to remove the resources we've added and clean-up after ourselves. Terraform makes this amazingly easy. Let's explore this now.
 
 ## Removing a Resource
 
-The `stage` Subnet will be removed.  To do this, remove its resource definition (the following code snippet) from the `main.tf` file:
+To remove the `stage` subnet, we'll first need to remove its resource definition (the following code snippet) from the `main.tf` file:
 
 ```terraform
 resource "oci_core_subnet" "stage" {
@@ -42,7 +42,7 @@ resource "oci_core_subnet" "stage" {
 }
 ```
 
-Look at the Terraform plan to make sure it's correct:
+Look at the Terraform plan to ensure it's correct:
 
 ```console
 $ terraform plan
@@ -51,7 +51,7 @@ oci_core_vcn.tf101: Refreshing state... [id=ocid1.vcn.oc1.phx.<sanitized>]
 oci_core_subnet.test: Refreshing state... [id=ocid1.subnet.oc1.phx.<sanitized>]
 oci_core_subnet.dev: Refreshing state... [id=ocid1.subnet.oc1.phx.<sanitized>]
 
-An execution plan has been generated and is shown below.
+An execution plan has been generated and is shown below. 
 Resource actions are indicated with the following symbols:
   - destroy
 
@@ -89,10 +89,10 @@ can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 ```
 
-> **NOTE:** It might feel redundant to keep looking at the output from `terraform plan` when the same output is given when you run `terraform apply` (before telling it to continue).  It's a good habit to always review proposed changes *before* making them.  By running plan and then apply, it forces you to closely look at what's going to happen to the environment (before it happens), giving you valuable time to stop or change what's going to take place.
+> **NOTE:** It might feel redundant to keep looking at the output from `terraform plan` when the same output is given when you run `terraform apply` (before telling it to continue). It might *feel* redundant, but it's a good habit to always review proposed changes *before* making them. By running the plan and then applying it, you're forcing yourself to closely look at what's going to happen to the environment (before it happens) giving you valuable time to stop or change what's going to take place.
 {:.notice}
 
-The minus sign (`-`) in front of the oci_core_subnet.stage is how Terraform indicates it will be removing the resource from the environment ("terminated" in OCI speak).  Proceed with applying it:
+The minus sign (`-`) in front of the `oci_core_subnet.stage` is how Terraform indicates it will be removing the resource from the environment ("terminated," in OCI speak). Proceed with applying it:
 
 ```console
 $ terraform apply
@@ -113,24 +113,24 @@ oci_core_subnet.stage: Destruction complete after 4s
 Apply complete! Resources: 0 added, 0 changed, 1 destroyed.
 ```
 
-With the `stage` Subnet removed, the environment is a bit cleaner.
+With the `stage` subnet removed, the environment is a bit cleaner.
 
 ### Deleting and Re-creating a Resource
 
-We chose to permanently delete the `stage` Subnet.  In situations where a single resource should be destroyed and then re-created, there are a couple of options (rather than modify the Terraform code):
+We chose to permanently delete the `stage` subnet. In situations where a single resource should be destroyed and then re-created, there are a couple of options (rather than modifying the Terraform code):
 
 * `terraform destroy` command
-* Taint a resource
+* taint a resource
 
-The `terraform destroy -target=type.name` command is handy.  Instead of deleting the stage Subnet in your code and running `terraform apply`, you could have run `terraform destroy -target=oci_core_subnet.stage`.  Of course, if you don't remove (or comment out) the code for the stage Subnet, the next time you run `terraform apply`, it would want to re-create the stage Subnet.
+The `terraform destroy -target=type.name` command is handy. Instead of deleting the stage subnet in your code and running `terraform apply`, you could have run `terraform destroy -target=oci_core_subnet.stage`. Of course, if you don't remove (or comment out) the code for the stage subnet, the next time you run `terraform apply`, it would want to re-create the stage Subnet.
 
-When a resource is "tainted," it will be deleted and re-created.  The command `terraform taint type.name` is how a resource is tainted.  Here's an example of how the staging subnet could've been tainted: `terraform taint oci_core_subnet.stage` (followed by `terraform plan` and `terraform apply`).  The next time Terraform applies, it will delete and re-create the resource.  Look at the [Terraform taint command documentation](https://www.terraform.io/docs/cli/commands/taint.html) for more information.
+When a resource is "tainted," it will be deleted and re-created. The command `terraform taint type.name` is how a resource is tainted. Here's an example of how the staging subnet could've been tainted: `terraform taint oci_core_subnet.stage` (followed by `terraform plan` and `terraform apply`). The next time Terraform applies, it will delete and re-create the resource. Look at the [Terraform taint command documentation](https://www.terraform.io/docs/cli/commands/taint.html) for more information.
 
 ## Removing All Resources
 
-When it's time to fully terminate (destroy) an environment, Terraform has a single command that can accomplish this.
+When it's time to fully terminate (destroy) an environment, Terraform has a single command that accomplishes this.
 
-While this could be accomplished by removing resource definitions from the `main.tf` (Terraform code) file, that isn't ideal.  What if the environment needs to be provisioned in the future?  Keep the Terraform code and use the `terraform destroy` command to clean-up (terminate/destroy) the environment:
+While this could be accomplished by removing resource definitions from the `main.tf` (Terraform code) file, that isn't ideal. What if the environment needs to be provisioned in the future? Keep the Terraform code and use the `terraform destroy` command to clean-up (terminate/destroy) the environment:
 
 ```console
 $ terraform destroy
@@ -225,9 +225,9 @@ oci_core_vcn.tf_101: Destruction complete after 1s
 Destroy complete! Resources: 3 destroyed.
 ```
 
-Much like the apply command, the destroy command alerts you as to what it intends to do, prompting you to authorize it before continuing.
+Much like the `apply` command, the destroy command alerts you as to what it intends to do, prompting you to authorize it before continuing.
 
-Things are now really cleaned up.  The Subnets and VCN is gone.  Speaking of being gone, did you notice how Terraform removed the OCI resources in the order of their dependency?  It didn't try to remove the VCN first (which would've failed because of the presence of the Subnets), but instead destroyed the two Subnets first, then destroyed the VCN.  That's part of the graph logic that Terraform applies to make managing your environment easy.  Pretty slick, right?
+Things are now really cleaned up. The subnets and VCN are gone. Speaking of being gone, did you notice how Terraform removed the OCI resources in the order of their dependency? It didn't try to remove the VCN first (which would've failed because of the presence of the subnets), but instead destroyed the two subnets first, then destroyed the VCN. That's part of the graph logic that Terraform applies to make managing your environment easy. Pretty slick, right?
 
-We've had a great time together, but this tutorial is coming to a close.  Before we part, make sure to check out some of the [resources offered in the next section](8-resources).
+We've had a great time together, but this tutorial is coming to a close. Before we part, make sure to check out some of the [resources offered in the next section](8-resources).
 {% endslides %}
