@@ -24,72 +24,86 @@ xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-star
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-Over the last two decades, Cloud Computing has revolutionized the technological landscape, allowing companies to rent infrastructure instead of building rapidly-obsolescing hardware on-site. During this time, the architectual approach that combines infrastructure orchestration and application code into cloud services has evolved. 
+## Introduction
 
-Today, cloud users have a choice between technology stacks for virtual hosts, master-slave architectures, and container cluster. Each stack wraps application code differently, relies on different methods to launch server, and provides different mechansims to automate fail-over and scaling processes. For Enterprise IT organizations, managing a large variety of applications, choosing one particular stack is usually not sufficient, because a single stack can not address the broad variety of functional and non-functional requirements.
+Over the last two decades, Cloud Computing has revolutionized the technological landscape, allowing companies to rent infrastructure instead of building rapidly-obsolescing hardware on-site. During this time, the architectural approach that combines infrastructure orchestration and application code into cloud services has evolved.  
 
-Hence, spreading workloads accross multiple cloud providers is a common strategy to address this constraint. However, deploying private workloads accross multiple public infrastructure stacks increases operational complexity significantly and comes with certain vulneribilities. 
+Today, cloud users have a choice between technology stacks for virtual hosts, master-slave architectures, and container cluster. Each stack wraps application code differently, relies on different methods to launch servers, and provides different mechanisms to automate fail-over and scaling processes. For Enterprise IT organizations managing a large variety of applications, choosing one particular stack is usually not sufficient, because a single stack can not address the broad variety of functional and non-functional requirements.  
 
-Adopting a second generation infrastructure service (IaaS) like [Oracle Cloud Infrastructure (OCI)][oci_cloud] is an attractive alternative. Purpose-built hardware enables cloud providers to separate the orchestration layer from the hosts and allows cloud customers to build private data centers on pre-built infrastructure pools. Programming interfaces allow operators to build extensible service delivery platforms and service owners to modernize applications in incremental steps. The bare metal approach allows customers to run enterprise applications in a traditional way. Cloud orchestrators remain optional, and can be added as managed service, but even then the user remains in control over the infrastructure resources. 
+Hence, spreading workloads across multiple cloud providers is a common strategy to address this constraint. However, deploying private workloads across multiple public infrastructure stacks increases operational complexity significantly and comes with certain vulnerabilities.  
+
+Adopting a second generation infrastructure service (IaaS) like [Oracle Cloud Infrastructure (OCI)][oci_cloud] is an attractive alternative. Purpose-built hardware enables cloud providers to separate the orchestration layer from the hosts and allows cloud customers to build private data centers on pre-built infrastructure pools. Programming interfaces allow operators to build extensible service delivery platforms and service owners to modernize applications in incremental steps. The bare-metal approach allows customers to run enterprise applications in a traditional way. Cloud orchestrators remain optional, and can be added as managed service, but even then the user remains in control over the infrastructure resources.  
 
 [![Data Center Regions](https://www.oracle.com/a/ocom/img/rc24-oci-region-map.png)][oci_regionmap]
 
-Oracle operates a fast-growing network of data centers to provide access to pre-built cloud infrastructure in more than 30 regions. In addition, Oracle builds private infrastructure pools on-demand, and offers to extend these pools with edge compute or database nodes. In every data center, dedicated compute and storage resources are isolated on a native layer three network. Orchestrators, including hypervisor, container, and network functions remain private by default - also in shared pools. Combining open-source orchestration technologies with cloud agnostic monitoring and management services allows operators to build a control center for hybrid cloud services. 
+Oracle operates a fast-growing network of data centers to provide access to pre-built cloud infrastructure in more than 30 regions. In addition, Oracle builds private infrastructure pools on-demand, and offers to extend these pools with edge compute or database nodes. In every data center, dedicated compute and storage resources are isolated on a native layer three network. Orchestrators, including hypervisor, container, and network functions remain private by default and available in shared pools. Combining open-source orchestration technologies with cloud agnostic monitoring and management services allows operators to build a control center for hybrid cloud services.  
 
-End to end programmability ensures fast and flexible resource deployments, with platform components like middleware, integration, and database infrastructure --- provided either as managed or as unmanaged service --- offer a choice between convenience and control. In any case, standard hardware controls like the [integrated lights out manager (ILOM)][oci_ilom] and [off-box vitrualization][oci_offbox] allow customers to address regional privacy regulations and compliance requirements.
+End-to-end programmability not only ensures fast and flexible resource deployments with platform components like middleware, integration, and database infrastructure (provided either as managed or unmanaged services), but also offers a choice between convenience and control. In addition, standard hardware controls like the [integrated lights out manager (ILOM)][oci_ilom] and [off-box vitrualization][oci_offbox] allow customers to address regional privacy regulations and compliance requirements.
 
-## Oracle Cloud Infrastructure Benefits
+## Oracle Cloud Infrastructure (OCI)
 
-### Autonomous Services
+OCI is a deep and broad platform of public cloud services that enables customers to build and run a wide range of applications in a scalable, secure, highly available, and high-performance environment.
 
-OCI is the exclusive home of Oracle Autonomous Database and its self-repairing, self-optimizing autonomous features. Leveraging machine learning to automate routine tasks, Autonomous Database delivers higher performance, better security, and improved operational efficiency, and frees up more time to focus on building enterprise applications.
+For on-premises requirements, OCI is available with the new Dedicated Region Cloud@Customer, located behind a company’s private firewall and in their own data center.  
+
+A detailed [Getting Started with OCI][oci_intro] guide is included as part of our documentation.  
+
+## OCI benefits
+
+### Autonomous services
+
+OCI is the exclusive home of Oracle Autonomous Database and its self-repairing, self-optimizing autonomous features. Leveraging machine learning to automate routine tasks, Autonomous Database delivers higher performance, better security, and improved operational efficiency, all while freeing up more time to focus on building enterprise applications.  
+
+For additional information, see:  
 
 [Gartner: Critical Capabilities for Operational Database Management Systems](https://www.oracle.com/database/gartner-dbms.html)  
 
-### Reduce Costs and Enhance Performance
-Oracle Cloud Infrastructure is built for enterprises seeking higher performance, lower costs, and easier cloud migration for their existing on-premises applications, and better price-performance for cloud native workloads. Read how customers have moved from AWS to Oracle Cloud Infrastructure, substantially reducing their costs and enhancing their compute platform performance.  
+### Reduce costs and enhance performance
+
+Oracle Cloud Infrastructure is built for enterprises seeking higher performance, lower costs, easier cloud migration for their existing on-premises applications, and better price-performance for cloud native workloads. Read how customers have moved from AWS to Oracle Cloud Infrastructure, substantially reducing their costs and enhancing their compute platform performance.  
+
+For additional information, see:  
 
 [Compare against AWS](https://www.oracle.com/cloud/economics/)  
 [Read Gartners perspective on Oracles public cloud](https://www.oracle.com/cloud/gartner-oci.html)
 
 ### Easily migrate enterprise apps
-Oracle Cloud Infrastructure is built for enterprises seeking higher performance, lower costs, and easier cloud migration for their existing on-premises applications, and better price-performance for cloud-native workloads. Read how customers have moved from AWS to Oracle Cloud Infrastructure, substantially reducing their costs and enhancing their compute platform performance: [compare against AWS](https://www.oracle.com/cloud/economics/) and [read Gartners perspective on Oracle's public cloud](https://www.oracle.com/cloud/gartner-oci.html).
 
-[Learn why Oracle apps run best on OCI](https://www.oracle.com/cloud/migrate-applications-to-oracle-cloud/)   
-### Easily Migrate Enterprise Apps
+Oracle Cloud Infrastructure is built for enterprises seeking higher performance, lower costs, easier cloud migration for their existing on-premises applications, and better price-performance for cloud-native workloads.  
 
-### Best support for hybrid architecture
-Traditional, on-premises workloads that enterprises rely on to run their business are easier to migrate to Oracle Cloud. Designed to deliver bare-metal compute services, network traffic isolation, and the only service-level guarantees for performance, Oracle Cloud enables rapid migration and faster time to innovation. Build new value around migrated applications faster with Autonomous Database, data science tools, and our cloud native development tools.
+These traditional, on-premises workloads that enterprises rely on to run their business, are easier to migrate to Oracle Cloud. Designed to deliver bare-metal compute services, network traffic isolation, and the only service-level guarantees for performance, OCI enables rapid migration and faster time to innovation. Build new value around migrated applications faster with Autonomous Database, data science tools, and our cloud-native development tools.  
+
+Read how customers have moved from [AWS to Oracle Cloud Infrastructure](https://www.oracle.com/cloud/economics/), substantially reducing their costs and enhancing their compute platform performance, and check out [Gartners' perspective on Oracle's public cloud](https://www.oracle.com/cloud/gartner-oci.html).  
+
+For additional information, see:  
 
 - [Learn why Oracle apps run best on OCI](https://www.oracle.com/cloud/migrate-applications-to-oracle-cloud/)
 - [Start migrating your custom apps to OCI](https://www.oracle.com/cloud/migrate-custom-applications-to-cloud/)
 
-### Best Support for Hybrid Architecture
+### Best support for hybrid architecture
 
-Deploy your cloud applications and databases anywhere with a wide choice of options, ranging from our public regions to edge devices. In addition to our public cloud region, we offer full private Dedicated Regions in customer data centers, edge-computing Oracle Roving Edge devices, and our blazingly-fast Oracle Exadata Cloud@Customer, with Autonomous Database service delivered behind your firewall. With full support for VMware environments in the customer tenancy as well, Oracle offers cloud computing that works the way you expect.
+Deploy your cloud applications and databases anywhere with a wide choice of options, ranging from our public regions to edge devices. In addition to our public cloud region, we offer full, private Dedicated Regions in customer data centers, edge-computing Oracle Roving Edge devices, and our blazingly-fast Oracle Exadata Cloud@Customer, all with Autonomous Database service delivered behind your firewall. With full support for VMware environments in the customer tenancy as well, Oracle offers cloud computing that works the way you expect.  
+
+For additional information, see:  
 
 - [Learn about hybrid, multi-cloud, and inter-cloud deployment options](https://www.oracle.com/cloud/cloud-deployment-models/)
 - [Oracle Brings the Cloud to You (PDF)](https://www.oracle.com/a/ocom/docs/engineered-systems/exadata/idc-adb-on-exac-at-cloud.pdf)
 
-Oracle Cloud Infrastructure (OCI) is a deep and broad platform of public cloud services that enables customers to build and run a wide range of applications in a scalable, secure, highly available, and high-performance environment.
+## What to expect
 
-For on-premises requirements, OCI is available with the new Dedicated Region Cloud@Customer—behind a company’s private firewall and in their data center. 
+This introduction targets future operation engineers and is structured as follows:  
 
-A detailed "Getting Started Guide" is part of our documentation and available here: [Getting Started with OCI][oci_intro]
+- [Automating with Terraform][provider]
+- [Base Configuration][base]
+- [Database Infrastructure][db-infra]
+- [Application Infrastructure][app-infra]
+- [Workload Deployment][workload]
+- [Governance][governance]
+- [Vizualizer][vizualize]
 
-This introduction targets future operation engineers is structured as follows.
+Cloud operations engineering is a relatively new field which extends the scope of IT service management (ITSM). It represents an important step towards more agility and flexibility in service operation. The concept of "Infrastructure as Code" replaces runbook tools and has become an enabler of self-service delivery, even for complex solution architectures. Operators empower service owners and developers to add, change, or delete infrastructure on demand with deployment templates for logical resources. Service consumers gain flexibility to provision virtual infrastructure, while resource operators remain in control of the physical infrastructure.
 
-* [Automating with Terraform][provider]
-* [Base Configuration][base]
-* [Database Infrastructure][db-infra]
-* [Application Infrastructure][app-infra]
-* [Workload Deployment][workload]
-* [Governance][governance]
-* [Vizualizer][vizualize]
-
-Cloud operations engineering is a relatively new field which extends the scope of IT service management (ITSM). It represents an important step towards more agility and flexibility in service operation. The concept of "Infrastructure as Code" replaces runbook tools and has become an enabler of self-service delivery --- even for complex solution architectures. Operators empower service owners and developers to add, change or delete infrastructure on demand with deployment templates for logical resources. Service consumers gain flexibility to provision virtual infrastructure, while resource operators remain in control of the physical infrastructure. 
-
-This series aims to provide a path for IT organizations introducing cloud engineering. We starts with a short introduction of Infrastructure as Code (IaC), show how to define logical resources for application and database services, and end with an example showing how to consolidate infrastructure and application services in a self-service catalogue. We'll build on the official [Oracle Cloud Architect training][oci_training] --- which prepares administrators for the [Oracle Architect Associate exam][oci_certification] --- but extend the [Learning Path][oci_learning] with tool recommendations and code examples for cloud engineers.
+This series aims to provide a path for IT organizations introducing cloud engineering. We start with a short introduction of Infrastructure as Code (IaC), show how to define logical resources for application and database services, and end with an example showing how to consolidate infrastructure and application services in a self-service catalogue. We'll build on the official [Oracle Cloud Architect training][oci_training] which prepares administrators for the [Oracle Architect Associate exam][oci_certification], but extend the [Learning Path][oci_learning] with tool recommendations and code examples for cloud engineers.
 
 Next up, [automating OCI with Terraform][provider].
 
@@ -127,7 +141,6 @@ Next up, [automating OCI with Terraform][provider].
 [oci_tenancy]:       https://docs.oracle.com/en-us/iaas/Content/GSG/Concepts/settinguptenancy.htm
 [oci_training]:      https://www.oracle.com/cloud/iaas/training/
 [oci_intro]:         https://docs.oracle.com/en-us/iaas/Content/GSG/Concepts/baremetalintro.htm
-
 
 [tf_doc]: https://registry.terraform.io/providers/hashicorp/oci/latest/docs
 [cli_doc]: https://docs.cloud.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/
