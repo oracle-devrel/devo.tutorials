@@ -93,7 +93,7 @@ We'll use our newly-minted Singapore region for the Admin cluster and then Mumba
 
 {% imgx aligncenter assets/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote Peering with different regions" "Remote Peering with different regions" %}
 
-We need the clusters to communicate securely using the OCI Backbone, so this means we need to set up DRGs in each region, attach them to their VCN and use remote peering. Since the VCNs and the clusters will be eventually be connected, we also need to ensure their respective IP address ranges (VCN, pod and service) do not overlap.
+We need the clusters to communicate securely using the OCI Backbone, so this means we need to set up DRGs in each region, attach them to their respective VCNs, and then use remote peering. Since the VCNs and the clusters will eventually be connected, we also need to ensure that their respective IP address ranges (VCN, pod, and service) do not overlap.
 
 ## Creating the Verrazzano clusters
 
@@ -619,18 +619,19 @@ We're going to the use [terraform-oci-oke module](https://github.com/oracle-terr
 
    {% imgx aligncenter assets/Eeiu_1isUl47wVZAAd1eoA.png 975 88 "Simultaneous creation of 4 OKE clusters in different regions" "Simultaneous creation of 4 OKE clusters in different regions" %}
 
-   This means our four OKE Clusters are being simultaneously created in 4 different OCI regions. In about 15 minutes, you'll have all four clusters created:
+   This means that our four OKE Clusters are being simultaneously created in 4 different OCI regions. In about 15 minutes, you'll have all four clusters created:  
 
-   {% imgx aligncenter assets/1vdOhprGm48QCzDjYBkUQQ.png 855 183 "Showing outputs after creating clusters" %}
+   {% imgx aligncenter assets/1vdOhprGm48QCzDjYBkUQQ.png 855 183 "Showing outputs after creating clusters" %}  
 
-   The ssh convenience commands to the various operator hosts will also be printed.
+   >**NOTE:** The ssh commands to the various operator hosts will also be printed.
+   {:.notice}
 
 ### Establish connections
 
 1. **Create remote peering connections**
    1. Navigate to the DRGs in ***each*** **managed cluster's** region (Mumbai, Tokyo, and Sydney).
-   2. Select **Remote Peering Attachment** and create a Remote Peering Connection (call it rpc_to_admin).
-   3. In the *Admin region* (Singapore in our selected region), create 3 Remote Peering Connections:  
+   2. Select **Remote Peering Attachment** and create a **Remote Peering Connection** (call it *rpc_to_admin*).
+   3. In the **Admin region** (*Singapore* in our selected region), create 3 **Remote Peering Connections**:  
 
       {% imgx aligncenter assets/sub6pYSaRFEQumzQLQdDxwg.png 1200 339 "3 RPCs in the Admin region" "3 RPCs in the Admin region" %}  
 
@@ -638,13 +639,16 @@ We're going to the use [terraform-oci-oke module](https://github.com/oracle-terr
 
 1. **Peer the connections**
    1. Select **rpc_to_syd**.
-   1. Open a new tab in your browser and access the OCI Console and change region to Sydney. Then, navigate to the DRG and the rpc_to_syd page. Copy the RPC's OCID (not the DRG), switch to the Admin tab and click on “Establish Connection”:  
+   1. Open a new tab in your browser and access the *OCI Console*.
+   1. Change the region to *Sydney*.
+   1. Navigate to the DRG and then to **rpc_to_syd** page.
+   1. Copy the RPC's OCID (not the DRG), switch to the **Admin** tab, and then select **Establish Connection**:  
 
       {% imgx aligncenter assets/2g_Oih2j9NBRy_cUoUW9Eg.png 619 216 "Establishing RPC" "Establishing RPC" %}  
 
 1. **Establish connection**
     1. Once you've provided the *RPC ID* and the *region* as above, select **Establish Connection** to perform the peering.
-    1. Repeat the same procedure for the Tokyo and Mumbai regions until all the managed cluster regions are peered with the Admin region. When the peering is performed and completed, you will see its status will change to “Pending” and eventually “Peered”:  
+    2. Repeat the same procedure for the Tokyo and Mumbai regions until all the managed cluster regions are peered with the Admin region. When the peering is performed and completed, you will see its status will change to “Pending” and eventually “Peered”:  
 
        {% imgx aligncenter assets/DX7Nv3MRwczRYbmc5aXzlA.png 1200 405 "RPCs in Pending state" "RPCs in Pending state" %}
 
@@ -660,7 +664,7 @@ At this point, our VCNs are peered but there are three more things we need to do
 
 In the first step, we're asked to configure the routing table. Previously, you would have had to manually configure rules, but now, they're automagically done for you! "How," you ask? Well, one of the [features](https://github.com/oracle-terraform-modules/terraform-oci-oke/releases) we've added is the [ability to configure and update routing tables](https://github.com/oracle-terraform-modules/terraform-oci-oke/issues/279).  
 
-Let's explore this in a little more detail. In your `main.tf`, take a look in the the Admin cluster module. Usually, the `nat_gateway_route_rules`  parameter is an empty list:
+Let's explore this in a little more detail. In your `main.tf`, take a look in the the Admin cluster module. Usually, the `nat_gateway_route_rules`  parameter is an empty list:  
 
 ```JSON
 nat_gateway_route_rules = []
@@ -729,21 +733,23 @@ Let's say you add another managed region in Hyderabad (VCN CIDR: 10.4.0.0). Ther
    After updating the custom rules, run `terraform apply` again and the routing rules in the Admin region will be updated.
 
 1. **Check rules**
-   Navigate to the Network Visualizer page to check your connectivity and routing rules:
+   Navigate to the **Network Visualizer** page to check your connectivity and routing rules:  
 
    {% imgx aligncenter assets/oS_bZ4lnAounnM_lgBGELg.png 1200 390 "Network connectivity across regions" "Network connectivity across regions" %}
 
 1. **TCP requests**
-   Next, in *each* region-managed VCN's control plane NSG, add an ingress to accept TCP requests from source CIDR 10.0.0.0/16 (Admin) and destination port 6443. This is for the Admin cluster to be able to communicate with the Managed Cluster's control plane.
+   Next, in *each* region-managed VCN's control plane NSG, add an ingress to accept TCP requests from source CIDR 10.0.0.0/16 (Admin) and destination port 6443. This is so that the Admin cluster can be able to communicate with the Managed Cluster's control plane.  
 
    {% imgx aligncenter assets/UbwGSoe2twNSHayNM4YfRg.png 1200 359 "Additional ingress security rule in each managed cluster's control plane NSG" "Additional ingress security rule in each managed cluster's control plane NSG" %}
 
 ## Operational Convenience
 
-For convenience, we'd like to be able to execute most of our operations from the Admin operator host. To do this, we first need to obtain the `kubeconfig` of each cluster and then merge them together on the Admin operator. At the moment, this step isn't quite so convenient itself, since you'll have to perform it manually, but we're working to improve this in the future:
+For convenience, we'd like to be able to execute most of our operations from the Admin operator host. To do this, we first need to obtain the `kubeconfig` of each cluster and then merge them together on the Admin operator. At the moment, this step isn't quite so convenient itself, since you'll have to perform it manually, but we're working to improve this in the future.  
+
+### Obtain `kubeconfigs`
 
 1. Navigate to *each* managed cluster's page and select **Access cluster**.
-2. Copy the second command which allows you get the `kubeconfig` for that cluster:  
+1. Copy the second command which allows you get the `kubeconfig` for that cluster:  
 
       ```console
       oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.... --file $HOME/.kube/configsyd --region ap-sydney-1 --token-version 2.0.0  --kube-endpoint PRIVATE_ENDPOINT
@@ -756,60 +762,72 @@ For convenience, we'd like to be able to execute most of our operations from the
    >**NOTE:** You also have to rename the file so it won't overwrite the existing config for the Admin region. In our example above, that would be configsyd, configmum, and configtok.
    {:.alert}
 
-1. Run the commands to get the managed cluster's respective kubeconfigs. You should have four kubeconfigs:  
+1. Run the commands to get the managed cluster's respective `kubeconfigs`. You should have four `kubeconfigs`:  
 
-```console
-$ ls -al .kube  
-total 16  
-drwxrwxr-x. 2 opc opc   71 Nov 10 11:40 .  
-drwx------. 4 opc opc  159 Nov 10 11:15 ..  
--rw--w----. 1 opc opc 2398 Nov 10 11:15 config  
--rw-rw-r--. 1 opc opc 2364 Nov 10 11:40 configmum  
--rw-rw-r--. 1 opc opc 2364 Nov 10 11:40 configsyd  
--rw-rw-r--. 1 opc opc 2362 Nov 10 11:40 configtok
-```
+      ```console
+      $ ls -al .kube  
+      total 16  
+      drwxrwxr-x. 2 opc opc   71 Nov 10 11:40 .  
+      drwx------. 4 opc opc  159 Nov 10 11:15 ..  
+      -rw--w----. 1 opc opc 2398 Nov 10 11:15 config  
+      -rw-rw-r--. 1 opc opc 2364 Nov 10 11:40 configmum  
+      -rw-rw-r--. 1 opc opc 2364 Nov 10 11:40 configsyd  
+      -rw-rw-r--. 1 opc opc 2362 Nov 10 11:40 configtok
+      ```
 
-We can check access to the clusters from the Admin operator host:
+   We can check access to the clusters from the Admin operator host:
 
-```console
-cd .kubefor cluster in config configsyd configmum configtok; do  
-  KUBECONFIG=$CLUSTER kubectl get nodes  
-done
-```
+      ```console
+      cd .kubefor cluster in config configsyd configmum configtok; do  
+        KUBECONFIG=$CLUSTER kubectl get nodes  
+      done
+      ```
 
-This will return us the list of nodes in each cluster:
+   This will return us the list of nodes in each cluster:  
 
-{% imgx aligncenter assets/Wbt9jmrz8pJxxZliPssYBw.png 818 310 "List of nodes in each cluster" "List of nodes in each cluster" %}
+   {% imgx aligncenter assets/Wbt9jmrz8pJxxZliPssYBw.png 818 310 "List of nodes in each cluster" "List of nodes in each cluster" %}
 
-One thing we also want to do for convenience is rename each cluster's context for convenience so we know which region we are dealing with. In this exercise, we want 1 context to equate to a Verrazzano cluster. Let's rename all the kubeconfig files first:
+### Rename cluster content
 
-* config -> admin
-* configmum -> mumbai
-* configsyd -> sydney
-* configtok -> tokyo
+Again for convenience, another thing we'll want to do is rename each cluster's context. That way, we'll know which region we're dealing with.  
 
-Let's rename their respective contexts:
+In this exercise, we want 1 context to equate to a Verrazzano cluster.  
 
-```bash
-for cluster in admin sydney mumbai tokyo; do  
-  current=$(KUBECONFIG=$cluster kubectl config current-context)  
-  KUBECONFIG=$cluster kubectl config rename-context $current $cluster  
-done
-```
+1. Let's rename all the `kubeconfig` files first:
 
-We are now ready to merge:
+   * config -> admin
+   * configmum -> mumbai
+   * configsyd -> sydney
+   * configtok -> tokyo
+
+1. Now, let's rename their respective contexts:
+
+      ```bash
+      for cluster in admin sydney mumbai tokyo; do  
+        current=$(KUBECONFIG=$cluster kubectl config current-context)  
+        KUBECONFIG=$cluster kubectl config rename-context $current $cluster  
+      done
+      ```
+
+### Merge
+
+We're now ready to merge!
+
+To merge the files, run:  
 
 ```bash
 KUBECONFIG=./admin:./sydney:./mumbai:./tokyo kubectl config view --flatten > ./config
 ```
 
-Let's get a list of the contexts:
+#### List contexts
+
+To get a list of the contexts, run:
 
 ```console
 kubectl config get-contexts
 ```
 
-This will return us the following:
+This will return the following:  
 
 ```console
 CURRENT   NAME     CLUSTER               AUTHINFO           NAMESPACE
@@ -819,7 +837,11 @@ sydney    cluster-cmgb37morjq   user-cmgb37morjqtokyo
 tokyo     cluster-coxskjynjra   user-coxskjynjra
 ```
 
-This is all rather verbose. Instead we'll use [kubectx](https://github.com/ahmetb/kubectx)(I'm a huge fan). Install kubectx (which we could have used to rename the contexts earlier):
+Now, this is all rather verbose. Fortunately, there's a way to get nice, succinct output through [kubectx](https://github.com/ahmetb/kubectx). But generating clean output isn't all this tool can do. It can also be used to rename the contexts as well. In the next section, we'll explore this alternative a little further.
+
+#### Install and run `kubectx`
+
+First, let's install `kubectx`:  
 
 ```console
 wget https://github.com/ahmetb/kubectx/releases/download/v0.9.4/kubectx
@@ -827,14 +849,29 @@ chmod +x kubectx
 sudo mv kubectx /usr/local/bin
 ```
 
-Now when we run kubectx:
+Now, run `kubectx`:
 
 {% imgx aligncenter assets/DPsupx6c_ADhdwE0TwS-Zw.png 397 113 "Using kubectx" "Using kubectx" %}
 
-The current context, i.e. the current Verrazzano cluster, is highlighted in yellow. We can also easily change contexts in order to perform Verrazzano installations and other operations e.g.
+The current context (i.e., the current Verrazzano cluster), is highlighted in yellow. We can also easily change contexts in order to perform Verrazzano installations and other operations. For example:  
 
 {% imgx aligncenter assets/nCSAOCAmUaD-AYTnUDhDpA.png 390 160 "Changing context to Sydney" "Changing context to Sydney" %}
 
-This concludes setting up OKE, networking connectivity and routing and some operational convenience to run multi-cluster Verrazzano in different regions. With this, I would like to thank my colleague and friend Shaun Levey for his ever perceptive insights into the intricacies of OCI Networking.
+## What's next
 
-In [Part 2](3-deploy-multi-cluster-verrazzano-oke), we'll look at how to install Verrazzano in a multi-cluster configuration.
+We made it through a lot of material in this article. Let's review everything we covered:  
+
+* Learned how to set up OKE, networking connectivity, and routing.
+* Discovered operational convenience to run multi-cluster Verrazzano in different regions.
+* Got started with `kubectx`
+
+[//]:# (Do we need to include this following line?)
+
+With this, I would like to thank my colleague and friend Shaun Levey for his ever perceptive insights into the intricacies of OCI Networking.
+
+Our exploration continues in [Part 2](3-deploy-multi-cluster-verrazzano-oke), where we'll take a look at how to install Verrazzano in a multi-cluster configuration.
+
+To explore more information about development with Oracle products:
+
+* [Oracle Developers Portal](https://developer.oracle.com/)
+* [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
