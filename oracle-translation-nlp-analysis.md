@@ -14,7 +14,7 @@ xredirect: https://developer.oracle.com/tutorials/oracle-translation-nlp-analysi
 ---
 
 ## Introduction
-Welcome! This article is an overview of Oracle's Machine Translation Services (MTS) and how they complement the standard open-source NLP libraries out there today. Currently, this service is focused / created with the intention of helping Oracle internal teams translate texts in a secure way (see below), so this is not a readily available product. However, there are plans for the future to make it available for OCI users.
+Welcome! This article is an overview of Oracle's Machine Translation Services (MTS) and how they complement the standard open-source NLP libraries out there today. Currently, this service is focused/created with the intention of helping Oracle internal teams translate texts in a secure way (see below), so this is not a readily available product. However, there are plans for the future to make it available for OCI users.
 
 Oracle Translate is an MTS made available by Oracle’s International Product Solutions. It's beneficial to use Oracle's service over others, especially for sensitive information, because other services, such as Google Translate, are known to harvest and collect requesting data which could infringe on company confidentiality and chain of custody of protected documents. Oracle's service does not store this information, and all transactions happen in a secure Oracle network environment.
 
@@ -26,7 +26,7 @@ Afterwards, check [developer.oracle.com/linux](https://developer.oracle.com/pyth
 
 ## Authentication
 
-Authentication is performed against Oracle Cloud resources and handled by Oracle's Identity Cloud Service (IDCS), using base 64 encoding.
+Authentication is performed against Oracle Cloud resources and handled by Oracle's Identity Cloud Service (IDCS), using Base64 encoding.
 
 The two main components of Oracle Translate are a client ID and a client secret. Using these components, we can perform authentication following this flow:
 

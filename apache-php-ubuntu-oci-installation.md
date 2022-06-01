@@ -243,7 +243,7 @@ To install and set up Apache and PHP, perform the following steps:
 
 8. Update firewall settings.
 
-    The Ubuntu firewall is disabled by default. However, you still need to update your `iptables`configuration to allow HTTP traffic. Update `iptables` with the following commands.
+    The Ubuntu firewall is disabled by default. However, you still need to update your `iptables`configuration to allow HTTP traffic. Update `iptables` with the following commands:
 
     ```console
     sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 80 -j ACCEPT

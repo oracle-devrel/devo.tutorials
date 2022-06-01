@@ -45,13 +45,16 @@ Welcome to the second article on the League of Legends Optimizer series! In this
 ## Code Optimization
 
 Before building a dataset with match information, there are some things to consider:
+
 1. The player and match datasets are ever-growing and will continue to expand in size and complexity if we keep executing our code
 2. The functions `get_top_player()` and `get_puuid()` can be more thoroughly optimized
 
-For that, I propose a code revamp and bugfix before resuming the ML pipeline work. It's important to keep optimizing code even when we think it won't matter, because in the end we might need to do it anyway. It's much better to have the ideas fresh rather than waiting for the right moment to do these optimizations and forgetting how to optimize the code at all.
+For this second point, I propose a code revamp and bugfix before resuming the ML pipeline work. 
+
+It's important to keep optimizing code even when we think it won't matter, because in the end we might need to do it anyway. It's much better to have the ideas fresh rather than waiting for the right moment to do these optimizations and forgetting how to optimize the code at all.
 
 ### Optimizing API call efficiency
-Our constantly-growing dataset made me realize there must be a way to retrieve skilled players without constantly requesting their PUUIDs. In fact, we should only retrieve the PUUID for a player if this player isn't already present in the database. By definition, the PUUID will never change even when summoners change their display / in-game names. The first order of optimization is to check whether players are already in our DB collection before requesting their PUUID. This will save us precious API calls which will allow our program to focus on processing, and less on API restrictions and rate limits.
+Our constantly-growing dataset made me realize there must be a way to retrieve skilled players without constantly requesting their PUUIDs. In fact, we should only retrieve the PUUID for a player if this player isn't already present in the database. By definition, the PUUID will never change even when summoners change their display/in-game names. The first order of optimization is to check whether players are already in our DB collection before requesting their PUUID. This will save us precious API calls which will allow our program to focus on processing, and less on API restrictions and rate limits.
 
 ```python
 # Insert the users.
@@ -73,10 +76,10 @@ Our constantly-growing dataset made me realize there must be a way to retrieve s
 			print('Summoner {} already inserted'.format(x['summonerName']))
 			continue
 ```
-As shown, we will check for new players in our collection before inserting them. In case they are not present, we'll request their PUUIDs and their respective information, and proceed to insert them.
 
+As shown, we'll check for new players in our collection before inserting them. In case they aren't present, we'll request their PUUIDs and their respective information, and proceed to insert them.
 
-Additionally, I also implemented a SODA database method that will remove faulty summoners (see `delete_json_db()`). In case a summoner can't be found given a specific username for a region, we will remove it from our DB since all subsequent requests (asking the Riot Games API for their games) will always result in errors:
+Additionally, I also implemented a SODA database method that will remove faulty summoners (see `delete_json_db()`). In case a summoner can't be found given their specific username for a region, we'll remove it from our DB since all subsequent requests (asking the Riot Games API for their games) will always result in errors:
 
 ```python
 # Remove a document from a collection based on the key and value pairs provided.
@@ -88,7 +91,7 @@ def delete_json_db(connection, collection_name, on_column, on_value):
 	x_collection.find().filter(qbe).remove()
 ```
 
-When calling `get_puuid()`, we will check for the HTTPs response status code before doing anything:
+When calling `get_puuid()`, we'll check for the HTTPs response status code before doing anything:
 
 ```python
 # Inside get_puuid()
@@ -103,11 +106,13 @@ if response.status_code == 200:
 		return
 ```
 
-These two modifications may seem insignificant, but they improved the code efficiency by up to 80%, depending on the number of already-existing players in the **summoner** collection. Querying the API for new summoners was much faster, since duplicate values would be automatically ignored, and I'd only have to wait for the new ones' PUUIDs.
+These two modifications may seem insignificant, but they improved code efficiency by up to 80%, depending on the number of already-existing players in the `summoner` collection. Querying the API for new summoners was much faster, since duplicate values would be automatically ignored, and I'd only have to wait for the new ones' PUUIDs.
 
 ### Reducing Redundant Processing
 
-Finally, as our last optimization, we will add new keys in our document, called `processed_1v1` and `processed_5v5`, which will indicate whether a match has already been processed for the 1v1 and 5v5 models or not (more on this in the next sections). In case this match has been processed, we will keep it in our dataset, but we will not extract the contents of the match from now on. This will reduce overloading the CPU and processing times of our Python code, since this data mining process has been programmed to take into consideration all values present in the database (as any data mining process should). 
+Finally, as our last optimization, we'll add new keys in our document, called `processed_1v1` and `processed_5v5`, which will indicate whether a match has already been processed for the 1v1 and 5v5 models or not (more on this in the next sections). 
+
+In case this match has been processed, we'll keep it in our dataset, but won't extract the contents of the match from now on. This will reduce overloading the CPU and processing times of our Python code, since this data mining process has been programmed to take into consideration all values present in the database (as any data mining process should). 
 
 Considering this previous collection structure:
 
@@ -127,13 +132,13 @@ We'll expand this into (example with a non-processed match):
 }
 ```
 
-Subsequently, in our `data_mine()` function, we will only process those matches who haven't been processed, and after processing, we will change their processed bit in order not to make redundant processing and API calls:
+Subsequently, in our `data_mine()` function, we'll only process those matches which haven't been processed. After processing, we'll change their processed bit in order not to make redundant processing and API calls:
 
 ```python
 all_match_ids = collection_match.find().filter({'processed_1v1': {"$ne":1}}).getDocuments()
 ```
 
-After processing our 1v1 models, in the upcoming articles we will make the same filtering but for the other processed bit:
+After processing our 1v1 models, in the upcoming articles we'll filter the same way for the other processed bit:
 
 ```python
 all_match_ids = collection_match.find().filter({'processed_5v5': {"$ne":1}}).getDocuments()
@@ -232,8 +237,7 @@ From this amount of data, which is a lot, and according to the problem statement
 
 ## Modelling the Matchup Predictor
 
-To create our first predictor and to test out the different possibilities of our models, we will build a structure that allows us to predict *individual* lane matchup results. Considering the JSON structure present in last section, we will now create one of its many derivatives, with the following structure:
-
+To create our first predictor and to test out the different possibilities of our models, we'll build a structure that allows us to predict *individual* lane matchup results. Considering the JSON structure present in last section, we'll now create one of its many derivatives, with the following structure:
 
 ```json
 {
@@ -270,11 +274,13 @@ To create our first predictor and to test out the different possibilities of our
 }
 ```
 
-We will store this information inside a new collection called *matchups*. It will only include two players (one from each enemy team), and the API allows us to check in which lane these players played in. For each game (excluding games with AFKs - Away From Keyboard, meaning players that never connected into the game) we will have five different matchups (toplane, midlane, jungle lane, physical damage lane and support lane). If we create this kind of structure, we will be able to check the best competitors for any lane and champion, which will help us make individual predictions and increase the chances of victory in the end. Note that the data available for one specific match will only be able to accurately predict results for a specific patch, since a champion may be optimal for patch 10.25 but really bad on the next one. That's why we also store the matchup game version in our collection structure.
+We'll store this information inside a new collection called *matchups*. It will only include two players (one from each enemy team) and the API allows us to check in which lane these players played in. For each game (excluding games with AFKs - Away From Keyboard, meaning players that never connected into the game) we'll have five different matchups (toplane, midlane, jungle lane, physical damage lane, and support lane). If we create this kind of structure, we'll be able to check the best competitors for any lane and champion, which will help us make individual predictions and increase the chances of victory in the end. 
+
+Note that the data available for one specific match will only be able to accurately predict results for a specific patch, since a champion may be optimal for patch 10.25 but really bad on the next one. That's why we also store the matchup game version in our collection structure.
 
 ## Statistics
 
-Using an auxiliary file called [find_counts.py](https://github.com/oracle-devrel/leagueoflegends-optimizer/blob/main/src/find_counts.py) we can find the number of elements we have in each one of our collections. In my case, having executed the data extraction code for several iterations, and processing matchups, I find myself with the following data:
+Using an auxiliary file called [find_counts.py](https://github.com/oracle-devrel/leagueoflegends-optimizer/blob/main/src/find_counts.py), we can find the number of elements we have in each one of our collections. In my case, having executed the data extraction code for several iterations, and processing matchups, I find myself with the following data:
 
 ```
 Collection match has 1193746 documents
@@ -283,13 +289,13 @@ Collection summoner has 31072 documents
 Collection match has 1013284 documents left to process
 ```
 
-From 31000 players, we have extracted about 1.2 million matches, and from these matches, we have processed only about 200.000 of them (since the matchups collection has an average of five documents per match). It looks like we will not need to download any more new games before processing the remaining matches. We will keep executing the code to increase the dataset for creating the model in the next article.
+From 31000 players, we have extracted about 1.2 million matches, and from these matches, we have processed only about 200.000 of them (since the matchups collection has an average of five documents per match). It looks like we won't need to download any more new games before processing the remaining matches. We'll keep executing the code to increase the dataset for creating the model in the next article.
 
 ## Next Steps
 
-After creating this data structure, we prepare for the next article, where we will do a deep dive into the training of the model for 1v1 matchups. We will use TensorFlow as the main framework for ML operations, and likely will explore PyTorch to make an introduction to two of the most notable ML libraries available for Python.
+After creating this data structure, we prepare for the next article where we'll do a deep dive into the training of the model for 1v1 matchups. We'll use TensorFlow as the main framework for ML operations and explore PyTorch, making an introduction to two of the most notable ML libraries available for Python.
 
-Hoping to see you in the next article where we will start training our 1v1 prediction model.
+Hoping to see you in the next article where we'll start training our 1v1 prediction model.
 
 ## How can I get started on OCI?
 

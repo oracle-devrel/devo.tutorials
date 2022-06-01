@@ -17,17 +17,17 @@ xredirect: https://developer.oracle.com/tutorials/deploy-flask-app-cloud-shell/
 ---
 {% slides %}
 
-In this tutorial, you use an Oracle Cloud Infrastructure account to set up a Kubernetes cluster. Then, you create a Python application with a Flask framework. Finally, you deploy your application to your cluster using Cloud Shell.
+In this tutorial, you use an Oracle Cloud Infrastructure (OCI) account to set up a Kubernetes cluster. Then, you create a Python application with a Flask framework. Finally, you'll deploy your application to your cluster using Cloud Shell.
 
 Key tasks include how to:
 
-  * Create a Compartment.
-  * Set up a Kubernetes cluster on OCI.
-  * Build a Python application in a Flask framework.
-  * Create a Docker image.
-  * Push your image to OCI Container Registry.
-  * Use Cloud Shell to deploy your Docker application to your cluster.
-  * Connect to your application from the internet.
+  * Create a Compartment
+  * Set up a Kubernetes cluster on OCI
+  * Build a Python application in a Flask framework
+  * Create a Docker image
+  * Push your image to OCI Container Registry
+  * Use Cloud Shell to deploy your Docker application to your cluster
+  * Connect to your application from the internet
 ![A diagram of the components needed to run a Flask app on Kubernetes cluster, on Oracle Cloud Infrastructure](assets/flask-shell-diagram.png)
 
 For additional information, see:
@@ -39,11 +39,11 @@ For additional information, see:
 
 ## Before You Begin
 
-To successfully perform this tutorial, you must have the following:
+To successfully perform this tutorial, you'll need the following:
 
 ### Requirements
 
-  * A **Free trial** or a **paid** Oracle Cloud Infrastructure account. You can sign up [here](https://signup.cloud.oracle.com/?language=en&sourceType=:ow:de:te::::RC_WWMK210625P00048:Free&intcmp=:ow:de:te::::RC_WWMK210625P00048:Free).
+  * A **Free trial** or a **paid** OCI account. You can sign up [here](https://signup.cloud.oracle.com/?language=en&sourceType=:ow:de:te::::RC_WWMK210625P00048:Free&intcmp=:ow:de:te::::RC_WWMK210625P00048:Free).
   * Cloud Shell or the following 
      * JDK 8+
      * Python 3.6.8+
@@ -91,7 +91,7 @@ Prepare your environment to create and deploy your application.
        * **Limit Name:** `total-storage-gb`
        * **Available:** minimum 50
      * Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least 50 GB of block volume available.
-  6. Find out how many **Flexible Load Balancers** you have available:
+  6. Find out how many **Flexible Load Balancers** are available:
      * **Filter** for the following options:
        * **Service:** LBaaS
        * **Scope:** `<your-region>`. Example: `us-ashburn-1`
@@ -102,11 +102,11 @@ Prepare your environment to create and deploy your application.
        * **Available:** minimum 1
 
 
-> This tutorial creates three compute instances with a **VM.Standard.E2.1** shape for the cluster nodes. To use another shape, filter for its **core count**. For example, for **VM.Standard2.4**, filter for **Cores for Standard2 based VM and BM Instances** and get the **count**.
+> This tutorial creates three compute instances with a **VM.Standard.E2.1** shape for the cluster nodes. To use another shape, filter for its **core count**. For example, filter **VM.Standard2.4** for **Cores for Standard2 based VM and BM Instances**, and get the **count**.
 > - For a list of all shapes, see [VM Standard Shapes](https://docs.oracle.com/iaas/Content/Compute/References/computeshapes.htm#vmshapes__vm-standard).
 {:.notice}
 
-> This tutorial creates a load balancer with a **flexible** shape. To use another bandwidth, filter for its **count**, for example **100-Mbps bandwidth** or **400-Mbps bandwidth**.
+> This tutorial creates a load balancer with a **flexible** shape. To use another bandwidth, filter its **count**. For example **100-Mbps bandwidth** or **400-Mbps bandwidth**.
 {:.notice}
 
 ### Create an Authorization Token
@@ -118,15 +118,14 @@ Prepare your environment to create and deploy your application.
   5. Give it a description.
   6. Click Generate Token.
   7. Copy the token and **save** it.
-  8. Click Close.
+  8. Click **Close**.
 
-      > **Ensure that you save your token** right after you create it. You have no access to it later.
+      > Ensure that you save your token right after you create it. You have no access to it later.
       {:.notice}
 
 ### Gather Required Information
 
-
-  1. Collect the following credential information from the Oracle Cloud Infrastructure **Console**.
+  1. Collect the following credential information from the Oracle Cloud Infrastructure Console:
 
      * **Tenancy name:** `<tenancy-name>`
        * Click your **Profile** menu (your avatar) and find your **Tenancy:<tenancy-name>**.
@@ -135,7 +134,7 @@ Prepare your environment to create and deploy your application.
        * Click **Tenancy: <tenancy-name>**.
        * Copy the value for **Object Storage Namespace**.
 
-      >For some accounts, tenancy name and namespace differ. Ensure that you use namespace in this tutorial.
+      >For some accounts, the **tenancy name** and **namespace** values differ. Ensure that you use namespace in this tutorial.
       {:.notice}
 
      * **Tenancy OCID:** `<tenancy-ocid>`
@@ -155,10 +154,9 @@ Prepare your environment to create and deploy your application.
        * Find your **Region Key** from the table in [Regions and Availability Domains](https://docs.oracle.com/iaas/Content/General/Concepts/regions.htm). 
        * Example: `iad`
 
-  2. Copy your authentication token from **Create an Authentication Token** section.
+  2. Copy your authentication token from the **Create an Authentication Token** section.
 
      * **Auth Token:** `<auth-token>`
-
 
 ## Set Up a Cluster
 
@@ -166,7 +164,7 @@ Install and configure management options for your Kubernetes cluster. Later, dep
 
 ### Add Compartment Policy
 
-If your username is in the **Administrators** group, then skip this section. Otherwise, have your administrator add the following policy to your tenancy:
+If your username is in the Administrators group, then skip this section. Otherwise, have your administrator add the following policy to your tenancy:
  
     allow group <the-group-your-username-belongs> to manage compartments in tenancy
 
@@ -176,7 +174,7 @@ With this privilege, you can create a compartment for all the resources in your 
 
   1. In the Console's top navigation bar, open the **Profile** menu (your avatar).
   2. Click your username.
-  3. In the left pane, click Groups.
+  3. In the left pane, click **Groups**.
   4. In a notepad, copy the **Group Name** that your username belongs.
   5. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Policies**.
   6. Click Create Policy.
@@ -188,11 +186,10 @@ With this privilege, you can create a compartment for all the resources in your 
 
   8. For **Policy Builder**, click Show Manual Editor.
   9. Paste in the following policy:
-
     
     allow group <the-group-your-username-belongs> to manage compartments in tenancy
 
-  10. Click Create.
+  10. Click **Create**.
 
 **Reference**
 
@@ -200,16 +197,16 @@ The `compartments` resource-type in [Verbs + Resource-Type Combinations for IAM]
 
 ### Create a Compartment
 
-Create a compartment for the resources that you create in this tutorial.
+Create a compartment for the resources that you'll create in this tutorial.
 
   1. Log in to the Oracle Cloud Infrastructure **Console**.
   2. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Compartments**.
-  3. Click Create Compartment.
+  3. Click **Create Compartment**.
   4. Fill in the following information:
      * **Name:** `<your-compartment-name>`
      * **Description:** `Compartment for <your-description>.`
      * **Parent Compartment:** `<your-tenancy>(root)`
-  5. Click Create Compartment.
+  5. Click **Create Compartment**.
 
 **Reference:** [Create a compartment](https://docs.oracle.com/iaas/Content/Identity/Tasks/managingcompartments.htm#To)
 
@@ -221,7 +218,7 @@ If your username is in the **Administrators** group, then skip this section. Oth
 allow group <the-group-your-username-belongs> to manage all-resources in compartment <your-compartment-name>
 ```
 
-With this privilege, you can **manage all the resources** in your **compartment**, essentially giving you administrative rights in that compartment.
+With this privilege, you can manage all the resources in your compartment, essentially giving you administrative rights in that compartment.
 
 ### Steps to Add the Policy
 
@@ -241,22 +238,22 @@ With this privilege, you can **manage all the resources** in your **compartment*
      * **Groups:** `<the-group-your-username-belongs>`
      * **Location:** `<your-tenancy>(root)`
 
-  6. Click Create.
+  6. Click **Create**.
 
 **Reference**
 
 [Common Policies](https://docs.oracle.com/iaas/Content/Identity/Concepts/commonpolicies.htm)
 
-### Create a Cluster with 'Quick Create'
+### Create a Cluster with "Quick Create"
 
 Create a cluster with default settings and new network resources through the 'Quick Create' workflow.
 
   1. Sign in to the Oracle Cloud Infrastructure **Console**.
   2. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click**Kubernetes Clusters (OKE)**.
-  3. Click Create Cluster.
-  4. Select Quick Create.
-  5. Click Launch Workflow.
-  6. The **Create Cluster** dialog is displayed. Fill in the following information.
+  3. Click **Create Cluster**.
+  4. Select **Quick Create**.
+  5. Click **Launch Workflow**.
+  6. The Create Cluster dialog is displayed. Fill in the following information.
 
      * **Name:** `<your-cluster-name>`
      * **Compartment:** `<your-compartment-name>`
@@ -291,23 +288,30 @@ After you create a Kubernetes cluster, set up your local system to access the cl
 
 The information about your cluster is displayed.
 
+
   4. Click Access Cluster.
   5. Click Cloud Shell Access. Follow the steps in the dialog. The following steps are provided for your reference.
   6. From the main menu, click the Cloud Shell icon (![](https://docs.oracle.com/en-us/iaas/developer-tutorials/tutorials/common/k8s-cs/images/cloud_shell_icon.png)) and start a session.
   7. Check your `oci` CLI version and verify that Cloud Shell is working.
+
       ```console  
       oci -v
       ```
-  8. Make your `.kube` directory if it doesn't exist.
+
+  8. Create your `.kube` directory if it doesn't exist.
+
       ```console
       mkdir -p $HOME/.kube
       ```
-  9.  Create kubeconfig file for your setup. Use the information from **Access Your Cluster** dialog.
+
+  9.  Create kubeconfig file for your setup. Use the information from the Access Your Cluster dialog.
+
       ```console
       oci ce cluster create-kubeconfig <use data from dialog>
       ```
 
   10. Test your cluster configuration with the following command.
+
         ```console
         kubectl get service
         ```
@@ -322,7 +326,6 @@ The information about your cluster is displayed.
 >    kubectl --kubeconfig=</path/to/config/file> <some-command>
 {:.notice}
 
-
 With your cluster access setup, you are now ready to prepare your application for deployment.
 
 ## Build your Docker Application
@@ -334,16 +337,19 @@ Next, set up the Flask framework on Cloud Shell. Then, create and run a Python a
 Create your Flask application.
 
   1. Install Flask.
+
       ```console
       pip3 install --user Flask
       ```
 
   2. Create a directory for your application.
+
       ```console
       mkdir python-hello-app
       ```
 
   3. Change to the `python-hello-app` directory.
+
       ```console
       cd python-hello-app
       ```
@@ -354,7 +360,8 @@ Create your Flask application.
       ```console
       vi hello.py
       ```
-     - In the file, input the following text:
+
+    In the file, input the following text:
   
       ```python
       from flask import Flask
@@ -368,20 +375,21 @@ Create your Flask application.
           app.run(host="0.0.0.0", port=int("5000"), debug=True)
       ```
 
-  5. Save the file.
+5. Save the file.
 
 ### Run the Local Application
 
 Run your Flask application.
 
   1. Run the Python program.
+
       ```console
       export FLASK_APP=hello.py
       export FLASK_ENV=development
       python3 hello.py
       ```
 
-      Produces the following output:
+      This produces the following output:
           
       * Serving Flask app 'hello' (lazy loading)
       * Environment: development
@@ -395,26 +403,31 @@ Run your Flask application.
 
   2. Move the app to the background.
 
-     * Hit **Ctrl z**.
+     * Input **ctrl-z**.
      * Enter the following command: `bg`
 
   3. Test the app using `curl`.
 
-      In Cloud Shell terminal, enter the following code:
+      In the  Cloud Shell terminal, enter the following code:
+
       ```console
       curl -X GET http://localhost:5000
       ```
       Output:
+
       ```html 
       <h1>Hello World from Flask!</h1>
       ```
+
   4. Stop the running application.
 
-      When you are done testing, get the process ID for your application.
+      When you're done testing, get the process ID for your application.
+
       ```console
       ps -ef
       ```
       Stop the process.
+
       ```console
       kill <your-pid>
       ```
@@ -423,13 +436,13 @@ You have successfully created a local Python application with the Flask framewor
 
 **References:**
 
-For more information on Flask, see [Flask Documentation](https://flask.palletsprojects.com/).
+For more information on Flask, check out the [Flask Documentation](https://flask.palletsprojects.com/).
 
 ### Build a Docker Image
 
-Next, create a Docker image for your Flask application.
+Next, you'll need to create a Docker image for your Flask application.
 
-  1. First, ensure you are in the `python-hello-app` directory.
+  1. First, ensure you're in the `python-hello-app` directory.
   2. Create the configuration file `Dockerfile`:
 
       ```console
@@ -437,6 +450,7 @@ Next, create a Docker image for your Flask application.
       ```
 
       In the file, input the following text and save the file:
+
       ```dockerfile   
       FROM python:3.9-slim-buster
       ADD hello.py /
@@ -446,38 +460,48 @@ Next, create a Docker image for your Flask application.
       EXPOSE 5000
       CMD [ "python3", "./hello.py" ]
       ```
+
   3. Build a Docker image: 
+
       ```console
       docker build -t python-hello-app .
       ```
+
       You get a success message.
+
       ```console
       [INFO] BUILD SUCCESS
       Successfully tagged python-hello-app:latest
       ```
-  4. Run the Docker image: 
+
+  4. Run the Docker image:
+
       ```console
       docker run --rm -p 5000:5000 python-hello-app:latest &
       ```
+
   5. Test the application using the `curl` command:
+  
       ```console
       curl -X GET http://localhost:5000
       ```
 
-      If you get `<h1>Hello World from Flask!</h1>`, then the Docker image is running. Now you can push the image to Container Registry.
+      If you see `<h1>Hello World from Flask!</h1>`, then the Docker image is running. You can now push the image to Container Registry.
 
   6. Stop the running application.
       When you are done testing, get the process ID for your application.
+
       ```console
       ps -ef
       ```
+
       Stop the process.
+
       ```console
       kill <your-pid>
       ```
+      
 Congratulations! You have successfully created a Python Flask Docker image.
-
-  
 
 ## Deploy Your Docker Image
 
@@ -487,8 +511,9 @@ With your Python image created, now you can deploy it.
 
   1. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click**Container Registry**.
   2. In the left navigation, select `<your-compartment-name>`.
-  3. Click Create Repository.
-  4. Create a **private repository** with your choice of repo name:
+  3. Click **Create Repository**.
+  4. Create a private repository with your choice of repo name:
+
       ```
       <repo-name> = <image-path-name>/<image-name>
       ```
@@ -496,7 +521,6 @@ With your Python image created, now you can deploy it.
       Example: `flask-apps/python-hello-app`
 
 You are now ready to push your local image to Container Registry.
-
 
 > Before you can push a Docker image into a registry repository, **the repository must exist in your compartment**. If the repository does not exist, the Docker push command does not work correctly.
 > The slash in a repository name **does not represent a hierarchical directory structure**. The optional `<image-path-name>` helps to organize your repositories.
@@ -510,36 +534,44 @@ Follow these steps.
 
   1. Open a terminal window.
   2. Log in to Container Registry:
+
       ```console    
       docker login <region-key>.ocir.io
       ```
 
       You are prompted for your login name and password.
 
-        * **Username:** `<tenancy-namespace>/<user-name>`
+        * **Username:**  `<tenancy-namespace>/<user-name>`
         * **Password:** `<auth-token>`
 
   3. List your local Docker images:
+
       ```console    
       docker images
       ```
+
       The Docker images on your system are displayed. Identify the image you created in the last section: `python-hello-app`
 
-  4. **Tag** your local image with the **URL for the registry** plus the **repo name**, so you can push it to that repo.
+  4. Tag your local image with the **URL for the registry** plus the **repo name**, so you can push it to that repo.
 
       ```console    
       docker tag <your-local-image> <repo-url>/<repo-name>
       ```
+
       Replace `<repo-url>` with:
+
       ```
       <region-key>.ocir.io/<tenancy-namespace>/
       ```
+
       Replace `<repo-name>` with `<image-folder-name>/<image-name>` from the *Create a Docker Repository* section.  
   
       Here is an example after combining both:
+
       ```console  
       docker tag python-hello-app iad.ocir.io/my-namespace/flask-apps/python-hello-app
       ```
+
       In this example, the components are:
 
        * **Repo URL:** `iad.ocir.io/my-namespace/`
@@ -548,10 +580,12 @@ Follow these steps.
       >OCI Container Registry now supports creating a registry repo in any compartment rather than only in the root compartment (tenancy). To push the image to the repo you created, combine the registry URL with the exact repo name. OCI Container Registry matches based on the unique repo name and pushes your image.
       {:.notice}
 
-  5. Check your Docker images to see if the image is **copied**.
+  5. Check your Docker images to ensure that the image is **copied**.
+
       ```console
       docker images
       ```
+
      * The tagged or the **copied image** has **the same image ID** as your local image.
      * The **copied image name** is:
       
@@ -560,14 +594,18 @@ Follow these steps.
       ```
 
   6. Push the image to Container Registry.
+
       ```console  
       docker push **<copied-image-name>**:latest
       ```
+
       Example:
+
       ```console
       docker push iad.ocir.io/my-namespace/flask-apps/python-hello-app:latest
       ```
-  7. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click**Container Registry**.
+
+  7. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, then click**Container Registry**.
 
       Find your image in Container Registry after the push command is complete.
 
@@ -586,6 +624,7 @@ With your image in Container Registry, you can now deploy your image and app.
      --docker-password='<auth-token>'  \
      --docker-email='<email-address>'
    ```
+
    After the command runs, you get a message similar to: `secret/ocirsecret created`.
 
 2. Verify that the secret is created. Issue the following command:
@@ -593,6 +632,7 @@ With your image in Container Registry, you can now deploy your image and app.
    ```console   
    kubectl get secret ocirsecret --output=yaml
    ```
+
    The output includes information about your secret in the yaml format.
 
 3. Determine the host URL to your registry image using the following template:
@@ -600,10 +640,13 @@ With your image in Container Registry, you can now deploy your image and app.
    ```    
    <region-code>.ocir.io/<tenancy-namespace>/<repo-name>/<image-name>:<tag>
    ```
+
    Example:
+
    ```    
    iad.ocir.io/my-namespace/flask-apps/python-hello-app:latest
    ```
+
 4. On your system, create a file called `app.yaml` with the following text:
 
    Replace the following place holders:
@@ -653,18 +696,22 @@ With your image in Container Registry, you can now deploy your image and app.
      selector:
        app: app
    ```
+
 5. Deploy your application with the following command.
 
    ```console   
    kubectl create -f app.yaml
    ```
+
    Output: 
+
    ```    
    deployment.apps/app created
    ```
 
     >In the `app.yaml` file, the code after the dashes adds a flexible load balancer.
     {:.notice}
+
 ### Test Your App
 
 After you deploy your app, it might take the load balancer a few seconds to load.
@@ -674,7 +721,8 @@ After you deploy your app, it might take the load balancer a few seconds to load
       ```console   
       kubectl get service
       ```
-      Repeat the command until load balancer is assigned an IP address.
+
+      Repeat the command until the load balancer is assigned an IP address.
 
       >While waiting for the load balancer to deploy, you can check the status of your cluster with these commands: 
       >    * Get each pods status: `kubectl get pods`
@@ -682,9 +730,11 @@ After you deploy your app, it might take the load balancer a few seconds to load
       {:.notice}
 
   2. Use the load balancer IP address to connect to your app in a browser:
+
       ```
       http://<load-balancer-IP-address>:5000
       ```
+
       The browser displays: `<h1>Hello World from Flask!</h1>`
 
   3. Undeploy your application from the cluster. _**(Optional)**_ To remove your application run this command:
@@ -692,19 +742,23 @@ After you deploy your app, it might take the load balancer a few seconds to load
       ```console
       kubectl delete -f app.yaml
       ```
+
       Output:
+
       ```    
       deployment.apps/python-hello-app deleted
       service "python-hello-app-lb" deleted
       ```
+
       Your application is now removed from your cluster.
 
 ## What's Next
 
-You have successfully created a Hello World Python application, deployed it to a Kubernetes cluster and made it accessible on the internet, using the Flask framework.
+You have successfully created a Hello World Python application, deployed it to a Kubernetes cluster, and made it accessible on the internet using the Flask framework.
 
-Check out these sites to explore more information about development with Oracle products:
+Check out these resources to explore more information about development with Oracle products:
 
   * [Oracle Developers Portal](https://developer.oracle.com/)
   * [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
+  
 {% endslides %}
