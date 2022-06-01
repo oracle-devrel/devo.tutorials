@@ -28,267 +28,310 @@ In [Part 1](2-deploy-multi-cluster-verrazzano-oke), we discussed setting up the 
 
 {% imgx aligncenter assets/vNjGKLaGatczobm2O5Ycdw.png 1076 630 "Verrazzano multi-cluster deployment and registration process" "Verrazzano multi-cluster deployment and registration process" %}
 
-Recall that a Verrazzano multi-cluster has 1 Admin cluster and 1 or more managed clusters and that each Verrazzano cluster is a Kubernetes cluster:
+## Prerequisites
 
-{% imgx aligncenter assets/5i_215fK15AiaYSz.png 535 413 "Verrazzano multi-cluster architecture" "Verrazzano multi-cluster architecture" %}
+To successfully complete this tutorial, you will need to have:
 
-Also, remember we have the following setup:
+- An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }})
+- A MacOS, Linux, or Windows computer with `ssh` support installed
+- Git
+- [Terraform 1.0.0] or later
+- Completed [section 2] of the series
 
-{% imgx aligncenter assets/695/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote peering with different regions" "Remote peering with different regions using star architecture for managed clusters" %}
+## Getting started
 
-Plus, we chose the Admin server to be in the Singapore OCI region.
+First, a little refresher.
 
-We will install Verrazzano with dev/prod profile on the Admin cluster and with managed-cluster profile on the managed clusters.
+- Recall that a Verrazzano multi-cluster has:  
 
-### Note on using kubectx
+  - 1 Admin cluster, *and*
+  - 1 or more managed clusters
 
-In the commands below, I use kubectx to set the Kubernetes context where a context is equivalent to a Kubernetes cluster. Strictly speaking that’s not true but it serves our purpose here. Since we have 1 Admin servers and 3 managed servers in 4 different regions, we have 4 different contexts:
+- Where *each* Verrazzano cluster is also a Kubernetes cluster:
+
+  {% imgx aligncenter assets/5i_215fK15AiaYSz.png 535 413 "Verrazzano multi-cluster architecture" "Verrazzano multi-cluster architecture" %}
+
+- Also, remember we have the following setup:  
+
+  {% imgx aligncenter assets/695/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote peering with different regions" "Remote peering with different regions using star architecture for managed clusters" %}
+
+- And that we chose the Admin server to be in the Singapore OCI region.
+
+Next, We'll install Verrazzano with the *dev/prod* profile on the Admin cluster and with *managed-cluster* profile on the managed clusters.
+
+### Quick note on using `kubectx`
+
+In the commands below, we'll use `kubectx` to set the Kubernetes context such that a context is equivalent to a Kubernetes cluster. Strictly speaking, that’s not really true, but it does serve our purposes here.  
+
+In our example, since we have 1 Admin server and 3 managed servers in 4 different regions, we have *4 different contexts*:
 
 {% imgx aligncenter assets/8IaaB1P-hc9P6vjffKZaDA.png 700 121 "Verifying your Kubernetes context" "Verifying your Kubernetes context" %}
 
-To ensure we are always using the correct context, I execute the `kubectx <context-name>` before every command.
+To ensure we're always using the correct context, we execute the `kubectx <context-name>` before every command.
 
 ## Installing Verrazzano as Admin
 
-Installing Verrazzano as the Admin cluster is straightforward. You follow the [quickstart guide](https://verrazzano.io/docs/quickstart/) and you can choose between the dev/prod profile. On the operator host, ensure your context is pointing to “admin”:
+Installing Verrazzano as the Admin cluster is straightforward, just follow the steps in the [quickstart guide](https://verrazzano.io/docs/quickstart/). During the set up process you can choose between the dev/prod profile.  
+
+### First things first
+
+Before you start, make sure that your context is pointing to “admin” on the operator host:  
 
 {% imgx aligncenter assets/700/8IaaB1P-hc9P6vjffKZaDA.png 700 121 "Verifying your Kubernetes context" "Verifying your Kubernetes context" %}
 
-
-If it’s pointing to one of the other clusters, change it as follows:
+If it’s pointing to one of the other clusters, change it as follows:  
 
 ```console
 kubectx admin
 ```
 
-We can now begin the installation:
+### Install Verrazzanno
 
-```console
-kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yaml
-```
+1. Begin the deployment:  
 
-Wait for the deployment to finish:
+      ```console
+      kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yaml
+      ```
 
-```console
-kubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
-```
+1. Wait for the deployment to finish:  
 
-And confirm the operator pods are working correctly:
+      ```console
+      kubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
+      ```
 
-```console  
-kubectl -n verrazzano-install get pods
-NAME                                            READY   STATUS    RESTARTS   AGE
-verrazzano-platform-operator-54cf56884f-46zzk   1/1     Running   0          91s
-```
+1. Confirm that the operator pods are working correctly:
 
-Next, install Verrazzano:
- 
-```console   
-kubectl apply -f - <<EOF  
-apiVersion: install.verrazzano.io/v1alpha1  
-kind: Verrazzano  
-metadata:  
-    name: admin  
-spec:  
-    profile: dev  
-EOF
-```
+      ```console  
+      kubectl -n verrazzano-install get pods
+      NAME                                            READY   STATUS    RESTARTS   AGE
+      verrazzano-platform-operator-54cf56884f-46zzk   1/1     Running   0          91s
+      ```
 
-Now we need to wait until the installation is complete:
-    
-```console
-kubectl wait \  
-    --timeout=20m \  
-    --for=condition=InstallComplete \  
-    verrazzano/admin
-```
+1. Install Verrazzano:  
 
-This will take a while. In the meantime, let’s install Verrazzano on the managed clusters.
+      ```console
+      kubectl apply -f - <<EOF  
+      apiVersion: install.verrazzano.io/v1alpha1  
+      kind: Verrazzano  
+      metadata:  
+          name: admin  
+      spec:  
+          profile: dev  
+      EOF
+      ```
+
+1. Wait until the installation is complete:  
+
+      ```console
+      kubectl wait \  
+          --timeout=20m \  
+          --for=condition=InstallComplete \  
+          verrazzano/admin
+      ```
+
+   This will take a while. In the meantime, let’s install Verrazzano on the managed clusters.  
 
 ## Installing Verrazzano on managed clusters
 
-Change the context to 1 of the managed clusters and install the operator again e.g.
- 
-```console
-kubectx sydney kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yamlkubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
-```
+1. Change the context to one of the managed clusters and install the operator again:  
 
-Repeat the above for all the managed clusters. Before running in each managed cluster, ensure you have changed your context with kubectx `<contextname>` as above.
+      ```console
+      kubectx sydney kubectl apply -f https://github.com/verrazzano/verrazzano/releases/download/v1.0.3/operator.yamlkubectl -n verrazzano-install rollout status deployment/verrazzano-platform-operator
+      ```
 
-Using the same procedure as for the Admin region, verify that the Verrazzano operator has been successfully installed.
+1. Repeat the previous command for each of the remaining managed clusters.  
+   >**NOTE:** Before running in each managed cluster, ensure that you've changed your context with kubectx `<contextname>` as noted above.  
+   {:.alert}
 
-Now, install Verrazzano for each using the managed profile by changing the context and name accordingly:
+1. Using the same procedure as the Admin region, verify that the Verrazzano operator has been successfully installed.  
 
-```yaml
-apiVersion: install.verrazzano.io/v1alpha1  
-kind: Verrazzano  
-metadata:  
-    name: sydney  
-spec:  
-    profile: managed-cluster
-```
+1. Using the managed profile, install Verrazzano for each cluster  by changing the context and name accordingly:  
+
+      ```yaml
+      apiVersion: install.verrazzano.io/v1alpha1  
+      kind: Verrazzano  
+      metadata:  
+          name: sydney  
+      spec:  
+          profile: managed-cluster
+      ```
 
 ## Verifying the Admin cluster and managed clusters
 
-While the managed clusters are being installed, let’s see if we can [access the various consoles](https://verrazzano.io/docs/operations/). Ensure you can login into the Verrazzano and Rancher consoles.
+While the managed clusters are being installed, let’s see if we can [access the various consoles](https://verrazzano.io/docs/operations/). First, make sure that you can log in into the Verrazzano and Rancher consoles.  
 
-Change the context again and verify:
+1. Change the context again and verify:  
 
-```console
-kubectx sydney kubectl wait \  
-    --timeout=20m \  
-    --for=condition=InstallComplete \  
-    verrazzano/sydney
-```
+      ```console
+      kubectx sydney kubectl wait \  
+          --timeout=20m \  
+          --for=condition=InstallComplete \  
+          verrazzano/sydney
+      ```
 
-Repeat the verification for each managed cluster.
+1. Repeat the verification for each managed cluster.
 
 ## Registering the managed clusters
 
-Verify the the CA certificate type for each managed cluster:
-    
-```console
-kubectx sydney kubectl -n verrazzano-system get secret system-tls -o jsonpath='{.data.ca\.crt}'
-```
+1. Verify the the CA certificate type for each managed cluster:
 
-If this value is empty, then your managed cluster is using certificates signed by a well-known certificate authority and you can generate a secret containing the CA certificate in YAML format. If it’s not empty, then the certificate is self-signed and needs to be extracted. Refer to the workflow at the beginning of this article.
+      ```console
+      kubectx sydney kubectl -n verrazzano-system get secret system-tls -o jsonpath='{.data.ca\.crt}'
+      ```
 
-```console
-kubectx sydney
+   If this value is empty, it's actually a good thing. This means that your managed cluster is using certificates signed by a well-known certificate authority and you can generate a secret containing the CA certificate in YAML format. If it’s *not* empty, then the certificate is self-signed and needs to be extracted. Refer to the workflow at the beginning of this article.  
 
-CA_CERT=$(kubectl \  
-    get secret system-tls \  
-    -n verrazzano-system \  
-    -o jsonpath="{.data.ca\.crt}" | base64 --decode)
+      ```console
+      kubectx sydney
 
-kubectl create secret generic "ca-secret-sydney" \  
-  -n verrazzano-mc \  
-  --from-literal=cacrt="$CA_CERT" \  
-  --dry-run=client -o yaml > managedsydney.yaml
-```
+      CA_CERT=$(kubectl \  
+          get secret system-tls \  
+          -n verrazzano-system \  
+          -o jsonpath="{.data.ca\.crt}" | base64 --decode)
 
-Repeat the above for the 2 other regions replacing the region/context and filenames accordingly.
+      kubectl create secret generic "ca-secret-sydney" \  
+        -n verrazzano-mc \  
+        --from-literal=cacrt="$CA_CERT" \  
+        --dry-run=client -o yaml > managedsydney.yaml
+      ```
 
-Create 3 secrets on the Admin cluster that contains the CA certificate for each managed cluster:
+1. Repeat the above for the 2 other regions, replacing the *region/context* and *filenames* accordingly.
 
-```console
-kubectx adminkubectl apply -f managedsydney.yaml  
-kubectl apply -f managedmumbai.yaml  
-kubectl apply -f managedtokyo.yaml
-```
+1. Create 3 secrets on the Admin cluster that contains the CA certificate for each managed cluster:  
 
-Get the cluster name for the Admin Cluster:
-    
-```console
-kubectl config get contexts
-```
+      ```console
+      kubectx adminkubectl apply -f managedsydney.yaml  
+      kubectl apply -f managedmumbai.yaml  
+      kubectl apply -f managedtokyo.yaml
+      ```
 
-{% imgx aligncenter assets/AHjsVsuj0gcjB0RNKCNVIQ.png 700 132 "Cluster names" "Cluster names" %}
+1. Get the *cluster name* for the Admin Cluster:  
 
-Get the API Server address for the Admin server:
- 
-```console   
-kubectx adminexport CLUSTER_NAME="cluster-cillzxw34tq"API_SERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
-```
+      ```console
+      kubectl config get contexts
+      ```
 
-Create a ConfigMap that contains the Admin cluster’s API server address:
+   {% imgx aligncenter assets/AHjsVsuj0gcjB0RNKCNVIQ.png 700 132 "Cluster names" "Cluster names" %}
 
-```console
-kubectx adminkubectl apply -f <<EOF -  
-apiVersion: v1  
-kind: ConfigMap  
-metadata:  
-  name: verrazzano-admin-cluster  
-  namespace: verrazzano-mc  
-data:  
-  server: "${API_SERVER}"  
-EOF
-```
+1. Get the *API Server address* for the Admin server:  
 
-Create the VerrazzanoManagedCluster object for each managed cluster:
+      ```console
+      kubectx adminexport CLUSTER_NAME="cluster-cillzxw34tq"API_SERVER=$(kubectl config view -o jsonpath="{.clusters[?(@.name==\"$CLUSTER_NAME\")].cluster.server}")
+      ```
 
-```console  
-kubectx admin  
-kubectl apply -f <<EOF -  
-apiVersion: clusters.verrazzano.io/v1alpha1  
-kind: VerrazzanoManagedCluster  
-metadata:  
-  name: sydney  
-  namespace: verrazzano-mc  
-spec:  
-  description: "Sydney VerrazzanoManagedCluster object"  
-  caSecret: ca-secret-sydney  
-EOFkubectl apply -f <<EOF -  
-apiVersion: clusters.verrazzano.io/v1alpha1  
-kind: VerrazzanoManagedCluster  
-metadata:  
-  name: mumbai  
-  namespace: verrazzano-mc  
-spec:  
-  description: "Mumbai VerrazzanoManagedCluster object"  
-  caSecret: ca-secret-mumbai  
-EOFkubectl apply -f <<EOF -  
-apiVersion: clusters.verrazzano.io/v1alpha1  
-kind: VerrazzanoManagedCluster  
-metadata:  
-  name: tokyo  
-  namespace: verrazzano-mc  
-spec:  
-  description: "Tokyo VerrazzanoManagedCluster object"  
-  caSecret: ca-secret-tokyo  
-EOF
-```
+1. Create a *ConfigMap* that contains the Admin cluster’s API server address:  
 
-Wait for the VerrazzanoManagedCluster resource to reach the Ready status:
-   
-```console 
-kubectx adminkubectl wait --for=condition=Ready \  
-    vmc sydney -n verrazzano-mckubectl wait --for=condition=Ready \  
-    vmc sydney -n verrazzano-mckubectl wait --for=condition=Ready \  
-    vmc sydney -n verrazzano-mc
-```
+      ```console
+      kubectx adminkubectl apply -f <<EOF -  
+      apiVersion: v1  
+      kind: ConfigMap  
+      metadata:  
+        name: verrazzano-admin-cluster  
+        namespace: verrazzano-mc  
+      data:  
+        server: "${API_SERVER}"  
+      EOF
+      ```
 
-Export a YAML file created to register the managed cluster:
-    
-```console
-kubectx adminkubectl get secret verrazzano-cluster-sydney-manifest \  
-    -n verrazzano-mc \  
-    -o jsonpath={.data.yaml} | base64 --decode > registersydney.yamlkubectl get secret verrazzano-cluster-mumbai-manifest \  
-    -n verrazzano-mc \  
-    -o jsonpath={.data.yaml} | base64 --decode > registermumbai.yamlkubectl get secret verrazzano-cluster-tokyo-manifest \  
-    -n verrazzano-mc \  
-    -o jsonpath={.data.yaml} | base64 --decode > registertokyo.yaml
-```
+1. Create the `VerrazzanoManagedCluster` object for each managed cluster:  
 
-On each managed cluster, apply the registration file:
+      ```console  
+      kubectx admin  
+      kubectl apply -f <<EOF -  
+      apiVersion: clusters.verrazzano.io/v1alpha1  
+      kind: VerrazzanoManagedCluster  
+      metadata:  
+        name: sydney  
+        namespace: verrazzano-mc  
+      spec:  
+        description: "Sydney VerrazzanoManagedCluster object"  
+        caSecret: ca-secret-sydney  
+      EOFkubectl apply -f <<EOF -  
+      apiVersion: clusters.verrazzano.io/v1alpha1  
+      kind: VerrazzanoManagedCluster  
+      metadata:  
+        name: mumbai  
+        namespace: verrazzano-mc  
+      spec:  
+        description: "Mumbai VerrazzanoManagedCluster object"  
+        caSecret: ca-secret-mumbai  
+      EOFkubectl apply -f <<EOF -  
+      apiVersion: clusters.verrazzano.io/v1alpha1  
+      kind: VerrazzanoManagedCluster  
+      metadata:  
+        name: tokyo  
+        namespace: verrazzano-mc  
+      spec:  
+        description: "Tokyo VerrazzanoManagedCluster object"  
+        caSecret: ca-secret-tokyo  
+      EOF
+      ```
 
-```console
-kubectx sydney  
-kubectl apply -f registersydney.yamlkubectx mumbai  
-kubectl apply -f registermumbai.yamlkubectx tokyo  
-kubectl apply -f registertokyo.yaml
-```
+1. Wait for the *VerrazzanoManagedCluster* resource to reach the Ready status:  
 
-Now verify whether the registration completed successfully:
+      ```console
+      kubectx adminkubectl wait --for=condition=Ready \  
+          vmc sydney -n verrazzano-mckubectl wait --for=condition=Ready \  
+          vmc sydney -n verrazzano-mckubectl wait --for=condition=Ready \  
+          vmc sydney -n verrazzano-mc
+      ```
 
-```console    
-kubectx admin  
-kubectl get vmc sydney -n verrazzano-mc -o yaml  
-kubectl get vmc mumbai -n verrazzano-mc -o yaml  
-kubectl get vmc tokyo -n verrazzano-mc -o yaml
-```
+1. Export a YAML file created to register the managed cluster:  
+
+      ```console
+      kubectx adminkubectl get secret verrazzano-cluster-sydney-manifest \  
+          -n verrazzano-mc \  
+          -o jsonpath={.data.yaml} | base64 --decode > registersydney.yamlkubectl get secret verrazzano-cluster-mumbai-manifest \  
+          -n verrazzano-mc \  
+          -o jsonpath={.data.yaml} | base64 --decode > registermumbai.yamlkubectl get secret verrazzano-cluster-tokyo-manifest \  
+          -n verrazzano-mc \  
+          -o jsonpath={.data.yaml} | base64 --decode > registertokyo.yaml
+      ```
+
+1. On each managed cluster, apply the registration file:  
+
+      ```console
+      kubectx sydney  
+      kubectl apply -f registersydney.yamlkubectx mumbai  
+      kubectl apply -f registermumbai.yamlkubectx tokyo  
+      kubectl apply -f registertokyo.yaml
+      ```
+
+1. Verify whether the registration completed successfully:  
+
+      ```console
+      kubectx admin  
+      kubectl get vmc sydney -n verrazzano-mc -o yaml  
+      kubectl get vmc mumbai -n verrazzano-mc -o yaml  
+      kubectl get vmc tokyo -n verrazzano-mc -o yaml
+      ```
 
 ## Additional verifications
 
-Navigate to the Verrazzano console, login and you should be able to see all 3 clusters:
+### Verrazzano console
+
+Navigate to the Verrazzano console and log in. You should be able to see all 3 clusters:  
 
 {% imgx aligncenter assets/oMn_S0wntkkEmuuPf-3JBw.png 700 403 "Managed clusters in Verrazzano" "Managed clusters in Verrazzano" %}
 
-Similarly, on the Rancher console, you should be able to see all 4 clusters:
+### Rancher console
+
+Similarly, on the Rancher console, you should be able to see all 4 clusters:  
+
 {% imgx aligncenter assets/v3E0CZxe1nF3Ni80qCB7tg.png 700 173 "Admin and managed clusters in Rancher" "Admin and managed clusters in Rancher" %}
 
-"local" is the Admin cluster whereas the others are the managed clusters.
+>**NOTE:** "local" is the Admin cluster whereas the others are the managed clusters.
+{:.notice}
 
 ## Conclusion
 
-This concludes the exercise of connecting the OKE clusters deployed in different regions into a multi-cluster Verrazzano deployment. Note that in this post, we did not configure things like DNS, Certificates, Ingress Controller etc. Our aim is to get the multi-cluster configuration going. In a future post, we will look at those other things as well.
+This concludes the exercise of connecting OKE clusters deployed in different regions into a multi-cluster Verrazzano deployment. Keep in mind that in this series we never configured things like DNS, Certificates, or the Ingress Controller. Our goal was just to get the multi-cluster configuration going. In a future article, we'll come back to this topic and look at those other things as well.
+
+To explore more information about development with Oracle products:
+
+- [Oracle Developers Portal](https://developer.oracle.com/)
+- [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
+
+<!-- Articles -->
+
+[section 2]: 2-deploy-multi-cluster-verrazzano-oke.md
