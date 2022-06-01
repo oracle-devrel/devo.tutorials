@@ -34,13 +34,13 @@ For those of you who don’t know LoL deeply, it’s a popular multiplayer compe
 
 ## First Steps
 
-Using [Riot Games’ Developer Portal](https://developer.riotgames.com), I signed up for a personal application. I explored the API and found that there are many endpoints to extract data, not only for LoL, but also from Riot Games’ other games (Teamfight Tactics and Valorant). We will dive together into these other games in the future.
+Using [Riot Games’ Developer Portal](https://developer.riotgames.com), I signed up for a personal application. I explored the API and found that there are many endpoints to extract data, not only for LoL, but also from Riot Games’ other games (Teamfight Tactics and Valorant). We  dive together into these other games in the future.
 
 In LoL, 5 players choose among a wide variety of champions, which have their own synergies between each other. Champion powers are either *buffed* (improved) or *nerfed* (reduced) if their statistics are too overpowered or imbalanced compared to other champions in what League calls patches. 
 
-Team composition is a very important feature of the game, since exploiting compositions where champions have synergies gives teams a greater chance of winning. Since champion’s statistics are changed in patches, these team compositions change constantly, and pro teams spend a lot of time devising strategies on how to create powerful team compositions that will lead them to victory.
+Team composition is a very important feature of the game, since exploiting compositions where champions have synergies gives teams a greater chance of winning. Since champion’s statistics are changed in patches, these team compositions change constantly, and pro teams spend a lot of time devising strategies on how to create powerful team compositions that  lead them to victory.
 
-Note that in LoL, players are rewarded gold when killing enemies, minions or jungle monsters, and with these items players may buy upgrades such as weapons that deal more damage. The intricacies of the videogame are very complex and it takes years to reach the highest level of play. Therefore, if you are not familiar with some of the concepts that I will talk about in this series, I will make sure to explain these advanced concepts in more detail when they come up. I am not a professional player, but I have been playing LoL since Season 1 at high Diamond level, which gives me more than enough knowledge to start fidgeting with some AI code related to League.
+Note that in LoL, players are rewarded gold when killing enemies, minions or jungle monsters, and with these items players may buy upgrades such as weapons that deal more damage. The intricacies of the videogame are very complex and it takes years to reach the highest level of play. Therefore, if you are not familiar with some of the concepts that I  talk about in this series, I  make sure to explain these advanced concepts in more detail when they come up. I am not a professional player, but I have been playing LoL since Season 1 at high Diamond level, which gives me more than enough knowledge to start fidgeting with some AI code related to League.
 
 Firstly, we should talk about the architecture for this project: 
 
@@ -62,7 +62,7 @@ Here's a detailed explanation of how this process (usually) works:
 
 Let’s start with the assumption that each team gets 5 bans each. So 10 bans total.
 
-We will create an ML model to predict the best team compositions based on inputs. Therefore, if a player picks (for example) Lee Sin, our model will be able to respond to this input and suggest counter-picks (meaning, champions whose win percentage / win rate is very high against LeeSin), also considering possible synergies with teammates.
+We  create an ML model to predict the best team compositions based on inputs. Therefore, if a player picks (for example) Lee Sin, our model  be able to respond to this input and suggest counter-picks (meaning, champions whose win percentage / win rate is very high against LeeSin), also considering possible synergies with teammates.
 
 How about our training data? For this set, we wouldn’t want to include decisions made by less-skilled players, so we would want to only include data from professional players in our initial dataset. 
 
@@ -105,11 +105,11 @@ def get_top_players(region, queue, connection):
 
 ```
 
-In this screenshot, I create a set of request URLs to get challenger, grandmaster, and master players. I want to get all players in all available servers, as well as all queue types. So I will focus on getting data from Solo Queue (where a player can only play together or with a duo partner, and the remainder of the team is composed of random teammates) and Flex Queue (where teams of up to 5 people can be built). 
+In this screenshot, I create a set of request URLs to get challenger, grandmaster, and master players. I want to get all players in all available servers, as well as all queue types. So I  focus on getting data from Solo Queue (where a player can only play together or with a duo partner, and the remainder of the team is composed of random teammates) and Flex Queue (where teams of up to 5 people can be built). 
 
 In order to expand my initial dataset I firstly considered getting all players above Master’s ELO, but as my dataset grew, I had enough active players, so after a while I decided to only consider new challenger players as an addition to my player collection.
 
-Note that if you want to reproduce this code, you will need your own API key and insert it as a header parameter.
+Note that if you want to reproduce this code, you  need your own API key and insert it as a header parameter.
 
 ```python
 for x in request_urls:
@@ -143,7 +143,7 @@ In this code, I make the requests using the requests Python library, and process
 # Insert into the database.
 soda = connection.getSodaDatabase()
 
-# this will open an existing collection, if the name is already in use
+# this  open an existing collection, if the name is already in use
 collection_summoner = soda.createCollection('summoner')
 
 ```
@@ -181,12 +181,11 @@ for x in total_users_to_insert:
 		print('Summoner {} already inserted'.format(x['summonerName']))
 		continue
 	print('Inserted new summoner: {} in region {}, queue {}'.format(x['summonerName'], region, queue))
-
 ```
 
 Here I inserted the player’s data into a collection called summoner. 
 
-This collection will store all the players’ identifying information. Note that in order to unequivocally identify a player or _summoner_ as we will call them from now on, a summoner name is not enough. Why? Because players can change their summoner name in the Riot Games store, so storing their username would not guarantee the access to their data permanently. Therefore, to identify users, we make an additional API call to get the PUUID (Personal UUID) for all players so that in case these users change username, we will still be able to use their PUUIDs to get additional information about them.
+This collection  store all the players’ identifying information. Note that in order to unequivocally identify a player or _summoner_ as we  call them from now on, a summoner name is not enough. Why? Because players can change their summoner name in the Riot Games store, so storing their username would not guarantee the access to their data permanently. Therefore, to identify users, we make an additional API call to get the PUUID (Personal UUID) for all players so that in case these users change username, we  still be able to use their PUUIDs to get additional information about them.
 
 ```json
 {
@@ -212,11 +211,11 @@ This is an example of data obtained for a European challenger player and their a
 
 ![Summoner Schema](assets/summoner_schema.png)
 
-We will primarily care about the summoner’s PUUID and their request region in order to know the geographical location of the player and make requests to the Riot Games API accordingly.
+We  primarily care about the summoner’s PUUID and their request region in order to know the geographical location of the player and make requests to the Riot Games API accordingly.
 
 And, what is the kind of information that we want from our extracted players? Well, in reality we wouldn’t want to get summoners’ information above a Masters’ ELO if we wouldn’t use this data somewhere else, or to produce something useful for our model. So, if we want to predict optimal team compositions, we need some League games to analyze. 
 
-After looking into the API a bit more, I found an endpoint which extracts the latest number of matches played by any summoner at any time (the limit for every request is 100, but we can use pagination to chain several requests and retrieve many more games). We will store these match IDs into an auxiliary collection in order to further process them. We could do this in only one step, but since this is a data mining process designed to run for long periods of time (even 24 hours a day), I decided that it would be best to simplify and use highly decoupled functions, each separate from the other.
+After looking into the API a bit more, I found an endpoint which extracts the latest number of matches played by any summoner at any time (the limit for every request is 100, but we can use pagination to chain several requests and retrieve many more games). We  store these match IDs into an auxiliary collection in order to further process them. We could do this in only one step, but since this is a data mining process designed to run for long periods of time (even 24 hours a day), I decided that it would be best to simplify and use highly decoupled functions, each separate from the other.
 
 ```json
 {
@@ -236,13 +235,13 @@ Now that we have our match IDs downloaded into our match collection, we need to 
 - The outcome of the game (win or loss)
 - Additionally, we can also calculate the outcome of each one of the matchups.
 
-    For example, calculate whether the player in middle lane lost their own matchup against the enemy middle laner, and so on. This can also be useful to create another ML model, which will consider individual matchups and make predictions to help out in the individual component of a match.
+    For example, calculate whether the player in middle lane lost their own matchup against the enemy middle laner, and so on. This can also be useful to create another ML model, which  consider individual matchups and make predictions to help out in the individual component of a match.
 
-In the end, we would like to feed a player’s champion into the model, and the model will give us the best possible choices (either for the ally or enemy team). So, we would tell the model something like: “I want to know the best synergy to pick together with X champion and I also want to know their worst matchups.” 
+In the end, we would like to feed a player’s champion into the model, and the model  give us the best possible choices (either for the ally or enemy team). So, we would tell the model something like: “I want to know the best synergy to pick together with X champion and I also want to know their worst matchups.” 
 
-We will start exploring this in the third article in this series, where we will dive deep into AI code on how to create these models, train them and improve them.  
+We  start exploring this in the third article in this series, where we  dive deep into AI code on how to create these models, train them and improve them.  
 
-I hope to see you in the next article of this series, where together we will:
+I hope to see you in the next article of this series, where together we :
 
 - Establish a stable architecture for our code
 - Optimize our code, which is good, but once the dataset grows, the code starts being inefficient
@@ -251,7 +250,7 @@ I hope to see you in the next article of this series, where together we will:
 
 ## DataSets
 
-I have published my datasets into Kaggle for everyone to use, in case you don't have as much as time to complement them and process them. The process of data collection is arduous and took me a very long time since the beginning of this project. I will keep updating the datasets with the progress I make in the following articles. You can find them in here:
+I have published my datasets into Kaggle for everyone to use, in case you don't have as much as time to complement them and process them. The process of data collection is arduous and took me a very long time since the beginning of this project. I  keep updating the datasets with the progress I make in the following articles. You can find them in here:
 
 - [Master+ Matches Collection (1.000.000+)](https://www.kaggle.com/jasperan/league-of-legends-1000000-master-matches)
 - [Master+ Players Collection (30.000+)](https://www.kaggle.com/jasperan/league-of-legends-master-players)
