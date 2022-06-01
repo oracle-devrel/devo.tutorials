@@ -250,7 +250,7 @@ I hope to see you in the next article of this series, where together we :
 
 ## DataSets
 
-I have published my datasets into Kaggle for everyone to use, in case you don't have as much as time to complement them and process them. The process of data collection is arduous and took me a very long time since the beginning of this project. I  keep updating the datasets with the progress I make in the following articles. You can find them in here:
+I have published my datasets into Kaggle for everyone to use, in case you don't have as much as time to complement them and process them. The process of data collection is arduous and took me a very long time since the beginning of this project. I'll keep updating the datasets with the progress I make in the following articles. You can find them in here:
 
 - [Master+ Matches Collection (1.000.000+)](https://www.kaggle.com/jasperan/league-of-legends-1000000-master-matches)
 - [Master+ Players Collection (30.000+)](https://www.kaggle.com/jasperan/league-of-legends-master-players)
