@@ -24,7 +24,7 @@ xredirect: https://developer.oracle.com/tutorials/apache-php-ubuntu-oci-installa
 ---
 {% slides %}
 
-In this tutorial, you use an Oracle Cloud Infrastructure (OCI) Free Tier account to set up a compute instance on the latest version of Ubuntu. Then, you will install an Apache web server and PHP and access your new server from the internet. Finally, this tutorial covers all the steps necessary to set up a virtual network for your host and connect the host to the internet.
+In this tutorial, you'll use an Oracle Cloud Infrastructure (OCI) Free Tier account to set up a compute instance on the latest version of Ubuntu. Then, you'll install PHP and an Apache web server to access your new server from the internet. This tutorial covers all the steps necessary to set up a virtual network for your host and connect that host to the internet.
 
 Key tasks include how to:
 
@@ -36,7 +36,7 @@ Key tasks include how to:
 * Configure Apache and PHP 7 on your instance.
 * Connect to your instance from the internet.
 
-Here is a simplified diagram of the setup for your Linux VM.
+Here's a simplified diagram for setting up your Linux VM.
 
 ![] ![]({% imgx aligncenter assets/apache-php-ubuntu-Apache_Diagram.png 1200 578 "" "Within OCI is the Compute VM, connected to the VCN, connected to the Internet" %})
 
@@ -48,23 +48,23 @@ For additional information, see:
 
 ## Requirements
 
-To successfully complete this tutorial, you must have the following:
+To successfully complete this tutorial, you'll need:
 
 * An Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
 * A MacOS, Linux, or Windows computer with `ssh` support installed.
 
 ## 1. Set up a Compartment for Development
 
-First, you will configure a compartment for your development.
+First, let's configure a compartment for your development.
 
 ### Create a Compartment
 
 Create a compartment for the resources that you create in this tutorial.
-
+ 
 1. Log in to the Oracle Cloud Infrastructure **Console**.
 2. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Compartments**.
 3. Click **Create Compartment**.
-4. Fill in the following information:
+4. Complete the following fields:
     * **Name:** `<your-compartment-name>`
     * **Description:** `Compartment for <your-description>.`
     * **Parent Compartment:** `<your-tenancy>(root)`
@@ -97,7 +97,7 @@ To get started installing your instance with the **Create a VM Instance** wizard
     * **Name:** `<name-for-the-instance>`
     * **Create in compartment:** `<your-compartment>`
 
-    Enter a value for the name or leave the system supplied default.
+    Enter a value for the name or leave the system-supplied default.
 
 3. Review the **Placement** settings, and click the **Show advanced options** link.
 
@@ -127,7 +127,7 @@ To get started installing your instance with the **Create a VM Instance** wizard
 
     2. Take the default values for **Shape**.
 
-    For example, your data looks similar to the following:
+    For example, your data should look similar to the following:
 
     **Shape**
 
@@ -171,7 +171,6 @@ The **Create a VM Instance** wizard automatically creates a VCN for your VM. You
 
 ### Create an Ingress Rule for your VCN
 
-
 Follow these steps to select your VCN's public subnet and add the ingress rule.
 
 1. Open the navigation menu and click **Networking**, and then click **Virtual Cloud Networks**.
@@ -189,8 +188,6 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
     An **Add Ingress Rules** dialog is displayed.
 
 6. Fill in the ingress rule with the following information.
-
-    Fill in the ingress rule as follows:
 
     * **Stateless:** Checked
     * **Source Type:** CIDR
@@ -210,7 +207,7 @@ Follow these steps to select your VCN's public subnet and add the ingress rule.
 
 ## 4. Set up Apache and PHP
 
-Next install and configure Apache web server and PHP to run on your Ubuntu Linux instance.
+Next, install and configure Apache web server and PHP to run on your Ubuntu Linux instance.
 
 ### Install and Configure Apache and PHP
 
@@ -238,7 +235,7 @@ To install and set up Apache and PHP, perform the following steps:
     sudo apt -y install apache2
     ```
 
-7. Next start Apache.
+7. Start Apache.
 
     ```console
     sudo systemctl restart apache2
@@ -253,7 +250,7 @@ To install and set up Apache and PHP, perform the following steps:
     sudo netfilter-persistent save
     ```
 
-    The commands add a rule to allow HTTP traffic and saves the changes to the `iptables`configuration files.
+    These commands add a rule to allow HTTP traffic and saves the changes to the `iptables`configuration files.
 
 9. You can now test your server.
 
