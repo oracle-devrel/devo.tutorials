@@ -216,7 +216,7 @@ Argo Rollouts provides additional deployment strategies such as *Blue-Green* and
 
 Switching from the default Kubernetes [Deployment to Rollout] is very easy:
 
-1. Change the `apiVersion` from *apps/v1* to *argoproj.io/v1alpha1*
+1. Change the `apiVersion` from *`apps/v1*` to _`argoproj.io/v1alpha1`_
 2. Change the `kind` from *Deployment* to *Rollout*
 3. Add a *deployment strategy* to the Rollout object
 
@@ -425,17 +425,16 @@ To explore more information about development with Oracle products:
 [Argo Project]: https://argoproj.github.io/
 [accepted as an incubator-level]: https://www.cncf.io/blog/2020/04/07/toc-welcomes-argo-into-the-cncf-incubator/
 
-[Argo Workflows]: https://argoproj.github.io/projects/argo/
-[Argo CD]: https://argo-cd.readthedocs.io/en/stable/
-[Argo Rollouts]: https://argoproj.github.io/argo-rollouts/
-[Argo Events]: https://argoproj.github.io/projects/argo-events/
+[Argo Workflows]: https://argoproj.github.io/workflows
+[Argo CD]: https://argoproj.github.io/cd
+[Argo Rollouts]: https://argoproj.github.io/rollouts
+[Argo Events]: https://argoproj.github.io/events
 [Argo Project]: https://argoproj.github.io/
 [accepted as incubator-level]: https://www.cncf.io/blog/2020/04/07/toc-welcomes-argo-into-the-cncf-incubator/
 [terraform-oci-oke repo]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/quickstart.adoc#provisioning-using-this-git-repo
 [use the published terraform OKE module]: https://github.com/oracle-terraform-modules/terraform-oci-oke/blob/master/docs/quickstart.adoc#provisioning-using-the-hashicorp-registry-module
 [Terraform registry]: https://registry.terraform.io/modules/oracle-terraform-modules/oke/oci/latest
 [the Quick Create]: https://docs.cloud.oracle.com/en-us/iaas/Content/ContEng/Tasks/contengcreatingclusterusingokehtm#create-quick-cluster
-[Argo CD]: https://argoproj.github.io/projects/argo-cd/
 [getting started guide]: https://argo-cd.readthedocs.io/en/stable/getting_started/
 [Deployment to Rollout]: https://argoproj.github.io/argo-rollouts/getting-started/#converting-deployment-to-rollout
 [creating apps via UI]: https://argoproj.github.io/argo-cd/getting_started/#creating-apps-via-ui
