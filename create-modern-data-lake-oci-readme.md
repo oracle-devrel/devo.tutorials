@@ -17,43 +17,58 @@ xredirect: https://developer.oracle.com/tutorials/create-modern-data-lake-oci-re
 ---
 {% imgx aligncenter assets/datalakeocichart_4481-9331b237844018b1.png "OCI Datalake Architecture Overview" %}
 
-## Resource Manager Deployment
+What is a data lake? Simply, a data lake is a place to store both your structured and unstructured data. It's also a great method for organizing large volumes of diverse data from diverse sources.  
 
-* An Oracle Cloud Infrastructure (OCI) Free Tier account. [Start for Free]({{ site.urls.always_free }}).
-* A MacOS, Linux, or Windows computer with `ssh` support installed.
-* [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm) (It provides a great platform for quickly working with Terraform as well as a host of other OCI interfaces and tools.)
+In this article, we'll guide you through deploying a data lake in OCI and quickly get you up and running so you can explore its many benefits!  
 
+For more information, see:
 
-This Quick Start uses the [OCI Resource Manager] to make deployment easy, sign up for an [OCI account] if you don't have one, and just click the button below:
-
-[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/oci-datalake/releases/download/0.1/master.zip)
-
-After logging into the console you'll be taken through the same steps described
-in the **Deploy** section below.
-
-Note, if you use this template to create another repo you'll need to change the link for the button to point at your repo.
+* [Signing Up for Oracle Cloud Infrastructure]
+* [Getting started with Terraform]
+* [Getting started with OCI Cloud Shell]
+* [What is a data lake?]
 
 ## Prerequisites
 
+In order to successfully complete this tutorial, you'll need:
+
+* An Oracle Cloud Infrastructure (OCI) Free Tier account. [Start for Free]({{ site.urls.always_free }}).
+* A MacOS, Linux, or Windows computer with `ssh` support installed.
+* Access to the [OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm) - It provides a great platform for quickly working with Terraform as well as a host of other OCI interfaces and tools.
+* The [OCI Resource Manager (ORM)] - This Quick Start uses the ORM to make deployment easy.
+* The ORM stack - Select the button below to download the `master.zip` file:  
+
+[![Deploy to Oracle Cloud](https://oci-resourcemanager-plugin.plugins.oci.oraclecloud.com/latest/deploy-to-oracle-cloud.svg)](https://cloud.oracle.com/resourcemanager/stacks/create?zipUrl=https://github.com/oracle-quickstart/oci-datalake/releases/download/0.1/master.zip)
+
+## Getting started
+
+After logging into the console you'll be taken through the same steps described in the [Deploy](#deploy-with-orm) section below.  
+
+>**NOTE:** If you use this template to create another repo you'll need to change the link for the button to point at your repo.
+{:.notice}
+
 ## Local Development
 
-Make sure your credentials are defined in $HOME/.oci/config file. As Terraform takes takes the default value from the .oci/config file
+Make sure your credentials are defined in `$HOME/.oci/config` file since Terraform takes takes the default value from the `.oci/config` file.  
+
+For example:  
 
 ```console
-For eg : [DEFAULT]
 user=ocid1.user.oc1..aaaaaxxxwf3a \
 fingerprint=de:50:15:13:...:d6 \
 key_file=/Users/shadab/.oci/oci_api_key.pem \
 tenancy=ocid1.tenancy.oc1..aaaaaaaa2txfa \
 compartment=ocid1.compartment.oc1..aaaa5pti7sq \
 region=us-ashburn-1
+```
 
-$ git clone https://github.com/oracle-quickstart/oci-datalake && cd oci-datalake
+```console
+git clone https://github.com/oracle-quickstart/oci-datalake && cd oci-datalake
 ```
 
 ### Initialize
 
-Initialize Terraform provider for OCI and Random
+Initialize the Terraform provider for OCI and Random:  
 
 ```console
 terraform init
@@ -91,6 +106,10 @@ terraform destroy -var-file=config.tfvars
 
 <!--- Links -->
 
-[OCI Resource Manager]: https://docs.cloud.oracle.com/iaas/Content/ResourceManager/Concepts/resourcemanager.htm
+[Signing Up for Oracle Cloud Infrastructure]: https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm
+[Getting started with Terraform]: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/terraformgettingstarted.htm
+[Getting started with OCI Cloud Shell]: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm
+[What is a data lake?]: https://www.oracle.com/big-data/what-is-data-lake/
+[OCI Resource Manager (ORM)]: https://docs.cloud.oracle.com/iaas/Content/ResourceManager/Concepts/resourcemanager.htm
 [OCI account]: https://cloud.oracle.com/en_US/tryit
 [Log in]: https://console.us-ashburn-1.oraclecloud.com/resourcemanager/stacks/create
