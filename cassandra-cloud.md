@@ -15,34 +15,46 @@ description: Cassandra, an open-source NoSQL database, plays well with Oracle Cl
 author: Olivier Francois Xavier Perard
 xredirect: https://developer.oracle.com/tutorials/cassandra-cloud/
 ---
-This walk-through guides you through configuring your environment to run Cassandra in Oracle Cloud Infrastructure (OCI).
+[Apache Cassandra] is a scalable, open-source NoSQL distributed database known for its high availability and compatibility with Oracle Cloud Infrastructure (OCI).  
 
-It's fun, we promise.
+This quick start guides you through configuring your environment to run Cassandra in OCI.  
+
+It's fun, we promise!  
+
+For more information, see:  
+
+* [Signing Up for Oracle Cloud Infrastructure](https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm)
 
 ## Prerequisites
 
-* You have deployed a VM 2.1 with Oracle Linux 7.9 (OEL7) in OCI.
-* The installation of Oracle Linux 7.9 is using pip3.6 by default.
-* Python 3.6 or higher is installed.
-* You have access to root either directly or using sudo. By default in OCI, you are connected like an "opc" user with sudo privilege.
+In order to successfully complete this tutorial, you will need to:  
+
+* Have deployed a VM 2.1 with Oracle Linux 7.9 (OEL7) in OCI.
+* Have installed Oracle Linux 7.9 with pip3.6 by default.
+* Installed Python 3.6 or higher.
+* Have access to root, either directly or by using sudo.  
+  By default in OCI, you are connected like an "opc" user with sudo privilege.
+* Have an Oracle Cloud Infrastructure Free Tier account. [Start for Free]({{ site.urls.always_free }}).
+
+## Getting started
 
 Let's start with setting up the Python environment.
 
-## 1. Python Setup
+### Python setup
 
-By default, OEL7 runs Python 3. The first is to install `pip` and `virtualenv`.
+By default, OEL7 runs Python 3. In order to prepare us for the JupyterLab installation later in the guide, we'll use pip to install virtualenv in this next section.
 
-### Install virtualenv
+#### Install virtualenv
 
-Virtualenv enables us to create isolated sandpits to develop Python applications without running into module or library conflicts. It's super easy to install.
+Virtualenv enables us to create isolated sandboxes to develop Python applications without running into module or library conflicts. It's also super easy to install:  
 
 ```console
 sudo pip3.6 install virtualenv
 ```
 
-Next, we can create a virtual environment and enable it.
+With virtualenv installed, we can create a virtual environment and enable it.
 
-#### Create an environment "myvirtualenv"
+#### Create an environment `myvirtualenv`
 
 ```conosle
 virtualenv -p /usr/bin/python3 myvirtualenv
@@ -50,12 +62,17 @@ virtualenv -p /usr/bin/python3 myvirtualenv
 source myvirtualenv/bin/activate
 ```
 
-### Check list of Python Libraries in your environment
+### List Python libraries in your environment
 
-Running the following command will show what Python models we have installed at this point.
+Running `pip3 list` will show which Python models we currently have installed:  
 
 ```console
 (myvirtualenv) [opc@lab1 ~]$ pip3 list
+```
+
+Which should return output similar to:
+
+```console
 Package    Version
 ---------- -------
 pip        21.1.3
@@ -71,13 +88,13 @@ You should consider upgrading via the '/home/opc/myvirtualenv/bin/python -m pip 
 /home/opc/myvirtualenv/bin/python -m pip install --upgrade pip
 ```
 
-## 2. Jupyterlab Setup
+## Jupyterlab setup
 
 ```console
 pip3 install jupyterlab
 ```
 
-### Install Python Libraries for Machine Learning or ETL Process
+### Install Python libraries for Machine Learning or ETL Process
 
 ```console
 pip install pandas
@@ -94,7 +111,7 @@ pip install beautifulsoup4
 pip install scikit-learn
 ```
 
-#### Install other Python Libraries for Kafka Access and WEB Server Access
+#### Install additional Python libraries for Kafka and web server access
 
 ```console
 pip install kafka-python (v2.0.0)
@@ -102,7 +119,7 @@ pip install Flask
 pip install gunicorn
 ```
 
-### Install extensions for Jupyterlab Environment
+### Install extensions for JupyterLab environment
 
 ```console
 pip install jupyter_contrib_nbextensions
@@ -110,17 +127,17 @@ jupyter contrib nbextension install --user
 jupyter nbextension enable execute_time/ExecuteTime
 ```
 
-## 3. Configure Jupyterlab like a OEL7 Linux Service
+## Configure JupyterLab like an OEL7 Linux service
 
-Create a script to instantiate automatically and reboot Jupyterlab with "opc" user.
+Create a script to automatically instantiate and reboot JupyterLab with user `opc`:  
 
 ```console
 vi /home/opc/launchjupyterlab.sh
 ```
 
-### Script for launchjupyterlab.sh
+### Script for `launchjupyterlab.sh`
 
-Using the virtualenv, you can launch Jupyterlab in a specific port (for example: 8001) and listen on public IP.
+Using the virtualenv, you can launch JupyterLab on a specific port (e.g., 8001) and listen via public IP:  
 
 ```console
 #!/bin/bash
@@ -139,25 +156,25 @@ kill $(cat /home/opc/jupyter.pid)
 fi
 ```
 
-Set the script to executable mode in order to be executed from the Jupyterlab service.
+Set the script to executable mode in order to be executed from the *jupyterlab* service:  
 
 ```console
 chmod 777 /home/opc/launchjupyterlab.sh
 ```
 
-### Connect to "root" user
+### Connect to `root` user
 
 ```console
 sudo -i
 ```
 
-### Create a script to start, stop service "jupyterlab"
+### Create a script to start/stop *jupyterlab* service
 
 ```console
 vi /etc/systemd/system/jupyterlab.service
 ```
 
-### Add next lines to launch like "opc" user the script "launchjupyterlab.sh"
+### Add code to launch the script `launchjupyterlab.sh` as an `oci` user
 
 ```console
 [Unit]
@@ -174,7 +191,7 @@ ExecStop=/home/opc/launchjupyterlab.sh stop
 WantedBy=multi-user.target
 ```
 
-### Test Jupyter Lab Service
+### Test *jupyterlab* service
 
 ```console
 systemctl start jupyterlab
@@ -182,22 +199,37 @@ systemctl status jupyterlab
 systemctl enable jupyterlab
 ```
 
-## 4. Reboot Your machine for a final check
+## Reboot your machine for a final check
 
-Home stretch! 
+Home stretch!  
 
-1.  Reboot your machine to check if the Jupyterlab script is enabled by default on port 8001.
-2. Open port 8001 to your virtual machine VM 2.1 in order to access it using your Public IP.
+1. Reboot your machine to check if the JupyterLab script is enabled by default on port 8001.
+2. Open port 8001 to your virtual machine VM 2.1 in order to access it using your Public IP:  
 
-```console
-firewall-cmd  --permanent --zone=public --list-ports
-firewall-cmd --get-active-zones
-firewall-cmd --permanent --zone=public --add-port=8001/tcp
-firewall-cmd --reload
-```
+      ```console
+      firewall-cmd  --permanent --zone=public --list-ports
+      firewall-cmd --get-active-zones
+      firewall-cmd --permanent --zone=public --add-port=8001/tcp
+      firewall-cmd --reload
+      ```
 
-If you're running directly on a virtual machine and have a browser installed, it should take you directly into the Jupyter environment. Connect to your `http://xxx.xxx.xxx.xxx:8001/`.
+   >**Note:** If you're running directly on a virtual machine and have a browser installed, it should take you directly into the Jupyter environment.  
+   >Connection on port 8001: `http://xxx.xxx.xxx.xxx:8001/`.
+   {:.notice}
 
-You should now see the next Python Web environment "Jupyterlab".
+You should now see the next Python Web environment **JupyterLab**.
 
 That's it! Enjoy using Cassandra with OCI.
+
+## What's next
+
+To explore more information about development with Oracle products:
+
+* [Oracle Developers Portal](https://developer.oracle.com/)
+* [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
+
+<!--- links -->
+
+[OCI Cloud Shell]: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm
+
+[Apache Cassandra]: https://cassandra.apache.org/_/index.html
