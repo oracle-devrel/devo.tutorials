@@ -17,4 +17,12 @@ xredirect: https://developer.oracle.com/tutorials/steampipe/
 
 {% img alignright assets/pexels-gabriela-palai-507410.jpg 800 534 "Steampipe Articles" "Steampipe Articles" %}
 
-Steampipe is a terrific tool that falls within the infrastructure-as-code (IaC) space, allowing you to interact with OCI using SQL statements.  How cool is that?  Mega cool!!!  These articles are here to help make life easier, using Steampipe with OCI.
+Steampipe is a terrific open-source tool that falls within the infrastructure-as-code (IaC) space, allowing you to interact with OCI using SQL statements.  How cool is that?!  These articles are here to help make life easier, using Steampipe with OCI.
+
+**Steampipe on Oracle:**
+
+- [Introduction to Steampipe on Oracle Cloud Infrastructure]
+
+<!--- links -->
+
+[Introduction to Steampipe on Oracle Cloud Infrastructure]: steampipe-intro.md
