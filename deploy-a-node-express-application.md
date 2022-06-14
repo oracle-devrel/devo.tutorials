@@ -14,7 +14,6 @@ redirect_from: "/collections/tutorials/deploy-a-node-express-application/"
 mrm: WWMK211117P00058
 xredirect: https://developer.oracle.com/tutorials/deploy-a-node-express-application/
 ---
-{% slides %}
 In this tutorial, you'll use an Oracle Cloud Infrastructure (OCI) account to set up a Kubernetes cluster. Then, you'll deploy a Node Express application to your cluster.
 
 Key tasks include how to:
@@ -26,7 +25,7 @@ Key tasks include how to:
 * Deploy your Node.js Docker application to your cluster.
 * Connect to your application from the internet.
 
-  {%imgx assets/deploy-a-node-express-application-Node-K8s-diagram.png 1254 517 "Deploy a node express application to the internet." %}
+    {%imgx assets/deploy-a-node-express-application-Node-K8s-diagram.png 1254 517 "Deploy a node express application to the internet." %}
 
 For additional information, see:
 
@@ -47,21 +46,23 @@ To successfully perform this tutorial, you'll need to have the following:
 ### For building applications and Docker images
 
 * One of the following local environments:
-  * A MacOS or Linux machine.
-  * A Windows machine with Linux support.  
-    For example:  
-    * [Windows Subsystem for Linux]
-    * [Oracle Virtual Box]
+    - A MacOS or Linux machine.
+    * A Windows machine with Linux support.  
+    
+        For example:  
+        
+        * [Windows Subsystem for Linux]
+        * [Oracle Virtual Box]
 * You have access to root either directly or using sudo. By default in OCI, you are connected as an `opc` user with sudo privilege.
 * A MacOS, Linux, or Windows computer with `ssh` support installed.
 * The following applications on your local environment:
-  * JDK 11 and set JAVA_HOME in .bashrc.
-  * Python 3.6.8+ and pip installer for Python 3
-  * Kubernetes Client 1.11.9+
-  * Apache Maven 3.0+
-  * Docker 19.0.3+
-  * Git 1.8+
-  * Node.js 10+
+    * JDK 11 and set JAVA_HOME in .bashrc.
+    * Python 3.6.8+ and pip installer for Python 3
+    * Kubernetes Client 1.11.9+
+    * Apache Maven 3.0+
+    * Docker 19.0.3+
+    * Git 1.8+
+    * Node.js 10+
 
 > **Note:** If you don't want to set up the required applications in your local environment, you can use OCI **Cloud Shell** instead. The advantage of using Cloud Shell is that all the required tools to manage your application are already installed and ready to use.  
 > If you'd like to go this route, follow the steps in the [Kubernetes Using Cloud Shell: Deploy a Spring Boot Application] guide.
@@ -80,16 +81,18 @@ We'll start off by installing a Linux VM with an **Always Free** compute shape o
 {:.notice}
 
 * To [install an Oracle Linux VM]
-  * Follow sections 2 and 3.
-    Section 2: if you have a paid account, choose your **compute options** based on your offerings.
-  * Section 4: to connect to your instance, follow steps 1-5.
-    **Skip the Apache instructions**.
+    + Follow sections 2 and 3.
+    
+        + Section 2: if you have a paid account, choose your **compute options** based on your offerings.
+        + Section 4: to connect to your instance, follow steps 1-5.
+    
+        **Skip the Apache instructions**.
 * To [install an Ubuntu VM]
-  * Follow sections 2 and 3.
-  * Section 2: if you have a paid account, choose **compute options** based on your offerings.
-  * Section 4: to connect to your instance, follow steps 1-5.
-    * **Skip the Apache instructions.**
-    * To update the firewall settings, in section 4, perform step 8.
+    * Follow sections 2 and 3.
+    * Section 2: if you have a paid account, choose **compute options** based on your offerings.
+    * Section 4: to connect to your instance, follow steps 1-5.
+        * **Skip the Apache instructions.**
+        * To update the firewall settings, in section 4, perform step 8.
 
 ## Install Node.js on your system
 
@@ -101,39 +104,39 @@ To install Node.js and Node Package Manager (NPM), run the following commands on
 
 1. Get and install any new versions of previously-installed packages:  
 
-      ```console
-      sudo yum update
-      ```
+    ```console
+    sudo yum update
+    ```
 
 1. Set up the Yum repo for Node.js.
 1. Install the `nodejs` package:  
 
-      ```console
-      sudo yum install -y oracle-nodejs-release-el7
-      sudo yum install -y nodejs
-      ```
+    ```console
+    sudo yum install -y oracle-nodejs-release-el7
+    sudo yum install -y nodejs
+    ```
 
 ### Ubuntu
 
 1. Get and install any new versions of previously-installed packages:  
 
-      ```console
-      sudo apt update
-      ```
+    ```console
+    sudo apt update
+    ```
 
 1. Install the `nodejs` and the `npm` packages:  
 
-      ```console
-      sudo apt install -y nodejs
-      sudo apt install -y npm
-      ```
+    ```console
+    sudo apt install -y nodejs
+    sudo apt install -y npm
+    ```
 
 1. Verify the installation:  
 
-      ```console
-      node -v
-      npm -v
-      ```
+    ```console
+    node -v
+    npm -v
+    ```
 
 ## Optional setups
 
@@ -165,28 +168,30 @@ Follow these steps to select your VCN's public subnet and add the ingress rule:
 1. Select **Virtual Cloud Networks**.
 1. Select the VCN you created with your compute instance.
 1. With your new VCN displayed, select **`<your-subnet-name>`** subnet link.  
-   You will see:  
-   * The public subnet information displayed with the **Security Lists** at the bottom of the page.
-   * A link to the **Default Security List** for your VCN.
+    
+    You will see:  
+    
+    * The public subnet information displayed with the **Security Lists** at the bottom of the page.
+    * A link to the **Default Security List** for your VCN.
 1. Select the **Default Security List** link.
 
-   The default **Ingress Rules** for your VCN are displayed.
+    The default **Ingress Rules** for your VCN are displayed.
 
 1. Select **Add Ingress Rules**.
 
-   An **Add Ingress Rules** dialog is displayed.
+    An **Add Ingress Rules** dialog is displayed.
 
 1. Fill in the ingress rule with the following information:
 
-      ```console
-      Stateless: Checked
-      Source Type: CIDR
-      Source CIDR: 0.0.0.0/0
-      IP Protocol: TCP
-      Source port range: (leave-blank)
-      Destination Port Range: 3000
-      Description: Allow HTTP connections
-      ```
+    ```console
+    Stateless: Checked
+    Source Type: CIDR
+    Source CIDR: 0.0.0.0/0
+    IP Protocol: TCP
+    Source port range: (leave-blank)
+    Destination Port Range: 3000
+    Description: Allow HTTP connections
+    ```
 
 1. Select **Add Ingress Rule**.
 
@@ -198,9 +203,9 @@ Congratulations! You've successfully created an ingress rule that makes your ins
 
 1. Verify your current installation:  
 
-      ```console
-      python3 --version
-      ```
+    ```console
+    python3 --version
+    ```
 
 1. For Python 3, run the following commands:
 
@@ -222,15 +227,15 @@ Congratulations! You've successfully created an ingress rule that makes your ins
 
 1. Verify the pip installation for Python3:  
 
-      ```console
-      pip3 -V
-      ```
+    ```console
+    pip3 -V
+    ```
 
     Sample output if pip for Python3 is installed:  
 
-      ```console
-      pip <version> from xxx/lib/python3.x/site-packages/pip   (python 3.x)
-      ```
+    ```console
+    pip <version> from xxx/lib/python3.x/site-packages/pip   (python 3.x)
+    ```
 
 1. To install Pip for Python 3, run the following commands:  
 
@@ -252,17 +257,17 @@ Congratulations! You've successfully created an ingress rule that makes your ins
 
 1. Verify the pip for Python 3 installation:  
 
-      ```console
-      pip3 -V
-      ```
+    ```console
+    pip3 -V
+    ```
 
 ## Install Kubernetes Client
 
 1. Verify your current installation:  
 
-      ```console
-      kubectl version --client
-      ```
+    ```console
+    kubectl version --client
+    ```
 
     If you have Kubernetes, then the version is `<major-version>.<minor-version>`.  
 
@@ -277,17 +282,17 @@ Congratulations! You've successfully created an ingress rule that makes your ins
    * [Install Kubernetes client on MacOS]
 1. Verify the installation:  
 
-      ```console
-      kubectl version --client
-      ```
+    ```console
+    kubectl version --client
+    ```
 
 ## Install Docker
 
 1. Verify your current installation:  
 
-      ```console
-      docker -v
-      ```
+    ```console
+    docker -v
+    ```
 
     * Oracle Linux
 
@@ -303,14 +308,14 @@ Congratulations! You've successfully created an ingress rule that makes your ins
         {:.notice}
 
     * Ubuntu Linux
-
-      To install Docker on Ubuntu Linux, refer to the [Get Docker] guide.
+ 
+        To install Docker on Ubuntu Linux, refer to the [Get Docker] guide.
 
 1. Verify the installation:  
 
-      ```console
-      docker -v
-      ```
+    ```console
+    docker -v
+    ```
 
 ## Prepare
 
@@ -323,64 +328,64 @@ We're finally here! It's time to prepare your environment to create and deploy y
 3. Under **Governance**, select **Limits, Quotas and Usage**.
 4. Find your service limit for **Regions**
 
-   1. **Filter** for the following options:  
+    1. **Filter** for the following options:  
 
-      * **Service:** Regions
-      * **Scope:** Tenancy
-      * **Resource:** Subscribed region count
-      * **Compartment:** `<tenancy-name>` (root)
+        * **Service:** Regions
+        * **Scope:** Tenancy
+        * **Resource:** Subscribed region count
+        * **Compartment:** `<tenancy-name>` (root)
 
    1. Find service limit:
 
-      * **Limit Name:** `subscribed-region-count`
-      * **Service Limit:** minimum 2
+        * **Limit Name:** `subscribed-region-count`
+        * **Service Limit:** minimum 2
 5. Find your available **Compute** **core count** for the **VM.Standard.E3.Flex** shape
 
-   1. **Filter** for the following options:
+    1. **Filter** for the following options:
 
-      * **Service:** Compute
-      * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
-      * **Resource:** **Cores** for **Standard.E3.Flex** and BM.Standard.E3.128 Instances
-      * **Compartment:** `<tenancy-name>` (root)
+        * **Service:** Compute
+        * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
+        * **Resource:** **Cores** for **Standard.E3.Flex** and BM.Standard.E3.128 Instances
+        * **Compartment:** `<tenancy-name>` (root)
 
-   1. Find available core count:
+    1. Find available core count:
 
-      * **Limit Name:** `standard-e3-core-ad-count`
-      * **Available:** minimum 1
+        * **Limit Name:** `standard-e3-core-ad-count`
+        * **Available:** minimum 1
 
-   1. Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least one core available for this shape.  
+    1. Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least one core available for this shape.  
 
-      > **Note:** This tutorial creates three compute instances with a **VM.Standard.E3.Flex** shape for the cluster nodes. To use another shape, filter for its **core count**.  
-      > For example, for **VM.Standard2.4**, filter for **Cores for Standard2 based VM and BM Instances** and get the **count**.
-      {:.notice}
+        > **Note:** This tutorial creates three compute instances with a **VM.Standard.E3.Flex** shape for the cluster nodes. To use another shape, filter for its **core count**.  
+        > For example, for **VM.Standard2.4**, filter for **Cores for Standard2 based VM and BM Instances** and get the **count**.
+        {:.notice}
 6. Find out if you have **50 GB** of **Block Volume** available:
 
-   1. **Filter** for the following options:
+    1. **Filter** for the following options:
 
-      * **Service:** Block Volume
-      * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
-      * **Resource** Volume Size (GB)
-      * **Compartment:** `<tenancy-name>` (root)
+        * **Service:** Block Volume
+        * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
+        * **Resource** Volume Size (GB)
+        * **Compartment:** `<tenancy-name>` (root)
 
-   1. Find available block volume storage:
+    1. Find available block volume storage:
 
-      * **Limit Name:** `total-storage-gb`
-      * **Available:** minimum 50
+        * **Limit Name:** `total-storage-gb`
+        * **Available:** minimum 50
 
-   1. Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least 50 GB of block volume available.
+    1. Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least 50 GB of block volume available.
 7. Find out how many **Flexible Load Balancers** you have available
 
     **Filter** for the following options:
 
-      * **Service:** LBaaS
-      * **Scope:** `<your-region>`. Example: `us-ashburn-1`
-      * **Resource:** `<blank>`
-      * **Compartment:** `<tenancy-name>` (root)
+    * **Service:** LBaaS
+    * **Scope:** `<your-region>`. Example: `us-ashburn-1`
+    * **Resource:** `<blank>`
+    * **Compartment:** `<tenancy-name>` (root)
 
     Find the number of available flexible load balancers:
 
-      * **Limit Name:** `lb-flexible-count`
-      * **Available:** minimum 1
+    * **Limit Name:** `lb-flexible-count`
+    * **Available:** minimum 1
 
     >**Note:** This tutorial creates a load balancer with a **flexible** shape. To use another bandwidth, filter for its **count**, for example **100-Mbps bandwidth** or **400-Mbps bandwidth**.
     {:.notice}
@@ -446,21 +451,21 @@ The `virtualenvwrapper` is an extension of `virtualenv`. It provides a set of co
 
 1. Install `virtualenv`:
 
-      ```console
-      pip3 install --user virtualenv
-      ```
+    ```console
+    pip3 install --user virtualenv
+    ```
 
 2. Install `virtualenvwrapper`:
 
-      ```console
-      pip3 install --user virtualenvwrapper
-      ```
+    ```console
+    pip3 install --user virtualenvwrapper
+    ```
 
 3. Find the location of the `virtualenvwrapper.sh` script:
 
-      ```console
-      grep -R virtualenvwrapper.sh
-      ```
+    ```console
+    grep -R virtualenvwrapper.sh
+    ```
 
     **Example paths:**
 
@@ -471,105 +476,106 @@ The `virtualenvwrapper` is an extension of `virtualenv`. It provides a set of co
 
 4. Configure the virtual environment wrapper in `.bashrc`:
 
-      ```console
-      sudo vi .bashrc
-      ```
+    ```console
+    sudo vi .bashrc
+    ```
 
-   1. Amend the following text with the updated information noted below:  
+    1. Amend the following text with the updated information noted below:  
 
-         ```console
-         # set up Python env
-         export WORKON_HOME=~/envs
-         export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-         export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=' -p /usr/bin/python3 '
-         source <path-to-virtualenvwrapper.sh>
-         ```
+        ```console
+        # set up Python env
+        export WORKON_HOME=~/envs
+        export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+        export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=' -p /usr/bin/python3 '
+        source <path-to-virtualenvwrapper.sh>
+        ```
 
-      Updated information:  
+        Updated information:  
 
-      * Replace `<path-to-virtualenvwrapper.sh>` with its appropriate value.
-      * Based on the location of Python3 binaries in your environment, update `/usr/bin/python3` to its correct location.
+        * Replace `<path-to-virtualenvwrapper.sh>` with its appropriate value.
+        * Based on the location of Python3 binaries in your environment, update `/usr/bin/python3` to its correct location.
 
-   1. Save the file.
+    1. Save the file.
 
 5. Activate the commands in the current window:
 
-      ```console
-      source ~/.bashrc
-      ```
+    ```console
+    source ~/.bashrc
+    ```
 
-   **Example output:**
+    **Example output:**
 
-      ```console  
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkproject
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkproject
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/initialize
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkvirtualenv
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkvirtualenv
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/prermvirtualenv
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postrmvirtualenv
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/predeactivate
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postdeactivate
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/preactivate
-      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postactivate
-      ```
+    ```console  
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkproject
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkproject
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/initialize
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkvirtualenv
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkvirtualenv
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/prermvirtualenv
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postrmvirtualenv
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/predeactivate
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postdeactivate
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/preactivate
+    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postactivate
+    ```
 
 ### Install OCI CLI
 
 1. Start a virtual environment:
 
-      ```console
-      workon cli-app
-      ```
+    ```console
+    workon cli-app
+    ```
 
 1. Confirm the name of your virtual environment.  
-   If you are, `cli-app` will appear immediately the left of your command prompt.
+   
+    If you are, `cli-app` will appear immediately the left of your command prompt.
 
-   **Example:** `(cli-app) ubuntu@<ubuntu-instance-name>:~$`
+    **Example:** `(cli-app) ubuntu@<ubuntu-instance-name>:~$`
 
 1. Install OCI CLI:
 
-      ```console
-      pip3 install oci-cli
-      ```
+    ```console
+    pip3 install oci-cli
+    ```
 
 1. Test the installation:  
 
-      ```console
-      oci --version
-      ```
+    ```console
+    oci --version
+    ```
 
    If everything is set up correctly, the fllowing command will return the correct version:  
 
-      ```console
-      oci --help
-      ```
+    ```console
+    oci --help
+    ```
 
 #### Configure the OCI CLI
 
 1. Enter the following command in your **virtual environment**:  
 
-      ```console
-      oci setup config
-      ```
+    ```console
+    oci setup config
+    ```
 
 1. Enter your answers from the [Gather Required Information](#gather-required-information) section:  
 
-   * **Location for your config [`$HOME/.oci/config`]:** `<take-default>`
-   * **User OCID:** `<user-ocid>`
-   * **Tenancy OCID:** `<tenancy-ocid>`
-   * **Region (e.g., *us-ashburn-1*):** `<region-identifier>`
+    * **Location for your config [`$HOME/.oci/config`]:** `<take-default>`
+    * **User OCID:** `<user-ocid>`
+    * **Tenancy OCID:** `<tenancy-ocid>`
+    * **Region (e.g., *us-ashburn-1*):** `<region-identifier>`
 
 1. **OpenSSL API encryption keys -** Enter the following information to set up your keys:
 
-   * **Generate a new API Signing RSA key pair? [Y/n]:** Y
-   * **Directory for your keys [$HOME/.oci]:** `<take-default>`
-   * **Name for your key [oci_api_key]** `<take-default>`
+    * **Generate a new API Signing RSA key pair? [Y/n]:** Y
+    * **Directory for your keys [$HOME/.oci]:** `<take-default>`
+    * **Name for your key [oci_api_key]** `<take-default>`
 
-   >**Note:**  
-   >Your private key is: `oci_api_key.pem`
-   >Your public key is: `oci_api_key_public.pem`.
-   {:.notice}
+    >**Note:**  
+    >Your private key is: `oci_api_key.pem`
+    >Your public key is: `oci_api_key_public.pem`.
+    {:.notice}
 
 1. Deactivate the virtual environment:
 
@@ -577,21 +583,21 @@ The `virtualenvwrapper` is an extension of `virtualenv`. It provides a set of co
     deactivate
     ```
 
-   After you deactivate the virtual environment, you should notice that the `(cli-app)` prefix in your environment is no longer displayed.
+    After you deactivate the virtual environment, you should notice that the `(cli-app)` prefix in your environment is no longer displayed.
 
 ### Add the Public Key to your User Account
 
 1. Activate the `cli-app` environment:
 
-      ```console
-      workon cli-app
-      ```
+    ```console
+    workon cli-app
+    ```
 
 1. Display the public key:
 
-      ```console
-      cat $HOME/.oci/oci_api_key_public.pem
-      ```
+    ```console
+    cat $HOME/.oci/oci_api_key_public.pem
+    ```
 
 1. Copy the public key.
 
@@ -658,9 +664,9 @@ Here, you'll use your tenancy privileges to create a compartment for the resourc
 3. Select **Create Compartment**.
 4. Fill in the following information:
 
-   * **Name:** `<your-compartment-name>`
-   * **Description:** `Compartment for <your-description>.`
-   * **Parent Compartment:** `<your-tenancy>(root)`
+    * **Name:** `<your-compartment-name>`
+    * **Description:** `Compartment for <your-description>.`
+    * **Parent Compartment:** `<your-tenancy>(root)`
 
 5. Select **Create Compartment**.
 
@@ -738,72 +744,74 @@ After you create a Kubernetes cluster, you'll need to be able to reach it. In th
 4. Select **Access Cluster**.
 5. Select **Local Access**.
 6. Follow the steps provided in the dialog.  
-   We've included a copy of the steps here for your reference:
+   
+    We've included a copy of the steps here for your reference:
 
-   > **Note:** If you are not in your virtual environment, enter: `workon cli-app` **before** you run `kubectl` commands.
-   {:.notice}
+    > **Note:** If you are not in your virtual environment, enter: `workon cli-app` **before** you run `kubectl` commands.
+    {:.notice}
 
-   1. Check your `oci` CLI version:  
+    1. Check your `oci` CLI version:  
 
-         ```console
-         oci -v
-         ```
+        ```console
+        oci -v
+        ```
 
-   1. Make a `.kube` directory if it doesn't already exist:  
+    1. Make a `.kube` directory if it doesn't already exist:  
 
-         ```console
-         mkdir -p $HOME/.kube
-         ```
+        ```console
+        mkdir -p $HOME/.kube
+        ```
 
-   1. Create a `kubeconfig` file for your setup.  
-      Use the information from **Access Your Cluster** dialog.
+    1. Create a `kubeconfig` file for your setup.  
+      
+        Use the information from **Access Your Cluster** dialog.
 
-         ```console
-         oci ce cluster create-kubeconfig <use data from dialog>
-         ```
+        ```console
+        oci ce cluster create-kubeconfig <use data from dialog>
+        ```
 
    1. Export the `KUBECONFIG` environment variable:  
 
-         ```console
-         export KUBECONFIG=$HOME/.kube/config
-         ```
+        ```console
+        export KUBECONFIG=$HOME/.kube/config
+        ```
 
-      > **Note:** If you want to have the environment variable start in a new shell, then add `export KUBECONFIG=$HOME/.kube/config` to your `~/.bashrc` file.
-      {:.notice}
+        > **Note:** If you want to have the environment variable start in a new shell, then add `export KUBECONFIG=$HOME/.kube/config` to your `~/.bashrc` file.
+        {:.notice}
 
 7. Test your cluster configuration with the following commands:
 
-   * List clusters:  
+    * List clusters:  
 
-       ```console
-       kubectl get service
-       ```
+        ```console
+        kubectl get service
+        ```
 
    * Get deployment details:  
 
-       ```console
-       kubectl describe deployment
-       ```
+        ```console
+        kubectl describe deployment
+        ```
 
-       Output: "No resources found in default namespace."  
-       This is expected since no application is deployed.
+        Output: "No resources found in default namespace."  
+        This is expected since no application is deployed.
 
    * Get pods:  
 
-       ```console
-       kubectl get pods
-       ```
+        ```console
+        kubectl get pods
+        ```
 
-       Output: "No resources found in default namespace."  
-       This is expected since no application is deployed.
+        Output: "No resources found in default namespace."  
+        This is expected since no application is deployed.
 
-   > **Note:** To look at a different cluster, specify a different config file on the command line. Example:
-   >
-   > ```console
-   > kubectl --kubeconfig=</path/to/config/file>
-   > ```
-   >
-   {:.notice}
+        > **Note:** To look at a different cluster, specify a different config file on the command line. Example:
+        >
+        > ```console
+        > kubectl --kubeconfig=</path/to/config/file>
+        > ```
+        >
+        {:.notice}
 
 With your cluster access set up, you're finally ready to prepare your application for deployment.
 
@@ -818,71 +826,71 @@ Create your Node.js application.
 1. Start an OCI CLI session.
 1. Create a directory for your application.
 
-      ```console
-      mkdir node-hello-app
-      cd node-hello-app
-      ```
+    ```console
+    mkdir node-hello-app
+    cd node-hello-app
+    ```
 
 1. Create a `package.json` file:  
 
-      ```console
-      vi package.json
-      ```
+    ```console
+    vi package.json
+    ```
 
 1. In the `package.json` file, input the following text, updating the `author` and `repository` fields:  
 
-      ```json
-      {
-            "name": "node-hello-app",
-            "version": "1.0.0",
-            "description": "Node Express Hello application",
-            "author": "Example User <username@example.com>",
-            "main": "app.js",
-            "scripts": {
-                "start": "node app.js"
-            },
-            "repository": {
-                "type": "git",
-                "url": "git://github.com/username/repository.git"
-            },
-            "dependencies": {
-                "express": "^4.0.0"
-            },
-            "license": "UPL-1.0"
-      }          
-      ```  
+    ```json
+    {
+        "name": "node-hello-app",
+        "version": "1.0.0",
+        "description": "Node Express Hello application",
+        "author": "Example User <username@example.com>",
+        "main": "app.js",
+        "scripts": {
+            "start": "node app.js"
+        },
+        "repository": {
+            "type": "git",
+            "url": "git://github.com/username/repository.git"
+        },
+        "dependencies": {
+            "express": "^4.0.0"
+        },
+        "license": "UPL-1.0"
+    }          
+    ```  
 
 1. Save the file.
 
 1. Install the NPM packages:  
 
-      ```console
-      npm install
-      ```
+    ```console
+    npm install
+    ```
 
 1. Create a "Hello, World!" application.
 
-   1. Create the file:
+    1. Create the file:
 
-         ```console
-         vi app.js
-         ```
+        ```console
+        vi app.js
+        ```
 
    2. In the file, input the following text:  
 
-         ```javascript
-         const express = require('express')
-         const app = express()
-         port = 3000
+        ```javascript
+        const express = require('express')
+        const app = express()
+        port = 3000
 
-         app.get('/', function (req, res) {
-            res.send('<h1>Hello World from Node.js!</h1>')
-         })
+        app.get('/', function (req, res) {
+        res.send('<h1>Hello World from Node.js!</h1>')
+        })
 
-         app.listen(port, function() {
-            console.log('Hello World app listening on port ' + port);
-         })
-         ```
+        app.listen(port, function() {
+        console.log('Hello World app listening on port ' + port);
+        })
+        ```
 
 You have successfully set up your Node.js app!
 
@@ -892,15 +900,15 @@ Let's make sure that your application is working properly.
 
 1. Run your Node.js application:
 
-      ```console
-      node app.js
-      ```
+    ```console
+    node app.js
+    ```
 
-   The Node Express server starts and displays:  
+    The Node Express server starts and displays:  
 
-      ```console
-        Hello World app listening on port 3000
-      ```
+    ```console
+    Hello World app listening on port 3000
+    ```
 
 1. Test the application:  
     * To test with `curl`, run:
@@ -919,7 +927,7 @@ Let's make sure that your application is working properly.
 
 1. Stop the running application.
 
-   Press **Ctrl+C** to stop your application in the terminal window you started with.
+    Press **Ctrl+C** to stop your application in the terminal window you started with.
 
 That's it! You've successfully created a Hello World application using Node.js and Express.
 
@@ -933,34 +941,34 @@ Next, create a Docker image for your Node.js Express application.
 
 1. Build a Docker image:  
 
-      ```console
-      docker build -t node-hello-app .
-      ```
+    ```console
+    docker build -t node-hello-app .
+    ```
 
-   You should see the following message:  
+    You should see the following message:  
 
-      ```console  
-      [INFO] BUILD SUCCESS
-      Successfully tagged node-hello-app:latest
-      ```
+    ```console  
+    [INFO] BUILD SUCCESS
+    Successfully tagged node-hello-app:latest
+    ```
 
 1. Run the Docker image:  
 
-      ```console
-      docker run --rm -p 3000:3000 node-hello-app:latest
-      ```
+    ```console
+    docker run --rm -p 3000:3000 node-hello-app:latest
+    ```
 
 1. Test the application.
 
-      ```console
-      curl -X GET http://localhost:3000
-      ```
+    ```console
+    curl -X GET http://localhost:3000
+    ```
 
-   The app should return:  
+    The app should return:  
 
-      ```html
-      <h1>Hello World from Node.js!</h1>
-      ```
+    ```html
+    <h1>Hello World from Node.js!</h1>
+    ```
 
 1. Stop the running application.
 
@@ -981,14 +989,14 @@ In this section, we'll push your Node.js Express image to OCI Container Registry
 3. Select **Create Repository**.
 4. Create a **private repository** with your choice of repo name:
 
-      ```console
-      <repo-name> = <image-path-name>/<image-name>
-      ```
+    ```console
+    <repo-name> = <image-path-name>/<image-name>
+    ```
 
-   **Example:** `node-apps/node-hello-app`
+    **Example:** `node-apps/node-hello-app`
 
-   > Note: The slash in a repository name **does not represent a hierarchical directory structure**. The optional `<image-path-name>` helps to organize your repositories.
-   {:.notice}
+    > Note: The slash in a repository name **does not represent a hierarchical directory structure**. The optional `<image-path-name>` helps to organize your repositories.
+    {:.notice}
 
 You are now ready to push your local image to Container Registry.
 
@@ -1001,69 +1009,67 @@ Follow these steps:
 1. Open your OCI CLI session.
 1. Log in to OCI Container Registry:
 
-      ```console
-      docker login <region-key>.ocir.io
-      ```
+    ```console
+    docker login <region-key>.ocir.io
+    ```
 
-   You are prompted for your login name and password:
+    You are prompted for your login name and password:
 
-   * **Username:** `<tenancy-namespace>/<user-name>`
-   * **Password:** `<auth-token>`
+    * **Username:** `<tenancy-namespace>/<user-name>`
+    * **Password:** `<auth-token>`
 
 1. List your local Docker images:  
 
-      ```console
-      docker images
-      ```
+    ```console
+    docker images
+    ```
 
-   The Docker images on your system are displayed. Identify the image you created in the [last section](#build-a-docker-image): `node-hello-app`
+    The Docker images on your system are displayed. Identify the image you created in the [last section](#build-a-docker-image): `node-hello-app`
 
 1. **Tag** your local image with the **URL for the registry** plus the **repo name**, so you can push it to that repo:  
 
-      ```console
-        docker tag <your-local-image> <repo-url>/<repo-name>
-      ```
+    ```console
+    docker tag <your-local-image> <repo-url>/<repo-name>
+    ```
 
-   * Replace **`<repo-url>`** with:  
-   `<region-key>.ocir.io/<tenancy-namespace>/`
+    * Replace **`<repo-url>`** with `<region-key>.ocir.io/<tenancy-namespace>/`
 
-   * Replace **`<repo-name>`** with:  
-   `<image-folder-name>/<image-name>` from the **Create a Docker Repository** section.
+    * Replace **`<repo-name>`** with `<image-folder-name>/<image-name>` from the **Create a Docker Repository** section.
 
-   Here is an example after combining both:  
+    Here is an example after combining both:  
 
-     ```console
-     docker tag node-hello-app iad.ocir.io/my-namespace/node-apps/node-hello-app
-     ```
+    ```console
+    docker tag node-hello-app iad.ocir.io/my-namespace/node-apps/node-hello-app
+    ```
 
-   In this example, the components are:  
+    In this example, the components are:  
 
-   * **Repo URL:** `iad.ocir.io/my-namespace/`
-   * **Repo name:** `node-apps/node-hello-app`
+    * **Repo URL:** `iad.ocir.io/my-namespace/`
+    * **Repo name:** `node-apps/node-hello-app`
 
-   > **Note:** OCI Container Registry now supports creating a registry repo in *any* compartment rather than only in the root compartment (tenancy). To push the image to the repo you created, combine the registry URL with the exact repo name. OCI Container Registry matches based on the unique repo name and pushes your image.
-   {:.notice}
+    > **Note:** OCI Container Registry now supports creating a registry repo in *any* compartment rather than only in the root compartment (tenancy). To push the image to the repo you created, combine the registry URL with the exact repo name. OCI Container Registry matches based on the unique repo name and pushes your image.
+    {:.notice}
 
 1. Check your Docker images to see if the image is **copied**:  
 
-      ```console
-      docker images
-      ```
+    ```console
+    docker images
+    ```
 
-   * The tagged image has **the same image ID** as your local image.
-   * The tagged image name is: `<region-key>.ocir.io/<tenancy-namespace>/<image-path-name>/<image-name>`
+    * The tagged image has **the same image ID** as your local image.
+    * The tagged image name is: `<region-key>.ocir.io/<tenancy-namespace>/<image-path-name>/<image-name>`
 
 1. Push the image to Container Registry:  
 
-      ```console
-      docker push <copied-image-name>:latest
-      ```
+    ```console
+    docker push <copied-image-name>:latest
+    ```
 
-   **Example:**
+    **Example:**
 
-      ```console
-      docker push iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
-      ```
+    ```console
+    docker push iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
+    ```
 
 1. Open the navigation menu and select **Developer Services**.  
    Under **Containers & Artifacts**, select **Container Registry**.
@@ -1076,33 +1082,33 @@ We're finally here! The moment of truth. With your image in Container Registry, 
 
 1. **Create a registry secret for your application -** This secret authenticates your image when you deploy it to your cluster.
 
-   To create your secret, fill in the information in this template:  
+    To create your secret, fill in the information in this template:  
 
-      ```console
-      kubectl create secret docker-registry ocirsecret --docker-server=<region-key>.ocir.io  --docker-username='<tenancy-namespace>/<user-name>' --docker-password='<auth-token>'  --docker-email='<email-address>'
-      ```
+    ```console
+    kubectl create secret docker-registry ocirsecret --docker-server=<region-key>.ocir.io  --docker-username='<tenancy-namespace>/<user-name>' --docker-password='<auth-token>'  --docker-email='<email-address>'
+    ```
 
    After the command runs, you get a message similar to: `secret/ocirsecret created`.
 
 1. **Verify that the secret is created -** Issue the following command:  
 
-      ```console
-      kubectl get secret ocirsecret --output=yaml
-      ```
+    ```console
+    kubectl get secret ocirsecret --output=yaml
+    ```
 
-   The output includes information about your secret in yaml format.
+    The output includes information about your secret in yaml format.
 
 1. **Host URL -** Determine the host URL to your registry image using the following template:  
 
-      ```console
-      <region-code>.ocir.io/<tenancy-namespace>/<repo-name>/<image-name>:<tag>
-      ```
+    ```console
+    <region-code>.ocir.io/<tenancy-namespace>/<repo-name>/<image-name>:<tag>
+    ```
 
-   **Example:**
+    **Example:**
 
-      ```console
-      iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
-      ```
+    ```console
+    iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
+    ```
 
 1. On your system, create a file called `node-app.yaml`.
 
@@ -1111,64 +1117,64 @@ We're finally here! The moment of truth. With your image in Container Registry, 
     * `<your-image-url>`
     * `<your-secret-name>`
 
-      ```yaml
-      apiVersion: apps/v1
-         kind: Deployment
+    ```yaml
+    apiVersion: apps/v1
+     kind: Deployment
+     metadata:
+       name: node-app
+     spec:
+       selector:
+         matchLabels:
+           app: app
+       replicas: 3
+       template:
          metadata:
-           name: node-app
-         spec:
-           selector:
-             matchLabels:
-               app: app
-           replicas: 3
-           template:
-             metadata:
-               labels:
-                 app: app
-             spec:
-               containers:
-               - name: app
-                 image: <your-image-url>
-                 imagePullPolicy: Always
-                 ports:
-                 - name: app
-                   containerPort: 3000
-                   protocol: TCP
-               imagePullSecrets:
-                 - name: <your-secret-name>
-         ---
-         apiVersion: v1
-         kind: Service
-         metadata:
-           name: node-app-lb
            labels:
              app: app
-           annotations:
-             service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
-             service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
-             service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
          spec:
-           type: LoadBalancer
-           ports:
-           - port: 3000
-           selector:
-             app: app
-      ```
+           containers:
+           - name: app
+             image: <your-image-url>
+             imagePullPolicy: Always
+             ports:
+             - name: app
+               containerPort: 3000
+               protocol: TCP
+           imagePullSecrets:
+             - name: <your-secret-name>
+     ---
+     apiVersion: v1
+     kind: Service
+     metadata:
+       name: node-app-lb
+       labels:
+         app: app
+       annotations:
+         service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+         service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+         service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+     spec:
+       type: LoadBalancer
+       ports:
+       - port: 3000
+       selector:
+         app: app
+    ```
 
-   > Note: In the `node-app.yaml` file, the code after the dashes adds a flexible load balancer.
-   {:.notice}
+    > Note: In the `node-app.yaml` file, the code after the dashes adds a flexible load balancer.
+    {:.notice}
 1. Deploy your application with the following command:  
 
-      ```console
-      kubectl create -f node-app.yaml
-      ```
+    ```console
+    kubectl create -f node-app.yaml
+    ```
 
-   **Sample output:**
+    **Sample output:**
 
-      ```console
-      deployment.apps/node-app created
-      service/node-app-lb created
-      ```
+    ```console
+    deployment.apps/node-app created
+    service/node-app-lb created
+    ```
 
 ## Test Your App
 
@@ -1176,41 +1182,41 @@ After you deploy your app, it might take the load balancer a few seconds to load
 
 1. Check if the load balancer is live:  
 
-      ```console
-      kubectl get service
-      ```
+    ```console
+    kubectl get service
+    ```
 
 1. Repeat the command until load balancer is assigned an IP address.
 
-   > **Note:** While waiting for the load balancer to deploy, you can check the status of your cluster with these commands:
-   >
-   > * Get each pods status: `kubectl get pods`
-   > * Get app status: `kubectl get deployment`
-   {:.notice}
+    > **Note:** While waiting for the load balancer to deploy, you can check the status of your cluster with these commands:
+    >
+    > * Get each pods status: `kubectl get pods`
+    > * Get app status: `kubectl get deployment`
+    {:.notice}
 
 1. Use the load balancer IP address to connect to your app in a browser:
 
-      ```console
-      http://<load-balancer-IP-address>:3000
-      ```
+    ```console
+    http://<load-balancer-IP-address>:3000
+    ```
 
-   The browser should display `<h1>Hello World from Node.js!</h1>`
+    The browser should display `<h1>Hello World from Node.js!</h1>`
 
 1. **[OPTIONAL]** Undeploy your application from the cluster  
    To remove your application, run this command:  
 
-      ```console
-      kubectl delete -f node-app.yaml
-      ```
+    ```console
+    kubectl delete -f node-app.yaml
+    ```
 
-   **Sample output:**
+    **Sample output:**
 
-      ```console
-      deployment.apps/node-app deleted
-      service "node-app-lb" deleted
-      ```
+    ```console
+    deployment.apps/node-app deleted
+    service "node-app-lb" deleted
+    ```
 
-   Your application is now removed from your cluster.
+    Your application is now removed from your cluster.
 
 ## What's Next
 
@@ -1220,7 +1226,6 @@ Check out these sites to explore more information about development with Oracle 
 
 [Oracle Developers Portal]
 [Oracle Cloud Infrastructure]
-{% endslides %}
 
 <!--- links -->
 

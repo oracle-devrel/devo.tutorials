@@ -16,7 +16,6 @@ date: 2021-11-20 12:01
 mrm: WWMK211125P00013
 xredirect: https://developer.oracle.com/tutorials/call-a-function-api-oci-clouddey/
 ---
-{% slides %}
 In this tutorial, you'll use Oracle Functions to process data passed from an Oracle API Gateway. Then, you'll create a Python function that uses the runtime context to extract HTTP information passed in a request.
 
 Key tasks include how to:
