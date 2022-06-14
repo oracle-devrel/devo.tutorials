@@ -6,7 +6,7 @@ tags:
 - analytics
 - oci
 date: 2022-01-14 13:04
-description: Coherence and Micronaut are powrful bedfellows when used together. This
+description: Coherence and Micronaut are powerful bedfellows when used together. This
   tutorial steps you through using them to build a hypothetical online sock shop.
   That's right, socks.
 mrm: WWMK220110P00039
@@ -16,158 +16,215 @@ author:
   github: https://github.com/aseovic
 xredirect: https://developer.oracle.com/tutorials/coherence-micronaut-sock-shopp/
 ---
-Welcome! 
+Welcome!
 
-In this tutorial, I'll walk you through creating a stateful, microservices based application that uses [Oracle Coherence CE](https://coherence.community/) as a scalable embedded data store, and [Micronaut Framework](https://micronaut.io/) as an application framework.
+In this tutorial, we'll walk through creating a stateful, microservices-based application that uses [Oracle Coherence CE] as a scalable embedded data store and [Micronaut Framework] as an application framework.  
 
-Ultimately, the application we're building is an online store that sells socks, and is based on the [SockShop Microservices Demo](https://microservices-demo.github.io) originally written and published under Apache 2.0 license by [Weaveworks](https://go.weave.works/socks).
+Ultimately, the application we're building is an online store that sells socks, and is based on the [SockShop Microservices Demo] originally written and published under Apache 2.0 license by [Weaveworks].
 
-You can see a working demo of the original application [here](http://socks.weave.works/).
+If you're curious, check out a [working demo] of the original application.
 
-This demo still uses the original front end implementation provided by Weaveworks, but all back end services have been re-implemented from scratch using Micronaut Framework and Oracle Coherence in order to showcase the many features of the [Coherence Micronaut](https://github.com/micronaut-projects/micronaut-coherence) integration.
+**Demo summary:**
 
-We also provide the implementations of the same application that uses Spring Boot or Helidon
-as the application framework, in case one of those is your framework of choice.
+This demo still uses the original front-end implementation provided by Weaveworks, but all back-end services have been re-implemented from scratch using Micronaut Framework and Oracle Coherence in order to showcase the many features of the [Coherence Micronaut] integration.
 
-* [Coherence Spring Sock Shop](https://github.com/oracle/coherence-spring-sockshop-sample)
-* [Coherence Helidon Sock Shop](https://github.com/oracle/coherence-helidon-sockshop-sample)
+We also provide the implementations of the same application that uses Spring Boot or Helidon as the application framework, in case one of those is your framework of choice.
 
-## How can I get started on OCI?
+* [Coherence Spring Sock Shop]
+* [Coherence Helidon Sock Shop]
 
-Remember that you can always sign up for free with OCI! Your Oracle Cloud account provides a number of Always Free services and a Free Trial with US$300 of free credit to use on all eligible OCI services for up to 30 days. These Always Free services are available for an **unlimited** period of time. The Free Trial services may be used until your US$300 of free credits are consumed or the 30 days has expired, whichever comes first. You can [sign up here for free](https://signup.cloud.oracle.com/).
+**Topics covered in this tutorial:**
 
-# Table of Contents
+* **Local install**
+  * Installing the Coherence Operator
+  * Installing a back end
+  * (Optional) Installing the back end into the `sockshop` namespace
+  * Scaling the back end
+* **Complete application deployment**
+* **Development (extending the application)**
 
-* [Architecture](#architecture)
-* [Project Structure](#project-structure)
-* [Pre-Requisites](#pre-requisites)
-* [Quick Start](#quick-start)
-* [Complete Application Deployment](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/doc/complete-application-deployment.md)
-* [Development](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/doc/development.md)
-* [License](#license)
+**For more information, see:**
+
+* [Signing Up for Oracle Cloud Infrastructure](https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm)
+* [Getting started with OCI Cloud Shell](https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm)
+
+## Prerequisites
+
+To successfully complete this tutorial, you'll need the following:
+
+* An Oracle Cloud Infrastructure (OCI) Free Tier account. [Start for Free]({{ site.urls.always_free }}).
+* A MacOS, Linux, or Windows computer with `ssh` support installed.
+* **[OCI Cloud Shell]** - It provides a host of other OCI interfaces and tools.
+* **Kustomize** - Make sure that you have a newer version of `kubectl` that supports it (at least 1.16 or above)
 
 ## Architecture
 
-The application consists of six back end services (rewritten from the ground up on top of Micronaut, implementing the API that the legacy `front-end` service expects).
+Before we get started, let's take a quick look at how this is all put together. The application consists of six back-end services rewritten from the ground up on top of Micronaut, implementing the API that the legacy `front-end` service expects.
 
 {% imgx assets/coherence-micronaut-diagram.png "Network diagram of the sock shop" %}
 
-Find more details for each service by following these links:
+**Reference -** You can find additional details for each service by following these links:
 
-- **[Product Catalog](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/catalog)**, which provides REST API that allows you to search product catalog and retrieve individual product details;
-
-- **[Shopping Cart](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/carts)**, which provides REST API that allows you to manage customers' shopping carts;
-
-- **[Orders](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/orders)**, which provides REST API that allows customers to place orders;
-
-- **[Payment](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/payment)**, which provides REST API that allows you to process payments;
-
-- **[Shipping](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/shipping)**, which provides REST API that allows you to ship orders and track shipments;
-
-- **[Users](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/users)**, which provides REST API that allows you to manage customer information and provides registration and authentication functionality for the customers.
+| Link | REST API |
+| :-: | - |
+| **[Product Catalog]** | allows you to search product catalog and retrieve individual product details |
+| **[Shopping Cart]** | allows you to manage customers' shopping carts |
+| **[Orders]** | allows customers to place orders |
+| **[Payment]** | allows you to process payments |
+| **[Shipping]** | allows you to ship orders and track shipments |
+| **[Users]** | allows you to manage customer information and provides registration and authentication functionality for the customers |
 
 ## Project Structure
 
-The main [Sock Shop](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master) repository also contains Kubernetes deployment files for the whole application, top-level POM file which allows you to easily build the whole project and import it into your favorite IDE.
+The main [Sock Shop] repository also contains Kubernetes deployment files for the whole application as well as a top-level POM file which allows you to easily build the whole project and import it into your favorite IDE.
 
-## Quick Start
+## Getting started
 
 Kubernetes scripts depend on Kustomize, so make sure that you have a newer version of `kubectl` that supports it (at least 1.16 or above).
 
-The easiest way to try the demo is to use the Kubernetes deployment scripts from this repo.
+The easiest way to try the demo is to use the Kubernetes deployment scripts from this [repo].
 
-If you do, you can simply run the following command from the `coherence-micronaut-sockshop-sample` directory.
+If you do, you can simply run the following commands from the `coherence-micronaut-sockshop-sample` directory.
 
 ### Install the Coherence Operator
 
-Install the Coherence Operator using the instructions in the [Coherence Operator Quick Start](https://oracle.github.io/coherence-operator/docs/latest/#/about/03_quickstart) documentation.
+Install the Coherence Operator using the instructions in the [Coherence Operator Quick Start] documentation.
 
-### Installing a Back-end
+### Installing a back end
 
-Create a namespace in Kubernetes called `sockshop`.
+1. Create a namespace in Kubernetes called `sockshop`:  
 
-```bash
-$ kubectl create namespace sockshop
-```
+      ```bash
+      kubectl create namespace sockshop
+      ```
 
-Install the back-end into the `sockshop` namespace.
+1. Install the back end into the `sockshop` namespace:
 
- ```bash
-$ kubectl --namespace sockshop apply -k k8s/coherence 
- ```
+      ```bash
+      kubectl --namespace sockshop apply -k k8s/coherence 
+      ```
 
-The `-k` parameter above will use `kubectl` with `kustomize` to merge all the files under the specified directory and create all Kubernetes resources defined by them, such as deployments and services for each microservice.
+   The `-k` parameter above will use `kubectl` with `kustomize` to merge all the files under the specified directory and create all Kubernetes resources defined by them, such as deployments and services for each microservice.
 
-### (Optional) Install the Original WeaveSocks Front End
+### (Optional) Install the original WeaveSocks front end
 
-> Warning: The original WeaveSocks Front End has a few bugs, as well as some security issues, and it hasn't been actively maintained for a few years. However, if you want to deploy it nevertheless to see how it interacts with our back-end services, please follow the steps below.
+> **Warning:** There are a few important things to note about the original implementation of the the WeaveSocks front end, so keep these in mind as you try out the demo. It has a few bugs, including some security issues, and it hasn't been actively maintained for a few years. However, if you want to deploy it to see how it interacts with our back-end services, you can follow the steps in the sections below.
+{:.warn}
 
-Install the `front-end` service by running the following command:
+1. Install the `front-end` service by running the following command:  
 
-```bash
-$ kubectl apply -f k8s/optional/original-front-end.yaml --namespace sockshop
-```
+      ```bash
+      kubectl apply -f k8s/optional/original-front-end.yaml --namespace sockshop
+      ```
 
-Port-forward to the `front-end` UI using the following processes:
+2. Port-forward to the `front-end` UI using the following processes:
 
-**Mac/Linux**
+   **Mac/Linux:**
 
-```bash
-$ kubectl port-forward --namespace sockshop service/front-end <localPort>:80
-```
+      ```bash
+      kubectl port-forward --namespace sockshop service/front-end <localPort>:80
+      ```
 
-**Windows**
+   **Windows:**
 
-```bash
-$ kubectl port-forward --namespace sockshop service/front-end <localPort>:80
-```
+      ```bash
+      kubectl port-forward --namespace sockshop service/front-end <localPort>:80
+      ```
 
-> Note: If you have installed into a namespace then add the `--namespace` option to all `kubectl` commands in these instructions.
+   > **Note:** If you have installed into a namespace then add the `--namespace` option to all `kubectl` commands in these instructions.
+   {:.notice}
 
-You should be able to access the home page for the application by pointing your browser to `http://localhost:<localPort>/`.
+At this point, you should be able to access the home page for the application by pointing your browser to: `http://localhost:<localPort>/`.
 
-You should then be able to browse the product catalog, add products to shopping cart, register as a new user, place an order, and browse order history, among other actions
+You should then be able to browse the product catalog, add products to shopping cart, register as a new user, place an order, and browse order history, among other actions.
 
-Once you are finished, you can clean up the environment by executing the following:
-
-```bash
-$ kubectl delete -f k8s/optional/original-front-end.yaml --namespace sockshop
-$ kubectl delete -k k8s/coherence --namespace sockshop
-```
-
-### Scale Back-End
-
-If you wish to scale the back-end, issue the following command:
-
-Scale only the orders microservice
+Once you are finished, you can clean up the environment by executing the following:  
 
 ```bash
-$ kubectl --namespace sockshop scale coherence orders --replicas=3
+kubectl delete -f k8s/optional/original-front-end.yaml --namespace sockshop
+kubectl delete -k k8s/coherence --namespace sockshop
 ```
 
-Or, alternatively, scale all the microservices
+### Scale the back end
 
-```bash
-$ for name in carts catalog orders payment shipping users
-    do kubectl --namespace sockshop scale coherence $name --replicas=3
-done
-```
+If you wish to scale the back end, use one of the following commands:
 
-## Complete Application Deployment
+* **Scale only the orders microservice**
 
-The Quick Start shows how you can run the application locally, but that may not be enough if you want to experiment with scaling individual services. Look at tracing data in Jaeger, monitor services via Prometheus and Grafana, or make API calls directly using Swagger UI.
+    ```bash
+    kubectl --namespace sockshop scale coherence orders --replicas=3
+    ```
 
-To do all of the above, you need to deploy the services into a managed Kubernetes cluster in the cloud, by following the same set of steps described above (except for port forwarding, which is not necessary), and performing a few additional steps.
+* **Scale *all* the microservices**
 
-[Go to Complete Application Deployment section](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/doc/complete-application-deployment.md)
+    ```bash
+    $ for name in carts catalog orders payment shipping users
+        do kubectl --namespace sockshop scale coherence $name --replicas=3
+    done
+    ```
+
+## Complete application deployment
+
+The steps in the [Getting Started](#getting-started) section showed you how to run the application locally. However, that may not be enough if you want to experiment with scaling individual services such as tracing data in *Jaeger*, monitoring services via *Prometheus* and *Grafana*, or making API calls directly using *Swagger UI*.
+
+To do all of the above, you'll need to deploy the services into a managed Kubernetes cluster in the cloud. You can accomplish this by following the same set of steps described above (except for port forwarding, which isn't necessary) and performing a few additional steps described more fully in the [Complete Application Deployment] document.
 
 ## Development
 
-If you want to modify the demo, you will need to check out the code for the project, build it
-locally, and (optionally) push new container images to the repository of your choice.
+If you want to modify the demo, follow these steps:  
 
-[Go to Development section](https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/doc/development.md)
+1. check out the code for the project
+1. build it locally
+1. **(optionally)** push new container images to the repository of your choice
+
+**Reference -** [Development section]
+
+## Next steps
+
+To explore more information about development with Oracle products:
+
+* [Oracle Developers Portal](https://developer.oracle.com/)
+* [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
 
 ## License
 
 The Universal Permissive License (UPL), Version 1.0
+
+<!--- links -->
+
+[Oracle Coherence CE]: https://coherence.community/
+[Micronaut Framework]: https://micronaut.io/
+
+[sign up here for free]: https://signup.cloud.oracle.com/
+
+[SockShop Microservices Demo]: https://microservices-demo.github.io
+[Weaveworks]: https://go.weave.works/socks
+
+[working demo]: http://socks.weave.works/
+
+[Coherence Micronaut]: https://github.com/micronaut-projects/micronaut-coherence
+
+[Coherence Spring Sock Shop]: https://github.com/oracle/coherence-spring-sockshop-sample
+[Coherence Helidon Sock Shop]: https://github.com/oracle/coherence-helidon-sockshop-sample
+
+[OCI Cloud Shell]: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm
+
+[Product Catalog]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/catalog
+[Shipping]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/shipping
+[Shopping Cart]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/carts
+[Orders]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/orders
+[Payment]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/payment
+[Shipping]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/shipping
+[Users]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/users
+
+[Sock Shop]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master
+[repo]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master
+
+[Coherence Operator Quick Start]: https://oracle.github.io/coherence-operator/docs/latest/#/about/03_quickstart
+
+[Complete Application Deployment]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/doc/complete-application-deployment.md
+
+[Development section]: https://github.com/oracle/coherence-micronaut-sockshop-sample/blob/master/doc/development.md
+
+[Oracle Developers Portal]: https://developer.oracle.com/
+[Oracle Cloud Infrastructure]: https://www.oracle.com/cloud/
