@@ -15,118 +15,134 @@ mrm: WWMK211117P00058
 xredirect: https://developer.oracle.com/tutorials/deploy-a-node-express-application/
 ---
 {% slides %}
-In this tutorial, you use an Oracle Cloud Infrastructure account to set up a Kubernetes cluster. Then, you deploy a Node Express application to your cluster.
+In this tutorial, you'll use an Oracle Cloud Infrastructure (OCI) account to set up a Kubernetes cluster. Then, you'll deploy a Node Express application to your cluster.
 
 Key tasks include how to:
 
 * Set up a Kubernetes cluster on OCI.
 * Set up OCI CLI to access your cluster.
 * Build a Node Express application and Docker Image.
-* Push your image to OCIR.
+* Push your image to the Oracle Cloud Infrastructure Registry (OCIR).
 * Deploy your Node.js Docker application to your cluster.
 * Connect to your application from the internet.
 
-![](assets/deploy-a-node-express-application-Node-K8s-diagram.png)
+  {%imgx assets/deploy-a-node-express-application-Node-K8s-diagram.png 1254 517 "Deploy a node express application to the internet." %}
 
 For additional information, see:
 
-* [Kubernetes Documentation](https://kubernetes.io/docs/home/)
-* [OCI Container Engine for Kubernetes](https://docs.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm)
-* [OCI Container Registry](https://docs.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm)
+* [Kubernetes Documentation]
+* [OCI Container Engine for Kubernetes]
+* [OCI Container Registry]
+* [Getting started with OCI Cloud Shell]
 
-## Before You Begin
+## Prerequisites
 
-To successfully perform this tutorial, you must have the following:
+To successfully perform this tutorial, you'll need to have the following:
 
-### Requirements
+### For Container Registry, Kubernetes, and Load Balancers
 
-* For Container Registry, Kubernetes and Load Balancers:
-    * A **paid** Oracle Cloud Infrastructure account. 
-    * See [Signing Up for Oracle Cloud Infrastructure](https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm).
-* For building applications and Docker images:
-    * One of the following local environments:
-        * A MacOS or Linux machine.
-        * A Windows machine with Linux support. For example:
-            * [Windows Subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10)
-            * [Oracle Virtual Box](https://www.virtualbox.org/)
-    * The following applications on your local environment:
-        * JDK 11 and set JAVA_HOME in .bashrc.
-        * Python 3.6.8+ and pip installer for Python 3
-        * Kubernetes Client 1.11.9+
-        * Apache Maven 3.0+
-        * Docker 19.0.3+
-        * Git 1.8+
-        * Node.js 10+
+* A **paid** Oracle Cloud Infrastructure account.  
+  See: [Signing Up for Oracle Cloud Infrastructure]
 
-> Note: If you don't want to set up the required applications on your local environment, you can use Oracle Cloud Infrastructure **Cloud Shell** instead. The advantage of using Cloud Shell is all the required tools to manage your application are already installed and ready to use. Follow the steps in:
->
->[Kubernetes Using Cloud Shell: Deploy a Spring Boot Application](https://docs.oracle.com/iaas/developer-tutorials/tutorials/spring-on-k8s-cs/01oci-spring-cs-k8s-summary.htm)
+### For building applications and Docker images
+
+* One of the following local environments:
+  * A MacOS or Linux machine.
+  * A Windows machine with Linux support.  
+    For example:  
+    * [Windows Subsystem for Linux]
+    * [Oracle Virtual Box]
+* You have access to root either directly or using sudo. By default in OCI, you are connected as an `opc` user with sudo privilege.
+* A MacOS, Linux, or Windows computer with `ssh` support installed.
+* The following applications on your local environment:
+  * JDK 11 and set JAVA_HOME in .bashrc.
+  * Python 3.6.8+ and pip installer for Python 3
+  * Kubernetes Client 1.11.9+
+  * Apache Maven 3.0+
+  * Docker 19.0.3+
+  * Git 1.8+
+  * Node.js 10+
+
+> **Note:** If you don't want to set up the required applications in your local environment, you can use OCI **Cloud Shell** instead. The advantage of using Cloud Shell is that all the required tools to manage your application are already installed and ready to use.  
+> If you'd like to go this route, follow the steps in the [Kubernetes Using Cloud Shell: Deploy a Spring Boot Application] guide.
+>  
 {:.notice}
-
 
 ### Get the Applications for Linux on OCI Free Tier
 
-If you want to use an OCI Free Tier Linux compute instance to manage your deployment, the following sections provide information to get the required software installed.
+If you prefer your deployment without commitments or are just seeing if OCI is right for you, we've got you covered! You can use an *OCI Free Tier Linux compute instance* to manage your deployment. The following sections will tell you how to install all of the software required for this tutorial.
 
 #### Install a Linux Instance
 
-Install a Linux VM with an **Always Free** compute shape, on Oracle Cloud Infrastructure. You will need a machine with `ssh` support to connect to your Linux instance.
+We'll start off by installing a Linux VM with an **Always Free** compute shape on Oracle Cloud Infrastructure. Below, we'll outline the steps for both an Oracle Linux and an Ubuntu VM.  
 
-* To [install an Oracle Linux VM](https://docs.oracle.com/iaas/developer-tutorials/tutorials/apache-on-oracle-linux/01oci-ol-apache-summary.htm#create-oracle-linux-vm)
-    * Follow sections 2 and 3.
-    * If you have a paid account, for section 2, choose your compute options based on your offerings.
-    * To connect to your instance, in section 4, follow steps 1-5.
-    * Skip the Apache instructions.
-* To [install an Ubuntu VM](https://docs.oracle.com/iaas/developer-tutorials/tutorials/helidon-on-ubuntu/01oci-ubuntu-helidon-summary.htm#create-ubuntu-vm)
-    * Follow sections 2 and 3.
-    * If you have a paid account, for section 2, choose compute options based on your offerings.
-    * To connect to your instance, in section 4, follow steps 1-5.
-    * Skip the Apache instructions.
-    * To update the firewall settings, in section 4, perform step 8.
-
-
-## Install Node.js on your system.
-
-First, you will run install commands. To install Node.js and NPM, run the following commands, using the appropriate system:
-
-### Oracle Linux:
-
-```console 
-sudo yum update
-```
-
-Set up the Yum repo for Node.js. Then install the `nodejs` package.
-
-```console
-sudo yum install -y oracle-nodejs-release-el7
-sudo yum install -y nodejs
-```
-
-### Ubuntu:
-
-```console 
-sudo apt update
-```
-
-Install the `nodejs` and the `npm` packages.
-
-```console
-sudo apt install -y nodejs
-sudo apt install -y npm
-```
-Verify the installation.
-
-```console
-node -v
-npm -v
-```
-
-## Configure Firewall (Optional)
-
-> Note: If you want to do browser-based testing of your Node application, make port 3000 available on your Linux instance.
+>**Note:** For this, you'll need a machine with `ssh` support to connect to your Linux instance.
 {:.notice}
 
-### Oracle Linux:
+* To [install an Oracle Linux VM]
+  * Follow sections 2 and 3.
+    Section 2: if you have a paid account, choose your **compute options** based on your offerings.
+  * Section 4: to connect to your instance, follow steps 1-5.
+    **Skip the Apache instructions**.
+* To [install an Ubuntu VM]
+  * Follow sections 2 and 3.
+  * Section 2: if you have a paid account, choose **compute options** based on your offerings.
+  * Section 4: to connect to your instance, follow steps 1-5.
+    * **Skip the Apache instructions.**
+    * To update the firewall settings, in section 4, perform step 8.
+
+## Install Node.js on your system
+
+Let's start digging into the heart of this tutorial and get Node.js installed in your environment.  
+
+To install Node.js and Node Package Manager (NPM), run the following commands on the appropriate system:
+
+### Oracle Linux
+
+1. Get and install any new versions of previously-installed packages:  
+
+      ```console
+      sudo yum update
+      ```
+
+1. Set up the Yum repo for Node.js.
+1. Install the `nodejs` package:  
+
+      ```console
+      sudo yum install -y oracle-nodejs-release-el7
+      sudo yum install -y nodejs
+      ```
+
+### Ubuntu
+
+1. Get and install any new versions of previously-installed packages:  
+
+      ```console
+      sudo apt update
+      ```
+
+1. Install the `nodejs` and the `npm` packages:  
+
+      ```console
+      sudo apt install -y nodejs
+      sudo apt install -y npm
+      ```
+
+1. Verify the installation:  
+
+      ```console
+      node -v
+      npm -v
+      ```
+
+## Optional setups
+
+### Configure the firewall
+
+> **Note:** If you want to perform browser-based testing of your Node application, make **port 3000** available on your Linux instance.
+{:.notice}
+
+#### On Oracle Linux
 
 ```console
 sudo firewall-cmd --add-service=http --permanent
@@ -134,51 +150,61 @@ sudo firewall-cmd --add-service=https --permanent
 sudo firewall-cmd --reload
 ```
 
-### Ubuntu Linux:
+#### On Ubuntu Linux
 
 ```console
 sudo iptables -I INPUT 6 -m state --state NEW -p tcp --dport 3000 -j ACCEPT
 sudo netfilter-persistent save
 ```
 
-## Create an Ingress Rule for your VCN (Optional)
+### Create an Ingress Rule for your VCN
 
-Follow these steps to select your VCN's public subnet and add the ingress rule.
+Follow these steps to select your VCN's public subnet and add the ingress rule:  
 
-1. Open the navigation menu and click **Networking**, and then click **Virtual Cloud Networks**.
-2. Select the VCN you created with your compute instance.
-3. With your new VCN displayed, click **`<`your-subnet-name`>`** subnet link. The public subnet information is displayed with the Security Lists at the bottom of the page. A link to the **Default Security List** for your VCN is displayed.
-4. Click the **Default Security List** link. 
-  * The default **Ingress Rules** for your VCN are displayed.
-5. Click **Add Ingress Rules**.
-  * An **Add Ingress Rules** dialog is displayed.
-6. Fill in the ingress rule with the following information:
+1. Open the navigation menu and select **Networking**.
+1. Select **Virtual Cloud Networks**.
+1. Select the VCN you created with your compute instance.
+1. With your new VCN displayed, select **`<your-subnet-name>`** subnet link.  
+   You will see:  
+   * The public subnet information displayed with the **Security Lists** at the bottom of the page.
+   * A link to the **Default Security List** for your VCN.
+1. Select the **Default Security List** link.
 
-    ```console
-    Stateless: Checked
-    Source Type: CIDR
-    Source CIDR: 0.0.0.0/0
-    IP Protocol: TCP
-    Source port range: (leave-blank)
-    Destination Port Range: 3000
-    Description: Allow HTTP connections
-    ```
-7. Click Add Ingress Rule. 
+   The default **Ingress Rules** for your VCN are displayed.
 
-Now HTTP connections are allowed. Your VCN is configured for Node Express.
+1. Select **Add Ingress Rules**.
 
-You have successfully created an ingress rule that makes your instance available from the internet.
+   An **Add Ingress Rules** dialog is displayed.
+
+1. Fill in the ingress rule with the following information:
+
+      ```console
+      Stateless: Checked
+      Source Type: CIDR
+      Source CIDR: 0.0.0.0/0
+      IP Protocol: TCP
+      Source port range: (leave-blank)
+      Destination Port Range: 3000
+      Description: Allow HTTP connections
+      ```
+
+1. Select **Add Ingress Rule**.
+
+At this point, HTTP connections are allowed and your VCN is configured for Node Express.
+
+Congratulations! You've successfully created an ingress rule that makes your instance available from the internet.
 
 ## Install Python 3 and Pip 3
 
-1. Verify your current installation.
+1. Verify your current installation:  
 
-    ```console
-    python3 --version
-    ```
-2. For Python 3, run the following commands:
+      ```console
+      python3 --version
+      ```
 
-    - Oracle Linux: 
+1. For Python 3, run the following commands:
+
+    * Oracle Linux:  
 
         ```console
         sudo yum update
@@ -186,30 +212,29 @@ You have successfully created an ingress rule that makes your instance available
         sudo yum install -y python3
         ```
 
-    - Ubuntu:
+    * Ubuntu:  
 
-        ```console    
+        ```console
         sudo apt update
 
         sudo apt install -y python3
         ```
 
+1. Verify the pip installation for Python3:  
 
-3. Verify the pip installation for Python3.
+      ```console
+      pip3 -V
+      ```
 
-    ```console
-    pip3 -V
-    ```
+    Sample output if pip for Python3 is installed:  
 
-    Example output if pip for Python3 is installed:
+      ```console
+      pip <version> from xxx/lib/python3.x/site-packages/pip   (python 3.x)
+      ```
 
-    ```console
-    pip <version> from xxx/lib/python3.x/site-packages/pip   (python 3.x)
-    ```
+1. To install Pip for Python 3, run the following commands:  
 
-4. To install Pip for Python 3, run the following commands:
-
-    * Oracle Linux: 
+    * Oracle Linux:  
 
         ```console
         sudo yum update
@@ -217,7 +242,7 @@ You have successfully created an ingress rule that makes your instance available
         sudo yum install -y python3-pip
         ```
 
-    * Ubuntu:
+    * Ubuntu:  
 
         ```console
         sudo apt update
@@ -225,186 +250,189 @@ You have successfully created an ingress rule that makes your instance available
         sudo apt install -y python3-pip
         ```
 
-5. Verify the pip for Python 3 installation.
+1. Verify the pip for Python 3 installation:  
 
-    ```console
-    pip3 -V
-    ```
+      ```console
+      pip3 -V
+      ```
 
 ## Install Kubernetes Client
 
-1. Verify your current installation:
+1. Verify your current installation:  
 
+      ```console
+      kubectl version --client
+      ```
+
+    If you have Kubernetes, then the version is `<major-version>.<minor-version>`.  
+
+    For example, if you have Kubernetes version 1.20, you'll get the following:  
 
     ```console
-    kubectl version --client
-    ```
-
-    If you have Kubernetes, then the version is `<major-version>.<minor-version>`. For example, for version 1.20, you get the following:
-
-    ```console 
     version.Info{Major:"1", Minor:"20"...
     ```
 
-2. To install he `kubectl` client, refer to the following links: 
-    - [Install Kubernetes client on Linux](https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux)
-    - [Install Kubernetes client on MacOS](https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/)
-3. Verify the installation. 
+1. To install he `kubectl` client, refer to the following links:  
+   * [Install Kubernetes client on Linux]
+   * [Install Kubernetes client on MacOS]
+1. Verify the installation:  
 
-    ```console
-    kubectl version --client
-    ```
+      ```console
+      kubectl version --client
+      ```
 
 ## Install Docker
 
-1. Verify your current installation: 
+1. Verify your current installation:  
 
-    ```console
-    docker -v
-    ```
+      ```console
+      docker -v
+      ```
 
     * Oracle Linux
 
-        ```console    
+        ```console
         sudo yum install docker-engine
-            
+           
         sudo systemctl start docker
 
         sudo systemctl enable docker
         ```
 
-        > Note: The last command enables Docker to start on reboots.
+        > **Note:** The last command enables Docker to start on reboots.
         {:.notice}
-
 
     * Ubuntu Linux
 
-        To install Docker on Ubuntu Linux, refer to the following link: [Get Docker](https://docs.docker.com/get-docker/)
+      To install Docker on Ubuntu Linux, refer to the [Get Docker] guide.
 
-2. Verify the installation.
+1. Verify the installation:  
 
-    ```console
-    docker -v
-    ```
+      ```console
+      docker -v
+      ```
 
 ## Prepare
 
-Prepare your environment to create and deploy your application.
+We're finally here! It's time to prepare your environment to create and deploy your application.
 
 ### Check your Service Limits
 
-1. Log in to the Oracle Cloud Infrastructure **Console**.
-2. Open the navigation menu, and click Governance and Administration. Under Governance, click Limits, Quotas and Usage.
-3. Find your service limit for **Regions**:
+1. Log in to the OCI **Console**.
+2. Open the navigation menu and select **Governance and Administration**.
+3. Under **Governance**, select **Limits, Quotas and Usage**.
+4. Find your service limit for **Regions**
+
+   1. **Filter** for the following options:  
+
+      * **Service:** Regions
+      * **Scope:** Tenancy
+      * **Resource:** Subscribed region count
+      * **Compartment:** `<tenancy-name>` (root)
+
+   1. Find service limit:
+
+      * **Limit Name:** `subscribed-region-count`
+      * **Service Limit:** minimum 2
+5. Find your available **Compute** **core count** for the **VM.Standard.E3.Flex** shape
+
+   1. **Filter** for the following options:
+
+      * **Service:** Compute
+      * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
+      * **Resource:** **Cores** for **Standard.E3.Flex** and BM.Standard.E3.128 Instances
+      * **Compartment:** `<tenancy-name>` (root)
+
+   1. Find available core count:
+
+      * **Limit Name:** `standard-e3-core-ad-count`
+      * **Available:** minimum 1
+
+   1. Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least one core available for this shape.  
+
+      > **Note:** This tutorial creates three compute instances with a **VM.Standard.E3.Flex** shape for the cluster nodes. To use another shape, filter for its **core count**.  
+      > For example, for **VM.Standard2.4**, filter for **Cores for Standard2 based VM and BM Instances** and get the **count**.
+      {:.notice}
+6. Find out if you have **50 GB** of **Block Volume** available:
+
+   1. **Filter** for the following options:
+
+      * **Service:** Block Volume
+      * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
+      * **Resource** Volume Size (GB)
+      * **Compartment:** `<tenancy-name>` (root)
+
+   1. Find available block volume storage:
+
+      * **Limit Name:** `total-storage-gb`
+      * **Available:** minimum 50
+
+   1. Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least 50 GB of block volume available.
+7. Find out how many **Flexible Load Balancers** you have available
 
     **Filter** for the following options:
 
-    * **Service:** Regions
-    * **Scope:** Tenancy
-    * **Resource:** Subscribed region count
-    * **Compartment:** `<tenancy-name>` (root)
-
-    Find service limit:
-    
-    *  **Limit Name:** `subscribed-region-count`
-    *  **Service Limit:** minimum 2
-4. Find your available **Compute** **core count** for the **VM.Standard.E3.Flex** shape:
-    
-    **Filter** for the following options:
-    
-    * **Service:** Compute
-    * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
-    * **Resource:** **Cores** for **Standard.E3.Flex** and BM.Standard.E3.128 Instances
-    * **Compartment:** `<tenancy-name>` (root)
-    
-    Find available core count:
-    
-    * **Limit Name:** `standard-e3-core-ad-count`
-    * **Available:** minimum 1
-
-    Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least one core available for this shape.
-5. Find out if you have **50 GB** of **Block Volume** available:
-    
-    **Filter** for the following options:
-
-    * **Service:** Block Volume
-    * **Scope:** `<first-availability-domain>`. Example: `EMlr:US-ASHBURN-AD-1`
-    * **Resource** Volume Size (GB)
-    * **Compartment:** `<tenancy-name>` (root)
-    
-    Find available block volume storage:
-    
-    * **Limit Name:** `total-storage-gb`
-    * **Available:** minimum 50
-    
-    Repeat for **Scope:** `<second-availability-domain>` and `<third-availability-domain>`. Each region must have at least 50 GB of block volume available.
-6. Find out how many **Flexible Load Balancers** you have available:
-    
-    **Filter** for the following options:
-    
       * **Service:** LBaaS
       * **Scope:** `<your-region>`. Example: `us-ashburn-1`
-      * **Resource:** `<blank>` 
+      * **Resource:** `<blank>`
       * **Compartment:** `<tenancy-name>` (root)
-    
+
     Find the number of available flexible load balancers:
 
       * **Limit Name:** `lb-flexible-count`
       * **Available:** minimum 1
 
-> Note: This tutorial creates three compute instances with a **VM.Standard.E3.Flex** shape for the cluster nodes. To use another shape, filter for its **core count**. For example, for **VM.Standard2.4**, filter for **Cores for Standard2 based VM and BM Instances** and get the **count**. 
-{:.notice}
+    >**Note:** This tutorial creates a load balancer with a **flexible** shape. To use another bandwidth, filter for its **count**, for example **100-Mbps bandwidth** or **400-Mbps bandwidth**.
+    {:.notice}
 
-For a list of all shapes, see [VM Standard Shapes](https://docs.oracle.com/iaas/Content/Compute/References/computeshapes.htm#vmshapes__vm-standard).
-
-> Note: This tutorial creates a load balancer with a **flexible** shape. To use another bandwidth, filter for its **count**, for example **100-Mbps bandwidth** or **400-Mbps bandwidth**. 
-{:.notice}
+**Reference:** For a list of all shapes, see [VM Standard Shapes]
 
 ### Create an Authorization Token
 
-1. In the Console's top navigation bar, click the **Profile** menu (your avatar). 
-2. Click your username. 
-3. Click Auth Tokens. 
-4. Click Generate Token. 
-5. Give it a description. 
-6. Click Generate Token. 
-7. Copy the token and **save** it. 
-8. Click Close. 
+1. In the Console's top navigation bar, select the **Profile** menu (your avatar).
+2. Select your **username**.
+3. Select **Auth Tokens**.
+4. Select **Generate Token**.
+5. Give the token a description.
+6. Select **Generate Token**.
+7. Copy the token and **save** it.
+8. Select **Close**.
 
-> Note: Ensure that you save your token right after you create it. You have no access to it later.
-{:.notice}
+> **Note:** It's crucial that you've made sure to save your token right after you create it since you'll have *no access to it later*.
+{:.warn}
 
 ### Gather Required Information
 
-1. Collect the following credential information from the Oracle Cloud Infrastructure **Console**. 
+1. Collect the following credential information from the OCI **Console**:
     * **Tenancy name:** `<tenancy-name>`
-        * Click your **Profile** menu (your avatar) and find your **Tenancy:`<tenancy-name>`**.
+        * Select your **Profile** menu (your avatar) and find your **Tenancy:`<tenancy-name>`**.
     * **Tenancy namespace:** `<tenancy-namespace>`
-        * Click your **Profile** menu (your avatar).
-        * Click **Tenancy:`<tenancy-name>`**.
+        * Select your **Profile** menu (your avatar).
+        * Select **Tenancy:`<tenancy-name>`**.
         * Copy the value for **Object Storage Namespace**.
 
-        > Note For some accounts, tenancy name and namespace differ. Ensure that you use namespace in this tutorial.
+        > **Note:** For some accounts, **`tenancy name`** and **`namespace`** differ. Ensure that you use **`namespace`** in this tutorial.
         {:.notice}
 
     * **Tenancy OCID:** `<tenancy-ocid>`
-        - Click your **Profile** menu (your avatar), then click **Tenancy:`<tenancy-name>`**, and copy OCID.
+        * Select your **Profile** menu (your avatar), then select **Tenancy:`<tenancy-name>`**, and copy `OCID`.
     * **Username:** `<user-name>`
-        - Click your **Profile** menu (your avatar).
+        * Select your **Profile** menu (your avatar).
     * **User OCID:** `<user-ocid>`
-        - Click your **Profile** menu (your avatar), then click **User Settings**, and copy OCID.
+        * Select your **Profile** menu (your avatar), then select **User Settings**, and copy `OCID`.
 
-2. Find your region information. 
+1. Find your region information.
 
     * **Region:** `<region-identifier>`
-        - In the Console's top navigation bar, find your region. Example: **US East (Ashburn)**.
-        - Find your **Region Identifier** from the table in [Regions and Availability Domains](https://docs.oracle.com/iaas/Content/General/Concepts/regions.htm). 
-        - Example: `us-ashburn-1`.
+        * In the Console's top navigation bar, find your region.
+          **Example:** **US East (Ashburn)**.
+        * Find your **Region Identifier** from the table in [Regions and Availability Domains].
+          **Example:** `us-ashburn-1`.
     * **Region Key:** `<region-key>`
-        - Find your **Region Key** from the table in [Regions and Availability Domains](https://docs.oracle.com/iaas/Content/General/Concepts/regions.htm). 
-        - Example: `iad`
+        * Find your **Region Key** from the table in [Regions and Availability Domains].
+          **Example:** `iad`
 
-3. Copy your authentication token from **Create an Authentication Token** section. 
+1. Copy your authentication token from the [Create an Authentication Token](#create-an-authorization-token) section.  
 
     **Auth Token:** `<auth-token>`
 
@@ -414,238 +442,246 @@ For a list of all shapes, see [VM Standard Shapes](https://docs.oracle.com/iaas/
 
 The Python `virtualenv` creates a folder that contains all the executables and libraries for your project.
 
-The `virtualenvwrapper` is an extension to `virtualenv`. It provides a set of commands, which makes working with virtual environments much more pleasant. It also places all your virtual environments in one place. The `virtualenvwrapper` provides tab-completion on environment names.
+The `virtualenvwrapper` is an extension of `virtualenv`. It provides a set of commands which makes working with virtual environments much  easier. Not only that, it also conveniently places all of your virtual environments in one place. One particularly useful (and sanity-saving) feature is that `virtualenvwrapper` provides *tab-completion of environment names*.
 
-1. Install `virtualenv`.
+1. Install `virtualenv`:
 
+      ```console
+      pip3 install --user virtualenv
+      ```
 
-    ```console
-    pip3 install --user virtualenv
-    ```
+2. Install `virtualenvwrapper`:
 
-2. Install `virtualenvwrapper`.
+      ```console
+      pip3 install --user virtualenvwrapper
+      ```
 
-    ```console
-    pip3 install --user virtualenvwrapper
-    ```
+3. Find the location of the `virtualenvwrapper.sh` script:
 
-3. Find the location of the `virtualenvwrapper.sh` script.
+      ```console
+      grep -R virtualenvwrapper.sh
+      ```
 
+    **Example paths:**
 
-    ```console
-    grep -R virtualenvwrapper.sh
-    ```
+    * Linux example:  
+      `/home/ubuntu/.local/bin/virtualenvwrapper.sh`
+    * MacOS example:  
+      `/usr/local/bin/virtualenvwrapper.sh`
 
-    Example paths: 
+4. Configure the virtual environment wrapper in `.bashrc`:
 
-        Linux example: 
-            /home/ubuntu/.local/bin/virtualenvwrapper.sh
-        MacOS example: 
-            /usr/local/bin/virtualenvwrapper.sh
+      ```console
+      sudo vi .bashrc
+      ```
 
+   1. Amend the following text with the updated information noted below:  
 
-4. Configure the virtual environment wrapper in `.bashrc`.
+         ```console
+         # set up Python env
+         export WORKON_HOME=~/envs
+         export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
+         export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=' -p /usr/bin/python3 '
+         source <path-to-virtualenvwrapper.sh>
+         ```
 
+      Updated information:  
 
-    ```console    
-    sudo vi .bashrc
-    ```
+      * Replace `<path-to-virtualenvwrapper.sh>` with its appropriate value.
+      * Based on the location of Python3 binaries in your environment, update `/usr/bin/python3` to its correct location.
 
-    Append the following text.
+   1. Save the file.
 
-    ```console 
-    # set up Python env
-    export WORKON_HOME=~/envs
-    export VIRTUALENVWRAPPER_PYTHON=/usr/bin/python3
-    export VIRTUALENVWRAPPER_VIRTUALENV_ARGS=' -p /usr/bin/python3 '
-    source <path-to-virtualenvwrapper.sh>
-    ```
+5. Activate the commands in the current window:
 
-    Replace `<path-to-virtualenvwrapper.sh>` with its value.
+      ```console
+      source ~/.bashrc
+      ```
 
-    Based on the location of Python3 binaries in your environment, update `/usr/bin/python3` to its correct location.
+   **Example output:**
 
-    Save the file.
-
-5. Activate the commands in the current window.
-
-
-    ```console
-    source ~/.bashrc
-    ```
-
-    Example output:
-
-    ```console  
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkproject
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkproject
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/initialize
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkvirtualenv
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkvirtualenv
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/prermvirtualenv
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postrmvirtualenv
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/predeactivate
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postdeactivate
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/preactivate
-    virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postactivate
-    ```
-    
+      ```console  
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkproject
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkproject
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/initialize
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/premkvirtualenv
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postmkvirtualenv
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/prermvirtualenv
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postrmvirtualenv
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/predeactivate
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postdeactivate
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/preactivate
+      virtualenvwrapper.user_scripts creating /home/ubuntu/envs/postactivate
+      ```
 
 ### Install OCI CLI
 
-1. Start a virtual environment.
+1. Start a virtual environment:
 
+      ```console
+      workon cli-app
+      ```
 
-    ```console
-    workon cli-app
-    ```
+1. Confirm the name of your virtual environment.  
+   If you are, `cli-app` will appear immediately the left of your command prompt.
 
-2. Confirm that the name of your virtual environment, `cli-app` appears in the left of your command prompt.
+   **Example:** `(cli-app) ubuntu@<ubuntu-instance-name>:~$`
 
-    Example: `(cli-app) ubuntu@<ubuntu-instance-name>:~$`
+1. Install OCI CLI:
 
-3. Install OCI CLI.
+      ```console
+      pip3 install oci-cli
+      ```
 
-    ```console
-    pip3 install oci-cli
-    ```
+1. Test the installation:  
 
-4. Test the installation:
-    
-    ```console
-    oci --version
-    ```
+      ```console
+      oci --version
+      ```
 
-    If everything is set up correctly, you get the version.
+   If everything is set up correctly, the fllowing command will return the correct version:  
 
-    ```console
-    oci --help
-    ```
+      ```console
+      oci --help
+      ```
 
 #### Configure the OCI CLI
 
-1. Enter the following command in your **virtual environment**:
+1. Enter the following command in your **virtual environment**:  
 
-    ```console
-    oci setup config
-    ```
+      ```console
+      oci setup config
+      ```
 
-2. Enter your answers from the **Gather Required Information** section:
-  * **Location for your config [$HOME/.oci/config]:** `<take-default>`
-  * **User OCID:** `<user-ocid>`
-  * **Tenancy OCID:** `<tenancy-ocid>`
-  * **Region (e.g. us-ashburn-1):** `<region-identifier>`
-3. Enter the following information to set up your OpenSSL API encryption keys:
-  * **Generate a new API Signing RSA key pair? [Y/n]:** Y
-  * **Directory for your keys [$HOME/.oci]:** `<take-default>`
-  * **Name for your key [oci_api_key]** `<take-default>`
-4. Deactivate the virtual environment: 
+1. Enter your answers from the [Gather Required Information](#gather-required-information) section:  
+
+   * **Location for your config [`$HOME/.oci/config`]:** `<take-default>`
+   * **User OCID:** `<user-ocid>`
+   * **Tenancy OCID:** `<tenancy-ocid>`
+   * **Region (e.g., *us-ashburn-1*):** `<region-identifier>`
+
+1. **OpenSSL API encryption keys -** Enter the following information to set up your keys:
+
+   * **Generate a new API Signing RSA key pair? [Y/n]:** Y
+   * **Directory for your keys [$HOME/.oci]:** `<take-default>`
+   * **Name for your key [oci_api_key]** `<take-default>`
+
+   >**Note:**  
+   >Your private key is: `oci_api_key.pem`
+   >Your public key is: `oci_api_key_public.pem`.
+   {:.notice}
+
+1. Deactivate the virtual environment:
 
     ```console
     deactivate
     ```
 
-The `(cli-app)` prefix in your environment is not displayed any more.
+   After you deactivate the virtual environment, you should notice that the `(cli-app)` prefix in your environment is no longer displayed.
 
->Note: Your private key is `oci_api_key.pem` and your public key is `oci_api_key_public.pem`.
-{:.notice}
-
-### Add the Public Key to Your User Account.
+### Add the Public Key to your User Account
 
 1. Activate the `cli-app` environment:
 
+      ```console
+      workon cli-app
+      ```
 
-    ```console
-    workon cli-app
-    ```
+1. Display the public key:
 
-2. Display the public key.
+      ```console
+      cat $HOME/.oci/oci_api_key_public.pem
+      ```
 
-    ```console
-    cat $HOME/.oci/oci_api_key_public.pem
-    ```
+1. Copy the public key.
 
-3. Copy the public key.
-
-4. Add the public key to your user account:
+1. Add the public key to your user account:
 
     * Go to the Console.
-    * Click your Profile menu (your avatar), and then click **User Settings**.
-    * Click **API Keys**.
-    * Click **Add API Key**.
-    * Click **Paste Public Key**.
+    * Select your **Profile** menu (your avatar), and then select **User Settings**.
+    * Select **API Keys**.
+    * Select **Add API Key**.
+    * Select **Paste Public Key**.
     * Paste value from previous step, including the lines with `BEGIN PUBLIC KEY` and `END PUBLIC KEY`.
-    * Click **Add**.
+    * Select **Add**.
 
-> Note:
-> * Whenever you want to use the OCI CLI, activate it with: `workon cli-app`
-> * When you change project names, `workon` deactivates your current working environment. This way, you can quickly switch between environments.
+### Some useful tips
+
+* **Quickly activate the OCI CLI -** Whenever you want to use the OCI CLI, all you have to do is run: `workon cli-app`
+* **Quickly deactivate your current working environment -** Whenever you change project names, `workon` deactivates your current working environment. This way, you can quickly switch between environments.
 {:.notice}
 
 ## Set Up a Cluster
 
-Install and configure management options for your Kubernetes cluster. Later, deploy your application to this cluster.
+In this section, we'll install and configure management options for your Kubernetes cluster. Later, we'll deploy your application to this cluster.
 
 ### Add Compartment Policy
 
-If your username is in the **Administrators** group, then skip this section. Otherwise, have your administrator add the following policy to your tenancy:
+>**Note:** If your username is in the **Administrators** group, you can skip this section.
+{:.notice}
 
-```console    
+If your username is not in the **Administrator** group, you'll need to have your administrator add the following policy to your tenancy:
+
+```console
 allow group <the-group-your-username-belongs> to manage compartments in tenancy
 ```
 
-With this privilege, you can create a compartment for all the resources in your tutorial.
+Why this added step? With this additional privilege, you'll be able to create a compartment for all the resources in your tutorial.
 
-### Steps to Add the Policy
+### Steps to add the Compartment Policy
 
 1. In the top navigation bar, open the **Profile** menu.
-2. Click your username.
-3. In the left pane, click Groups.
-4. In a notepad, copy the **Group Name** that your username belongs.
-5. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Policies**.
+2. Select your *username*.
+3. In the left pane, select **Groups**.
+4. In a notepad, copy the **Group Name** to which your *username* belongs.
+5. Open the navigation menu and slect **Identity & Security**.  
+   Under **Identity**, select **Policies**.
 6. Select your compartment from the **Compartment** drop-down.
-7. Click Create Policy.
+7. Select **Create Policy**.
 8. Fill in the following information:
     * **Name:** `manage-compartments`
-    * **Description:** `Allow the group <the-group-your-username-belongs> to list, create, update, delete and recover compartments in the tenancy.`
+    * **Description:** "Allow the group `<the-group-your-username-belongs>` to list, create, update, delete and recover compartments in the tenancy."
     * **Compartment:** `<your-tenancy>(root)`
-9. For **Policy Builder**, click Customize (Advanced).
-10. Paste in the following policy:
-11. allow group `<the-group-your-username-belongs>` to manage compartments in tenancy
-12. Click Create.
+9. For **Policy Builder**, select **Customize (Advanced)**.
+10. Paste in the following policy: allow group `<the-group-your-username-belongs>` to manage compartments in tenancy
+11. Select **Create**.
 
-**Reference:** The `compartments` resource-type in [Verbs + Resource-Type Combinations for IAM](https://docs.oracle.com/iaas/Content/Identity/Reference/iampolicyreference.htm#Identity)
+**Reference:** The `compartments` resource-type can be found in the [Verbs + Resource-Type Combinations for IAM] guide.
 
 ## Create a Compartment
 
-Create a compartment for the resources that you create in this tutorial.
+Here, you'll use your tenancy privileges to create a compartment for the resources that you create in this tutorial:
 
-1. Log in to the Oracle Cloud Infrastructure **Console**.
-2. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Compartments**.
-3. Click **Create Compartment**.
-4. Fill in the following information: 
-* **Name:** `<your-compartment-name>`
-* **Description:** `Compartment for <your-description>.`
-* **Parent Compartment:** `<your-tenancy>(root)`
-5. Click **Create Compartment**.
+1. Log in to the OCI **Console**.
+2. Open the navigation menu and select **Identity & Security**.  
+   Under **Identity**, select **Compartments**.
+3. Select **Create Compartment**.
+4. Fill in the following information:
 
-**Reference:** [Create a compartment](https://docs.oracle.com/iaas/Content/Identity/Tasks/managingcompartments.htm#To)
+   * **Name:** `<your-compartment-name>`
+   * **Description:** `Compartment for <your-description>.`
+   * **Parent Compartment:** `<your-tenancy>(root)`
+
+5. Select **Create Compartment**.
+
+**Reference:** [Create a compartment]
 
 ## Add Resource Policy
 
-If your username is in the **Administrators** group, then skip this section. Otherwise, have your administrator add the following policy to your tenancy:
-    
+If your username is in the **Administrators** group, you can skip this section. Otherwise, have your administrator add the following policy to your tenancy:
+
 ```console
 allow group <the-group-your-username-belongs> to manage all-resources in compartment <your-compartment-name>
 ```
 
 With this privilege, you can **manage all resources** in your **compartment**, essentially giving you administrative rights in that compartment.
 
-### Steps to Add the Policy
+### Steps to add the Resource Policy
 
-1. Open the navigation menu and click **Identity & Security**. Under **Identity**, click **Policies**.
+1. Open the navigation menu and select **Identity & Security**.  
+   Under **Identity**, select **Policies**.
 2. Select your compartment from the **Compartment** drop-down.
-3. Click Create Policy.
+3. Select **Create Policy**.
 4. Fill in the following information:
     * **Name:** `manage-<your-compartment-name>-resources`
     * **Description:** `Allow users to list, create, update, and delete resources in <your-compartment-name>.`
@@ -655,139 +691,148 @@ With this privilege, you can **manage all resources** in your **compartment**, e
     * **Common policy templates:** `Let compartment admins manage the compartment`
     * **Groups:** `<the-group-your-username-belongs>`
     * **Location:** `<your-tenancy>(root)`
-6. Click Create.
+6. Select **Create**.
 
-**Reference:** [Common Policies](https://docs.oracle.com/iaas/Content/Identity/Concepts/commonpolicies.htm)
+**Reference:** [Common Policies]
 
 ### Create a Cluster with 'Quick Create'
 
-Create a cluster with default settings and new network resources through the 'Quick Create' workflow.
+Next, we'll create a cluster with default settings and a new set of network resources through the **Quick Create** workflow.
 
-1. Sign in to the Oracle Cloud Infrastructure **Console**. 
-2. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click **Kubernetes Clusters (OKE)**. 
-3. Click Create Cluster. 
-4. Select Quick Create. 
-5. Click Launch Workflow. 
-The **Create Cluster** dialog is displayed.
-6. Fill in the following information. 
+1. Sign in to the OCI **Console**.
+2. Open the navigation menu and select **Developer Services**.  
+   Under **Containers & Artifacts**, select **Kubernetes Clusters (OKE)**.
+3. Select **Create Cluster**.
+4. Select **Quick Create**.
+5. Select **Launch Workflow**.
+   The **Create Cluster** dialog is displayed.
+6. Fill in the following information:
     * **Name:** `<your-cluster-name>`
     * **Compartment:** `<your-compartment-name>`
     * **Kubernetes Version:** `<take-default>`
-    * **Kubernetes API Endpoint:** Public Endpoint 
-    The Kubernetes cluster is hosted in a public subnet with an auto-assigned public IP address.
-    * **Kubernetes Worker Nodes:** Private Workers 
-    The Kubernetes worker nodes are hosted in a private subnet.
+    * **Kubernetes API Endpoint:** Public Endpoint
+      With this selected, the Kubernetes cluster will be hosted in a public subnet with an auto-assigned public IP address.
+    * **Kubernetes Worker Nodes:** Private Workers
+      With this selected, the Kubernetes worker nodes are hosted in a private subnet.
     * **Shape:** `VM.Standard.E3.Flex`
     * **Number of Nodes:** 3
-    * **Specify a custom boot volume size:** Clear the check box.
-7. Click **Next**. 
-All your choices are displayed. Review them to ensure that everything is configured correctly.
-8. Click **Create Cluster**. 
-The services set up for your cluster are displayed.
-9. Click **Close**. 
-10. Get a cup of coffee. It takes a few minutes for the cluster to be created. 
-You have successfully created a Kubernetes cluster.
+    * **Specify a custom boot volume size:** *Clear the check box.*
+7. Select **Next**.
+   Once you do, all your choices are displayed. Take a moment to review them to ensure that everything is configured correctly.
+8. Select **Create Cluster**.
+   The services setup for your cluster is displayed.
+9. Select **Close**.
+10. And... get yourself a cup of coffee! Creating the cluster will definitely take a few minutes.  
 
+When this process completes, you'll have successfully created a Kubernetes cluster!
 
 ## Set Up Local Access to Your Cluster
 
-After you create a Kubernetes cluster, set up your local system to access the cluster.
+After you create a Kubernetes cluster, you'll need to be able to reach it. In this section, we'll set up your local system to access the cluster.
 
-1. Sign in to the Oracle Cloud Infrastructure **Console**.
-2. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click **Kubernetes Clusters (OKE)**. 
-3. Click the link to `<your-cluster>`. The information about your cluster is displayed.
-4. Click **Access Cluster**. 
-5. Click **Local Access**. 
-6. Follow the steps provided in the dialog. They are reprinted here for your reference. 
+1. Sign in to the OCI **Console**.
+2. Open the navigation menu and select **Developer Services**.  
+   Under **Containers & Artifacts**, select **Kubernetes Clusters (OKE)**.
+3. Select the link to `<your-cluster>`.  
+   The information about your cluster is displayed.
+4. Select **Access Cluster**.
+5. Select **Local Access**.
+6. Follow the steps provided in the dialog.  
+   We've included a copy of the steps here for your reference:
 
-    > Note: If you are not in your virtual environment, enter: `workon cli-app` before you run `kubectl` commands.
-    {:.notice}
+   > **Note:** If you are not in your virtual environment, enter: `workon cli-app` **before** you run `kubectl` commands.
+   {:.notice}
 
-    Check your `oci` CLI version.
+   1. Check your `oci` CLI version:  
 
-    ```console
-    oci -v
-    ```
+         ```console
+         oci -v
+         ```
 
-    Make your `.kube` directory if it doesn't exist.
+   1. Make a `.kube` directory if it doesn't already exist:  
 
-    ```console
-    mkdir -p $HOME/.kube
-    ```
+         ```console
+         mkdir -p $HOME/.kube
+         ```
 
-    Create a kubeconfig file for your setup. Use the information from **Access Your Cluster** dialog.
+   1. Create a `kubeconfig` file for your setup.  
+      Use the information from **Access Your Cluster** dialog.
 
-    ```console    
-    oci ce cluster create-kubeconfig <use data from dialog>
-    ```
+         ```console
+         oci ce cluster create-kubeconfig <use data from dialog>
+         ```
 
-    Export the `KUBECONFIG` environment variable.
+   1. Export the `KUBECONFIG` environment variable:  
 
-    ```console    
-    export KUBECONFIG=$HOME/.kube/config
-    ```
+         ```console
+         export KUBECONFIG=$HOME/.kube/config
+         ```
 
-    > Note: If you want to have the environment variable start in a new shell, then add `export KUBECONFIG=$HOME/.kube/config` to your `~/.bashrc` file.
-    {:.notice}
+      > **Note:** If you want to have the environment variable start in a new shell, then add `export KUBECONFIG=$HOME/.kube/config` to your `~/.bashrc` file.
+      {:.notice}
 
-7. Test your cluster configuration with the following commands. 
-List clusters:
-    
-    ```console    
-    kubectl get service
-    ```
+7. Test your cluster configuration with the following commands:
 
-    Get deployment details:
+   * List clusters:  
 
-    ```console
-    kubectl describe deployment
-    ```
+       ```console
+       kubectl get service
+       ```
 
-    Get pods:
+   * Get deployment details:  
 
-    ```console
-    kubectl get pods
-    ```
+       ```console
+       kubectl describe deployment
+       ```
 
-    > Note: Since no application is deployed, the last two commands produce: "No resources found in default namespace."
-    {:.notice}
+       Output: "No resources found in default namespace."  
+       This is expected since no application is deployed.
 
-    > Note: To look at a different cluster, specify a different config file on the command line. Example:
-    >
-    > ```console
-    > kubectl --kubeconfig=</path/to/config/file>
-    > ```
-    {:.notice}
+   * Get pods:  
 
-With your cluster access set up, you are now ready to prepare your application for deployment.
+       ```console
+       kubectl get pods
+       ```
+
+       Output: "No resources found in default namespace."  
+       This is expected since no application is deployed.
+
+   > **Note:** To look at a different cluster, specify a different config file on the command line. Example:
+   >
+   > ```console
+   > kubectl --kubeconfig=</path/to/config/file>
+   > ```
+   >
+   {:.notice}
+
+With your cluster access set up, you're finally ready to prepare your application for deployment.
 
 ## Build a Local Application
 
-Build a local application and a Docker image for the application.
+Before we deploy your application, we'll need to set up a few things. First, we'll build a local application and then create a Docker image for the application.
 
 ### Create a Local Application
 
 Create your Node.js application.
 
-1. Start an OCI CLI session. 
-2. Create a directory for your application. 
+1. Start an OCI CLI session.
+1. Create a directory for your application.
 
-    ```console
-    mkdir node-hello-app
-    cd node-hello-app
-    ```
-3. Create a `package.json` file. 
+      ```console
+      mkdir node-hello-app
+      cd node-hello-app
+      ```
 
-    Create the file:
+1. Create a `package.json` file:  
 
-    ```console   
-    vi package.json
-    ```
+      ```console
+      vi package.json
+      ```
 
-    In the file, input the following text, update the optional author and repository fields and then save the file:
+1. In the `package.json` file, input the following text, updating the `author` and `repository` fields:  
 
-    ```json
-    {
+      ```json
+      {
             "name": "node-hello-app",
             "version": "1.0.0",
             "description": "Node Express Hello application",
@@ -804,370 +849,411 @@ Create your Node.js application.
                 "express": "^4.0.0"
             },
             "license": "UPL-1.0"
-    }          
-    ```  
-4. Install the NPM packages. 
+      }          
+      ```  
 
-    ```console
-    npm install
-    ```
-5. Create a "Hello, World!" application. 
+1. Save the file.
 
-    Create the file:
+1. Install the NPM packages:  
 
-    ```console   
-    vi app.js
-    ```
+      ```console
+      npm install
+      ```
 
-    In the file, input the following text and save the file:
+1. Create a "Hello, World!" application.
 
-    ```javascript
-    const express = require('express')
-    const app = express()
-    port = 3000
-    
-    app.get('/', function (req, res) {
-        res.send('<h1>Hello World from Node.js!</h1>')
-    })
-    
-    app.listen(port, function() {
-        console.log('Hello World app listening on port ' + port);
-    })
-    ```                      
+   1. Create the file:
 
-You have successfully set up your Node.js app.
+         ```console
+         vi app.js
+         ```
 
-## Run the Local Application
+   2. In the file, input the following text:  
 
-1. Run your Node.js application. 
+         ```javascript
+         const express = require('express')
+         const app = express()
+         port = 3000
 
-    ```console
-    node app.js
-    ```
+         app.get('/', function (req, res) {
+            res.send('<h1>Hello World from Node.js!</h1>')
+         })
 
-    The Node Express server starts and displays: 
+         app.listen(port, function() {
+            console.log('Hello World app listening on port ' + port);
+         })
+         ```
 
-    ```console
+You have successfully set up your Node.js app!
+
+## Run the local application
+
+Let's make sure that your application is working properly.
+
+1. Run your Node.js application:
+
+      ```console
+      node app.js
+      ```
+
+   The Node Express server starts and displays:  
+
+      ```console
         Hello World app listening on port 3000
-    ```
+      ```
 
-2. Test the application using `curl` or your browser.
-    * To test with `curl`, enter: 
-    
+1. Test the application:  
+    * To test with `curl`, run:
+
         ```console
         curl -X GET http://localhost:3000
         ```
 
-    * To test with your browser, connect a browser window to: `http://<your-ip-address>:3000` (Optional).
+    * To test with your browser, connect a browser window to: `http://<your-ip-address>:3000`:
 
-        The app returns 
+        The page should display:  
 
         ```html
         <h1>Hello World from Node.js!</h1>
         ```
 
-3. Stop the running application. 
+1. Stop the running application.
 
-Press **Ctrl+C** to stop your application in the terminal window you started with.
+   Press **Ctrl+C** to stop your application in the terminal window you started with.
 
-You have successfully created a Hello World application using Node.js and Express.
+That's it! You've successfully created a Hello World application using Node.js and Express.
 
-**References:**
-
-  * For detailed information on this example, see [Getting Started with Express](https://expressjs.com/en/starter/hello-world.html).
+**Reference:** For detailed information on this example, see [Getting Started with Express].
 
 ## Build a Docker Image
 
 Next, create a Docker image for your Node.js Express application.
 
-1. Ensure you are in the `node-hello-app` directory.
+1. Ensure that you're in the `node-hello-app` directory.
 
-2. Build a Docker image. 
+1. Build a Docker image:  
 
-    ```console
-    docker build -t node-hello-app .
-    ```
+      ```console
+      docker build -t node-hello-app .
+      ```
 
-    You get a success message.
+   You should see the following message:  
 
-    ```console  
-    [INFO] BUILD SUCCESS
-    Successfully tagged node-hello-app:latest
-    ```
+      ```console  
+      [INFO] BUILD SUCCESS
+      Successfully tagged node-hello-app:latest
+      ```
 
-3. Run the Docker image: 
+1. Run the Docker image:  
 
-    ```console
-    docker run --rm -p 3000:3000 node-hello-app:latest
-    ```
+      ```console
+      docker run --rm -p 3000:3000 node-hello-app:latest
+      ```
 
-4. Test the application. 
+1. Test the application.
 
-    ```console
-    curl -X GET http://localhost:3000
-    ```
+      ```console
+      curl -X GET http://localhost:3000
+      ```
 
-    The app returns:
+   The app should return:  
 
-    ```html
-    <h1>Hello World from Node.js!</h1>
-    ```
+      ```html
+      <h1>Hello World from Node.js!</h1>
+      ```
 
-5. Stop the running application. 
+1. Stop the running application.
 
-Congratulations! You have successfully created a Node.js Express image.
+Congratulations! You've successfully created a Node.js Express image.
 
 ## Deploy Your Docker Image
 
-Push your Node.js Express image to OCI Container Registry. Then use the image to deploy your application.
+In this section, we'll push your Node.js Express image to OCI Container Registry and then use the image to deploy your application.
+
+> **Note:** Before you can push a Docker image into a registry repository, **the repository must exist in your compartment**. If the repository does not exist, the Docker push command will not work correctly.
+{:.warn}
 
 ### Create a Docker Repository
 
-1. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click **Container Registry**. 
-2. In the left navigation, select `<your-compartment-name>`. 
-3. Click Create Repository. 
-4. Create a **private repository** with your choice of repo name: 
+1. Open the navigation menu and select **Developer Services**.  
+   Under **Containers & Artifacts**, select **Container Registry**.
+2. In the left navigation, select `<your-compartment-name>`.
+3. Select **Create Repository**.
+4. Create a **private repository** with your choice of repo name:
 
-    ```console   
-    <repo-name> = <image-path-name>/<image-name>
-    ```
+      ```console
+      <repo-name> = <image-path-name>/<image-name>
+      ```
 
-    Example: `node-apps/node-hello-app`
+   **Example:** `node-apps/node-hello-app`
+
+   > Note: The slash in a repository name **does not represent a hierarchical directory structure**. The optional `<image-path-name>` helps to organize your repositories.
+   {:.notice}
 
 You are now ready to push your local image to Container Registry.
 
-> Note: Before you can push a Docker image into a registry repository, **the repository must exist in your compartment**. If the repository does not exist, the Docker push command does not work correctly.
-{:.notice}
-
-> Note: The slash in a repository name **does not represent a hierarchical directory structure**. The optional `<image-path-name>` helps to organize your repositories.
-{:.notice}
-
 ## Push Your Local Image
 
-With your local Docker image created, push the image to the Container Registry.
+With your local Docker image created, push the image to the Container Registry.  
 
-Follow these steps.
+Follow these steps:  
 
-1. Open your OCI CLI session. 
-2. Log in to OCI Container Registry: 
+1. Open your OCI CLI session.
+1. Log in to OCI Container Registry:
 
-    ```console
-    docker login <region-key>.ocir.io
-    ```
+      ```console
+      docker login <region-key>.ocir.io
+      ```
 
-    You are prompted for your login name and password.
+   You are prompted for your login name and password:
 
-    * **Username:** `<tenancy-namespace>/<user-name>`
-    * **Password:** `<auth-token>`
+   * **Username:** `<tenancy-namespace>/<user-name>`
+   * **Password:** `<auth-token>`
 
-3. List your local Docker images: 
+1. List your local Docker images:  
 
-    ```console
-    docker images
-    ```
-The Docker images on your system are displayed. Identify the image you created in the last section: `node-hello-app`
+      ```console
+      docker images
+      ```
 
-4. **Tag** your local image with the **URL for the registry** plus the **repo name**, so you can push it to that repo. 
+   The Docker images on your system are displayed. Identify the image you created in the [last section](#build-a-docker-image): `node-hello-app`
 
-    ```console 
+1. **Tag** your local image with the **URL for the registry** plus the **repo name**, so you can push it to that repo:  
+
+      ```console
         docker tag <your-local-image> <repo-url>/<repo-name>
-    ```
+      ```
 
-    * Replace **`<repo-url>`** with: 
-    `<region-key>.ocir.io/<tenancy-namespace>/`
+   * Replace **`<repo-url>`** with:  
+   `<region-key>.ocir.io/<tenancy-namespace>/`
 
-    * Replace **`<repo-name>`** with: 
-    `<image-folder-name>/<image-name>` from the **Create a Docker Repository** section.
+   * Replace **`<repo-name>`** with:  
+   `<image-folder-name>/<image-name>` from the **Create a Docker Repository** section.
 
-    * Here is an example after combining both:
+   Here is an example after combining both:  
 
-    ```console
-    docker tag node-hello-app iad.ocir.io/my-namespace/node-apps/node-hello-app
-    ```
+     ```console
+     docker tag node-hello-app iad.ocir.io/my-namespace/node-apps/node-hello-app
+     ```
 
-    In this example, the components are:
+   In this example, the components are:  
 
-    * **Repo URL:** `iad.ocir.io/my-namespace/`
-    * **Repo name:** `node-apps/node-hello-app`
+   * **Repo URL:** `iad.ocir.io/my-namespace/`
+   * **Repo name:** `node-apps/node-hello-app`
 
-    > Note: OCI Container Registry now supports creating a registry repo in any compartment rather than only in the root compartment (tenancy). To push the image to the repo you created, combine the registry URL with the exact repo name. OCI Container Registry matches based on the unique repo name and pushes your image.
-    {:.notice}
+   > **Note:** OCI Container Registry now supports creating a registry repo in *any* compartment rather than only in the root compartment (tenancy). To push the image to the repo you created, combine the registry URL with the exact repo name. OCI Container Registry matches based on the unique repo name and pushes your image.
+   {:.notice}
 
+1. Check your Docker images to see if the image is **copied**:  
 
-5. Check your Docker images to see if the image is **copied**. 
+      ```console
+      docker images
+      ```
 
-    ```console
-    docker images
-    ```
+   * The tagged image has **the same image ID** as your local image.
+   * The tagged image name is: `<region-key>.ocir.io/<tenancy-namespace>/<image-path-name>/<image-name>`
 
-    * The tagged image has **the same image ID** as your local image.
-    * The tagged image name is: `<region-key>.ocir.io/<tenancy-namespace>/<image-path-name>/<image-name>`
+1. Push the image to Container Registry:  
 
+      ```console
+      docker push <copied-image-name>:latest
+      ```
 
-6. Push the image to Container Registry. 
+   **Example:**
 
-    ```console
-    docker push <copied-image-name>:latest
-    ```
+      ```console
+      docker push iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
+      ```
 
-    Example:
+1. Open the navigation menu and select **Developer Services**.  
+   Under **Containers & Artifacts**, select **Container Registry**.
 
-    ```console
-    docker push iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
-    ```
-
-7. Open the navigation menu and click **Developer Services**. Under **Containers & Artifacts**, click **Container Registry**. 
-
-Find your image in Container Registry after the push command is complete.
+1. Find your image in the **Container Registry** after the push command is complete.
 
 ## Deploy the Image
 
-With your image in Container Registry, you can now deploy your image and app.
+We're finally here! The moment of truth. With your image in Container Registry, you can now deploy your image and app:  
 
-1. Create a registry secret for your application. This secret authenticates your image when you deploy it to your cluster. 
+1. **Create a registry secret for your application -** This secret authenticates your image when you deploy it to your cluster.
 
-    To create your secret, fill in the information in this template .
+   To create your secret, fill in the information in this template:  
 
-    ```console
-    kubectl create secret docker-registry ocirsecret --docker-server=<region-key>.ocir.io  --docker-username='<tenancy-namespace>/<user-name>' --docker-password='<auth-token>'  --docker-email='<email-address>'
-    ```
+      ```console
+      kubectl create secret docker-registry ocirsecret --docker-server=<region-key>.ocir.io  --docker-username='<tenancy-namespace>/<user-name>' --docker-password='<auth-token>'  --docker-email='<email-address>'
+      ```
 
-    After the command runs, you get a message similar to: `secret/ocirsecret created`.
+   After the command runs, you get a message similar to: `secret/ocirsecret created`.
 
-2. Verify that the secret is created. Issue the following command: 
+1. **Verify that the secret is created -** Issue the following command:  
 
-    ```console
-    kubectl get secret ocirsecret --output=yaml
-    ```
+      ```console
+      kubectl get secret ocirsecret --output=yaml
+      ```
 
-    The output includes information about your secret in the yaml format.
+   The output includes information about your secret in yaml format.
 
-3. Determine the host URL to your registry image using the following template: 
+1. **Host URL -** Determine the host URL to your registry image using the following template:  
 
-    ```console
-    <region-code>.ocir.io/<tenancy-namespace>/<repo-name>/<image-name>:<tag>
-    ```
+      ```console
+      <region-code>.ocir.io/<tenancy-namespace>/<repo-name>/<image-name>:<tag>
+      ```
 
-    Example:
+   **Example:**
 
-    ```console
-    iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
-    ```
+      ```console
+      iad.ocir.io/my-namespace/node-apps/node-hello-app:latest
+      ```
 
-4. On your system, create a file called `node-app.yaml` with the following text: 
+1. On your system, create a file called `node-app.yaml`.
 
-    Replace the following place holders:
+    Include the text below and replace the following placeholders:
 
     * `<your-image-url>`
     * `<your-secret-name>`
 
-    ```yaml
-    apiVersion: apps/v1
-        kind: Deployment
-        metadata:
-          name: node-app
-        spec:
-          selector:
-            matchLabels:
-              app: app
-          replicas: 3
-          template:
-            metadata:
-              labels:
-                app: app
-            spec:
-              containers:
-              - name: app
-                image: <your-image-url>
-                imagePullPolicy: Always
-                ports:
-                - name: app
-                  containerPort: 3000
-                  protocol: TCP
-              imagePullSecrets:
-                - name: <your-secret-name>
-        ---
-        apiVersion: v1
-        kind: Service
-        metadata:
-          name: node-app-lb
-          labels:
-            app: app
-          annotations:
-            service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
-            service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
-            service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
-        spec:
-          type: LoadBalancer
-          ports:
-          - port: 3000
-          selector:
-            app: app
-    ```
+      ```yaml
+      apiVersion: apps/v1
+         kind: Deployment
+         metadata:
+           name: node-app
+         spec:
+           selector:
+             matchLabels:
+               app: app
+           replicas: 3
+           template:
+             metadata:
+               labels:
+                 app: app
+             spec:
+               containers:
+               - name: app
+                 image: <your-image-url>
+                 imagePullPolicy: Always
+                 ports:
+                 - name: app
+                   containerPort: 3000
+                   protocol: TCP
+               imagePullSecrets:
+                 - name: <your-secret-name>
+         ---
+         apiVersion: v1
+         kind: Service
+         metadata:
+           name: node-app-lb
+           labels:
+             app: app
+           annotations:
+             service.beta.kubernetes.io/oci-load-balancer-shape: "flexible"
+             service.beta.kubernetes.io/oci-load-balancer-shape-flex-min: "10"
+             service.beta.kubernetes.io/oci-load-balancer-shape-flex-max: "100"
+         spec:
+           type: LoadBalancer
+           ports:
+           - port: 3000
+           selector:
+             app: app
+      ```
 
-5. Deploy your application with the following command. 
+   > Note: In the `node-app.yaml` file, the code after the dashes adds a flexible load balancer.
+   {:.notice}
+1. Deploy your application with the following command:  
 
-    ```console    
-    kubectl create -f node-app.yaml
-    ```
+      ```console
+      kubectl create -f node-app.yaml
+      ```
 
-    Output: 
+   **Sample output:**
 
-    ```console
-    deployment.apps/node-app created
-    service/node-app-lb created
-    ```
-
-> Note: In the `node-app.yaml` file, the code after the dashes adds a flexible load balancer.
-{:.notice}
+      ```console
+      deployment.apps/node-app created
+      service/node-app-lb created
+      ```
 
 ## Test Your App
 
 After you deploy your app, it might take the load balancer a few seconds to load.
 
-1. Check if the load balancer is live: 
+1. Check if the load balancer is live:  
 
-    ```console
-    kubectl get service
-    ```
+      ```console
+      kubectl get service
+      ```
 
-    Repeat the command until load balancer is assigned an IP address.
+1. Repeat the command until load balancer is assigned an IP address.
 
-    > **Note:** While waiting for the load balancer to deploy, you can check the status of your cluster with these commands: 
-    >
-    > * Get each pods status: `kubectl get pods`
-    > * Get app status: `kubectl get deployment`
-    {:.notice}
+   > **Note:** While waiting for the load balancer to deploy, you can check the status of your cluster with these commands:
+   >
+   > * Get each pods status: `kubectl get pods`
+   > * Get app status: `kubectl get deployment`
+   {:.notice}
 
-2. Use the load balancer IP address to connect to your app in a browser:
+1. Use the load balancer IP address to connect to your app in a browser:
 
-    ```console
-    http://<load-balancer-IP-address>:3000
-    ```
+      ```console
+      http://<load-balancer-IP-address>:3000
+      ```
 
-    The browser displays: `<h1>Hello World from Node.js!</h1>`
+   The browser should display `<h1>Hello World from Node.js!</h1>`
 
-3. Undeploy your application from the cluster. **(Optional)** To remove your application run this command: 
+1. **[OPTIONAL]** Undeploy your application from the cluster  
+   To remove your application, run this command:  
 
-    ```console
-    kubectl delete -f node-app.yaml
-    ```
+      ```console
+      kubectl delete -f node-app.yaml
+      ```
 
-    Output:
+   **Sample output:**
 
-    ```console
-    deployment.apps/node-app deleted
-    service "node-app-lb" deleted
-    ```
+      ```console
+      deployment.apps/node-app deleted
+      service "node-app-lb" deleted
+      ```
 
-    Your application is now removed from your cluster.
+   Your application is now removed from your cluster.
 
 ## What's Next
 
-You have successfully created a Hello World application, deployed it to a Kubernetes cluster and made it accessible on the internet, using the Node Express framework.
+We've accomplish a lot in this tutorial! You've successfully created a Hello World application, deployed it to a Kubernetes cluster, and made it accessible on the internet using the Node Express framework.
 
 Check out these sites to explore more information about development with Oracle products:
 
-  * [Oracle Developers Portal](https://developer.oracle.com/)
-  * [Oracle Cloud Infrastructure](https://www.oracle.com/cloud/)
+[Oracle Developers Portal]
+[Oracle Cloud Infrastructure]
 {% endslides %}
+
+<!--- links -->
+
+[Kubernetes Documentation]: https://kubernetes.io/docs/home/
+[OCI Container Engine for Kubernetes]: https://docs.oracle.com/iaas/Content/ContEng/Concepts/contengoverview.htm
+[OCI Container Registry]: https://docs.oracle.com/iaas/Content/Registry/Concepts/registryoverview.htm
+[Getting started with OCI Cloud Shell]: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm
+
+[Signing Up for Oracle Cloud Infrastructure]: https://docs.oracle.com/iaas/Content/GSG/Tasks/signingup.htm
+
+[Windows Subsystem for Linux]: https://docs.microsoft.com/en-us/windows/wsl/install-win10
+[Oracle Virtual Box]: https://www.virtualbox.org/
+
+[Kubernetes Using Cloud Shell: Deploy a Spring Boot Application]: https://docs.oracle.com/iaas/developer-tutorials/tutorials/spring-on-k8s-cs/01oci-spring-cs-k8s-summary.htm
+
+[install an Oracle Linux VM]: https://docs.oracle.com/iaas/developer-tutorials/tutorials/apache-on-oracle-linux/01oci-ol-apache-summary.htm#create-oracle-linux-vm
+[install an Ubuntu VM]: https://docs.oracle.com/iaas/developer-tutorials/tutorials/helidon-on-ubuntu/01oci-ubuntu-helidon-summary.htm#create-ubuntu-vm
+
+[Install Kubernetes client on Linux]: https://kubernetes.io/docs/tasks/tools/install-kubectl-linux/#install-kubectl-binary-with-curl-on-linux
+[Install Kubernetes client on MacOS]: https://kubernetes.io/docs/tasks/tools/install-kubectl-macos/
+[Get Docker]: https://docs.docker.com/get-docker/
+
+[VM Standard Shapes]: https://docs.oracle.com/iaas/Content/Compute/References/computeshapes.htm#vmshapes__vm-standard
+
+[Verbs + Resource-Type Combinations for IAM]: https://docs.oracle.com/iaas/Content/Identity/Reference/iampolicyreference.htm#Identity
+
+[Create a compartment]: https://docs.oracle.com/iaas/Content/Identity/Tasks/managingcompartments.htm#To
+
+[Common Policies]: https://docs.oracle.com/iaas/Content/Identity/Concepts/commonpolicies.htm
+
+[Getting Started with Express]: https://expressjs.com/en/starter/hello-world.html
+
+[Regions and Availability Domains]: https://docs.oracle.com/iaas/Content/General/Concepts/regions.htm
+
+[Oracle Developers Portal]: https://developer.oracle.com/
+[Oracle Cloud Infrastructure]: https://www.oracle.com/cloud/
