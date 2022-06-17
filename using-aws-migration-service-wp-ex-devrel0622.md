@@ -1,13 +1,13 @@
 ---
 title: Using the AWS Migration Service with HeatWave on AWS with WordPress as an Example
 parent:
-	- tutorials
+- tutorials
 tags: 
-	- mysql
-	- database
-	- heatwave
+- mysql
+- database
+- heatwave
 categories:
-	- cloudapps
+- cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
 description: A quick example of how you can move data over for use in MySQL HeatWave on AWS.
@@ -67,7 +67,7 @@ Great! Now let’s head over to AWS.
 11. Now, we’ll create a second endpoint as our destination.
 To do this, we return to the MySQL HeatWave on AWS Console, and click MySQL DB Systems. 
 
-	I{% imgx assets/step11-mysql-dbsystems-onaws-awshw-wpex-devrel0622.png %}
+	{% imgx assets/step11-mysql-dbsystems-onaws-awshw-wpex-devrel0622.png %}
 
 	Then, click on the DB System you wish to use, and in Summary you will find the Host Name. Copy the string.
 

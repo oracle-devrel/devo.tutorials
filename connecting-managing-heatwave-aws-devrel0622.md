@@ -1,14 +1,14 @@
 ---
 title: Connecting To and Managing HeatWave on AWS
 parent:
-	- tutorials
+- tutorials
 tags: 
-	- mysql
-	- database
-	- heatwave
-	- aws
+- mysql
+- database
+- heatwave
+- aws
 categories:
-	- cloudapps
+- cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
 description: Getting signed up, signed on, and some basic management tasks for your HeatWave on AWS cluster.

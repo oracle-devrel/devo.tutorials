@@ -1,13 +1,13 @@
 ---
 title: HeatWave on AWS Metrics and Performance Tools
 parent:
-	- tutorials
+- tutorials
 tags: 
-	- mysql
-	- database
-	- heatwave
+- mysql
+- database
+- heatwave
 categories:
-	- cloudapps
+- cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
 description: A quick overview of the performance and metrics console windows in MySQL HeatWave on AWS.
