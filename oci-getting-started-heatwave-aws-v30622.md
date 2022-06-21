@@ -1,19 +1,21 @@
 ---
 title: Getting Started with MySQL HeatWave on AWS
 parent:
-- tutorials
+	- tutorials
 tags: 
-- mysql
-- database
-- heatwave
-- aws
+	- mysql
+	- database
+	- heatwave
+	- aws
 categories:
-- cloudapps
+	- cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
 description: Getting your OCI tenancy ready to connect to MySQL HeatWave on AWS. We will create a compute instance, DB System, and endpoint. We also began to provision MySQL HeatWave on AWS.
 author: Victor Agreda
 mrm: WWMK220224P00058
+xredirect: 
+
 ---
 We live in a multi-cloud world, and that's why MySQL HeatWave for Amazon Web Service makes so much sense if you need a massively parallel, high performance, in-memory query accelerator for the MySQL Database Service. A combination that accelerates MySQL performance by orders of magnitude for combined analytics and transactional workloads (OLAP and OLTP). The MySQL Database Service is built on MySQL Enterprise Edition, which allows developers to quickly create and deploy secure cloud native applications using the world's most popular open source database.  
 
@@ -122,7 +124,6 @@ Let’s make friends with the **Identity and Security** options.
    {% imgx assets/hw_policy_aws_statements-devrel0622va.png %}
 
    This is just making it possible to configure and administrate our compartment, and defines the scope of the access applied to the database instance.  
-
 
 For more on adding users and setting policies in OCI, refer to [this documentation](https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/addingusers.htm#Add).
 
@@ -330,7 +331,7 @@ Remember the DB System we just created? Now we can activate MySQL HeatWave in AW
 
 1. Under **MySQL HeatWave on AWS**, click **Administration**, and you'll go back to the setup.  
 
-1. Now click **Provision** to (of course) provision MySQL on AWS. 
+1. Now click **Provision** to (of course) provision MySQL on AWS.
    After the provisioning operation is completed, a message appears stating that MySQL HeatWave on AWS is ready and you are presented with options to open the MySQL HeatWave console, set up users, and view billing information.
 
 ## Summary - so far
