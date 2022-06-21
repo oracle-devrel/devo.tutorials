@@ -14,13 +14,13 @@ description: A quick example of how you can move data over for use in MySQL Heat
 author: Victor Agreda
 mrm: WWMK220224P00058
 ---
-Now let’s try something really fun. Let’s say you’ve already got a database using Aurora or RDS, in our case we’ll use a WordPress database, and you want to migrate it to MySQL HeatWave on AWS.
+Now let’s try something really fun. Let’s say you’ve already got a database using Aurora or RDS, in our case we’ll use a WordPress database, and you want to migrate it to MySQL HeatWave on AWS.  
 
-First, we’ll need to have a MySQL DB System on HeatWave already, and a critical step is opening port 3306, shown below.
+First, we’ll need to have a MySQL DB System on HeatWave already, and a critical step is opening port 3306, shown below.  
 
 {% imgx assets/create-mysqldbsys-devrel0622.png %}
 
-Great! Now let’s head over to AWS.
+Great! Now let’s head over to AWS.  
 
 1. Log in to your AWS console, and use search for “DMS” — Database Migration Service, it’ll be the top result.
 
@@ -65,7 +65,7 @@ Great! Now let’s head over to AWS.
 11. Now, we’ll create a second endpoint as our destination.
 To do this, we return to the MySQL HeatWave on AWS Console, and click MySQL DB Systems.
 
-	{% imgx assets/step11-mysql-dbsystems-onaws-awshw-wpex-devrel0622.png %}
+    {% imgx assets/step11-mysql-dbsystems-onaws-awshw-wpex-devrel0622.png %}
 
      Then, click on the DB System you wish to use, and in Summary you will find the Host Name. Copy the string.
 
@@ -81,6 +81,7 @@ To do this, we return to the MySQL HeatWave on AWS Console, and click MySQL DB S
 
 15. Now you have your endpoint, username/password, and can use this when creating a HeatWave on AWS cluster to connect a DB System and run queries. Refer to the HeatWave on AWS documentation for more.
 
-NOTE: MySQL Shell is the recommended utility for exporting data from a source MySQL Server and importing it into a DB System on the MySQL HeatWave on AWS. MySQL Shell dump and load utilities are purpose- built for use with MySQL DB Systems. For more on running queries with HeatWave, please refer to the [MySQL documentation](https://dev.mysql.com/doc/heatwave/en/heatwave-running-queries.html).
+>**Note:** MySQL Shell is the recommended utility for exporting data from a source MySQL Server and importing it into a DB System on the MySQL HeatWave on AWS. MySQL Shell dump and load utilities are purpose- built for use with MySQL DB Systems. For more on running queries with HeatWave, please refer to the [MySQL documentation](https://dev.mysql.com/doc/heatwave/en/heatwave-running-queries.html).
+{:.notice}
 
 Want to know more? Join the discussion in our [public Slack channel](https://bit.ly/devrel_slack)!
