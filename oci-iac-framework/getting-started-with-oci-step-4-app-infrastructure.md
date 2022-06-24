@@ -22,82 +22,105 @@ xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-star
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
+Oracle Cloud Infrastructure (OCI) allows different deployment models within a shared network using the same Infrastructure-as-Code (IaC) methods. When setting up our operation, we distinguish between core and orchestration service API. *Core services* represent the physical infrastructure in our data center while *orchestration services* refer to software that runs outside the core service portfolio, interacts with the application code, and manipulates the behavior of virtual instances. Both application developers and service operators alike need to delineate the following four infrastructure deployment models when designing a multi-server architecture:  
 
-Oracle Cloud Infrastructure (OCI) allows different deployment models to be applied within a shared network and deployed using the same Infrastructure-as-Code methods. When setting up our operation, we distinguish between core and orchestration service API. Core services represent the physical infrastructure in our data center, and orchestration services refer to software that runs outside the core service portfolio, interacts with the application code, and manipulates the behavior of virtual instances. Application developers and service operators need to delineate the following four infrastructure deployment models when designing a multi-server architecture:
+* **Dedicated Server -** Virtual Machines (VM) or bare metal server that maintain stateful communication interfaces on layer three.
+* **Elastic Compute Cluster -** One or more VM that scales automatically and maintain a stateless communication interface on layer three.
+* **Container Cluster -** One or more dedicated server that host lightweight stand-alone, executable user space images including code, runtime, system tools, system libraries, settings to run on a linux kernel.
+* **Miscellaneous -** Functions, ephemeral, single purpose, self contained, or stateless container without an API surface, invoked via network protocols like HTTP.  
 
-* Dedicated Server — Virtual Machines (VM) or bare metal server that maintain stateful communication interfaces on layer three.
-* Elastic Compute cluster — One or more VM that scales automatically and maintain a stateless communication interface on layer three.
-* Container Cluster — One or more dedicated server that host lightweight stand-alone, executable user space images including code, runtime, system tools, system libraries, settings to run on a linux kernel.
-* Functions, ephemeral, single purpose, self contained, stateless container without API surface, invoked via network protocols like HTTP.
-
-While public cloud providers offer these instance types as products, in OCI we define logical resources — including the respective orchestrator. We can rely on managed services for open source orchestrators, or choose commercial third-party offerings. Either way, we invoke an orchestrator, writing modules for the resource manager. Here we will focus on these three different models:
+While public cloud providers also offer these instance types as products, OCI provides the ability to defines logical resources such as respective orchestrators. We can rely on managed services for open source orchestrators or choose commercial third-party offerings. Either way, we invoke an orchestrator and write modules for the resource manager. In this article, we'll focus on these three different models:  host, node, and container.  
 
 {% imgx aligncenter assets/host_node_container.png "Overview of Host, Node and Container Deployment Models in OCI" %}
 
-1. The **Host model** is the one most known from on-premise environments: On a dedicated physical machine, Virtual Machines (VMs) can be deployed that run stateless or stateful applications. OCI offers both ways here: 
-    - You can deploy a bare metal host, install the hypervisor and deploy the VMs on top of it. Here, you are responsible for the VMs and the hypervisor layer as well as the Operating System (O/S) of the bare metal host. You will have full root access to the O/S of the bare metal server and it will be inside a Virtual Cloud Network (VCN) that you own.
-    - You can deploy a Dedicated VM Host and deploy the VMs on top of it. This is the approach that we use here: You can use Terraform to fully deploy both the Dedicated VM Host as well as the VMs on top of it. Each VM will be instantiated with its own Virtual Network Interface Card (VNIC) which can be individually placed into VCNs and subnets that you own. The Dedicated VM Host itself will be in full control by Oracle, you won't have any O/S access to it and the Dedicated VM Host won't be placed in any VCN.
+## Host model
 
-    You can use tools like **Packer** to first build a custom image with all applications and data you need on your VMs before applying Terraform to instantiate the VMs. The `cloud-init` option of Terraform gives the opportunity to apply a shell script on the instantiated VMs to add individual data or installations immediately after the instantiation. 
+The *host model* is the one most known from on-premise environments. On a dedicated physical machine, Virtual Machines (VMs) can be deployed that run either stateless or stateful applications. OCI offers both ways here:  
 
-    Here, the shell script is added as a base64-encoded attribute to the resource definition of the instance. Through metadata key-value pairs, Terraform can pass parameters to the instance that can be used inside the cloud-init shell script to parameterize the actual shell execution.
+* You can deploy a bare metal host, install the hypervisor, and deploy the VMs on top of it.  
+  Here, you are responsible for the VMs and the hypervisor layer as well as the Operating System (O/S) of the bare metal host. You will have full root access to the O/S of the bare metal server and it will be inside a Virtual Cloud Network (VCN) that you own.
+* You can deploy a Dedicated VM Host and deploy the VMs on top of it.  
+  This is the approach that we use here:  
+  * You can use Terraform to fully deploy both the Dedicated VM Host as well as the VMs on top of it. Each VM will be instantiated with its own Virtual Network Interface Card (VNIC) which can be individually placed into VCNs and subnets that you own. Since the Dedicated VM Host itself is fully managed by Oracle, you won't have any O/S access to it and the Dedicated VM Host won't be placed in any VCN.  
 
-    The Terraform stack consists of a dedicatedHost.tf file which can be used to create a Dedicated VM Host. By default, this code is commented out because many demo-tenants do not allow the creation of Dedicated VM Hosts by its Service Limits. It can easily be activated by removing the comments start/end lines.
+  * You can use tools like **Packer** to first build a custom image with all applications and data you need on your VMs before applying Terraform to instantiate the VMs.  
+    The `cloud-init` option of Terraform gives the opportunity to apply a shell script on the instantiated VMs to add either individual pieces of data or installations immediately after the instantiation.  
 
-2. The **Node model** applies the cloud principle to adapt the number of available nodes to the current amount of workload. Here we have primary workloads running that control secondary workloads on top which will be scaled in and out based on on-demand capacity rather than capacity from a Dedicated VM Host in order to optimize the costs. The secondary workloads should be stateless in nature since scaling in means that those nodes might be terminated by the Cloud Control at any time if the overall workload would be sufficiently executed by less nodes.
+  * The shell script is added as a base64-encoded attribute to the resource definition of the instance.  
+    Through metadata key-value pairs, Terraform can pass parameters to the instance that can be used inside the cloud-init shell script to parameterize the actual shell execution.  
 
-    OCI has the following artifacts to create this scenario, which can be fully deployed by Terraform:
+  * The Terraform stack consists of a `dedicatedHost.tf` file which can be used to create a Dedicated VM Host.  
+    By default, this code is commented out because the Service Limits of many demo-tenants do not allow the creation of Dedicated VM Hosts. However, this capability can easily be activated by removing the comments start/end lines.
 
-    - An Instance Configuration that acts as the blueprint for the pool of secondary workloads VMs. Here you define 
-          - A Custom Image that should be used (can be built using **Packer** and you can use `cloud-init` provider for further work).
-          - The Shape of the pool instances (e.g. *VM.Standard2.1* which means a 1 OCPU Intel X7 VM with network-attached storage).
-          - The public part of the **ssh** key pair to access the O/S of the instance.
+## Node model
 
-    - The Instance Pool object refers to an Instance Configuration and adds information about in which Availability Domain it will be in, as well as in which subnet the instance pool's instances' VNICs should be placed. Furthermore, you define how many VMs should be started. You can add a load balancer to the instance pool definition in a way that any created instances inside the pool will be part of this load balancer's backend set, so that incoming requests are forwarded to the instance pool instances e.g. in a round-robin-manner. Load balancers also support cookie-based session stickiness in case this is needed by stateful applications running in the instance pool instances.
+The *Node model* applies the cloud principle to adapt the number of available nodes to the current amount of workload. Here, we have primary workloads running that control secondary workloads on top which will be scaled in and out based on on-demand capacity rather than capacity from a Dedicated VM Host in order to optimize the costs. The secondary workloads should be stateless in practice since scaling in means that those nodes might be terminated by the Cloud Control at any time if the overall workload could be sufficiently executed by less nodes.  
 
-    - The Autoscaling Configuration refers to an Instance Pool and adds policies to when new instances should be automatically added and when instances should be removed. You define the incremental and decremental step size (numbers of instances to be added or removed when a scale-in or scale-out event occurs) as well as the minimum and maximum total number of instances. Two autoscaling policies are supported:
+OCI has the following artifacts to create this scenario, which can be fully deployed by Terraform:  
 
-      - Schedule-based Autoscaling: Here the scaling-out and scaling-in rules are defined based on fixed schedules similar to definitions in cron jobs. This is feasible, if regular workload peaks are to be expected like loading data into a Data Warehouse or providing Analytic reporting at certain times during a day, week or month.
+* **Instance Configuration -** An Instance Configuration that acts as the blueprint for the pool of secondary workloads VMs.  
+  Here, you define:
 
-      - Metrics-based Autoscaling: Here the scaling-out and scaling-in rules are based on overall instance pool metrics that the instances report using agents to the Cloud Control. OCI allows the following metrics to be used here:
+  * A Custom Image that should be used (can be built using **Packer** and you can use `cloud-init` provider for further work).
+  * The Shape of the pool instances (e.g., *VM.Standard2.1*, which means a 1 OCPU Intel X7 VM with network-attached storage).
+  * The public part of the **ssh** key pair to access the O/S of the instance.
 
-           - CPU Utilization (in percent)
-           - Memory Utilization (in percent)
+* **Instance Pool -** The Instance Pool object refers to an Instance Configuration. This Instance Configuration adds information about in which Availability Domain it will be in, as well as in which subnet the instance pool's instances' VNICs should be placed. Furthermore, you define how many VMs should be started. You can add a load balancer to the instance pool definition in a way that any created instances inside the pool will be part of this load balancer's backend set, so that incoming requests are forwarded to the instance pool instances (e.g., in a round-robin-manner). Load balancers also support cookie-based session stickiness in case this is needed by stateful applications running in the instance pool instances.
 
-      - In the Autoscaling Configuration you define the percent threshold value above which the pool will scale out (add an instance or instances if the maximum number is not yet reached) and the percent threshold value underneath which the pool will scale in (terminate an instance or instances if the minimum number is not yet reached).
+* **Autoscaling Configuration -** The Autoscaling Configuration refers to an Instance Pool and adds policies for when new instances should be automatically added or removed. You define the incremental and decremental step size (number of instances to be added or removed when a scale-in or scale-out event occurs) as well as the minimum and maximum number of instances. Two autoscaling policies are supported:  
 
-    In the scenario, we trigger a 100% CPU utilization process in each new instance pool instance upon instance creation (using `cloud-init` that lasts for a number of minutes that the user can define as part of the Terraform stack definition as a variable. So we can optionally demonstrate the scaling-in and scaling-out according to an CPU-utilization based auto-scaling policy.
+  * **Schedule-based Autoscaling:** Here, the scaling-out and scaling-in rules are defined based on fixed schedules similar to definitions in cron jobs. This is feasible if regular workload peaks are to be expected like loading data into a Data Warehouse or providing Analytic reporting at certain times during a day, week, or month.
 
-    Further, we deploy an httpd server along with a static page (showing a timestamp for the instance creation) on each instance pool instance. This stateless "application" is exposed to the public internet by a load balancer, so you can see the round-robin-fashioned forwarding of requests to the instance pool instances by reloading the page in the browser. The corresponding public load balancer endpoint is displayed a part of the Terraform out parameters. In this stack, the load balancer exposes the "application" with https, using a self-signed certificate that is also created inside the Terraform stack.
+  * **Metrics-based Autoscaling:** Here, the scaling-out and scaling-in rules are based on overall instance pool metrics that the instances report using agents to the Cloud Control. OCI allows the following metrics to be used in this option:  
 
-3. The **Container model** is the preferred cloud model for stateless applications like Functions. OCI offers a fully managed **Kubernetes** Cluster, the OCI Container Engine (OKE). Again, this can be fully deployed using Terraform. 
+    * CPU Utilization (in percent)
+    * Memory Utilization (in percent)
 
-    OKE consists of:
+  >**Note:** In the Autoscaling Configuration, you define the percent threshold value above which the pool will scale out (add an instance or instances if the maximum number is not yet reached) and the percent threshold value below which the pool will scale in (terminate an instance or instances if the minimum number is not yet reached).
+  {:.notice}
 
-     - The Kubernetes Cluster which provides the Kubernetes API endpoint as well as the Scheduler and Controller Manager. These components are fully managed by Oracle and visible to the customer only using the Kubernetes API (e.g. by using **kubectl** or by deploying *Helm* charts). The customer doesn't have O/S access to this instance and also doesn't have to pay for it. This component is free of charge.
-     - The Kubernetes Node Pool that contains the worker nodes. The customer has full root access using *ssh* and has to pay for these VMs. The charges are the regular charges for Linux VMs of the respective shapes -- there is no surcharge for their role being a Kubernetes worker node.
-     - further elements are added and terminated according to Kubernetes deployments. E.g. when deploying a Load Balancer service to a Kubernetes cluster like
+In this scenario, we trigger a 100% CPU utilization process with each new instance pool upon creation (using `cloud-init`) whose duration in minutes can be set by a user-defined variable as part of the Terraform stack definition. This way we can optionally demonstrate the scaling-in and scaling-out according to an CPU-utilization based auto-scaling policy.  
 
-     
-     ```console
-     $ kubectl expose deployment myapplication --type=LoadBalancer --name=myapplicationservice
-     ```
-     
-     An OCI Load Balancer is automatically deployed and configured with the worker nodes in its backend set.
+Further, we deploy a https server along with a static page for each instance pool instance (including a timestamp of the instance's creation). This stateless "application" is exposed to the public internet by a load balancer, so you can directly see the round-robin-fashioned forwarding of requests to the instance pool instances by reloading the page in the browser. The corresponding public load balancer endpoint is displayed as part of the Terraform out parameters. In this stack, the load balancer exposes the "application" with https, using a self-signed certificate that is also created inside the Terraform stack.
 
-When the cluster is ready, the `.kube/config` file (which contains the network details like the Kubernetes Cluster's API endpoint's IP address and the authorization certificate) can be downloaded to a client using the following OCI Command Line Interface (OCI CLI) command:
+## Container Model
+
+The *Container model* is the preferred cloud model for stateless applications like Functions. OCI offers a fully managed **Kubernetes** Cluster, the OCI Container Engine (OKE). Again, this can be deployed using Terraform.  
+
+OKE consists of:  
+
+* The Kubernetes Cluster which provides the Kubernetes API endpoint as well as the Scheduler and Controller Manager.  
+  These components are fully managed by Oracle and visible to the customer only using the Kubernetes API (e.g., either by using **kubectl** or by deploying *Helm* charts). The customer doesn't have O/S access to this instance and is also free of charge.
+* The Kubernetes Node Pool that contains the worker nodes.  
+  The customer has full root access using *ssh* but has to pay for these VMs. The charges are the same for Linux VMs of the respective shapes, meaning that there is no surcharge for their role as a Kubernetes worker node.
+* Additional elements are added and terminated according to Kubernetes deployments., e.g. when deploying a Load Balancer service to a Kubernetes cluster like:  
+
+    ```console
+    kubectl expose deployment myapplication --type=LoadBalancer --name=myapplicationservice
+    ```
+
+  An OCI Load Balancer is automatically deployed and configured with the worker nodes in its backend set.
+
+## `.kube/config`
+
+When the cluster is ready, the `.kube/config` file (which contains the network details like the Kubernetes Cluster's API endpoint's IP address and the authorization certificate) can be downloaded to a client using the following OCI Command Line Interface (OCI CLI) command:  
 
 ```console
-$ oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.eu-frankfurt-1.aaaaathekubernetesclusterocidlqs27a --file $HOME/.kube/config --region eu-frankfurt-1 --token-version 2.0.0 
+oci ce cluster create-kubeconfig --cluster-id ocid1.cluster.oc1.eu-frankfurt-1.aaaaathekubernetesclusterocidlqs27a --file $HOME/.kube/config --region eu-frankfurt-1 --token-version 2.0.0 
 export KUBECONFIG=$HOME/.kube/config
 ```
 
-The Terraform stack creates also an Kubernetes Cluster along with a worker node pool, the contents of the `.kube/config` file can be directly taken by a corresponding parameter of the Terraform Output.
+The Terraform stack also creates an Kubernetes Cluster along with a worker node pool. The contents of the `.kube/config` file can be directly accessed by a corresponding parameter of the Terraform Output.  
 
-Then, the client can e.g apply **kubectl** to inspect, create and destroy Kubernetes artifacts:
+Then, the client can, for example, apply `kubectl` to inspect, create, and destroy Kubernetes artifacts:  
 
 ```console
-$ kubectl get nodes,pods
+kubectl get nodes,pods
+```
+
+Output may look similar to:  
+
+```console
 NAME               STATUS   ROLES   AGE     VERSION
 node/10.0.10.166   Ready    node    7h11m   v1.19.7
 
@@ -107,26 +130,37 @@ pod/myapplication-588cf6ff66-hwtgd   1/1     Running   0          6h13m
 pod/myapplication-588cf6ff66-q4228   1/1     Running   0          6h15m
 ```
 
-OCI also offers a registry service (the OCI registry, OCIR) where container images can be stored and retrieved to be deployed to the Kubernetes cluster. OCIR allows registries both being publicly available (free access to anyone) or privately (downloading images prerequisites presenting a SWIFT-compliant API Key, a so called **OCI Auth Token** that is created individually for each OCI User).
+## Registry service
 
-Besides deploying Kubernetes artifacts like pods, deployments, services, replicasets etc. using a **kubectl** client, Terraform provides a Kubernetes provider in order to deploy these artifacts as part of the terraform apply process. The `okeServiceDeployment.tf` shows the steps to take here:
+OCI also offers a registry service (the OCI registry, OCIR) where container images can be stored and retrieved to be deployed to the Kubernetes cluster. OCIR allows registries to both be public (free access to anyone) or private (downloading images requires presenting a SWIFT-compliant API Key, a so-called **OCI Auth Token** that is created individually for each OCI User).  
 
-1. Get the OKE Cluster's config file and extract the CA certificate as well as the OCI CLI command (along with the necessary arguments) to create an ExecCredential. This OCI CLI command is executed, so Terraform can authenticate to the Kubernetes API endpoint for further operations.
+Besides deploying Kubernetes artifacts like pods, deployments, services, or replicasets, Terraform provides a Kubernetes provider to deploy these artifacts as part of the terraform apply process using a **kubectl** client. The `okeServiceDeployment.tf` shows the steps to take here:  
+
+1. Get the OKE Cluster's config file and extract the CA certificate as well as the OCI CLI command (along with the necessary arguments) to create an ExecCredential.  
+   This OCI CLI command is executed so Terraform can authenticate to the Kubernetes API endpoint for further operations.
 2. Create a new namespace in Kubernetes.
-3. Define further resources like `kubernetes_service` to deploy artifacts. Kubernetes artifacts are defined by yaml documents and those Terraform resources basically reformat these yaml documents to the HashiCorp Configuration Language (HCL) format.
+3. Define additional resources like `kubernetes_service` to deploy artifacts.  
+   Kubernetes artifacts are defined by yaml documents and those Terraform resources basically reformat these yaml documents to match the HashiCorp Configuration Language (HCL) standard.
 
-In this example stack, we deploy a standard NGINX server to the new generated Kubernetes Cluster. We take the standard NGINX image from the official Docker registry, but you can also deploy your own pods from docker images that are stored e.g. in the OCI registry (OCIR).
+### Example stack
 
-We deploy this NGINX server as a `kubernetes_service` with "Load Balancer" as the type using Terraform. The advantage of using Terraform instead of a local **kubectl** client for deploying Kubernetes services is, that those services are also being deleted when destroying the Terraform stack. This is important because deploying a Kubernetes service with "Load Balancer" as type means that an OCI Load Balancer with the Kubernetes deployment of pods in its backend is created outside of the Kubernetes Cluster. So you need to delete the Kubernetes service first when destroying the Terraform stack in order to properly remove this load balancer.
+In this example stack, we deploy a standard NGINX server to the new generated Kubernetes Cluster. We take the standard NGINX image from the official Docker registry, but you can also deploy your own pods from stored docker images (e.g., in the OCI registry (OCIR)).  
 
-The complete network topology along with the compute instances, load balancers and Kubernetes resources that will be created by running this stack can be seen in this picture below:
+Next, we deploy this NGINX server as a `kubernetes_service` with "Load Balancer" as the type using Terraform. The advantage of using Terraform instead of a local **kubectl** client for deploying Kubernetes services is that these services are removed when destroying the Terraform stack. This is important because deploying a Kubernetes service as a "Load Balancer" means that an OCI Load Balancer with the Kubernetes deployment of pods in its backend is created outside of the Kubernetes Cluster. So you need to delete the Kubernetes service first when destroying the Terraform stack in order to properly remove this load balancer.  
+
+The complete network topology along with the compute instances, load balancers, and Kubernetes resources that will be created by running this stack can be seen in the image below:  
 
 {% imgx assets/network_topology_app_stack.png "Network topology of the app stack" %}
 
-After the Terraform stack has been successfully applied, you should see the following Kubernetes artifacts (e.g. by using the cloud shell):
+After the Terraform stack has been successfully applied, you should see the following Kubernetes artifacts (e.g., by using the cloud shell):  
 
 ```console
-$ kubectl get pods,deployments,replicasets,services --namespace nginx
+kubectl get pods,deployments,replicasets,services --namespace nginx
+```
+
+Output should look something like:
+
+```console
 NAME                         READY   STATUS    RESTARTS   AGE
 pod/nginx-5c48f8956d-84456   1/1     Running   0          41m
 pod/nginx-5c48f8956d-wwq8s   1/1     Running   0          41m
@@ -141,7 +175,13 @@ NAME            TYPE           CLUSTER-IP      EXTERNAL-IP      PORT(S)        A
 service/nginx   LoadBalancer   10.96.113.223   152.70.173.212   80:32177/TCP   33m
 ```
 
-[< db-infra][db-infra] | [+][home] | [workload >][workload] 
+[< db-infra][db-infra] | [+][home] | [workload >][workload]
+
+## What's next
+
+In this article, we covered the various deployment options OCI supports and focused in on the Container model for stateless applications like Functions. We also discussed cluster configuration and the OCI Registry service.  At this point, you should be ready for our next topic!  
+
+In the next section of the series, we'll discuss [workload deployment](./getting-started-with-oci-step-5-workload-deployment.md).
 
 <!--- Links -->
 [home]:       index
