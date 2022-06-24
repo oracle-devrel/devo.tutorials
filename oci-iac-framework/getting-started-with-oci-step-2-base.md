@@ -23,34 +23,39 @@ xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-star
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
-Oracle Cloud Infrastructure (OCI) is a programable data center, providing dedicated infrastructure in more than 30 locations world wide. The [share-nothing design][ref_sna] allows IT operators to launch [private clouds][ref_nist] on demand and enables enterprises to adopt managed services into an existing operation. This framework is inspired by the [CIS landing zone][oci_landing] and helps ITIL oriented organizations to build and launch private or public cloud services.
+At it's core, Oracle Cloud Infrastructure (OCI) is a programable data center, providing dedicated infrastructure in more than 30 locations worldwide. The [share-nothing design][ref_sna] allows IT operators to launch [private clouds][ref_nist] on demand and enables enterprises to adopt managed services into an existing operation. This framework is inspired by the [Center for Internet Security (CIS) landing zone][oci_landing] and helps Information Technology Infrastructure Library (ITIL) oriented organizations build and launch both private or public cloud services.  
 
-Customizing the framework enables application provider to manage multi-tenant services with clients shielded on the network layer. We recommend to study the following material before approaching this tutorial:   
-Compartments, Group-, Policy- and User-Templates [Documentation](learn_doc_iam) [Video](learn_video_iam)  
-Virtual Cloud Network [Documentation](learn_doc_network) [Video](learn_video_network)  
-Key Vault [Documentation](learn_doc_vault) [Video](learn_video_vault)   
-Object Store [Documentation](learn_doc_storage)  [Video](learn_video_storage)  
+## Prerequisites
+
+Customizing the framework enables the application provider to manage multi-tenant services with clients shielded on the network layer. We recommend that you study the following material before approaching this tutorial:  
+
+- Compartments, Group-, Policy- and User-Templates [Documentation](learn_doc_iam) [Video](learn_video_iam)  
+- Virtual Cloud Network [Documentation](learn_doc_network) [Video](learn_video_network)  
+- Key Vault [Documentation](learn_doc_vault) [Video](learn_video_vault)
+- Object Store [Documentation](learn_doc_storage)  [Video](learn_video_storage)  
 
 ## Code Structure
 
-We employ [Infrastructure as Code][ref_iac] to combine dedicated resources with managed cloud- and orchestration services into [custom resources][ref_logresource]. The code is separated into multiple definition files that Terraform merges into one deployment plan at the time of execution. The following structure uses [compartments][oci_compartments] to reflect shared service center for independent businesses or business units that are separated on the network layer. 
+We employ [Infrastructure as Code][ref_iac] (IaC) to combine dedicated resources with managed cloud- and orchestration services into [custom resources][ref_logresource]. The code is separated into multiple definition files that Terraform merges into one deployment plan at the time of execution. The following structure uses [compartments][oci_compartments] to reflect shared service center for independent businesses or business units that are separated on the network layer.  
 
-| Nr. | Domain                  | File               | Resources                                              |          |
-|:---:|:---                     |:---                | :---                                                   |:---      |
-| 1   | Applications            | app.tf             | Hosts (VM & BM), instance groups and container cluster | optional |
-| 2   | Database Infrastructure | db.tf              | CDB or PDB                                             | optional |
-| 3   | Network Topology        | net.tf             | Virtual Cloud Network, Layer-3 Gateways                | required |
-| 4   | Operations and Security | ops.tf             | Monitoring and management                              | required |
-| 5   | Operations and Security | global.tf          | Global variables, datasources and naming conventions   | required |
-| 6   | Operations and Security | default.tfvars     | Default parameter for a project                        | required |
+| Nr. | Domain | File | Resources | |
+|:-:|:- |:- |:-|:-|
+| 1 | Applications | `app.tf` | Hosts (VM & BM), instance groups and container cluster | optional |
+| 2 | Database Infrastructure | `db.tf` | CDB or PDB | optional |
+| 3 | Network Topology        | `net.tf` | Virtual Cloud Network, Layer-3 Gateways | required |
+| 4 | Operations and Security | `ops.tf` | Monitoring and management | required |
+| 5 | Operations and Security | `global.tf` | Global variables, data sources and naming conventions | required |
+| 6 | Operations and Security | `default.tfvars` | Default parameter for a project | required |
 
-In the background we build on a modular code structure that uses terraform modules to employ OCI resources and services. Templates for a predefined network topology and isolated database infrastructure extend the application oriented DevOps processes with customized resources. 
+### Templates
+
+In the background, we build on a modular code structure that uses Terraform modules to employ OCI resources and services. Templates for a predefined network topology and isolated database infrastructure extend the application oriented DevOps processes with customized resources.  
 
 {% imgx aligncenter assets/taxonomy.png "Base Configuration Taxonomy" %}
 
-Using declarative templates, provides operators with the flexibility to adjust their service delivery platform with evolving requirements. Global input parameters help to maintain readability of the code and avoid [repeating definitions][ref_dry]. We use the `~/project/default.tfvars` file to define global input parameter for an entire project. 
+Using declarative templates provides operators with the flexibility to adjust their service delivery platform as requirements evolve. Global input parameters help maintain readability of the code and avoid [repeating definitions][ref_dry]. We use the `~/project/default.tfvars` file to define global input parameters for an entire project:  
 
-```
+```terraform
 variable "tenancy_ocid"     { }
 
 variable "organization"            { 
@@ -105,9 +110,12 @@ variable "owner" {
   }
 }
 ```
+
+#### `global.tf`
+
 The `~/project/global.tf` file contains common datasources and functions that can be utilized throughout the entire stack.
 
-```
+```terraform
 provider "oci" {
   region               = var.region
   tenancy_ocid         = var.tenancy_ocid
@@ -165,16 +173,17 @@ output "ad_names"  { value = sort(data.template_file.ad_names.*.rendered) } # Li
 
 ### Network Design
 
-Before provisioning any compute or storage resources we need to setup a basic network. Therefore we start with the compartment for network operation. One of the unique features of OCI is the [virtual layer 2 network][oci_l2] design. Compared to the common network overlays in public clouds, this design provides the necessary control to create isolated data center on a shared infrastructure pool. Packet encapsulation shields private traffic on a shared network backbone to the extend of defining overlapping IP ranges. This allows for a multi-tenant design on the infrastructure layer, and prevents developers and operators to rely complex procedures building and maintaining multi-tenant applications. The following diagram exemplifies the topology in a multi data centre region. 
+Before provisioning any compute or storage resources we'll first need to set up a basic network. To do this, we'll start with the compartment for *network operation*. One of the unique features of OCI is the [virtual layer 2 network][oci_l2] design. Compared to the common network overlays in public clouds, this design provides the necessary control to create an isolated data center on a shared infrastructure pool. Packet encapsulation shields private traffic on a shared network backbone by defining overlapping IP ranges. This allows for a multi-tenant design on the infrastructure layer and frees developers and operators from relying on complex procedures to build and maintain multi-tenant applications. The following diagram exemplifies the topology in a multi data centre region.  
 
 {% imgx assets/topology.png "Physical Network Topology" %}
 
-A Virtual Cloud Network (VCN) contains a private ["Classless Inter-Domain Routing (CIDR)"][ref_cidr] and can be extend with publically addressable IP adresses.
+#### Virtual Cloud Network
+
+A Virtual Cloud Network (VCN) contains a private ["Classless Inter-Domain Routing (CIDR)"][ref_cidr] and can be extended with publicly addressable IP addresses:  
 
 {% imgx assets/segmentation.png "Network Segmentation" %}
 
-Even though we need to distinguish the physical topology of single- and multi-data centre regions, the logical network layer remains the same, because the data center are connected through a close network and packet forwarding relys on [host routing mechanisms][ref_hostrouting]. Regional subnets enable operators to launch multi-data center networks for both, private and public cloud services. Beside the CIDR the VCN definition contains the Dynamic Routing Gateway (DRG) as IP peer and host for network functions like Internet Connectivity, Network Address Translation (NAT) or Private-Public Service Communication.
-
+Even though we need to distinguish the physical topology of single- and multi-data center regions, the logical network layer remains the same, because the data centers are connected through a close network and packet forwarding relies on [host routing mechanisms][ref_hostrouting]. Regional subnets enable operators to launch multi-data center networks for both private and public cloud services. In addition to the CIDR, the VCN definition contains the Dynamic Routing Gateway (DRG). The DRG acts as both an IP peer and host for network functions like Internet Connectivity, Network Address Translation (NAT), or Private-Public Service Communication.  
 
 | CIDR | Subnet Mask     | Total IP      | Usable IP     |
 |:---: |:---             |:---           | :---          |
@@ -212,9 +221,11 @@ Even though we need to distinguish the physical topology of single- and multi-da
 | /01  | 128.0.0.0       | 2,147,483,648 | 2,147,483,646 |
 | /00  | 0.0.0.0         | 4,294,967,296 | 4,294,967,294 |
 
-We start the VCN definition with the network parameter.
+**VCN definition:**
 
-```
+We start the VCN definition with the network parameter:  
+
+```terraform
 # VCN parameters
 variable "create_net"        { default = false }
 variable "cidr"              { default = "10.0.0.0/16" }
@@ -224,111 +235,127 @@ variable "enable_nat"        { default = true }
 variable "private_service"   { default = false }
 ```
 
-In the sources file we define a valid hostname that refers to the owner and the lifecycle stage of an infrastructure platform.
+**hostname:**
+In the *sources* file we define a valid hostname that refers to the owner and the lifecycle stage of an infrastructure platform:  
 
-```
+```terraform
 # Create a valid hostname
 locals {
   hostname = "${var.project}_${var.stage}"
 }
 ```
 
-We define the following resource blocks file in the *network.tf*. First we define the network compartment. A group and policy block that allows administrators to read all the resources in the tenancy and manage all the networking resources, except security lists, internet gateways, IPSec VPN connections, and customer-premises equipment. For the vcn definition, we rely on a [terraform module][tf_module_vcn] that combines the layer three gateways with the CIDR.
+**Resource blocks:**
+Next, we define the following resource blocks in the file, `network.tf`:  
 
-```
-# Create a compartment network management
-resource "oci_identity_compartment" "net" {
-    #Required
-    compartment_id  = var.net
-    name            = "${var.project}_network"
-    description     = "Compartment to manage network for ${var.project}"
-    
-    #Optional
-    enable_delete   = false  // true will cause this compartment to be deleted when running `terrafrom destroy`
-    # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
-    freeform_tags   = {"source": "/code/setup", "Parent"="root"}
-}
+1. The *network compartment*.
+2. **Group and policy block -** Here we'll need a *group and policy block* that allows administrators to read all the resources in the tenancy and manage all the networking resources, *except* for security lists, internet gateways, IPSec VPN connections, and customer-premises equipment.
+3. **VCN -** For the *VCN* definition, we rely on a [terraform module][tf_module_vcn] that combines the layer three gateways with the CIDR.
 
-# Create the network administrator role
-resource "oci_identity_group" "netops" {
-    #Required
-    compartment_id  = var.tenancy_ocid
-    name            = "${var.project}_netops"
-    description     = "Group for the network administrator role"
+      ```terraform
+      # Create a compartment network management
+      resource "oci_identity_compartment" "net" {
+          #Required
+          compartment_id  = var.net
+          name            = "${var.project}_network"
+          description     = "Compartment to manage network for ${var.project}"
+          
+          #Optional
+          enable_delete   = false  // true will cause this compartment to be deleted when running `terrafrom destroy`
+          # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
+          freeform_tags   = {"source": "/code/setup", "Parent"="root"}
+      }
 
-    #Optional
-    # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
-    freeform_tags   = {"source": "/code/setup", "Parent"="root"}
-}
+      # Create the network administrator role
+      resource "oci_identity_group" "netops" {
+          #Required
+          compartment_id  = var.tenancy_ocid
+          name            = "${var.project}_netops"
+          description     = "Group for the network administrator role"
 
-# Define a the administration policies for network administrators
-resource "oci_identity_policy" "netops" {
-    name            = "netops"
-    description     = "Policies for the network administrator role"
-    compartment_id  = var.tenancy_ocid
+          #Optional
+          # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
+          freeform_tags   = {"source": "/code/setup", "Parent"="root"}
+      }
 
-    statements = [
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage vcns IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage subnets IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage route-tables IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage dhcp-options IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage drgs IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage cross-connects IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage cross-connect-groups IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage virtual-circuits IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage vnics IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage vnic-attachments IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to manage load-balancers IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to use virtual-network-family IN TENANCY",
-        "ALLOW GROUP ${oci_identity_group.netops.name} to read all-resources IN TENANCY",
-    ]
-}
+      # Define a the administration policies for network administrators
+      resource "oci_identity_policy" "netops" {
+          name            = "netops"
+          description     = "Policies for the network administrator role"
+          compartment_id  = var.tenancy_ocid
 
-# Launch the base network
-module "vcn" {
-  source  = "oracle-terraform-modules/vcn/oci"
-  version = "2.2.0"
+          statements = [
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage vcns IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage subnets IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage route-tables IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage dhcp-options IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage drgs IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage cross-connects IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage cross-connect-groups IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage virtual-circuits IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage vnics IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage vnic-attachments IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to manage load-balancers IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to use virtual-network-family IN TENANCY",
+              "ALLOW GROUP ${oci_identity_group.netops.name} to read all-resources IN TENANCY",
+          ]
+      }
 
-  # required inputs
-  compartment_id               = oci_identity_compartment.net.id
-  drg_display_name             = "${var.project}_${var.stage}_DRG"
-  region                       = local.home_region
-  vcn_dns_project                = local.hostname
-  vcn_name                     = "${var.project}_${var.stage}_VCN"
-  #internet_gateway_route_rules = list(object({ destination = string destination_type = string network_entity_id = string description = string }))
-  #nat_gateway_route_rules      = list(object({ destination = string destination_type = string network_entity_id = string description = string }))
+      # Launch the base network
+      module "vcn" {
+        source  = "oracle-terraform-modules/vcn/oci"
+        version = "2.2.0"
 
-  # optional inputs 
-  create_drg               = var.enable_routing
-  internet_gateway_enabled = var.enable_internet
-  project_stage             = local.hostname
-  lockdown_default_seclist = true
-  nat_gateway_enabled      = var.enable_nat
-  service_gateway_enabled  = var.private_service
-  vcn_cidr                 = var.cidr
-  tags                     = { "module": "oracle-terraform-modules/vcn/oci", "terraformed": "yes", "budget": 0, "stage": var.stage }
-}
-```
+        # required inputs
+        compartment_id               = oci_identity_compartment.net.id
+        drg_display_name             = "${var.project}_${var.stage}_DRG"
+        region                       = local.home_region
+        vcn_dns_project                = local.hostname
+        vcn_name                     = "${var.project}_${var.stage}_VCN"
+        #internet_gateway_route_rules = list(object({ destination = string destination_type = string network_entity_id = string description = string }))
+        #nat_gateway_route_rules      = list(object({ destination = string destination_type = string network_entity_id = string description = string }))
 
-In the *output.tf* file we add the reference to the module output.
+        # optional inputs 
+        create_drg               = var.enable_routing
+        internet_gateway_enabled = var.enable_internet
+        project_stage             = local.hostname
+        lockdown_default_seclist = true
+        nat_gateway_enabled      = var.enable_nat
+        service_gateway_enabled  = var.private_service
+        vcn_cidr                 = var.cidr
+        tags                     = { "module": "oracle-terraform-modules/vcn/oci", "terraformed": "yes", "budget": 0, "stage": var.stage }
+      }
+      ```
 
-```
-# VCN parameter returns
-output "vcn_id"         { value = module.vcn.vcn_id }
-output "ig_route_id"    { value = module.vcn.ig_route_id }
-output "nat_gateway_id" { value = module.vcn.nat_gateway_id }
-output "nat_route_id"   { value = module.vcn.nat_route_id }
-```
+4. **`output.tf` -** In the `output.tf` file we add the reference to the module output:  
+
+      ```terraform
+      # VCN parameter returns
+      output "vcn_id"         { value = module.vcn.vcn_id }
+      output "ig_route_id"    { value = module.vcn.ig_route_id }
+      output "nat_gateway_id" { value = module.vcn.nat_gateway_id }
+      output "nat_route_id"   { value = module.vcn.nat_route_id }
+      ```
 
 ## Service Operation
 
-Compartments denote a demarcation for administrator domains in OCI. A compartment membership determines the privilige to add, change or delete resources. For define our compartment structure with the [ITIL][itil_web] model in mind. The first compartment defines the working environment for [service operators][itil_operation] and enables processes like incident or problem management. While ITIL distinguishes between [technical management services][itil_technical] and [application management services][itil_application], we rely on Infrastructure as a Servce and separate network- and database-manager in distinct compartments. On the application layer we distinguish between application management and application development. The later compromises platform services and allows to define an own code chain, meanwhile application managers receive the necessary rights to deploy and manage binaries. The definitions are captured in the `~/starter/operation.tf` template. 
+*Compartments* denote a demarcation for administrator domains in OCI, and compartment membership determines the privilege to add, change, or delete resources.  
+
+### Compartment structure
+
+When we define our compartment structure we need to keep the [ITIL][itil_web] model in mind. The first compartment defines the working environment for [service operators][itil_operation] and enables processes like incident or problem management. While ITIL distinguishes between [technical management services][itil_technical] and [application management services][itil_application], we rely on Infrastructure as a Service and separate network- and database-managers in distinct compartments. On the application layer, we distinguish between application management and application development. The later compromises platform services and allows us to define our own code chain, while application managers receive the necessary rights to deploy and manage binaries. The definitions are captured in the `~/starter/operation.tf` template.  
 
 {% imgx assets/itil_cloud.png "Cloud Operating Model" %}
 
-First, we create a set of roles with priviledged access to operation data and tools. Cloud operators that make sure that services are delivered effectively and efficiently. This includes fulfilling of user requests, resolving service failures, fixing problems, as well as carrying out routine operational tasks. These roles get provisiones in form of groups. Group policies allow to define the different administrator roles on a granular level. Initially we stick to four groups: a cloud account adminstrator, security manager, user manager and "readonly" e.g. for auditors. In HCL we use a [complex variable type][tf_type], a map, to describe the different roles.
+### Operator roles
 
-```
+First, we create a set of roles with privileged access to operation data and tools. *Cloud operators* make sure that services are delivered effectively and efficiently. This includes fulfilling user requests, resolving service failures, fixing problems, as well as carrying out routine operational tasks. These roles get provisioned in the form of groups. Group policies allow us to define the different administrator roles on a granular level. Initially, we'll stick to four groups: a cloud account administrator, security manager, user manager, and "readonly" (e.g., for auditors).  
+
+#### HCL
+
+In HashiCorp Configuration Language ([HCL]), we use a [complex variable type][tf_type], a map, to describe the different roles:
+
+```terraform
 # the base set of operator roles
 variable "operator" {
   type    = map
@@ -362,10 +389,13 @@ variable "operator" {
 }
 ```
 
-We modify the group resource to reflect the list of roles. In a later stage we will use an own resource to assign the user accounts to one of these roles. From a terraform perspective we introduce a loop typ. With [count][tf_count] we create an ordered list and we can use the index to refer to the stored value. While \[each.key\] loops through the user list, \[0\] refers to the first group.
+### Modify group resources for each role
 
+We modify the group resource to reflect the list of roles. In a later stage, we'll use our own resource to assign user accounts to one of these roles. From a Terraform perspective, we introduce a loop type to help automate the role assignment process. With [count][tf_count] we create an ordered list and we can use the index to refer to the stored value. While `each.key` loops through the user list, `[0]` refers to the first group.
 
-```
+#### Create a *service operation compartment*
+
+```terraform
 # Create a service operation compartment
 resource "oci_identity_compartment" "operation" {
     provider        = oci.home
@@ -376,7 +406,7 @@ resource "oci_identity_compartment" "operation" {
     description     = "Compartment to manage ${var.project} ${var.stage} services"
     
     #Optional
-    enable_delete   = false  // true will cause this compartment to be deleted when running `terrafrom destroy`
+    enable_delete   = false  // true will cause this compartment to be deleted when running `terraform destroy`
     # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
     freeform_tags   = {"source": "/code/setup", "Parent"="root"}
 }
@@ -407,9 +437,11 @@ resource "oci_identity_policy" "operation" {
 }
 ```
 
-In the output file we create a map containing the name and respective OCID for the new defined roles.
+#### output file
 
-```
+In the output file, we create a map containing the name and respective OCID for the new defined roles:  
+
+```terraform
 output "operator" {
   value = {
     for operator in oci_identity_group.operators:
@@ -419,11 +451,14 @@ output "operator" {
 ```
 
 #### Key Vault
-Vault is a cloud service that allows operators to manage encryption keys that protect data and secret credentials and to secure resource access. Vaults store master encryption keys and secrets that are used in configuration files and/or code. A secret is anything that requires controled access, such as API keys, passwords, certificates, or cryptographic keys.
 
-After that we create the compartments for technical- and application manager. The tree structure is created, using the compartment_id argument. While the "resource" compartments refer to the tenancy_ocid, the service compartments refer to the parent compartment ID. This enables us to use [loops][tf_loop], counts and conditionals. Using lists helps to avoid the creation multiple blocks and allows to adjust the tree compartment structure, without rewriting the code. 
+Vault is a cloud service that allows operators to manage encryption keys that secure resource access and protect both data and secret credentials. Vaults also store the master encryption keys and secrets that are used in configuration files and/or code. A secret can be anything that requires controlled access, such as API keys, passwords, certificates, or cryptographic keys.
 
-```
+### Technical- and application manager compartments
+
+After that, we create the compartments for both the technical- and application manager. The compartment's associated tree structure is created using the `compartment_id` argument. While the *resource* compartments refer to the tenancy_ocid, the *service* compartments refer to the parent compartment ID. This enables us to use [loops][tf_loop], counts and conditionals. Using lists helps avoid the creation of multiple blocks and allows us to adjust the tree compartment structure without rewriting the code:  
+
+```terraform
 // Create a vault to store secrets
 
 output "key_id" {
@@ -472,9 +507,9 @@ data "oci_kms_keys" "ops" {
 
 #### Management Bucket
 
-Within the ops compartment we define a storage bucket to store files that need to be accessible to all operators. Examples are log files or terraform state file. We add the following resource blocks to the *ops.tf* template.
+Within the *ops compartment*, we define a *storage bucket* to store files that need to be accessible to *all* operators. Some examples include log files or Terraform state files. To do this, we add the following resource blocks to the `ops.tf` template:  
 
-```
+```terraform
 resource "oci_objectstorage_bucket" "ops" {
     provider       = oci.home
     #Required
@@ -490,19 +525,22 @@ resource "oci_objectstorage_bucket" "ops" {
 }
 ```
 
-The complete [template][code_...] is stored in the code directory. In the compartment structure we break the technical management domain up into network and data management services. In addition, a tree structure for application management services enables operators to integrate multiple in- and external application owner, without giving up control over the main digital assets. 
+>**Note:** The complete [template][code_...] is stored in the code directory. In the compartment structure we break the technical management domain up into network and data management services. In addition, a tree structure for application management services enables operators to integrate multiple in- and external application owner, without giving up control over the main digital assets.
+{:.notice}
 
 ### Data Management
 
-Next we define the data management domain in order to maintain [data gravity][ref_dgravity] accross the four infrastructure deployment models for application developer and service operator. A [boolean variable][tf_boolean] to enable or dsiable the creation of the "data" compartment. 
+Next, we'll need to define 2 properties to establish our overall data management behavior. The first will be the creation of a *data management domain* to maintain [data gravity][ref_dgravity] across the four infrastructure deployment models for the application developer and service operator. And the second will be a [boolean variable][tf_boolean] to enable/disable the creation of the *data* compartment:  
 
-```
+```terraform
 variable "create_data" { default = false }
 ```
 
-Initially, the *data.tf* contains only one resource definitions. We use the [count method][tf_count] to en- or disable the compartment creation. 
+#### Create a data management compartment
 
-```
+Initially, `data.tf` contains only one resource definition. We use the [count method][tf_count] to enable/disable the compartment creation:  
+
+```terraform
 # Create a data management compartment 
 resource "oci_identity_compartment" "data" {
     count           = var.create_data ? 1 : 0
@@ -514,15 +552,17 @@ resource "oci_identity_compartment" "data" {
     description     = "Compartment to manage persistent data for ${var.project}"
     
     #Optional
-    enable_delete   = false  // true will cause this compartment to be deleted when running `terrafrom destroy`
+    enable_delete   = false  // true will cause this compartment to be deleted when running `terraform destroy`
     # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
     freeform_tags   = {"source": "/code/setup", "Parent"="root"}
 }
 ```
 
-Admin policies define the tasks that a user can perform. We define groups for database administrators as well as file system manager and [assign policies][tf_data_policies]. Group memberships enable domain administrators to perform the tasks associated with these [policies][tf_policy].
+#### Define policies and roles
 
-```
+*Admin policies* define the tasks that a user can perform. We'll create groups for database administrators and file system managers, as well as [assign policies][tf_data_policies] to them. Group memberships enable domain administrators to perform the tasks associated with these [policies][tf_policy].  
+
+```terraform
 # Create a file system administrator role 
 resource "oci_identity_group" "fsadmin" {
     provider        = oci.home
@@ -578,9 +618,11 @@ resource "oci_identity_policy" "database_admin" {
 }
 ```
 
-A data block that we call "trunk" creates a list of compartments attached to the root compartment.
+#### List root compartments
 
-```
+A data block that we call *trunk* creates a list of compartments attached to the root compartment.  
+
+```terraform
 # List root compartments 
 data "oci_identity_compartments" "trunk" {
     #Required
@@ -593,9 +635,9 @@ data "oci_identity_compartments" "trunk" {
 }
 ```
 
-These data blocks are referenced in *output.tf*.
+These data blocks are referenced in `output.tf`.  
 
-```
+```terraform
 # Output compartment details for resource compartments
 output "resources" {
     value = data.oci_identity_compartments.resources
@@ -604,16 +646,15 @@ output "resources" {
 
 ### Application Management
 
-For the application management domain we add a [variable containing list of application domains][tf_list]. 
+For the application management domain, we add a [variable containing list of application domains][tf_list]:  
 
-```
+```terraform
 variable "create_app" { default = false }
 ```
 
-The *app.tf* it contains two resource definitions, one for the main app compartment and one for the sub-compartments. The compartment structure is reflected using a [complex variable type][tf_variable] that enables us to create list of sub-compartments.
+The `app.tf` file contains two resource definitions, one for the main app compartment and one for the sub-compartments. The compartment structure is reflected using a [complex variable type][tf_variable] that enables us to create list of sub-compartments.
 
-
-```
+```terraform
 # Create a main compartment application management (https://wiki.en.it-processmaps.com/index.php/ITIL_Application_Management)
 resource "oci_identity_compartment" "app" {
     count           = var.create_app ? 1 : 0
@@ -625,7 +666,7 @@ resource "oci_identity_compartment" "app" {
     description     = "Compartment to manage applications for ${var.project}"
     
     #Optional
-    enable_delete   = false  // true will cause this compartment to be deleted when running `terrafrom destroy`
+    enable_delete   = false  // true will cause this compartment to be deleted when running `terraform destroy`
     # defined_tags  = {"terraformed": "yes", "budget": 0, "stage": var.stage}
     freeform_tags   = {"source": "/code/setup", "Parent"="root"}
 }
@@ -663,9 +704,11 @@ resource "oci_identity_policy" "sysadmin" {
 }
 ```
 
-We loop over our platform- and the services block, using the [count method][tf_count]. *Count* refers to keys using the respective index number `[count.index]`. The `${ }` construct allows to use variables inside a string. Freeform tags provide non-harmonized context information. After that we define the data blocks in the *sources.tf* to return the identifier for the compartments that are defined in the deployment plan.
+#### List app compartments
 
-```
+We loop over our platform- and the services block, using the [count method][tf_count]. `Count` refers to keys using the respective index number `[count.index]`. The `${ }` construct allows to use variables inside a string. Freeform tags provide non-harmonized context information. After that, we create data blocks in `sources.tf` which return the identifier for the compartments defined in the deployment plan:  
+
+```terraform
 # List app compartments 
 data "oci_identity_compartments" "apps" {
     #Required
@@ -678,22 +721,28 @@ data "oci_identity_compartments" "apps" {
 }
 ```
 
-These data blocks are referenced in *output.tf*.
+These data blocks are referenced in `output.tf`:  
 
-```
+```terraform
 # Output compartment details for app compartments
 output "apps" {
     value = data.oci_identity_compartments.apps
 }
 ```
 
-A complete [compartment.tf][code_compartment] examle file is stored in the code directory. 
+A complete [compartment.tf][code_compartment] example file is stored in the code directory.
 
 ## User Management
 
-After defining the compartment structure we create the initial admin users, leveraging the *user.tf* template. with the basic [resource block][tf_user] amd the [user data block][tf_data_users]. We define a variable that represents the admin profile and insert the variable at the top of our template. Information like the name, email and description is captured in a tuple, another [complex variable type][tf_variable]. User profiles allow tenant administrators to manage user information; manage privilege, application, and service access; and grant users self-management for their own accounts and services. 
+After defining the compartment structure, we create the initial admin users, leveraging the `user.tf` template with the basic [resource block][tf_user] and the [user data block][tf_data_users]. Next, we'll define a variable that represents the admin profile and insert the variable at the top of our template. Information like the *name*, *email* and *description* is captured in a tuple, another [complex variable type][tf_variable].  
 
-```
+User profiles allow tenant administrators to:  
+
+- manage user information
+- manage privilege, application, and service access
+- grant users self-management for their own accounts and services.
+
+```terraform
 variable "user" {
     description    = "user definition"
     type           = tuple([string, string, string, bool])
@@ -701,9 +750,17 @@ variable "user" {
 }
 ```
 
-The oci_identity_user resource block creates the admin users, the oci_identity_ui_password block the password and the oci_identity_user_capabilities_management block sets the user capabilities.
+`oci_identity_user`
 
-```
+: this resource block creates the admin users
+
+`oci_identity_ui_password`
+: this block creates the password
+
+`oci_identity_user_capabilities_management`
+: this block sets the user capabilities
+
+```terraform
 resource "oci_identity_user" "user_name" {
     provider       = oci.home
 
@@ -736,20 +793,22 @@ resource "oci_identity_user_capabilities_management" "user_name" {
 
 ### Assigning Roles
 
-We defined a number of groups to manage the roles and responsibilites. A common definition of roles and responsibilites is provided by the [ITIL framework][itil_roles]. The complete model is pretty broad, our specific concern is service operation and initially created the following administrator roles
+We defined a number of groups to manage the roles and responsibilities. A common definition of roles and responsibilities is provided by the [ITIL framework][itil_roles]. While the complete model is pretty broad, our specific concern is service operation and initially created the following administrator roles:  
 
 | **Group**         | **Permissions**       |
 | :---------------- |:----------------------|
-| *cloud account* | Manage users. <br> Manage the Administrators and Netsecopss groups. <br><br> **Note**: Oracle creates the Administrators group when you subscribe to Oracle Cloud. The users in this group have full access to all the resources in the tenancy, including managing users and groups. Limit the membership to this group. |
-| *security* | Read all the resources in the tenancy. <br> Manage security lists, internet gateways, customer-premises equipment, IPSec VPN connections, and load balancers. <br> Use all the virtual network resources.|
-| *user* | Manage users. <br> Manage all the groups except Administrators and Netsecopss.|
-| *network* | Read all the resources in the tenancy. <br> Manage all the networking resources, except security lists, internet gateways, IPSec VPN connections, and customer-premises equipment. |
-| *system* | Read all the resources in the tenancy. <br> Manage the compute and storage resources. <br> Manage compartments. <br> Use load balancers, subnets, and VNICs. |
-| *storage* | Read all the resources in the tenancy. <br> Manage the object storage and block volume resources. |
-| *database* | Read all the resources in the tenancy. <br> Manage the database resources. |
-| *Auditor (ReadOnly)* | View and inspect the tenancy. This group is for users who aren't expected to create or manage any resources (for example, auditors and trainees). |
+| *cloud account* | - Manage users <br>- Manage the Administrators and Netsecopss groups <br>**Note**: Oracle creates the Administrators group when you subscribe to Oracle Cloud. The users in this group have full access to all the resources in the tenancy, including managing users and groups. Limit the membership to this group. |
+| *security* | - Read all the resources in the tenancy <br> - Manage security lists, internet gateways, customer-premises equipment, IPSec VPN connections, and load balancers <br>- Use all the virtual network resources |
+| *user* | - Manage users <br>- Manage all the groups except Administrators and Netsecopss|
+| *network* | - Read all the resources in the tenancy <br>- Manage all the networking resources, except security lists, internet gateways, IPSec VPN connections, and customer-premises equipment |
+| *system* | - Read all the resources in the tenancy <br>- Manage the compute and storage resources <br>- Manage compartments <br> - Use load balancers, subnets, and VNICs |
+| *storage* | - Read all the resources in the tenancy <br>- Manage the object storage and block volume resources |
+| *database* | - Read all the resources in the tenancy <br>- Manage the database resources |
+| *Auditor (ReadOnly)* | - View and inspect the tenancy<br>**Note:** This group is for users who aren't expected to create or manage any resources (for example, auditors and trainees). |
 
-```
+**Role assignment:**
+
+```terraform
 resource "oci_identity_user_group_membership" "operator" {
   provider       = oci.home
   compartment_id = var.tenancy_ocid
@@ -759,9 +818,10 @@ resource "oci_identity_user_group_membership" "operator" {
 }
 ```
 
-With the oci_identity_ui_password data block we retrieve all information related to the password resource before we create the output block for the user details.
+`oci_identity_ui_password`
+: this data block retrieves all information related to the password resource before we create the output block for the user details.
 
-```
+```terraform
 data "oci_identity_ui_password" "user_name" {
     #Required
     user_id         = oci_identity_user.user_name.id
@@ -772,9 +832,11 @@ output "user_details" {
 }
 ```
 
-The template will return the user details including the UI password. Passwords will be generated and shown at the `terraform apply` stage. When we use the `terraform output` command terraform will not return the passwords. The complete [template][code_user] is stored in the code directory.
+This template will return the user details including the UI password. Passwords will be generated and shown at the `terraform apply` stage. When we use the `terraform output` command, Terraform will not return the passwords. The complete [template][code_user] is stored in the code directory.
 
-[Bookmark this series][home] and check back soon for Database Infrastructure in Step 3.
+## What's next
+
+Next up, **Database Infrastructure** in [Step 3](getting-started-with-oci-step-3-database-infrastructure.md)!
 
 <!--- Links -->
 [home]:       index
@@ -845,7 +907,7 @@ The template will return the user details including the UI password. Passwords w
 [code_user]:        ../code/iam/user.tf
 [code_group]:       ../code/iam/group.tf
 [code_policy]:      ../code/iam/policy.tf
- 
+
 [ref_cidr]:          https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing
 [ref_cli]:           https://docs.cloud.oracle.com/en-us/iaas/tools/oci-cli/latest/oci_cli_docs/
 [ref_dgravity]:      https://whatis.techtarget.com/definition/data-gravity
@@ -868,3 +930,6 @@ The template will return the user details including the UI password. Passwords w
 [itil_roles]:       https://wiki.en.it-processmaps.com/index.php/ITIL_Roles
 [itil_technical]:   https://wiki.en.it-processmaps.com/index.php/ITIL_Technical_Management
 [itil_web]:         https://www.axelos.com/best-practice-solutions/itil
+
+[HCL]: https://github.com/hashicorp/hcl
+[Step 3]: getting-started-with-oci-step-3-database-infrastructure.md
