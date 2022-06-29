@@ -1,15 +1,21 @@
 ---
-title: "Free Tier: Install WordPress on an Ubuntu Instance"
-parent: [tutorials]
+title: 'Free Tier: Install WordPress on an Ubuntu Instance'
+parent:
+- tutorials
 toc: true
-tags: [ubuntu, back-end]
-categories: [modernize]
+tags:
+- ubuntu
+- back-end
+categories:
+- modernize
 thumbnail: assets/modernize-healthcare-ambulance.jpeg
 date: 2021-11-24 9:45
-description: This tutorial guides you through configuring WordPress on your Ubuntu OCI instance.
-author: 
-    name: Docs @ Oracle
+description: This tutorial guides you through configuring WordPress on your Ubuntu
+  OCI instance.
+author:
+  name: Docs @ Oracle
 draft: true
+slug: freetier-wordpress-ubuntu
 ---
 {% slides %}
 In this tutorial, use an Oracle Cloud Infrastructure Free Tier account to set up an Ubuntu instance. Next, install an Apache web server, PHP 7, MySQL, and finally WordPress. After installation, access your new WordPress installation from the internet. This tutorial covers all the steps necessary to set up a virtual network, a compute instance, and connect the host to the internet. Key tasks include how to:

@@ -13,6 +13,7 @@ description: How to deploy a Node Express application to a Kubernetes cluster on
 redirect_from: "/collections/tutorials/deploy-a-node-express-application/"
 mrm: WWMK211117P00058
 xredirect: https://developer.oracle.com/tutorials/deploy-a-node-express-application/
+slug: deploy-a-node-express-application
 ---
 In this tutorial, you'll use an Oracle Cloud Infrastructure (OCI) account to set up a Kubernetes cluster. Then, you'll deploy a Node Express application to your cluster.
 

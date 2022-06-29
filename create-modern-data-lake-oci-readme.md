@@ -14,6 +14,7 @@ category: clouddev
 date: 2021-10-29 12:00
 mrm: WWMK211125P00021
 xredirect: https://developer.oracle.com/tutorials/create-modern-data-lake-oci-readme/
+slug: create-modern-data-lake-oci-readme
 ---
 {% imgx aligncenter assets/datalakeocichart_4481-9331b237844018b1.png "OCI Datalake Architecture Overview" %}
 

@@ -19,6 +19,7 @@ sort: asc
 color: purple
 date: 2021-12-09 11:00
 xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/
+slug: index
 ---
 
 {% imgx aligncenter assets/landing-zone.png 400 400 "Landing Zone" "OCLOUD Landing Zone" %}

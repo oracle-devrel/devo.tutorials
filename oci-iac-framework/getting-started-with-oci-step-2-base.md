@@ -20,6 +20,7 @@ toc: true
 author: kubemen
 mrm: WWMK211125P00022
 xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-2-base/
+slug: getting-started-with-oci-step-2-base
 ---
 {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

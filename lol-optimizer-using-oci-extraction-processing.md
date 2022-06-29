@@ -19,6 +19,7 @@ description: Can OCI be used to make League of Legends even better? Ignacio Mart
 author: ignacio-martinez
 mrm: WWMK211125P00027
 xredirect: https://developer.oracle.com/tutorials/lol-optimizer-using-oci-extraction-processing/
+slug: lol-optimizer-using-oci-extraction-processing
 ---
 
 ## Introduction

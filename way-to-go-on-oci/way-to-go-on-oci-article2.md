@@ -11,13 +11,17 @@ tags:
 - back-end
 - go
 - iac
-categories:  [clouddev, cloudapps]
+categories:
+- clouddev
+- cloudapps
 thumbnail: assets/way-to-go-on-oci-article-2-thumbnail-overview.png
 date: 2022-05-26 11:00
-description: How to build, deploy, test and expose Go applications on Oracle Cloud Infrastructure with DevOps, Resource Manager, Compute and API Gateway.
+description: How to build, deploy, test and expose Go applications on Oracle Cloud
+  Infrastructure with DevOps, Resource Manager, Compute and API Gateway.
 toc: true
 author: lucas-jellema
 draft: true
+slug: way-to-go-on-oci-article2
 ---
 {% imgx alignright assets/way-to-go-on-oci-article-2-thumbnail-overview.png 400 400 "Go Build & Deployment on OCI" %}
 

@@ -19,6 +19,7 @@ modified: 2021-09-22 18:10
 redirect_from: "/collections/tutorials/install-spring-boot-on-an-oracle-instance/"
 mrm: WWMK211117P00090
 xredirect: https://developer.oracle.com/tutorials/install-spring-boot-on-an-oracle-instance/
+slug: install-spring-boot-on-an-oracle-instance
 ---
 {% slides %}
 

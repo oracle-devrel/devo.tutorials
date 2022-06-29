@@ -1,5 +1,6 @@
 ---
-title: Working in Go applications with Oracle Database and Oracle Cloud Autonomous Database
+title: Working in Go applications with Oracle Database and Oracle Cloud Autonomous
+  Database
 parent:
 - tutorials
 - way-to-go-on-oci
@@ -9,13 +10,17 @@ tags:
 - get-started
 - automation
 - iac
-categories:  [clouddev, cloudapps]
+categories:
+- clouddev
+- cloudapps
 thumbnail: assets/way-to-go-on-oci-article-4-endtoend-apigw-vm-object-atp.png
 date: 2022-05-26 11:00
-description: Working with on premises Oracle Database and OCI Autonomous Database in Go applications, either on OCI Compute Instances or anywhere else.
+description: Working with on premises Oracle Database and OCI Autonomous Database
+  in Go applications, either on OCI Compute Instances or anywhere else.
 toc: true
 author: lucas-jellema
 draft: true
+slug: way-to-go-on-oci-article4
 ---
 {% imgx alignright assets/way-to-go-on-oci-article-4-endtoend-apigw-vm-object-atp.png 1141 384 "End state on OCI with Go service on Compute Instance, exposed through API Gateway, interacting with Autonomous Database and Object Storage "  %}
 

@@ -21,6 +21,7 @@ color: purple
 mrm: WWMK211123P00031
 author: ali-mukadam
 xredirect: https://developer.oracle.com/tutorials/multi-cluster-verrazzano-oke/3-deploy-multi-cluster-verrazzano-oke/
+slug: 3-deploy-multi-cluster-verrazzano-oke
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 
@@ -53,7 +54,7 @@ First, a little refresher.
 
 - Also, remember we have the following setup:  
 
-  {% imgx aligncenter assets/695/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote peering with different regions" "Remote peering with different regions using star architecture for managed clusters" %}
+  {% imgx aligncenter assets/bF77x66gHN42zsW_2_9Dxw.png 695 554 "Remote peering with different regions" "Remote peering with different regions using star architecture for managed clusters" %}
 
 - And that we chose the Admin server to be in the Singapore OCI region.
 
@@ -77,7 +78,7 @@ Installing Verrazzano as the Admin cluster is straightforward, just follow the s
 
 Before you start, make sure that your context is pointing to “admin” on the operator host:  
 
-{% imgx aligncenter assets/700/8IaaB1P-hc9P6vjffKZaDA.png 700 121 "Verifying your Kubernetes context" "Verifying your Kubernetes context" %}
+{% imgx aligncenter assets/8IaaB1P-hc9P6vjffKZaDA.png 700 121 "Verifying your Kubernetes context" "Verifying your Kubernetes context" %}
 
 If it’s pointing to one of the other clusters, change it as follows:  
 

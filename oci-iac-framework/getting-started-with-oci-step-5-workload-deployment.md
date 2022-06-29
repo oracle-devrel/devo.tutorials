@@ -20,6 +20,7 @@ toc: true
 author: kubemen
 mrm: WWMK211125P00022
 xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-step-5-workload-deployment/
+slug: getting-started-with-oci-step-5-workload-deployment
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 

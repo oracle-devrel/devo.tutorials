@@ -21,6 +21,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/8-resources/"
 mrm: WWMK211117P00010
 xredirect: https://developer.oracle.com/tutorials/tf-101/8-resources/
+slug: 8-resources
 ---
 
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

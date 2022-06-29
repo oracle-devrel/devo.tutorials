@@ -15,6 +15,7 @@ description:
 author: hassan-ajan
 published: true
 xredirect: https://www-sites.oracle.com/developer.oracle.com/tutorials/get-started-with-rubyonrails/
+slug: get-started-with-rubyonrails
 ---
 {% imgx assets/rails-logo.png "Ruby on Rails Logo" %}
 

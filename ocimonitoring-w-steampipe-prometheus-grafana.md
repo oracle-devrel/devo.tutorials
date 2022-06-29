@@ -17,6 +17,7 @@ author:
   github: martinberger-ch
 mrm: WWMK211125P00018
 xredirect: https://developer.oracle.com/tutorials/ocimonitoring-w-steampipe-prometheus-grafana/
+slug: ocimonitoring-w-steampipe-prometheus-grafana
 ---
 {% slides %}
 

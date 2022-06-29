@@ -22,6 +22,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/1-why-iac/"
 mrm: WWMK211117P00010
 xredirect: https://developer.oracle.com/tutorials/tf-101/1-why-iac/
+slug: 1-why-iac
 ---
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}
 

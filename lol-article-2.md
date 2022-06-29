@@ -14,6 +14,7 @@ author: ignacio-martinez
 date: 2022-01-07 06:00
 mrm: WWMK211125P00027
 xredirect: https://developer.oracle.com/tutorials/lol-article-2/
+slug: lol-article-2
 ---
 ## Recap and Introduction
 Welcome to the second article on the League of Legends Optimizer series! In this article, we'll continue where we left off in [the first article](https://cool.devo.build/tutorials/lol-optimizer-using-oci-extraction-processing). As a reminder, let's review what we covered last time last time:

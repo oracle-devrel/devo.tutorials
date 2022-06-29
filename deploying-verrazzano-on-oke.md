@@ -24,6 +24,7 @@ author:
   linkedin: https://www.linkedin.com/in/alimukadam/
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 mrm: WWMK211117P00086
+slug: deploying-verrazzano-on-oke
 ---
 {% imgx alignright assets/verrazzano-logo.png 400 400 "Verrazzano Logo" %}
 

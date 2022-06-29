@@ -16,6 +16,7 @@ description: Matamo, an alternative to Google Analytics, is becoming increasingl
 author: frederic-descamps
 mrm: WWMK211125P00016
 xredirect: https://developer.oracle.com/tutorials/matamo-with-oci-mds/
+slug: matamo-with-oci-mds
 ---
 [Matomo](https://matomo.org/) is a Google Analytics alternative for tracking metrics on your websites. If you follow my blog, you know how easy it is to deploy popular Open Source web solutions like WordPress, Joomla!, Drupal, Moodle, and Magento on Oracle Cloud Infrastructure (OCI).
 

@@ -2,7 +2,7 @@
 title: Getting Started with MySQL HeatWave on AWS
 parent:
 - tutorials
-tags: 
+tags:
 - mysql
 - database
 - heatwave
@@ -11,9 +11,12 @@ categories:
 - cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
-description: Getting your OCI tenancy ready to connect to MySQL HeatWave on AWS. We will create a compute instance, DB System, and endpoint. We also began to provision MySQL HeatWave on AWS.
+description: Getting your OCI tenancy ready to connect to MySQL HeatWave on AWS. We
+  will create a compute instance, DB System, and endpoint. We also began to provision
+  MySQL HeatWave on AWS.
 author: Victor Agreda
 mrm: WWMK220224P00058
+slug: oci-getting-started-heatwave-aws-v30622
 ---
 We live in a multi-cloud world, and that's why MySQL HeatWave for Amazon Web Service makes so much sense if you need a massively parallel, high performance, in-memory query accelerator for the MySQL Database Service. A combination that accelerates MySQL performance by orders of magnitude for combined analytics and transactional workloads (OLAP and OLTP). The MySQL Database Service is built on MySQL Enterprise Edition, which allows developers to quickly create and deploy secure cloud native applications using the world's most popular open source database.  
 

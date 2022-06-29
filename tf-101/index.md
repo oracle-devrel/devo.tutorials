@@ -17,6 +17,7 @@ tags:
 sort: asc
 date: 2021-09-28 08:13
 xredirect: https://developer.oracle.com/tutorials/tf-101/
+slug: index
 ---
 
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

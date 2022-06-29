@@ -1,17 +1,29 @@
 ---
-title: Deploying a Custom Nodejs Web Application Integrated with Identity Cloud Service for Unique Single Sign On UX 
-parent: [tutorials]
+title: Deploying a Custom Nodejs Web Application Integrated with Identity Cloud Service
+  for Unique Single Sign On UX
+parent:
+- tutorials
 toc: false
-tags: [open-source, oci, always-free, nodejs, javascript]
-languages: [nodejs]
-categories: [frameworks, cloudapps]
+tags:
+- open-source
+- oci
+- always-free
+- nodejs
+- javascript
+languages:
+- nodejs
+categories:
+- frameworks
+- cloudapps
 thumbnail: assets/ociemailimage-10.jpg
-description: How to configure custom Node.js web application to have a unique Single Sign On user experience.
+description: How to configure custom Node.js web application to have a unique Single
+  Sign On user experience.
 date: 2022-03-10 08:42
-mrm: WWMK210625P00048 
+mrm: WWMK210625P00048
 author:
-    name: Javier Mugueta
-    home: https://javiermugueta.blog/author/javiermugueta/ 
+  name: Javier Mugueta
+  home: https://javiermugueta.blog/author/javiermugueta/
+slug: oke-nodejs-webapp-sso-ex
 ---
 
 In this post we are deploying a custom Node.js web application in the Oracle Kubernetes Engine (OKE).

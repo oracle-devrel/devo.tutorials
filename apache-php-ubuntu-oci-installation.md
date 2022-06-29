@@ -21,6 +21,7 @@ author:
 redirect_from: "/collections/tutorials/apache-php-ubuntu-oci-installation/"
 mrm: WWMK211125P00028
 xredirect: https://developer.oracle.com/tutorials/apache-php-ubuntu-oci-installation/
+slug: apache-php-ubuntu-oci-installation
 ---
 {% slides %}
 

@@ -2,7 +2,7 @@
 title: Using the AWS Migration Service with HeatWave on AWS with WordPress as an Example
 parent:
 - tutorials
-tags: 
+tags:
 - mysql
 - database
 - heatwave
@@ -10,9 +10,11 @@ categories:
 - cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
-description: A quick example of how you can move data over for use in MySQL HeatWave on AWS.
+description: A quick example of how you can move data over for use in MySQL HeatWave
+  on AWS.
 author: Victor Agreda
 mrm: WWMK220224P00058
+slug: using-aws-migration-service-wp-ex-devrel0622
 ---
 Now let’s try something really fun. Let’s say you’ve already got a database using Aurora or RDS, in our case we’ll use a WordPress database, and you want to migrate it to MySQL HeatWave on AWS.  
 

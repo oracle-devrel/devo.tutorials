@@ -13,6 +13,7 @@ categories:
 author: tim-clegg
 mrm: WWMK220203P00028
 xredirect: https://developer.oracle.com/tutorials/making-calls-to-oci-api-with-postman/
+slug: making-calls-to-oci-api-with-postman
 ---
 
 {% imgx alignright assets/pexels-adis-bacinovic-7103901.jpg 800 534 "Mail box" %}

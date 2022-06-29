@@ -23,6 +23,7 @@ author:
   linkedin: alimukadam
 mrm: WWMK211125P00012
 xredirect: https://developer.oracle.com/tutorials/modernize-healthcare-graalvm/
+slug: modernize-healthcare-graalvm
 ---
 
 {% imgx alignright assets/modernize-healthcare-ambulance.jpeg  “Stock ambulance visual” %}

@@ -16,6 +16,7 @@ author:
     from Sourcefire, Cisco Systems, and Applied Materials.
 mrm: WWMK211125P00020
 xredirect: https://developer.oracle.com/tutorials/polyglot-application-observability/
+slug: polyglot-application-observability
 ---
 
 Pinpoint (developed by [Naver](https://www.navercorp.com/en), South Korea’s largest web search engine company) is an APM (Application Performance Management) solution used by many organizations around the globe and actively used internally by Naver, where **Pinpoint monitors over 10 billion transactions per day**. This allows tracing transactions and data flows between multiple software components and identifies problematic areas along with potential bottlenecks.

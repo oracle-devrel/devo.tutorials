@@ -11,6 +11,7 @@ description: Extend a sample repo with your own extensions to make reusable prov
   scripts.
 mrm: WWMK211125P00024
 xredirect: https://developer.oracle.com/tutorials/extending-terraform-oke-helm-chart/
+slug: extending-terraform-oke-helm-chart
 ---
 {% slides %}
 When designing the [Terraform OKE] provisioning scripts, one of the things we wanted to do was make it reusable. So, what does that translate to here? In this context, it means extending the base sample repo and adding in our own extensions.

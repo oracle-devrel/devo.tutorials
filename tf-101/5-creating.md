@@ -21,6 +21,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/5-creating/"
 mrm: WWMK211117P00010
 xredirect: https://developer.oracle.com/tutorials/tf-101/5-creating/
+slug: 5-creating
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

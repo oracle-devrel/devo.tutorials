@@ -15,6 +15,7 @@ author:
   name: Aleks Seovic
   github: https://github.com/aseovic
 xredirect: https://developer.oracle.com/tutorials/coherence-micronaut-sock-shopp/
+slug: coherence-micronaut-sock-shop
 ---
 Welcome!
 

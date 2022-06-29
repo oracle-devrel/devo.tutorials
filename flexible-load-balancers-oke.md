@@ -11,6 +11,7 @@ description: New load balancer shapes mean more options to optimize your configu
 author: Ali Mukadam
 mrm: WWMK211125P00019
 xredirect: https://developer.oracle.com/tutorials/flexible-load-balancers-oke/
+slug: flexible-load-balancers-oke
 ---
 Until recently, the OCI Load Balancer shapes were restricted to a handful of options:  
 

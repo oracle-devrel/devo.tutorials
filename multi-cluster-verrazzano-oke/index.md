@@ -17,6 +17,7 @@ sort: asc
 color: purple
 date: 2021-12-03 09:00
 xredirect: https://developer.oracle.com/tutorials/multi-cluster-verrazzano-oke/
+slug: index
 ---
 
 {% imgx aligncenter assets/verrazzano-logo.png 400 400 "Deploying Verrazzano" "Deploying Verrazzano Tutorial Series" %}

@@ -25,6 +25,7 @@ author:
 redirect_from: "/collections/tutorials/deploying-the-argo-project-on-oke/"
 mrm: WWMK211125P00029
 xredirect: https://developer.oracle.com/tutorials/deploying-the-argo-project-on-oke/
+slug: deploying-the-argo-project-on-oke
 ---
 {% imgx alignright assets/argo-icon-color-800.png 400 400 "ARGO Logo" %}
 
@@ -361,7 +362,7 @@ We can also use the Argo Rollouts dashboard to visualize things.
 
 1. Use your browser to access the Rollout dashboards:
 
-   {% imgx alignright assets/argo-oke-dhasboard.png 400 400 "ARGO Rollout Dashboard" %}
+   {% imgx alignright assets/argo-oke-dashboard.png 400 400 "ARGO Rollout Dashboard" %}
 
 #### Example - load balancers
 

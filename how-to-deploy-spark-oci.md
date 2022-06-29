@@ -14,6 +14,7 @@ author: olivier
 redirect_from: "/collections/tutorials/how-to-deploy-spark-oci/"
 mrm: WWMK211117P00011
 xredirect: https://developer.oracle.com/tutorials/how-to-deploy-spark-oci/
+slug: how-to-deploy-spark-oci
 ---
 {% slides %}
 The following walk-through guides you through setting up your environment to run Spark and Hadoop on Oracle Cloud Infrastructure (OCI).

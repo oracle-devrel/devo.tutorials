@@ -22,6 +22,7 @@ published: true
 redirect_from: "/collections/tutorials/3-understanding-terraform-basics/"
 mrm: WWMK211117P00010
 xredirect: https://developer.oracle.com/tutorials/tf-101/3-understanding-terraform-basics/
+slug: 3-understanding-terraform-basics
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

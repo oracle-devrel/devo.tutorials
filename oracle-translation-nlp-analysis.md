@@ -11,6 +11,7 @@ description: Ignacio walks you through Oracle MTS, a translation service, using 
 MRM: WWMK211210P00028
 author: ignacio-martinez
 xredirect: https://developer.oracle.com/tutorials/oracle-translation-nlp-analysis/
+slug: oracle-translation-nlp-analysis
 ---
 
 ## Introduction

@@ -1,16 +1,24 @@
 ---
 title: Creating a Simple Chatbot using NodeJS on OCI
-parent: [tutorials]
+parent:
+- tutorials
 toc: false
-tags: [open-source, oci, nodejs]
-languages: [nodejs]
-categories: [frameworks, cloudapps]
+tags:
+- open-source
+- oci
+- nodejs
+languages:
+- nodejs
+categories:
+- frameworks
+- cloudapps
 thumbnail: assets/racterexaemplasdfsdfsdf.jpg
-description: A very basic chatbot using nodejs on an oracle cloud compute instance.  
+description: A very basic chatbot using nodejs on an oracle cloud compute instance.
 date: 2022-05-26 19:42
 mrm: WWMK220210P00063
 author:
-    name: Victor Agreda 
+  name: Victor Agreda
+slug: create-simple-chatbot-nodejs-oci
 ---
 ## Introduction: Why this?
 
@@ -59,7 +67,7 @@ You may want a GitHub account if you want to branch the project as I did for ext
 
 	Here's where things get streamlined. Oracle does a good job of choosing a general purpose shape, but we're going to adjust it so it's free-tier and connecting to the Internet.
 
-	{% imgx assets/createcomputeinstancechatbotproj.png %}
+	{% imgx assets/2createcomputeinstancechatbotproj.png %}
 
 	Instead of AMD, we'll go with Ampere, an exceptionally good value (free-tier, remember?) just click on change shape...
 
@@ -77,7 +85,7 @@ You may want a GitHub account if you want to branch the project as I did for ext
 
 	I personally provision 50GB of storage, but you don't have to as OCI will provision some block memory to start with.
 
-	{% imgx assets/2privpubkeysandstorage %}
+	{% imgx assets/2privpubkeysandstorage.png %}
 
 	*NOTE: You can save these as a stack for later use as well, which is also handy.*
 

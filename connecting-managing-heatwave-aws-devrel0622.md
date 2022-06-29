@@ -2,7 +2,7 @@
 title: Connecting To and Managing HeatWave on AWS
 parent:
 - tutorials
-tags: 
+tags:
 - mysql
 - database
 - heatwave
@@ -11,9 +11,11 @@ categories:
 - cloudapps
 thumbnail: assets/a-mysqglhw-devrel0622-thmb001.png
 date: 2022-06-16 17:00
-description: Getting signed up, signed on, and some basic management tasks for your HeatWave on AWS cluster.
+description: Getting signed up, signed on, and some basic management tasks for your
+  HeatWave on AWS cluster.
 author: Victor Agreda
 mrm: WWMK220224P00058
+slug: connecting-managing-heatwave-aws-devrel0622
 ---
 It’s a multi-cloud world today, and that's why MySQL HeatWave for Amazon Web Service gives you a massively parallel, high performance, in-memory query accelerator for the MySQL Database Service as a fully managed service, developed and supported by the MySQL team in Oracle. This accelerates MySQL performance by orders of magnitude for combined analytics and transactional workloads (OLAP and OLTP).
 

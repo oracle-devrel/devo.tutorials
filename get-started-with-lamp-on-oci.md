@@ -22,6 +22,7 @@ author:
 redirect_from: "/collections/tutorials/get-started-with-lamp-on-oci/"
 mrm: WWMK211117P00082
 xredirect: https://developer.oracle.com/tutorials/get-started-with-lamp-on-oci/
+slug: get-started-with-lamp-on-oci
 ---
 
 

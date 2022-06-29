@@ -15,4 +15,5 @@ tags:
 sort: asc
 date: 2022-05-26 08:13
 draft: true
+slug: index
 ---

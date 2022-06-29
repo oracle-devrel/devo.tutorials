@@ -21,6 +21,7 @@ author: tim-clegg
 redirect_from: "/collections/tutorials/2-experiencing-terraform/"
 mrm: WWMK211117P00010
 xredirect: https://developer.oracle.com/tutorials/tf-101/2-experiencing-terraform/
+slug: 2-experiencing-terraform
 ---
 {% slides %}
 {% imgx aligncenter assets/terraform-101.png 400 400 "Terraform 101" "Terraform 101 Tutorial Series" %}

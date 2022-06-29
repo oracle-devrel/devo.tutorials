@@ -21,6 +21,7 @@ toc: true
 author: jon-decamp
 mrm: WWMK211125P00011
 xredirect: https://developer.oracle.com/tutorials/steampipe/steampipe-intro/
+slug: steampipe-intro
 ---
 *[OCI]: Oracle Cloud Infrastructure
 

@@ -15,6 +15,7 @@ author: ignacio-martinez
 date: 2022-01-07 07:00
 mrm: WWMK211125P00027
 xredirect: https://developer.oracle.com/tutorials/lol-article-3/
+slug: lol-article-3
 ---
 ## Recap and Introduction
 Welcome to the third article of the League of Legends Optimizer series!

@@ -15,6 +15,7 @@ description: Ali walks you through configuring OKE with Calico, an open-source n
 author: ali-mukadam
 mrm: WWMK211125P00010
 xredirect: https://developer.oracle.com/tutorials/calico-with-oke/
+slug: calico-with-oke
 ---
 
 ## Introduction

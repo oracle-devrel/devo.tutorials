@@ -21,6 +21,7 @@ author: kubemen
 date: 2021-10-29 06:00
 mrm: WWMK211125P00022
 xredirect: https://developer.oracle.com/tutorials/oci-iac-framework/getting-started-with-oci-intro/
+slug: getting-started-with-oci-intro
 ---
 {% imgx aligncenter assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
 
