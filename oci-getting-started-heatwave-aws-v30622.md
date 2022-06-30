@@ -18,17 +18,17 @@ author: Victor Agreda
 mrm: WWMK220224P00058
 slug: oci-getting-started-heatwave-aws-v30622
 ---
-We live in a multi-cloud world, and that's why MySQL HeatWave for Amazon Web Service makes so much sense if you need a massively parallel, high performance, in-memory query accelerator for the MySQL Database Service. A combination that accelerates MySQL performance by orders of magnitude for combined analytics and transactional workloads (OLAP and OLTP). The MySQL Database Service is built on MySQL Enterprise Edition, which allows developers to quickly create and deploy secure cloud native applications using the world's most popular open source database.  
+We live in a multi-cloud world, and that’s why Oracle MySQL HeatWave on Amazon Web Service (AWS) makes so much sense, especially if you can benefit from a massively parallel, high performance, in-memory query accelerator for the MySQL Database.  
 
-Oracle designed this so developers can focus on the important things, like managing data, creating schemas, and providing highly-available applications. MySQL HeatWave for Amazon Web Services (AWS) is a fully managed service, developed and supported by the MySQL team in Oracle. Oracle automates tasks such as backup, recovery, and database and operating system patching. "Worry less, crunch more," as we say!  
+The integrated HeatWave in-memory query accelerator increases MySQL performance by orders of magnitude for analytics and mixed workloads (OLAP and OLTP). MySQL HeatWave is a fully managed service which allows developers to quickly create and deploy secure cloud native applications using the world’s most popular open source database. MySQL HeatWave is developed and supported by the MySQL team in Oracle. It automates tasks such as backup, recovery, and database and operating system patching. “Worry less, crunch more,” as we say! Oracle designed this so that developers could focus on the important things, like managing data, creating schemas, and providing highly-available applications.  
 
-If you’ve never heard of HeatWave, think of it as a database query accelerator with boost buttons. As in The Fast and the Furious, when you want to pull ahead of the competition, you hit the NO2 and get the speed you need, right when you need it. And of course, this efficiency means it’s a little less expensive to run those big queries. One of the incredible things about Oracle MySQL HeatWave is the ability to [run analytics](https://www.oracle.com/mysql/heatwave/) directly against your existing transactional data, so there's no need to shuffle that data off to a separate system when you need to perform massively parallel analysis.  
+If you’ve never heard of HeatWave, think of it as a database query accelerator with boost buttons. As in The Fast and the Furious, when you want to pull ahead of the competition, you hit the NO2 and get the speed you need right when you need it. And of course, this efficiency means that it’s also less expensive to run complex queries. One of the incredible things about MySQL HeatWave is the ability to [run analytics] directly against your existing transactional data, so there’s no need to ETL that data to a separate system when you need to run analytics queries.  
 
-To get started, we'll create a compartment and install MySQL Shell due to its extended capabilities over vanilla MySQL and create a small database so we can eventually connect it to HeatWave for analysis. Note that this is working within Oracle Cloud, but we’ll cover AWS setup in another tutorial to show you how you can leverage HeatWave in a multi-cloud scenario. What a time to be alive!  
+To get started, we’ll create a compartment and install MySQL Shell due to its extended capabilities over vanilla MySQL. We’ll then create a small database so we can eventually connect it to HeatWave for analysis. Note that this is working within Oracle Cloud, but we’ll cover the setup on AWS in another tutorial to show you how you can leverage MySQL HeatWave in a multi-cloud scenario. What a time to be alive!  
 
-Let's look at how to get started. If you're already developing in Oracle Cloud (OCI), you'll find it's relatively easy to get going, as HeatWave on AWS is integrated with OCI's Identity and Access Management system. When you sign up for HeatWave on AWS, you'll be directed to the OCI login page where you must sign in with an OCI Cloud Account. After signing in, you'll be directed to the OCI Console to complete the MySQL HeatWave on AWS sign-up process. When signing into the HeatWave Console, you are directed to OCI for authentication and then back to the HeatWave Console. To keep things simple, billing is still managed and monitored in OCI.  
+Let’s look at how to get started. If you’re already developing in Oracle Cloud Infrastructure (OCI), you’ll find that it’s relatively easy to get going, as MySQL HeatWave on AWS is integrated with OCI’s Identity and Access Management system. When you sign up for MySQL HeatWave on AWS, you’ll be directed to the OCI login page where you must sign in with an OCI Cloud Account. After signing in, you’ll be directed to the OCI Console to complete the MySQL HeatWave on AWS sign-up process. When signing into the MySQL HeatWave Console, you are directed to OCI for authentication and then back to the MySQL HeatWave Console. To keep things simple, billing is still managed and monitored in OCI. To get started, let’s first create a compute instance with the proper access rules, and see then how to create a HeatWave cluster in OCI. If you’re already using AWS, we’ll cover that in a separate tutorial.  
 
-Since we're just getting started, let's begin truly at the beginning and create a compute instance with the proper access rules and see how to create a HeatWave cluster in OCI. If you're already using AWS, we'll cover that in a separate tutorial.
+Since we're just getting started, let's start completely from scratch and create a compute instance with the proper access rules. Then we'll create a HeatWave cluster in OCI. If you're already using AWS, we'll cover that in a separate tutorial.  
 
 ## PREREQUISITES
 
@@ -49,14 +49,14 @@ MySQL HeatWave on AWS uses predefined Oracle Identity Cloud Service (IDCS) group
 7. Create a DB System with HeatWave-compatible shape
 8. Activate HeatWave on AWS
 
-Wondering why this is a "bastion host"? You can read more about bastions in this [article](https://www.oracle.com/security/cloud-security/bastion/).  
+Wondering why this is a "bastion host"? You can read more about bastions in this [article].  
 
->**NOTE**: Once you’re connecting databases and analytics, there’s a better production method for connecting, and that’s creating a Private Access Channel (OAC), which you can learn all about in the article, [How to create OAC instances on OCI Native using multiple stripes or instances of IDCS](https://blogs.oracle.com/analytics/post/how-to-create-oac-instances-on-oci-native-using-multiple-stripes-or-instances-of-idcs)
+>**NOTE**: Once you’re connecting databases and analytics, there’s a better production method for connecting, and that’s creating a Private Access Channel (OAC), which you can learn all about in the article, [How to create OAC instances on OCI Native using multiple stripes or instances of IDCS].  
 {:.notice}
 
 In our example, we’re using a quick and dirty approach to set things up to use HeatWave.  
 
-Now let’s get started with the basics! We begin by slicing off a piece of the cloud as our own little homestead. There are a couple of ways to do this, but one of the simplest is to create a Compartment (you could also start with a Compute instance). This is a “place for your stuff” within your tenancy and is quite flexible. As you might imagine, we need to create a group of users who can administer our system, and Identity and Access Management (IAM) is where you’ll go to configure this for any compartments you create.
+Now, let’s get started with the basics! We begin by slicing off a piece of the cloud as our own little homestead. There are a couple of ways to do this, but one of the simplest is to create a Compartment (you could also start with a Compute instance). This is a “place for your stuff” within your tenancy and is quite flexible. As you might imagine, we need to create a group of users who can administer our system, and Identity and Access Management (IAM) is where you’ll go to configure this for any compartments you create.
 
 ## Create a Compartment
 
@@ -72,23 +72,23 @@ Creating compartments is a simple matter, and a necessary starting point to orga
 
 **Menu:** Home > Networking > Virtual Cloud Networks  
 
-1. Create VCN and subnets using **Virtual Cloud Networks > Start VCN Wizard > Create a VCN with Internet Connectivit**y.
+1. Create VCN and subnets using **Virtual Cloud Networks > Start VCN Wizard > Create a VCN with Internet Connectivit**y.  
 
    {% imgx assets/start_a_vcn_wizard-devrel0622va.png %}
 
-   The handy wizard will walk you through creating a network interface for your system, although there are lots of ways to configure this, let’s not get distracted. Notice that I chose the compartment I set up earlier, my_heatwave_testing -- because that's important!
+   The handy wizard will walk you through creating a network interface for your system, although there are lots of ways to configure this, let’s not get distracted. Notice that I chose the compartment I set up earlier, my_heatwave_testing -- because that's important!  
 
    {% imgx assets/vcn_config_screen2-devrel0622va.png %}
 
 1. Now let's configure the VCN's security list to allow traffic through MySQL Database Service ports.  
-   Click on the **Private Subnet** for the VCN you created, then click the **Security List** for it.
+   Click on the **Private Subnet** for the VCN you created, then click the **Security List** for it.  
 
    {% imgx assets/vcn_edit_subnet_s1-devrel0622va.png %}
 
 1. Now click **Add Security** list.  
 
    1. We'll add some ingress rules needed to enable the right ports, `3306` and `33060`.  
-      Here's the details:
+      Here's the details:  
 
          ```console
          Source CIDR: 0.0.0.0/0
@@ -98,11 +98,11 @@ Creating compartments is a simple matter, and a necessary starting point to orga
          Description: MySQL Port
          ```
 
-   2. And click **Add Ingress Rules**.
+   2. And click **Add Ingress Rules**.  
 
       {% imgx assets/vcn_ingress_rules_example-devrel0622va.png %}
 
-      Looking good so far!
+      Looking good so far!  
 
 ## Create users and groups (if you haven't already)
 
@@ -118,7 +118,7 @@ Let’s make friends with the **Identity and Security** options.
 
    Of course, for a group you’ll first create all the users you need, add those into the group needing access at the levels you determine, and rest assured that you can set them loose with appropriate access controls.  
 
-3. We allow access by setting policies, allowing one group to have full access (admins), and a group with limited access (database users, for example).  
+3. We permit access by setting policies, allowing one group to have full access (admins), and another group to have limited access (database users, for example).  
 
    For MySQL HeatWave on AWS, there are some specific policy statements we can use, detailed in the charts below.  
 
@@ -126,8 +126,7 @@ Let’s make friends with the **Identity and Security** options.
 
    This is just making it possible to configure and administrate our compartment, and defines the scope of the access applied to the database instance.  
 
-
-For more on adding users and setting policies in OCI, refer to [this documentation](https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/addingusers.htm#Add).
+For more on adding users and setting policies in OCI, refer to [this documentation].
 
 ## Create a Bastion Host Compute Instance
 
@@ -145,13 +144,13 @@ Click **Create Instance** (easy, right?)
 
 Name it something useful, and right now we'll leave the Availability Domain, Fault Domain, Image, and Shape as-is. You can use a free-tier compute!  
 
-We’re going to use Oracle Linux, but one of the niceties here are the choices of compute shapes and Linux distributions to choose from. There’s even a developer distro, which comes pre-configured with key frameworks. For our purposes, we’ll want to make sure it’s set up to work with HeatWave. Plus, we'll use a Bastion Host for better security. Bastions provide "restricted and time-limited access to target resources that don't have public endpoints," and you can [read all about them in this overview article](https://docs.oracle.com/en-us/iaas/Content/Bastion/Concepts/bastionoverview.htm).  
+We’re going to use Oracle Linux, but one of the niceties here are the choices of compute shapes and Linux distributions to choose from. There’s even a developer distro, which comes pre-configured with key frameworks. For our purposes, we’ll want to make sure it’s set up to work with HeatWave. Plus, we'll use a Bastion Host for better security. Bastions provide "restricted and time-limited access to target resources that don't have public endpoints," and you can [read all about them in this overview article].  
 
 {% imgx assets/create_compute_hw_devrel0522aa.png %}
 
 #### Launching a Linux instance
 
-If you want to know more, [here's a tutorial on launching a Linux instance](https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm), but I'll walk you through the basics now. Bear in mind that our compute instance can be pretty minimal, and there are free tier shapes that could work ([our always-free tier VM](https://www.oracle.com/cloud/free/) is quite generous).  
+If you want to know more, [here's a tutorial on launching a Linux instance], but I'll walk you through the basics now. Bear in mind that our compute instance can be pretty minimal, and there are free tier shapes that could work ([our always-free tier VM] is quite generous).  
 
 {% imgx assets/compute_network_hw_devrel0522aa.png %}
 
@@ -167,7 +166,7 @@ And of course, during this process you’ll generate SSH keys so you can access 
 
 Also, the path of least resistance for creating a key pair will be letting Oracle generate one. The key pair will allow you to log in remotely and install MySQL-shell, etc.  
 
->**NOTE:** In many labs we’ll have you use the Cloud Shell, which is a convenient command line interface available directly in the OCI dashboard. I’m old school, so I’m just using Terminal on my Mac. You can use the SSH client of your choice, of course!
+>**NOTE:** In many labs we’ll have you use the Cloud Shell, which is a convenient command line interface available directly in the OCI dashboard. I’m old school, so I’m just using Terminal on my Mac. You can use the SSH client of your choice, of course!  
 {:.notice}
 
 For more information see:  
@@ -211,7 +210,7 @@ To connect, let's use the handy Cloud Shell. It's a little Linux terminal embedd
       chmod 400 <private-key-filename>.key
       ```
 
-1. Then use your public IP address and username opc:  
+1. Then use your public IP address and username `opc`:  
 
       ```console
       ssh -i <private-key-file-name>.key opc@<compute_instance_public_ip>
@@ -243,12 +242,12 @@ Remember a little while ago when we mentioned the endpoint for your DB System? L
 {% imgx assets/createdbsys_warn_devrel_0522va.png %}
 
 >**NOTE:** Notice that the system warns you if you haven't already set up users, a VCN, and so on. That's nice.  
->Also, don't forget to check which compartment you'll create this in, again under **List Scope** on the left.
+>Also, don't forget to check which compartment you'll create this in, again under **List Scope** on the left.  
 {:.notice}
 
 1. Click **Create DB System**.  
 
-   Double-check the compartment, give it a name, and select HeatWave (of course).
+   Double-check the compartment, give it a name, and select **HeatWave** (of course).
 
 1. You'll create admin credentials.  
    Be sure to save those somewhere handy but safe!
@@ -333,7 +332,7 @@ Remember the DB System we just created? Now we can activate MySQL HeatWave in AW
 
 1. Under **MySQL HeatWave on AWS**, click **Administration**, and you'll go back to the setup.  
 
-1. Now click **Provision** to (of course) provision MySQL on AWS. 
+1. Now click **Provision** to (of course) provision MySQL on AWS.
    After the provisioning operation is completed, a message appears stating that MySQL HeatWave on AWS is ready and you are presented with options to open the MySQL HeatWave console, set up users, and view billing information.
 
 ## Summary - so far
@@ -341,3 +340,12 @@ Remember the DB System we just created? Now we can activate MySQL HeatWave in AW
 What we've done so far, all on OCI, is set up a Virtual Cloud Network with ports for MySQL use, created a Bastion Compute instance, then set up a MySQL database, and now we have an endpoint for our HeatWave on AWS instance, and HeatWave should be provisioned on AWS.  
 
 Want to know more? Join the discussion in our [public Slack channel](https://bit.ly/devrel_slack)!
+
+<!--- links -->
+[run analytics]: https://www.oracle.com/mysql/heatwave/
+[article]: https://www.oracle.com/security/cloud-security/bastion/
+[How to create OAC instances on OCI Native using multiple stripes or instances of IDCS]: https://blogs.oracle.com/analytics/post/how-to-create-oac-instances-on-oci-native-using-multiple-stripes-or-instances-of-idcs
+[this documentation]: https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/addingusers.htm#Add
+[read all about them in this overview article]: https://docs.oracle.com/en-us/iaas/Content/Bastion/Concepts/bastionoverview.htm
+[here's a tutorial on launching a Linux instance]: https://docs.oracle.com/en-us/iaas/Content/Compute/Tasks/launchinginstance.htm
+[our always-free tier VM]: https://www.oracle.com/cloud/free/
