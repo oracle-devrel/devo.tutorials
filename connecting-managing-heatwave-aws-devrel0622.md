@@ -17,7 +17,7 @@ author: Victor Agreda
 mrm: WWMK220224P00058
 slug: connecting-managing-heatwave-aws-devrel0622
 ---
-It’s a multi-cloud world today, and that's why MySQL HeatWave for Amazon Web Service gives you a massively parallel, high performance, in-memory query accelerator for the MySQL Database Service as a fully managed service, developed and supported by the MySQL team in Oracle. This accelerates MySQL performance by orders of magnitude for combined analytics and transactional workloads (OLAP and OLTP).
+MySQL HeatWave is a fully managed database service, powered by the integrated HeatWave in-memory query accelerator. It’s the only cloud database service that combines transactions and analytics into one MySQL Database, delivering real-time, secure analytics without the complexity, latency, and cost of ETL duplication. It’s available on OCI and AWS.  
 
 {% imgx assets/networkdiagram-hwaws-oci-devrel0622a.png %}
 
@@ -46,24 +46,30 @@ Plus, you’ll need a DB System somewhere to connect to the HeatWave instance (t
 
 To sign up for MySQL HeatWave on AWS (if you don’t have an Oracle account):  
 
-1. Navigate your browser to [http://cloud.mysql.com/](http://cloud.mysql.com/). You are taken to the MySQL HeatWave on AWS welcome page.
-2. Click Sign Up. A field is displayed for entering your email address.
-3. Enter your email address and click Continue.  
+1. Navigate your browser to [http://cloud.mysql.com/](http://cloud.mysql.com/).  
+   You are taken to the MySQL HeatWave on AWS welcome page.
+2. Click **Sign Up**.  
+   A field is displayed for entering your email address.
+3. Enter your email address and click **Continue**.  
    {% imgx assets/welcome2-mysqlhw-signup-actname-devrel0622a.png %}
-   You are directed to an Account Information page for creating an Oracle Cloud account, which is required to use MySQL HeatWave on AWS.  
+   You are directed to an **Account Information** page for creating an Oracle Cloud account, which is required to use MySQL HeatWave on AWS.  
    >**NOTE:** Do NOT change your Oracle Cloud Account name after provisioning the MySQL HeatWave on AWS service, as it can cause a loss of access to the MySQL HeatWave on AWS service, requiring Support assistance.
    {:.notice}
-4. Enter the required information and click Verify my email. A verification email is sent to the specified address. This may take a minute!
-5. In the verification email, click on the verification link.
- You are directed to a page for verifying the email address and providing initial account information. Follow the prompts. After providing the initial account information, you’ll go to a Get Started page in the Oracle Cloud Infrastructure (OCI) Console, which includes an Enable MySQL HeatWave on AWS link in the Quickstarts section of the page.
-6. Click Enable MySQL HeatWave on AWS.  
+4. Enter the required information and click **Verify my email**.  
+   A verification email is sent to the specified address. This may take a minute!
+5. In the verification email, click on the verification link.  
+   You are directed to a page for verifying the email address and providing initial account information. Follow the prompts. After providing the initial account information, you’ll go to a **Get Started** page in the Oracle Cloud Infrastructure (OCI) Console, which includes an **Enable MySQL HeatWave on AWS** link in the **Quickstarts** section of the page.
+6. Click **Enable MySQL HeatWave on AWS**.  
    You are directed to a MySQL HeatWave on AWS Administration page where you are presented with a dialog that guides you through the setup process.
    {% imgx assets/hwaws-quickstart-enablehwaws-devrel0622a.png %}
-7. A paid account is required to use MySQL HeatWave on AWS. Follow the prompts to complete the account upgrade process. You will be prompted to select an account type and payment method. When the upgrade process is complete, you are directed to the OCI Console.
+7. A paid account is required to use MySQL HeatWave on AWS.  
+   Follow the prompts to complete the account upgrade process. You will be prompted to select an account type and payment method. When the upgrade process is complete, you are directed to the OCI Console.
    {% imgx assets/upgd-awshw-account-reqscrn-devrel0622.png %}
-8. From the OCI Console navigation menu, select Databases. MySQL HeatWave on AWS appears on the Home tab under the Featured label.
-9. Under MySQL HeatWave on AWS, click Administration. You are returned to the setup dialog.
-10. Click Provision to provision MySQL HeatWave on AWS.
+8. From the OCI Console navigation menu, select **Databases**.  
+   MySQL HeatWave on AWS appears on the **Home** tab under the **Featured** label.
+9. Under MySQL HeatWave on AWS, click **Administration**.  
+   You are returned to the setup dialog.
+10. Click **Provision** to provision MySQL HeatWave on AWS.
 
     After the provisioning operation is completed, a message appears stating that MySQL HeatWave on AWS is ready and you are presented with options to open the MySQL HeatWave console, set up users, and view billing information.
 
@@ -73,17 +79,17 @@ MySQL HeatWave on AWS requires a subscription to the US East (Ashburn) region on
 
 1. Navigate your browser to [http://cloud.mysql.com/](http://cloud.mysql.com/).  
    You are taken to the MySQL HeatWave on AWS welcome page.
-2. Enter your Oracle Cloud Account name and click Continue.  
-   You are directed to a Get Started page in the Oracle Cloud Infrastructure (OCI) Console, which includes an Enable MySQL HeatWave on AWS link in the Quickstarts section of the page.
-3. Click Enable MySQL HeatWave on AWS.  
-   You are directed to a MySQL HeatWave on AWS Administration page where you are presented with a dialog that guides you through the setup process.  
+2. Enter your Oracle Cloud Account name and click **Continue**.  
+   You are directed to a **Get Started** page in the Oracle Cloud Infrastructure (OCI) Console, which includes an **Enable MySQL HeatWave on AWS** link in the Quickstarts section of the page.
+3. Click **Enable MySQL HeatWave on AWS**.  
+   You are directed to a **MySQL HeatWave on AWS Administration** page where you are presented with a dialog that guides you through the setup process.  
 
     >**IMPORTANT:** A paid account is required to use MySQL HeatWave on AWS. If you do not have a paid account, follow the prompts to compete the account upgrade process. You will be prompted to select an account type and payment method. When the upgrade process is complete, you are directed to the OCI Console.
    {:.warn}
 
-4. From the OCI Console navigation menu, select Databases.  
-   MySQL HeatWave on AWS appears on the Home tab under the Featured label.
-5. Under MySQL HeatWave on AWS, click Administration.  
+4. From the OCI Console navigation menu, select **Databases**.  
+   MySQL HeatWave on AWS appears on the **Home** tab under the **Featured** label.
+5. Under MySQL HeatWave on AWS, click **Administration**.  
    You’ll go back to the setup dialog.
 6. Click Provision to provision MySQL HeatWave on AWS.  
    {% imgx assets/provision-requpg-hwaws-setup-devrel0622a.png %}
@@ -103,20 +109,20 @@ To sign in to MySQL HeatWave on AWS, you must have:
 Let's get started!  
 
 1. Point your browser to [http://cloud.mysql.com/](http://cloud.mysql.com/)  
-   You are taken to the MySQL HeatWave on AWS welcome page. You’re familiar by now with this screen.
+   You are taken to the **MySQL HeatWave on AWS** welcome page. You’re familiar by now with this screen.
 2. Enter your Cloud Account name.
 3. Click Continue.
-   You are directed to the Oracle Cloud Account Sign In dialog.
+   You are directed to the **Oracle Cloud Account Sign In** dialog.
 4. Enter your user name and password and click Sign In.  
 
-   Once your user name and password are authenticated, you are directed to the HeatWave Console. Eventually you’ll need to create users and groups (for various levels of access control), and luckily you can access the Oracle Identity Cloud Service from the MySQL HEatWave on AWS Console:
+   Once your user name and password are authenticated, you are directed to the HeatWave Console. Eventually you’ll need to create users and groups (for various levels of access control), and luckily you can access the Oracle Identity Cloud Service from the MySQL HeatWave on AWS Console:
 
    1. Sign into the HeatWave Console as an Account Administrator.
-   2. From the profile menu, select Administration.  
-      You are directed to the MySQL HeatWave on AWS Administration page in the OCI Console.
-   3. Select Identity Service.  
+   2. From the profile menu, select **Administration**.  
+      You are directed to the **MySQL HeatWave on AWS Administration** page in the OCI Console.
+   3. Select **Identity Service**.  
 
-      This will take you to the Identity section in the OCI Account Center.  
+      This will take you to the **Identity** section in the **OCI Account Center**.  
 
       {% imgx assets/mysqlhw-awsconsole-2view-signin-devrel0622a.png %}
 
@@ -130,39 +136,39 @@ From here, you can log into the MySQL HeatWave on AWS Console and create a MySQL
 
 By now you’ve got MySQL HeatWave on AWS provisioned, and you want to connect it to a DB System somewhere. We do this in the Workspaces tab in the console.  
 
-A Connection Information dialog will appear, and you choose a DB System from the drop-down, enter the proper username/password combo, and click Connect.
+A **Connection Information** dialog will appear, and you choose a DB System from the drop-down, enter the proper username/password combo, and click **Connect**.
 
 ### Managing HeatWave Cluster Data
 
-Also in the Workspaces tab, we can use the Console to load or unload data from a HeatWave cluster. Here’s how:
+Also in the **Workspaces** tab, we can use the Console to load or unload data from a HeatWave cluster. Here’s how:  
 
-1. In the DB System workspace, expand the Manage Data in HeatWave pane.
-2. Select the databases and tables that you want to load or unload. Databases are selected in the Databases pane. When a database is selected, the tables from the selected database appear in the Tables from selected databases pane.
-3. There’s lots to see there but we’re interested in selecting the tables we want to load or unload, so click Load into HeatWave or Unload from HeatWave.  
+1. In the **DB System** workspace, expand the **Manage Data in HeatWave** pane.
+2. Select the databases and tables that you want to load or unload. Databases are selected in the Databases pane. When a database is selected, the tables from the selected database appear in the **Tables** from selected databases pane.
+3. There’s lots to see there but we’re interested in selecting the tables we want to load or unload, so click **Load into HeatWave or Unload from HeatWave**.  
 
-   If you're loading tables, the MySQL Auto Parallel Load tables into Heatwave dialog appears, providing a summary of the load operation about to happen.
+   If you're loading tables, the **MySQL Auto Parallel Load tables into Heatwave** dialog appears, providing a summary of the load operation about to happen.
 
-4. Click Load Tables to start the parallel load operation.  
+4. Click **Load Tables** to start the parallel load operation.  
 
-   To stop a load or unload operation, click Stop Load/Unload.
+   To stop a load or unload operation, click **Stop Load/Unload**.
 
->**NOTE:** The Refresh button refreshes the page, displaying the current state of databases and tables loaded in HeatWave.
+>**NOTE:** The **Refresh** button refreshes the page, displaying the current state of databases and tables loaded in HeatWave.
 {:.notice}
 
 ### Creating Backups
 
 To create a DB System backup:  
 
-1. In the HeatWave Console, select the MySQL DB Systems tab. Under MySQL, select DB Systems.
+1. In the HeatWave Console, select the **MySQL DB Systems** tab. Under **MySQL**, select **DB Systems**.
 2. In the list of DB Systems, find the DB System you want to create a backup for, and do one of the following:  
 
-    - Click on the row of the DB System to highlight it, and choose Create Backup from the Actions menu.
-    - Click the name of the DB System to open the DB System Details page. Click Create Backup. The Create Backup dialog is displayed.
+    - Click on the row of the **DB System** to highlight it, and choose **Create Backup** from the Actions menu.
+    - Click the name of the **DB System** to open the DB System Details page. Click **Create Backup**. The **Create Backup** dialog is displayed.
 3. Edit the fields as required:  
 
-   - Display Name: The name of the backup.  
+   - **Display Name:** The name of the backup.  
      If you do not define a name, one is generated in the format `DB-System-Name - Backup - Date&Time`.
-   - Description: The description of the backup.  
+   - **Description:** The description of the backup.  
      If you do not define a description, one is generated in the format `DB-System-Name - Manual Backup - Date&Time`.
 
 4. Click Create to create the backup.
@@ -177,21 +183,24 @@ Such maintenance is performed infrequently, and only when absolutely necessary. 
 
 ### Upgrading MySQL Server
 
-Use the Console to manually upgrade the MySQL Server of your DB system.
+Use the Console to manually upgrade the MySQL Server of your DB system.  
 
->**NOTE:** It is recommended to perform a full backup of your DB system before upgrading.
+>**NOTE:** It is recommended to perform a full backup of your DB system before upgrading.  
 {:.notice}
 
-1. In the HeatWave Console, select the MySQL DB Systems tab.
-2. Under MySQL, select DB Systems.
+1. In the HeatWave Console, select the **MySQL DB Systems** tab.
+2. Under **MySQL**, select **DB Systems**.
 3. Find the DB system you want to upgrade, and do one of the following:
 
-   - Click on the row of the DB System to highlight it, and choose Edit MySQL Version from the Actions menu. If this option is not enabled, your DB system is already using the latest version of the MySQL Server.
-   - Click the name of the DB System to open the DB System Details page. Click Edit MySQL Version. If this button is not enabled, your DB system is already using the latest version of the MySQL Server.
-    The Edit MySQL Version dialog is displayed.
+   - Click on the row of the DB System to highlight it, and then choose **Edit MySQL Version** from the **Actions** menu.  
+     **Note:** If this option is not enabled, your DB system is already using the latest version of the MySQL Server.
+   - Click the name of the DB System to open the **DB System Details** page.  
+     Click **Edit MySQL Version**.  
+     **Note:** If this button is not enabled, your DB system is already using the latest version of the MySQL Server.
+     The **Edit MySQL Version** dialog is displayed.
 
 4. In the Edit MySQL Version, select the required MySQL version.
-5. Click Save Changes.
+5. Click **Save Changes**.
 
    The DB system enters the UPDATING state while the MySQL Server is upgraded.
 
@@ -205,17 +214,18 @@ These actions have no effect on the DB System to which the HeatWave cluster is a
 
 To start, stop, or restart a HeatWave cluster:  
 
-1. In the HeatWave Console, select the HeatWave Clusters tab.
+1. In the HeatWave Console, select the **HeatWave Clusters** tab.
 2. In the list of HeatWave clusters, find the HeatWave cluster you want to start, stop, or restart, and do one of the following:
 
-   - Click on the row of the HeatWave cluster to highlight it, and choose the required action from the Actions menu.
-   - Click the name of the HeatWave cluster to open the HeatWave Cluster Details page. On this page you can stop, start, or restart the HeatWave cluster.
+   - Click on the row of the HeatWave cluster to highlight it, and choose the required action from the **Actions** menu.
+   - Click the name of the HeatWave cluster to open the **HeatWave Cluster Details** page.  
+    On this page you can stop, start, or restart the HeatWave cluster.
 
 3. Select one of the following actions:  
 
-   - Start: Starts a stopped HeatWave cluster. After the HeatWave cluster is started, the Stop action is enabled and the Start option is disabled.
-   - Stop: Stops a running HeatWave cluster. After the HeatWave cluster is stopped, the Start action is enabled.
-   - Restart: Shuts down a HeatWave cluster and restarts it.
+   - **Start:** Starts a stopped HeatWave cluster. After the HeatWave cluster is started, the Stop action is enabled and the Start option is disabled.
+   - **Stop:** Stops a running HeatWave cluster. After the HeatWave cluster is stopped, the Start action is enabled.
+   - **Restart:** Shuts down a HeatWave cluster and restarts it.
 
 ### Deleting a HeatWave Cluster
 
@@ -223,14 +233,14 @@ Deleting a HeatWave cluster removes the HeatWave cluster nodes permanently. The 
 
 To delete a HeatWave cluster:
 
-1. In the HeatWave Console, select the HeatWave Clusters tab.
+1. In the HeatWave Console, select the **HeatWave Clusters** tab.
 2. In the list of HeatWave clusters, find the HeatWave cluster you want to delete, and do one of the following:
 
-   - Click on the row of the HeatWave cluster to highlight it, and choose the Delete action from the Actions menu.
-   - Click the name of the HeatWave cluster to open the HeatWave Cluster Details page. Click the Delete button.
-    The Delete HeatWave Cluster dialog is displayed.
+   - Click on the row of the HeatWave cluster to highlight it, and choose the **Delete** action from the Actions menu.
+   - Click the name of the HeatWave cluster to open the **HeatWave Cluster Details** page. Click the **Delete** button.
+    The **Delete HeatWave Cluster** dialog is displayed.
 
-3. Click Delete HeatWave cluster.
+3. Click **Delete HeatWave cluster**.
 
 That's a top-level overview of getting your HeatWave on AWS set up, and a little bit of management.  
 
