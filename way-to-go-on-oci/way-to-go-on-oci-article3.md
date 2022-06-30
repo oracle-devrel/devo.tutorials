@@ -26,7 +26,7 @@ author: lucas-jellema
 draft: true
 slug: way-to-go-on-oci-article3
 ---
-{% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %}
+<!-- {% imgx alignright assets/landing-zone.png 400 400 "OCLOUD landing zone" %} -->
 
 This is the third installment in a five part series about Go and Oracle Cloud Infrastructure. This series discusses how Go applications can be created and run on Oracle Cloud Infrastructure (OCI) in Compute Instances (VMs), containerized on Kubernetes, or as serverless Functions. The articles show how to automate the build and deployment of these Go applications using OCI DevOps. An important topic is how to use OCI services from Go applications, both those running on OCI as well as Go code running elsewhere. Some of the OCI services discussed are Object Storage, Streaming, Key Vault and Autonomous Database. 
 
@@ -159,13 +159,13 @@ Let's first create the application through the OCI Console. Type *app* in the se
 
 Click on button *Create Application*. Type the name for the application: *go-on-oci-app*. Select the VCN that was created in part one of the article series and its one public subnet. Then click on *Create* to create the application. 
 
-![](assets/3tgo-create-application.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-create-application.jpg 1200 469 "way-to-go-on-oci-article-3-create-application.jpg" %}  
 
 #### Prepare Local Environment for OCI Interaction and Function Image Push
 
 Once the application is created, the General Information for the application is presented. The page also contains instructions for creating your first function, either in the OCI Cloud Shell, or in a local setup (which could, of course, also be the *go-app-vm* compute instance).
 
-![](assets/3tgo-create-function-from-app.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-create-function-from-app.jpg 1200 681 "way-to-go-on-oci-article-3-create-function-from-app.jpg" %}  
 
 If you are using the OCI Cloud Shell, the steps for creating this context are slightly different (and simpler) than when you work in a regular development environment. Feel free to follow the OCI Shell setup. In this article, we will take the other path, used for any local development environment.
 
@@ -189,7 +189,7 @@ If the user account used for deploying the function has the necessary IAM permis
 1. Type *regi* in the search bar. Click on link *Container Registry | Containers & Artifacts*. 
 2. Click *Create repository*. Type the name of the repository: *go-on-oci/greeter*. This is comprised of the repository prefix and the name of the function, in which the repository will contain the images. Set the Access to *Public*. 
 
-    ![](assets/3tgo-create-repository.png)  
+    {% imgx aligncenter assets/way-to-go-on-oci-article-3-create-repository.jpg 1200 464 "way-to-go-on-oci-article-3-create-repository.jpg" %}  
 3. Click on button *Create repository*. After a few seconds, a new and empty container image repository is created, ready to receive the function (container) images that we will push using the Fn CLI.
 
 #### Create a Context for OCI in Fn CLI
@@ -201,7 +201,7 @@ fn create context go-on-oci --provider oracle
 fn use context go-on-oci
 ```
 
-![](assets/3tgo-getting-started-with-app.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-getting-started-with-app.jpg 1200 554 "way-to-go-on-oci-article-3-getting-started-with-app.jpg" %}  
 
 Copy the commands under step 4 to update the context with the compartment OCID and the Oracle Functions API URL. In my case:
 
@@ -271,7 +271,7 @@ The first call will take quite some time because the function starts out cold an
 
 This image describes the situation we have arrived at:
 
-![](assets/3tgo-local-dev-oci-functions.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-local-dev-oci-functions.jpg 585 431 "way-to-go-on-oci-article-3-local-dev-oci-functions.jpg" %}  
 
 You can check in the OCI Console for the evidence of what just happened. Type *greeter* in the search box in the console. Under *Resources* there will be an entry *greeter | Functions*. Click on the link to go to the page showing details for the function. You will find references to the function image, the memory setting and the endpoint for invoking the function. Under metrics you should find evidence of the call to the function made using the Fn CLI. 
 
@@ -283,7 +283,7 @@ OCI Functions can not just be invoked. Even though they have an HTTP endpoint th
 
 A better way to allow consumers to invoke functions is through an API Gateway. We used an API Gateway in the previous article to open up a public route to the *myserver* application running on a (potentially) private compute instance. Now we will do the same for the *greeter* function using an additional route in the API Gateway *the-api-gateway* and the deployment *myserver-api* created in the previous article.
 
-![](assets/3tgo-apigateway-function.png)
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-apigateway-function.jpg 1170 250 "way-to-go-on-oci-article-3-apigateway-function.jpg" %}
 
 #### Setup IAM Access for the API Gateway
 
@@ -308,7 +308,7 @@ Click on button *Edit* to open the deployment specification. Click on the link f
 
 Type */greeting* as the path for this new route. Select *GET* as the method and *Oracle Functions* as the Type (of backend). Select application *go-on-oci-app* and then set *Function Name* to *greeter*. 
 
-![](assets/3tgo-define-apigateway-route-to-greeterfunction.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-define-apigateway-route-to-greeterfunction.jpg 1200 836 "way-to-go-on-oci-article-3-define-apigateway-route-to-greeterfunction.jpg" %}  
 
 Press *Next*. Then press *Save Changes* to apply the changes and make the new route real.
 
@@ -353,7 +353,7 @@ This should result in the improved response. The build and deploy process are co
 
 In the previous installment in this series, we saw the use of OCI DevOps Deployment Pipelines for deploying an application to a compute instance. Now we'll use a pipeline for automated deployment of a function. The overall approach and ingredients are similar. We need an artifact, a (target) environment, and the deployment pipeline with a Function Deployment stage, as well as IAM permissions for the pipeline to read the artifact and deploy the function.
 
-![](assets/3tgo-ingredients-function-deployment-pipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-ingredients-function-deployment-pipeline.jpg 696 515 "way-to-go-on-oci-article-3-ingredients-function-deployment-pipeline.jpg" %}  
 
 These ingredients in more detail:
 
@@ -374,7 +374,7 @@ Enter *greeter-function* as the name of the DevOps artifact. The type should be 
 
 Set the drop down field *Replace parameters used in this artifact* to *Yes, substitute placeholders*.
 
-![](assets/3tgo-create-artifact-for-function-image.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-create-artifact-for-function-image.jpg 1200 474 "way-to-go-on-oci-article-3-create-artifact-for-function-image.jpg" %}  
 
 Click on button *Add* to complete and save the definition of the artifact.
 
@@ -386,7 +386,7 @@ In the first step, *Basic information*, click on the tile *Functions - Create an
 
 Click on *Create environment* to save the definition.
 
-![](assets/3tgo-define-environment-for-function.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-define-environment-for-function.jpg 1200 608 "way-to-go-on-oci-article-3-define-environment-for-function.jpg" %}  
 
 ### Create the Deploy Pipeline for Deploying the Function
 
@@ -402,7 +402,7 @@ Under the heading *Artifact*, click on *Select Artifact*. A list of all artifact
 
 Note that the button *Select Artifact* is no longer enabled: only a single container image can be associated with this stage.
 
-![](assets/3tgo-deployment-pipeline-stage-update-greeter-function.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-deployment-pipeline-stage-update-greeter-function.jpg 1200 487 "way-to-go-on-oci-article-3-deployment-pipeline-stage-update-greeter-function.jpg" %}  
 
 Click on *Add*. The pipeline stage is created in the pipeline. And the pipeline is now ready to be executed -- its definition is complete. Or is it? The artifact this pipeline makes use of is not unequivocally defined: the version label in the path for the container image contains the placeholder `${imageVersion}`. To ensure the proper version is used for deployment, this placeholder needs to be replaced with the right value. And that is arranged by defining a parameter in the pipeline that is called `imageVersion` and is set to an existing version label.
 
@@ -420,7 +420,7 @@ Run the Deployment Pipeline by pressing *Run pipeline*.
 
 Once the deployment is complete, you will see the green markers that proclaim success. However, there is no other obvious indication of this success because the end result is exactly the situation we had achieved with manual deployment of the function from the Fn CLI command line.
 
-![](assets/3tgo-function-deploymentpipeline-done.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-function-deploymentpipeline-done.jpg 1200 555 "way-to-go-on-oci-article-3-function-deploymentpipeline-done.jpg" %}  
 
 To make things a little bit more interesting, we will make a change to the function's code. Then, build the container image for the function (locally) and push the new function image to the container image registry. Then we'll start the deployment pipeline once again; this time, when successful, it will render a new situation which we can experience by invoking the *my-api/greeting* route on the API Gateway.
 
@@ -486,7 +486,7 @@ Until now, we've built the function container image by hand in the local develop
 
 When all the elements are in place, the total interconnected set of OCI components looks as visualized in the next figure.
 
-![](assets/3tgo-tying-function-build-and-deploy-together.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-tying-function-build-and-deploy-together.jpg 1022 833 "way-to-go-on-oci-article-3-tying-function-build-and-deploy-together.jpg" %}  
 
 The artifact and the deployment pipeline shown in this figure are already defined in the DevOps project, as are the Application, Function, and Container Image Registry repository for the images for the function.  We will use the Code Repository set up in the previous article. All we need to create is the Build Pipeline *build-greeter-function* with its three stages.
 
@@ -510,7 +510,7 @@ Set the *Build spec file path* to `/functions/greeter/go-function-build-spec.yam
 
 Click on the *Select* button under *Primary code repository*. We can now specify from which code repository the build will get its sources. Select *OCI Code Repository* as the *Source Connection Type*. Then select the *go-on-oci-repo* repository. We will work with sources on the main branch, so do not change that default. Type *go-on-oci-sources* as the value for *Build source name*. A managed build stage can use sources from multiple repositories. In the build specification, we can refer to each of these sources' root locations using the label defined as *Build source name*. Click on *Save*. 
 
-![](assets/3tgo-define-managed-build-stage-greeter-function.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-define-managed-build-stage-greeter-function.jpg 1200 501 "way-to-go-on-oci-article-3-define-managed-build-stage-greeter-function.jpg" %}  
 
 Press button *Add*. This completes the definition of the managed build stage. This is all that's needed to take sources and process them into artifacts. The detailed instructions executed by this managed build stage and on the build server are defined in the `go-function-build-spec.yaml` file. It is this file that contains the instructions for the actual detailed steps executed on the build server.
 
@@ -654,7 +654,7 @@ Click on *Add* to complete the stage definition and add it to the build pipeline
 
 This completes the build pipeline: it grabs sources, processes them into a deployable artifact, publishes the artifact to the image repository and triggers the deployment pipeline to take it from there.
 
-![](assets/3tgo-complete-buildpipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-complete-buildpipeline.jpg 941 712 "way-to-go-on-oci-article-3-complete-buildpipeline.jpg" %}  
 
 ### Run Build Pipeline and Trigger Deployment Pipeline
 
@@ -662,7 +662,7 @@ Click on *Start manual run*. Define a value for parameter *imageVersion*, e.g. *
 
 It will now take a few minutes to complete the build pipeline and trigger the subsequent deployment of the newly built function image. 
 
-![](assets/3tgo-run-of-buildpipeline.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-run-of-buildpipeline.jpg 1200 564 "way-to-go-on-oci-article-3-run-of-buildpipeline.jpg" %}  
 
 When all is done and success is reported, you can invoke the route on the API Gateway that leads to the *greeter* function to check if the response is indeed the new one expected.
 
@@ -766,7 +766,7 @@ The source repository for this article contains the folder `applications/store-n
 
 The dependency of this application on the Go SDK for OCI is defined in `go.mod`.
 
-![](assets/3tgo-goclientapp-object-storage.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-goclientapp-object-storage.jpg 825 749 "way-to-go-on-oci-article-3-goclientapp-object-storage.jpg" %}  
 
 The first part of the code creates an `ObjectStorageClient` instance. Many functions are defined on the underlying interface -- all supporting some form of interaction with the Object Storage Service. The `ObjectStorageClient` is created using `common.DefaultConfigProvider()` (just as before), using the default OCI configuration file with a reference to a file containing the private key. 
 
@@ -1019,7 +1019,7 @@ allow dynamic-group functions-in-go-on-oci to manage buckets in compartment go-o
 
 The next figure depicts the permissions that now apply to the function when the policy containing these statements is saved:
 
-![](asserts/3tgo-iam-for-function-to-objects.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-iam-for-function-to-objects.jpg   "way-to-go-on-oci-article-3-iam-for-function-to-objects.jpg" %}  
 
 Now the function can be invoked and should be able to do its thing using the default names for bucket and object.
 
@@ -1039,7 +1039,7 @@ Type */object-broker* as the path for this new route. Select *GET* as the method
 
 The end-to-end picture that is now configured from HTTP consumer through API Gateway to Function and finally bucket and object looks like this:
 
-![](assets/3tgo-apigw-objectbroker-fun.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-apigw-objectbroker-fun.jpg 1200 490 "way-to-go-on-oci-article-3-apigw-objectbroker-fun.jpg" %}  
 
 Invoke the function from the browser or using `curl` on the command line using:
 
@@ -1055,7 +1055,7 @@ Just as we have done before, you can easily set up the required elements in OCI 
 
 After creating a DevOps artifact for the Function Container Image, an environment for the Function, and the two pipelines for build and deployment, the automated DevOps process set up would look like this:
 
-![](assets/3tgo-automated-build-and-deploy-of-object-broker.png)  
+{% imgx aligncenter assets/way-to-go-on-oci-article-3-automated-build-and-deploy-of-object-broker.jpg 997 780 "way-to-go-on-oci-article-3-automated-build-and-deploy-of-object-broker.jpg" %}  
 
 ## Conclusion
 

@@ -24,7 +24,7 @@ Today, we will see how we can use these two components to connect from the brows
 
 We need the MySQL DB System’s IP:
 
-![System details in OCI with IP address highlighted](assets/system-details-IP.png)
+{% imgx aligncenter assets/system-details-IP.jpg 2480 1366 "System details in OCI with IP address highlighted" %}
 
 So in this example, the MDS Instance we want to connect to has 10.0.0.99 as IP.
 
@@ -34,15 +34,15 @@ Now we will create a new Bastion Service that will allow us to create a SSH Tunn
 
 The Bastion Service’s dashboard is located in **Identity & Security**:
 
-![Identity and Security dashboard, where access Bastion](assets/identity-security-dash.png)
+{% imgx aligncenter assets/identity-security-dash.jpg 2356 1214 "Identity and Security dashboard, where access Bastion" %}
 
 If this is the first time you create a Bastion, the list will be empty and you just need to create one:
 
-![The 'Create Bastion' button if you've not created one before](assets/create-bastion-button.png)
+{% imgx aligncenter assets/create-bastion-button.jpg 2470 896 "The 'Create Bastion' button if you've not created one before" %}
 
 We need to select the VCN, the subnet and a block of allow IPs. As I don’t know the IP of the Cloud Shell, I will use 0.0.0.0/0:
 
-![With Bastion selected, begin to configure its instance](assets/configuring-bastion.png)
+{% imgx aligncenter assets/configuring-bastion.jpg 2486 1794 "With Bastion selected, begin to configure its instance" %}
 
 If you don't like to use 0.0.0.0/0, you need to add the public IP used by Cloud Shell with \32:
 
@@ -59,7 +59,7 @@ But before creating the session, we will start the Cloud Shell and generate a SS
 
 To Start Cloud Shell, we just click on this icon on the top right corner of the OCI’s Dashboard:
 
-![Click the Cloud Shell button to get started](assets/cloud-shell-button.png)
+{% imgx aligncenter assets/cloud-shell-button.jpg 738 190 "Click the Cloud Shell button to get started" %}
 
 This will open the Cloud Shell in the browser, the first time it takes some time to generate it.
 
@@ -71,23 +71,23 @@ $ ssh-keygen -t rsa
 
 This is how it looks like and as you can see the public key we need will be stored in `~/.ssh/id_rsa.pub`:
 
-![The public key is stored in ~/.ssh/id_rsa.pub:](assets/public-key-location.png)
+{% imgx aligncenter assets/public-key-location.jpg 1844 1098 "The public key is stored in ~/.ssh/id_rsa.pub:" %}
 
 # Bastion Session
 
 As we have now all we need to create the Bastion Session for the SSH Tunnel, we can go back to the Bastion we created earlier and create a new session:
 
-![Create a new Bastion session](assets/create-new-bastion-session.png)
+{% imgx aligncenter assets/create-new-bastion-session.jpg 2514 1322 "Create a new Bastion session" %}
 
 We need to choose the **SSH port forwarding session** as Type, add the MySQL Database System’s IP and paste the SSH Public Key.
 
 After the session is created (which took me a little over two hours), you will have something like this:
 
-![Click the vertical, dotted item](assets/dotted-menu-button.png)
+{% imgx aligncenter assets/dotted-menu-button.jpg 1942 498 "Click the vertical, dotted item" %}
 
 If you click on the 3 vertical dots, you can view or copy the ssh command we need to run in Cloud Shell:
 
-![Copy the ssh command](assets/view-ssh-command.png)
+{% imgx aligncenter assets/view-ssh-command.jpg 2516 1904 "Copy the ssh command" %}
 
 `-i <privateKey>` is not really required as we only have one single key for the moment. Also, the error message “bind: Cannot assign requested address” is not a problem. This message only displays because because the Cloud Shell tries to bind on ipv6 too. If you want to avoid it, just add -4 between ssh and -i like this: 
 
@@ -101,7 +101,7 @@ Note the "&" at the end of the ssh command.
 
 And finally, we can connect to MySQL Database Service’s instance from Cloud Shell simply using MySQL Shell:
 
-![Server version highlighted in shell](assets/cloud-connect-from-shell.png)
+{% imgx aligncenter assets/cloud-connect-from-shell.jpg 2536 2070 "Server version highlighted in shell" %}
 
 As you can see it’s easy to connect from Cloud Shel once the Tunnel is ready.
 
