@@ -36,7 +36,7 @@ If you should encounter issues either during installation (Python or CLI) or whe
 
 ## Authentication
 
-[Token-based authentication](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm) for the CLI allows customers to authenticate their session interactively, then use the CLI for a single session without an API signing key. This enables customers using an identity provider that is not [SCIM](https://docs.oracle.com/en/cloud/paas/identity-cloud/uaids/use-scim-interface-integrate-oracle-identity-cloud-service-custom-applications.html#GUID-B883A440-9726-4219-8C0C-A906B821AB46)-supported to use a [federated user account](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/usingscim.htm#:~:text=A%20federated%20user%20is%20created,to%20Oracle%20Cloud%20Infrastructure%20groups.) with the CLI and SDKs.
+[Token-based authentication](https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/clitoken.htm) for the CLI allows customers to authenticate their session interactively, then use the CLI for a single session without an API signing key. This enables customers using an identity provider that is not [SCIM](https://docs.oracle.com/en/cloud/paas/identity-cloud/uaids/use-scim-interface-integrate-oracle-identity-cloud-service-custom-applications.html#GUID-B883A440-9726-4219-8C0C-A906B821AB46)-supported to use a [federated user account](https://docs.oracle.com/en-us/iaas/Content/Identity/Tasks/usingscim.htm#:~:text=A%20federated%20user%20is%20created,to%20Oracle%20Cloud%20Infrastructure%20groups.) with the CLI and SDKs.  
 
 ### Requirements
 
