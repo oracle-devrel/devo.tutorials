@@ -211,7 +211,7 @@ In addition, you can get help for any command by using the **\--help**,
 
 #### Output formats
 
-- **JSON (\--output JSON) --** (default) The output is formatted as JSON string.  
+- **JSON (\--output JSON) -** (default) The output is formatted as JSON string.  
 
   For additional information about working with JSON, see the section on **Advanced JSON options** in the [Additional features](#additional-features) section below.  
 
@@ -246,7 +246,7 @@ In addition, you can get help for any command by using the **\--help**,
     **Example:** To generate the JSON for launching an instance, run the following command:  
 
     ```sh
-    oci compute instance launch \--generate-full-command-json-input
+    oci compute instance launch --generate-full-command-json-input
     ```
 
   **JMESPath:**
@@ -406,7 +406,7 @@ Command reference: [OS](https://docs.oracle.com/en-us/iaas/tools/oci-cli/2.17.0/
 | Get a [list of buckets](https://docs.oracle.com/en-us/iaas/tools/oci-cli/3.15.1/oci_cli_docs/cmdref/os/bucket/list.html) | oci os bucket list -ns mynamespace \--compartment-id \$C |
 | | |
 
-### Useful examples (Advanced)
+### Useful examples (advanced)
 
 #### General
 
@@ -757,7 +757,7 @@ A complete list of OCI CLI [Object commands](https://docs.oracle.com/en-us/iaas/
 
   - Misc  
 
-    To get the base URL of object storage in the home region, see the associated section under [Useful examples (Advanced)/General](#general).  
+    To get the base URL of object storage in the home region, see the associated section under [Useful examples (advanced)/General](#general).  
 
 - Bulk operations  
 
