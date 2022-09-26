@@ -1,6 +1,6 @@
 # Introduction
 
-The *CLI* is a small-footprint tool that you can use on its own or with the Console to complete Oracle Cloud Infrastructure tasks. The CLI provides the same core functionality as the Console, plus additional commands. Some of these extend Console functionality, such as the ability to run scripts.  
+The *Command Line Interface (CLI)* is a small-footprint tool that you can use on its own or with the Console to complete Oracle Cloud Infrastructure tasks. The CLI provides the same core functionality as the Console, plus additional commands. Some of these extend Console functionality, such as the ability to run scripts.  
 
 This CLI and sample are dual licensed under the [Universal Permissive License 1.0](https://opensource.org/licenses/UPL) and the [Apache License 2.0](https://www.apache.org/licenses/LICENSE-2.0); third-party content is separately licensed as described in the code.  
 
@@ -211,13 +211,13 @@ In addition, you can get help for any command by using the **\--help**,
 
 #### Output formats
 
-- **JSON (\--output JSON) -** (default) The output is formatted as JSON string.  
+- **JSON (\--output JSON)** - (default) The output is formatted as JSON string.  
 
   For additional information about working with JSON, see the section on **Advanced JSON options** in the [Additional features](#additional-features) section below.  
 
-- **Table (\--output table) -** The output is formatted as a table with headings derived from the query parameters. It typically presents in an easier-to-read, human-friendly format.  
+- **Table (\--output table)** - The output is formatted as a table with headings derived from the query parameters. It typically presents in an easier-to-read, human-friendly format.  
 
-- **\--raw-output -** You can supply this argument to the CLI if you know that the output is a single string value; any surrounding quotes are removed for you in the output.  
+- **\--raw-output** - You can supply this argument to the CLI if you know that the output is a single string value; any surrounding quotes are removed for you in the output.  
 
 ### Additional features
 
