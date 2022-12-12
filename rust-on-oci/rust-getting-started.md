@@ -15,8 +15,7 @@ categories:
 date: 2022-12-12 08:00
 description: The beginning of a series on building applications using the Rust programming language.
 toc: true
-author:
-  name: 
+author: oracle-developers
 slug: rust-getting-started
 ---
 {% imgx alignleft 250 250 media/image2.png "Rust Logo" "Rust Logo" %}

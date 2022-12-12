@@ -15,8 +15,7 @@ categories:
 date: 2022-12-12 08:00
 description: How to build an API using Rust and host it on Oracle Cloud Infrastructure.
 toc: true
-author:
-  name: 
+author: oracle-developers
 slug: rust-building-an-api
 ---
 It's impossible to work in cloud services without hearing about Rust, the system's programming language from Mozilla. It's used all over the internet by companies like [Cloudflare][1], [Facebook][2], and [Discord][3]. It's a strongly-typed yet flexible language that emphasizes strict guidelines around memory usage, making it blazing fast and resource lean. The language also focuses on developer productivity, which is evident in their tooling and [package ecosystems].

@@ -15,8 +15,7 @@ categories:
 date: 2022-12-12 08:00
 description: How to build safely with modern technology.
 toc: true
-author:
-  name: 
+author: oracle-developers
 slug: rust-safe-fast-manageable
 ---
 ## Introduction
