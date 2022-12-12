@@ -1,14 +1,25 @@
-# Virtual Desktop Infrastructure(VDI) for Unreal Engine 5 on OCI with nVidia GPU
+---
+title: Virtual Desktop Infrastructure(VDI) for Unreal Engine 5 on Oracle Cloud Infrastructure with nVidia GPU
+parent:
+- tutorials
+tags: []
+categories: []
+date: 2021-12-12 08:00
+description: Get Virtual Desktop Infrastructure set up on Oracle Cloud Infrastructure with nVidia GPU.
+toc: true
+author: oracle-developers
+slug: rust-building-an-api
+---
 
-Hey, in this blog I will share how to get Virtual Desktop Infrastructure setup on Oracle Cloud Infrastructure.
+In this blog you'll learn how to set up Virtual Desktop Infrastructure on Oracle Cloud Infrastructure (OCI).
 
-Few weeks ago Unreal Engine 5.1 was released, there is a lot of improvements many new cool features that for me are making this release kind of of a big deal.
+A few weeks ago, Unreal Engine 5.1 was released. There are a lot of improvements and many new cool features that, for me, are making this release kind of of a big deal.
 
 [{% imgx img/UE5/UE5.png "UE5.1" "UE5.1" %}](https://www.youtube.com/watch?v=FUGqzE6Je5c&ab_channel=UnrealSensei)
 
 {% imgx img/UE5/VPT.png %}
 
-Let’s get started.
+Let’s get started with setting this up.
 
 ## Configuration
 
@@ -41,9 +52,11 @@ Let’s get started.
 6. This guide will focus on Ubuntu OS so select Canonical Ubuntu.
 7. Next select Bare Metal Machine and GPU shape
 8. Tick T&C (Please note that GPU shape will be charged against your account event when instance is stopped)
-9. Confirm but clicking on Select Shape
+9. Confirm by clicking on Select Shape
 
     {% imgx img/selectShape.png %}
+
+### Setting up networking
 
 1. For the purpuse of this guide we will create new virtual network called "GPUVCN" but you can reuse your exisiting one if you wish
 
@@ -57,6 +70,8 @@ Let’s get started.
 
     {% imgx img/newSSH.png" %}
 
+### Other settings
+
 1. Running Unreal usually requires a lot of hard drive space, I recommend selecting a boot volume starting from 500GB+, but this may vary depending on your requirements
 
     {% imgx img/bootVolume.png" %}
@@ -65,26 +80,29 @@ Let’s get started.
 
     {% imgx img/VPU.png %}
 
-3. Once our instance is provisioned lets create networks security rules to allow connection for Remote desktop and SSH
+
+### Security rules
+
+1. Once our instance is provisioned lets create networks security rules to allow connection for Remote desktop and SSH
 
     {% imgx img/NSG/1VNICnoNSG.png %}
 
-4. Let’s create a new security rule by navigating to our VCN
+1. Let’s create a new security rule by navigating to our VCN
 
     {% imgx img/NSG/2openVCN.png %}
 
     {% imgx img/NSG/3createNSG.png %}
 
-5. Let’s navigate back to our compute instance and add our newly created Security Rule
+1. Let’s navigate back to our compute instance and add our newly created Security Rule
 
     {% imgx img/NSG/4addAllowNSG.png %}
 
 ### Setting up remote desktop on your GPU Compute shape.
 
-Next steps will focus on enabling Ubuntu GUI on the GPU shape. These steps can be done either in Terminal or Visual Studio Code.
+The next steps will focus on enabling Ubuntu GUI on the GPU shape. These steps can be done either in Terminal or Visual Studio Code.
 
 1. In order to connect to your instance you can [follow this guide](https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/testingconnection.htm)
-1. Now that we are in lets run few commands to setup our GUI for Ubuntu
+1. Now that we are in, lets run few commands to setup our GUI for Ubuntu
 2. Let’s run following to update and upgrade our OS and install nVidia drivers
 
     ```console
@@ -119,9 +137,9 @@ Next steps will focus on enabling Ubuntu GUI on the GPU shape. These steps can b
     sudo nano /etc/xrdp/xrdp.ini
     ```
 
-1. Inside that config file change `port=3389` to `port=tcp://:3389`
+7. Inside that config file change `port=3389` to `port=tcp://:3389`
 
-2. Next step is to flush our iptables so that we can reset our linux firewall (https://www.comparitech.com/net-admin/beginners-guide-ip-tables/) you can do that by running
+8. The next step is to flush our iptables so that we can reset our linux firewall (https://www.comparitech.com/net-admin/beginners-guide-ip-tables/) you can do that by running
 
     ```console
     $ sudo iptables -F
@@ -133,8 +151,9 @@ Next steps will focus on enabling Ubuntu GUI on the GPU shape. These steps can b
     sudo netfilter-persistent save
     ```
 
-1. I would recommend creating new user and securing your admin account with password or whitelisting your external IP you can find out how using [this video we did a while back](https://youtu.be/amqxaw2Ujn4?t=909)
-4. You should now be able to access virtual machine via Remote Desktop solution of your choice. Just type your external IP to connect to your machine.
+I would recommend creating new user and securing your admin account with password or whitelisting your external IP you can find out how using [this video we did a while back](https://youtu.be/amqxaw2Ujn4?t=909).
+
+You should now be able to access the virtual machine using the Remote Desktop solution of your choice. Just type your external IP to connect to your machine.
   
 ### Using Unreal Engine on your Cloud
 
