@@ -1,5 +1,15 @@
-## Use Data Streaming on OCI to provide actionable public health information - Part One: Setting Up
-
+---
+title: "Use Data Streaming on OCI to provide actionable public health info, Part 1: Setting Up"
+parent:
+- tutorials
+tags: []
+categories: []
+date: 2022-10-22 11:00
+description: Setting up to use Data Streaming on OCI to provide actionable public health info
+toc: true
+author: victor-agreda
+slug: oci-public-health-part-1
+---
 In the arena of public health, there's a lot of "free data" available for us to consume, but getting to it and putting it all in one place so that it's meaningful can be a challenge. Sure, we have weather apps with air quality (if you can find it!), we have government data tracking things like COVID and flu rates, but can we triangulate these numbers in a way that will help someone who may be immune-compromised? Absolutely! It's just data, and we can take it and use it and then display it, just as with any data. This project will be a journey into such an idea -- using public health data and air quality measurements to provide possibly actionable information for people who might not be tech-savvy, and who might have pre-existing conditions that would be hazardous should case rates go up or air quality go down.
 
 Of course, to do all this we'll be using Oracle Cloud Infrastructure (OCI) as our platform of choice. We'll look at where we can tap into data streams, how to pull what we need when we need it, how to put it into a database for transformation, and then how we might extend this with data from smartwatches, personal medical devices, or self-reporting mechanisms. We can then take the backend and plug it into a different front-end (we'll start with a simple web page) to further simplify the process for those who may lack the tech skills or possibly not even have access to a computer or smartphone.

@@ -4,20 +4,20 @@ parent:
 - tutorials
 tags: []
 categories: []
-date: 2021-12-12 08:00
+date: 2022-12-22 08:00
 description: Get Virtual Desktop Infrastructure set up on Oracle Cloud Infrastructure with nVidia GPU.
 toc: true
 author: oracle-developers
-slug: rust-building-an-api
+slug: virtual-desktop-unreal-engine
 ---
 
 In this blog you'll learn how to set up Virtual Desktop Infrastructure on Oracle Cloud Infrastructure (OCI).
 
 A few weeks ago, Unreal Engine 5.1 was released. There are a lot of improvements and many new cool features that, for me, are making this release kind of of a big deal.
 
-[{% imgx img/UE5/UE5.png "UE5.1" "UE5.1" %}](https://www.youtube.com/watch?v=FUGqzE6Je5c&ab_channel=UnrealSensei)
+[{% imgx assets/vdi-unreal-UE5.jpg "UE5.1" %}](https://www.youtube.com/watch?v=FUGqzE6Je5c&ab_channel=UnrealSensei)
 
-{% imgx img/UE5/VPT.png %}
+{% imgx assets/vdi-unreal-VPT.jpg %}
 
 Let’s get started with setting this up.
 
@@ -29,23 +29,23 @@ Let’s get started with setting this up.
 
 1. Once there, click on the hamburger menu
 
-    {% imgx img/hamburger.png %}
+    {% imgx assets/vdi-unreal-hamburger.jpg %}
 
 1. Click "Compute"
     
-    {% imgx img/compute.png %}
+    {% imgx assets/vdi-unreal-compute.jpg %}
 
 2. Click "Instances"
     
-    {% imgx img/instances.png %}
+    {% imgx assets/vdi-unreal-instances.jpg %}
 
 3. Click "Create instance"
 
-    {% imgx img/create.png %}
+    {% imgx assets/vdi-unreal-create.jpg %}
 
 4. Change name
 
-    {% imgx img/changeName.png %}
+    {% imgx assets/vdi-unreal-changeName.jpg %}
 
 5. Choose the compartment that you want to run it on
     
@@ -54,48 +54,48 @@ Let’s get started with setting this up.
 8. Tick Terms and Conditions (Please note that the GPU shape will be charged against your account event when instance is stopped)
 9. Confirm by clicking on Select Shape
 
-    {% imgx img/selectShape.png %}
+    {% imgx assets/vdi-unreal-selectShape.jpg %}
 
 ### Setting up networking
 
-1. For the purpuse of this guide we will create new virtual network called "GPUVCN" but you can reuse your exisiting one if you wish
+1. For the purpuses of this guide we will create new virtual network called "GPUVCN" but you can reuse your exisiting one if you wish
 
-    {% imgx  img/newVCN.png" %}
+    {% imgx assets/vdi-unreal-newVCN.jpg %}
 
 1. Also create new subnet and call it "GPUSUBNET"
     
-    {% imgx img/newSubnet.png %}
+    {% imgx assets/vdi-unreal-newSubnet.jpg %}
 
 1. Next, create new SSH keys (or upload your public key files.pub)
 
-    {% imgx img/newSSH.png" %}
+    {% imgx assets/vdi-unreal-newSSH.jpg %}
 
 ### Other settings
 
 1. Running Unreal usually requires a lot of hard drive space, so I recommend selecting a boot volume starting from 500GB+. This may vary depending on your requirements
 
-    {% imgx img/bootVolume.png" %}
+    {% imgx assets/vdi-unreal-bootVolume.jpg %}
 
 2. I also recommend setting up a high performance VPU as this will speed things up when compiling, calculating shaders etc. Hit create once you finish
 
-    {% imgx img/VPU.png %}
+    {% imgx assets/vdi-unreal-VPU.jpg %}
 
 
 ### Security rules
 
 1. Once our instance is provisioned, let's create network security rules to allow connections for Remote desktop and SSH
 
-    {% imgx img/NSG/1VNICnoNSG.png %}
+    {% imgx assets/vdi-unreal-1VNICnoNSG.jpg %}
 
 1. Next, create a new security rule by navigating to our VCN
 
-    {% imgx img/NSG/2openVCN.png %}
+    {% imgx assets/vdi-unreal-2openVCN.jpg %}
 
-    {% imgx img/NSG/3createNSG.png %}
+    {% imgx assets/vdi-unreal-3createNSG.jpg %}
 
 1. Navigate back to our compute instance and add the new Security Rule
 
-    {% imgx img/NSG/4addAllowNSG.png %}
+    {% imgx assets/vdi-unreal-4addAllowNSG.jpg %}
 
 ### Setting up remote desktop on your GPU Compute shape.
 
@@ -162,13 +162,13 @@ You should now be able to access the virtual machine using the Remote Desktop so
 2. Navigate to <https://www.unrealengine.com/en-US/linux> and log in/create an epic account
 3. Download your preferred version of the engine and extract the zip file:
 
-    {% imgx img/UE5/UEforLinux.png %}
+    {% imgx assets/vdi-unreal-UEforLinux.jpg %}
 
 4. To open Unreal Engine, run `/path/to/ue5.1/Engine/Binaries/Linux/UnrealEditor` in terminal:
     
-    {% imgx img/UE5/Terminal.png %}
+    {% imgx assets/vdi-unreal-Terminal.jpg %}
     
-    {% imgx img/UE5/UEStart.png %}
+    {% imgx assets/vdi-unreal-UEStart.jpg %}
           
 
 ## Outro
