@@ -11,7 +11,7 @@ author: oracle-developers
 slug: virtual-desktop-unreal-engine
 ---
 
-In this blog you'll learn how to set up Virtual Desktop Infrastructure on Oracle Cloud Infrastructure (OCI).
+In this tutorial you'll learn how to set up Virtual Desktop Infrastructure on Oracle Cloud Infrastructure (OCI).
 
 A few weeks ago, Unreal Engine 5.1 was released. There are a lot of improvements and many new cool features that, for me, are making this release kind of of a big deal.
 
