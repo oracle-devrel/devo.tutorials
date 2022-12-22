@@ -175,7 +175,6 @@ Looking more into the detail, we get average precision broken down by validation
 > **Note**: also note that, across validation and test set, the "incorrect" label has a constant precision of 49%. This makes sense as it's the hardest class to predict of the three - it's very easy to see the difference between someone with our without a mask, but incorrectly-placed masks are harder to detect even for us, wherein some pictures we may fail as humans. We take note of this and we'll find a way to try and improve the precision for this specific class in the future.
 
 
-
 ## Conclusions
 
 After training, we have a final, initial version of our dataset. Here's a full detail of all metrics during training - this is provided automatically by RoboFlow, but I'll teach you how to generate these figures in the next article by yourself:
