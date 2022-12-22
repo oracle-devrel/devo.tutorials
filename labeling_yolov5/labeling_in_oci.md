@@ -181,8 +181,7 @@ Looking more into the detail, we get average precision broken down by validation
 After training, we have a final, initial version of our dataset. Here's a full detail of all metrics during training - this is provided automatically by RoboFlow, but I'll teach you how to generate these figures in the next article by yourself:
 
 ![graph breakdown](./images/graphs.png)
-> **Note**: the lower the loss, the better. Loss is a metric that represents the inverse of accuracy. So the lower the accuracy, the higher the loss, and vice versa.
-> **Note**: we can also observe that the training loss decreases correctly; never increases, which is good, and both training and validation losses follow the same curve, which also means that overfitting or underfitting isn't happening in our case.
+> **Note**: the lower the loss, the better. Loss is a metric that represents the inverse of accuracy. So the lower the accuracy, the higher the loss, and vice versa. We can also observe that the training loss decreases correctly; never increases, which is good, and both training and validation losses follow the same curve, which also means that overfitting or underfitting isn't happening in our case.
 
 Finally, I usually like to check some things to see if my model has been properly trained, which are:
 - [ ] Is my training loss higher than the testing loss? -> This would indicate __underfitting__.
