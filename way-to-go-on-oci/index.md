@@ -13,7 +13,7 @@ tags:
 - automation
 - iac
 sort: asc
-date: 2022-05-26 08:13
+date: 2022-12-12 08:13
 draft: true
 slug: index
 ---
