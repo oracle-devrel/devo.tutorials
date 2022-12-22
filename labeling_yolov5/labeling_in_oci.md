@@ -2,7 +2,7 @@
 
 ## Introduction
 
-I've had always been curious about using Vision ML in some projects of mine. I  dreamt of knowing how a Tesla autopilot worked on the inside, and whether I could make my own AI system at some point in my life. I was tired of dreaming, so I decided to learn by example (hands-on).
+I've always been curious about using Vision ML in some projects of mine. I  dreamt of knowing how a Tesla autopilot worked on the inside, and whether I could make my own AI system at some point in my life. I was tired of dreaming, so I decided to learn by example (hands-on).
 
 I set my focus on re-learning everything I knew about Vision ML (which is what I call image/video processing concerning Machine Learning in one way or another).
 
