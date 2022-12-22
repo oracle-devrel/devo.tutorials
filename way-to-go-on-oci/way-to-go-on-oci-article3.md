@@ -19,6 +19,7 @@ categories:
 - cloudapps
 thumbnail: assets/landing-zone.png
 date: 2022-05-26 11:00
+updated: 2022-12-12 12:00
 description: Building OCI Functions in Go and using the Go SDK for OCI to leverage
   OCI services.
 toc: true

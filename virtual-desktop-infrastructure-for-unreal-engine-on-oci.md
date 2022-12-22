@@ -49,9 +49,9 @@ Let’s get started with setting this up.
 
 5. Choose the compartment that you want to run it on
     
-6. This guide will focus on Ubuntu OS so select Canonical Ubuntu.
-7. Next select Bare Metal Machine and GPU shape
-8. Tick T&C (Please note that GPU shape will be charged against your account event when instance is stopped)
+6. This guide will focus on Ubuntu OS, so select Canonical Ubuntu.
+7. Next, select Bare Metal Machine and GPU shape
+8. Tick Terms and Conditions (Please note that the GPU shape will be charged against your account event when instance is stopped)
 9. Confirm by clicking on Select Shape
 
     {% imgx img/selectShape.png %}
@@ -72,38 +72,38 @@ Let’s get started with setting this up.
 
 ### Other settings
 
-1. Running Unreal usually requires a lot of hard drive space, I recommend selecting a boot volume starting from 500GB+, but this may vary depending on your requirements
+1. Running Unreal usually requires a lot of hard drive space, so I recommend selecting a boot volume starting from 500GB+. This may vary depending on your requirements
 
     {% imgx img/bootVolume.png" %}
 
-2. I also recommend setting up high performance VPU as this will speed things up when compiling, calculating shaders etc. Hit create once you finished.
+2. I also recommend setting up a high performance VPU as this will speed things up when compiling, calculating shaders etc. Hit create once you finish
 
     {% imgx img/VPU.png %}
 
 
 ### Security rules
 
-1. Once our instance is provisioned lets create networks security rules to allow connection for Remote desktop and SSH
+1. Once our instance is provisioned, let's create network security rules to allow connections for Remote desktop and SSH
 
     {% imgx img/NSG/1VNICnoNSG.png %}
 
-1. Let’s create a new security rule by navigating to our VCN
+1. Next, create a new security rule by navigating to our VCN
 
     {% imgx img/NSG/2openVCN.png %}
 
     {% imgx img/NSG/3createNSG.png %}
 
-1. Let’s navigate back to our compute instance and add our newly created Security Rule
+1. Navigate back to our compute instance and add the new Security Rule
 
     {% imgx img/NSG/4addAllowNSG.png %}
 
 ### Setting up remote desktop on your GPU Compute shape.
 
-The next steps will focus on enabling Ubuntu GUI on the GPU shape. These steps can be done either in Terminal or Visual Studio Code.
+The next steps will focus on enabling the Ubuntu GUI on the GPU shape. These steps can be done either in Terminal or Visual Studio Code.
 
-1. In order to connect to your instance you can [follow this guide](https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/testingconnection.htm)
-1. Now that we are in, lets run few commands to setup our GUI for Ubuntu
-2. Let’s run following to update and upgrade our OS and install nVidia drivers
+1. In order to connect to your instance, you can [follow this guide](https://docs.oracle.com/en-us/iaas/Content/GSG/Tasks/testingconnection.htm)
+1. Now that we are in, lets run few commands to set up our GUI for Ubuntu
+2. Run the following to update and upgrade your OS and install nVidia drivers:
 
     ```console
     $ sudo apt-get update
@@ -113,57 +113,58 @@ The next steps will focus on enabling Ubuntu GUI on the GPU shape. These steps c
     $ sudo apt install nvidia-driver-515
     ```
 
-3. Let’s get Ubuntu GUI installed next
+3. Install the Ubuntu GUI:
     
     ```console
     $ sudo apt install ubuntu-desktop
     ```
 
-4. In order to enable remote access lets [install XRDP](http://xrdp.org/) - an open-source Remote Desktop Protocol server
+4. In order to enable remote access, let's [install XRDP](http://xrdp.org/), an open-source Remote Desktop Protocol server:
     
     ```console
     $ sudo apt install xrdp
     ```
 
-5. Followed by installing net tool so we can debug our connectivity
+5. Install net tools so we can debug our connectivity:
     
     ```console
     sudo apt install net-tools
     ```
 
-6. Let change our port setting from tcp6 to tcp4
+6. Change your port setting from tcp6 to tcp4:
     
     ```console
     sudo nano /etc/xrdp/xrdp.ini
     ```
 
-7. Inside that config file change `port=3389` to `port=tcp://:3389`
+7. Inside that config file, change `port=3389` to `port=tcp://:3389`
 
-8. The next step is to flush our iptables so that we can reset our linux firewall (https://www.comparitech.com/net-admin/beginners-guide-ip-tables/) you can do that by running
+8. The next step is to flush your iptables so that we can reset our linux firewall (https://www.comparitech.com/net-admin/beginners-guide-ip-tables/). You can do that by running:
 
     ```console
     $ sudo iptables -F
     ```
 
-3. Save your config by running 
+3. Save your config:
     
     ```console
     sudo netfilter-persistent save
     ```
 
-I would recommend creating new user and securing your admin account with password or whitelisting your external IP you can find out how using [this video we did a while back](https://youtu.be/amqxaw2Ujn4?t=909).
+I recommend creating a new user and securing your admin account with a password, or whitelisting your external IP. You can find out how using [this video we did a while back](https://youtu.be/amqxaw2Ujn4?t=909).
 
 You should now be able to access the virtual machine using the Remote Desktop solution of your choice. Just type your external IP to connect to your machine.
   
 ### Using Unreal Engine on your Cloud
 
-1. Final thing to do is to get Unreal Engine downloaded to your machine. Since we have a GUI interface you can install by running in terminal `sudo apt install -y chromium-browser` and open browser on your machine 
+1. Get Unreal Engine downloaded to your machine. Since we have a GUI interface, you can install it in terminal by running `sudo apt install -y chromium-browser`. 
+2. Open browser on your machine 
 2. Navigate to <https://www.unrealengine.com/en-US/linux> and log in/create an epic account
-3. Download your preferred version of the engine and extract the zip file 
+3. Download your preferred version of the engine and extract the zip file:
 
     {% imgx img/UE5/UEforLinux.png %}
 
-4. To open Unreal Engine simply run following command `/path/to/ue5.1/Engine/Binaries/Linux/UnrealEditor` in terminal.
+4. To open Unreal Engine, run `/path/to/ue5.1/Engine/Binaries/Linux/UnrealEditor` in terminal:
     
     {% imgx img/UE5/Terminal.png %}
     
@@ -172,5 +173,5 @@ You should now be able to access the virtual machine using the Remote Desktop so
 
 ## Outro
 
-As a word of caution I would say that Unreal Editor still require a bit of work in order to be as intuitive as it is on Windows. Hence use case here is probably focusing at accelerating the rendering for video generation and pixel streaming. 
+As a word of caution, I would say that Unreal Editor still require a bit of work in order to be as intuitive as it is on Windows. Hence, the use case here is probably focusing on accelerating the rendering for video generation and pixel streaming. 
 
