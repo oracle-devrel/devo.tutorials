@@ -51,7 +51,7 @@ Let’s get started with setting this up.
     
 6. This guide will focus on Ubuntu OS, so select Canonical Ubuntu.
 7. Next, select Bare Metal Machine and GPU shape
-8. Tick Terms and Conditions (Please note that the GPU shape will be charged against your account event when instance is stopped)
+8. Tick Terms and Conditions (Please note that the GPU shape will be charged against your account, even when instance is stopped)
 9. Confirm by clicking on Select Shape
 
     {% imgx img/selectShape.png %}
@@ -125,7 +125,7 @@ The next steps will focus on enabling the Ubuntu GUI on the GPU shape. These ste
     $ sudo apt install xrdp
     ```
 
-5. Install net tools so we can debug our connectivity:
+5. Install net tools in case you need to debug your connectivity:
     
     ```console
     sudo apt install net-tools
@@ -139,7 +139,7 @@ The next steps will focus on enabling the Ubuntu GUI on the GPU shape. These ste
 
 7. Inside that config file, change `port=3389` to `port=tcp://:3389`
 
-8. The next step is to flush your iptables so that we can reset our linux firewall (https://www.comparitech.com/net-admin/beginners-guide-ip-tables/). You can do that by running:
+8. The next step is to flush your iptables so that we can reset our linux firewall [for comprehencive tutarial around iptables check out this article](https://www.comparitech.com/net-admin/beginners-guide-ip-tables/). You can do that by running:
 
     ```console
     $ sudo iptables -F
@@ -157,9 +157,9 @@ You should now be able to access the virtual machine using the Remote Desktop so
   
 ### Using Unreal Engine on your Cloud
 
-1. Get Unreal Engine downloaded to your machine. Since we have a GUI interface, you can install it in terminal by running `sudo apt install -y chromium-browser`. 
-2. Open browser on your machine 
-2. Navigate to <https://www.unrealengine.com/en-US/linux> and log in/create an epic account
+1. Lets install chromium broswer as Ubuntu doesnt't come with it by default `sudo apt install -y chromium-browser`. 
+2. Open chromium on your remote machine 
+2. Navigate to <https://www.unrealengine.com/en-US/linux> and log in or create epic account
 3. Download your preferred version of the engine and extract the zip file:
 
     {% imgx img/UE5/UEforLinux.png %}
