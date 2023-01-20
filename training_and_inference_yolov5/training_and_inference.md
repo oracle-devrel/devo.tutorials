@@ -1,18 +1,29 @@
+---
+title:
+author: ignacio-martinez
+title: "Creating a Mask Model on Oracle Cloud Infrastructure with YOLOv5: Training and Real-Time Inference"
+parent: [tutorials]
+categories: [cloudapps]
+tags: [aiml]
+thumbnail: images/screenshot_yt.jpg
+date: 2023-01-17 12:00
+description: Train a mask detection model using Oracle Cloud Infrastructure.
+---
 # Creating a Mask Model on OCI with YOLOv5: Training and Real-Time Inference
 
 ## Introduction
 
-If you remember [an article I wrote a few weeks back](https://medium.com/oracledevs/creating-a-cmask-detection-model-on-oci-with-yolov5-data-labeling-with-roboflow-5cff89cf9b0b), I created a Computer Vision model able to recognize whether anyone was wearing their COVID-19 mask correctly, incorrectly, or simply didn't wear any mask.
+If you remember [an article I wrote a few weeks back](https://medium.com/oracledevs/creating-a-cmask-detection-model-on-oci-with-yolov5-data-labeling-with-roboflow-5cff89cf9b0b), I created a Computer Vision model able to recognize whether someone was wearing their COVID-19 mask correctly, incorrectly, or simply didn't wear any mask.
 
-Now, as a natural continuation of this topic, I will teach you how you can train the model using OCI. This applies to any object detection model created using the YOLO (You Only Look Once) standard and format.
+Now, as a natural continuation of this topic, I'll show you how you can train the model using Oracle Cloud Infrastructure (OCI). This applies to any object detection model created using the YOLO (You Only Look Once) standard and format.
 
 At the end of the article, you'll see the end result of performing inference (on myself):
 
-![selecting compute image](./images/screenshot_yt.PNG)
+{% imgx images/screenshot_yt.jpg "selecting compute image" %}
 
 ## Hardware?
 
-To get started, I went into my Oracle Cloud Infrastructure account and created a compute instance. These are the specifications for the project:
+To get started, I went into my Oracle Cloud Infrastructure account and created a Compute instance. These are the specifications for the project:
 
 * Shape: VM.GPU3.2
 * GPU: 2 NVIDIA® Tesla® V100 GPUs ready for action.
@@ -22,87 +33,97 @@ To get started, I went into my Oracle Cloud Infrastructure account and created a
 
 I specifically chose an OCI Custom Image as the default Operating System for my machine. The partner image that I chose is the following:
 
-![selecting compute image](./images/select_custom_image.PNG)
+{% imgx images/select_custom_image.jpg "selecting compute image" %}
 
 > **Note**: this custom image is very useful and often saves me a lot of time. It already has 99% of the things that I need to work on in any Data Science-related project. So, no installation/setup wasted time before getting to work. (It includes things like conda, CUDA, PyTorch, a Jupyter environment, VSCode, PyCharm, git, Docker, the OCI CLI... and much more. Make sure to read the [full custom image specs here](https://cloud.oracle.com/marketplace/application/74084544/usageInformation)).
+{:.notice}
 
 ### Price Comparison
 
-The hardware that we're going to work with is [very expensive](https://www.amazon.com/PNY-TCSV100MPCIE-PB-Nvidia-Tesla-v100/dp/B076P84525) which I - nor anybody - is expected to have access to in their homes. Nobody that I know has a 15.000$ graphics card (if you know someone let me know), and this is where Cloud can really help us. OCI gives us access to these amazing machines for a fraction of the cost that you would find in a competitor.
+The hardware that we're going to work with is [very expensive](https://www.amazon.com/PNY-TCSV100MPCIE-PB-Nvidia-Tesla-v100/dp/B076P84525), which nobody is expected to have access to in their homes. Nobody that I know has a $15,000 graphics card (if you know someone let me know), and this is where Cloud can really help us. OCI gives us access to these amazing machines for a fraction of the cost that you would find from a competitor.
 
-For example, I rented both NVIDIA V100s *just for **2.50$/hr***, and I'll be using these GPUs to train my models.
+For example, I rented both NVIDIA V100s *just for **$2.50/hr***, and I'll be using these GPUs to train my models.
 
-> **Note**: just be mindful of the resources you use in OCI. Just like other Cloud providers, once you allocate a GPU in your Cloud account, you will still be charged for the use even if it's idle. So, remember to terminate your GPU instances when you're finished to avoid overcharges!
+> **Note**: Be mindful of the resources you use in OCI. Just like other Cloud providers, once you allocate a GPU in your Cloud account, you will still be charged for the use even if it's idle. So, remember to terminate your GPU instances when you're finished to avoid overcharges!
+{:.notice}
 
 [Here's a link](https://www.oracle.com/cloud/price-list/) to the full OCI price list if you're curious.
 
 ## Training the Model with YOLOv5
 
-Now, I already have my compute instance ready. And, since I have almost no configuration overheads (I'm using the custom image), I can get straight to business.
+Now I have my compute instance ready. And since I have almost no configuration overheads (I'm using the custom image), I can get straight to business.
 
 Before getting ready to train the model, I have to clone YOLOv5's repository:
 
-``` python
+```console
 git clone https://github.com/ultralytics/yolov5.git
 ```
 
 And finally, install all dependencies into my Python environment:
 
-``` python
+```console
 cd /home/$USER/yolov5
 pip install -r /home/$USER/yolov5/requirements.txt
 ```
 
-> **Note**: YOLOv8 was just released. I thought, why not change directly to YOLOv8, since it's basically an improved version of YOLOv5? But I didn't want to overcomplicate things. For future content, I'll switch to YOLOv8 and show you why it's better than the version we are using for this article!
+> **Note**: YOLOv8 was just released. I thought, "why not change directly to YOLOv8, since it's basically an improved version of YOLOv5?" But I didn't want to overcomplicate things -- for future content, I'll switch to YOLOv8 and show you why it's better than the version we are using for this article!
+{:.notice}
+
 
 ### Downloading my Dataset
 
 [The model](https://universe.roboflow.com/jasperan/public-mask-placement) is public and freely available for anyone who wants to use it:
 
-![Model Link](./images/universe_roboflow.PNG)
+{% imgx images/universe_roboflow.jpg "Model Link" %}
 
 
 > **Note**: thanks to RoboFlow and their team, you can even [test the model in your browser](https://universe.roboflow.com/jasperan/public-mask-placement/model/4) (uploading your images/videos) or with your webcam!
+{:.notice}
 
-I exported my model from RoboFlow with YOLOv5 format. This downloaded my dataset into a ZIP file, including three different directories: training, testing, and validation, each with their corresponding image sets.
+I exported my model from RoboFlow in the YOLOv5 format. This downloaded my dataset into a ZIP file, including three different directories: training, testing, and validation, each with their corresponding image sets.
 
-I pushed the dataset into my compute instance through FTP (File Transfer Protocol) and unzipped it:
+I pushed the dataset into my compute instance using FTP (File Transfer Protocol) and unzipped it:
 
-![unzipping](./images/unzipping.PNG)
+{% imgx images/unzipping.jpg "unzipping" %}
 
 
-![dataset contents](./images/dataset_contents.PNG)
+{% imgx images/dataset_contents.jpg "dataset contents" %}
 
 Additionally, we have the `data.yaml` file containing the dataset's metadata.
 
-To avoid absolute/relative path issues with my dataset, I also want to modify `data.yaml` and insert the **absolute** paths where all images (from training, validation, and testing sets) are found since by default they contain the relative path:
+To avoid absolute/relative path issues with my dataset, I also want to modify `data.yaml` and insert the *absolute* paths where all images (from training, validation, and testing sets) are found since by default they contain the relative path:
 
-![dataset contents](./images/absolute_paths.PNG)
+{% imgx images/absolute_paths.jpg "dataset contents" %}
 
 Now, we're almost ready for training.
 
 ### Training Parameters
 
-Now, we are ready to make a couple of extra decisions: which parameters we'll use during training.
+We're ready to make a couple of extra decisions regarding which parameters we'll use during training.
 
-It's important to choose the right parameters as doing otherwise can cause terrible models to be created (the word *terrible* is intentional). So, let me explain what's important about training parameters. Official documentation can be found [here](https://docs.ultralytics.com/config/).
+It's important to choose the right parameters, as doing otherwise can cause terrible models to be created (the word *terrible* is intentional). So, let me explain what's important about training parameters. Official documentation can be found [here](https://docs.ultralytics.com/config/).
 
-* --device: specifies which CUDA device (or by default, CPU) we want to use. Since I have two GPUs, I'll want to use both for training. I'll set this to "0,1", which will perform **distributed training**, although not in the most optimal way. (I'll make an article in the future on how to properly do Distributed Data Parallel with PyTorch).
-* --epochs: the total number of epochs we want to train the model for. If the model doesn't find an improvement during training. I set this to 3000 epochs, although my model converged into very good precisions way before the 3000th epoch was done.
+* `--device`: specifies which CUDA device (or by default, CPU) we want to use. Since I have two GPUs, I'll want to use both for training. I'll set this to "0,1", which will perform **distributed training**, although not in the most optimal way. (I'll make an article in the future on how to properly do Distributed Data Parallel with PyTorch).
+* `--epochs`: the total number of epochs we want to train the model for. If the model doesn't find an improvement during training. I set this to 3000 epochs, although my model converged very precisely long before the 3000th epoch was done.
+    
     > **Note**: YOLOv5 (and lots of Neural Networks) implement a function called **early stopping**, which will stop training before the specified number of epochs, if it can't find a way to improve the mAPs (Mean Average Precision) for any class.
-* --batch: represents the batch size, I set this to either 16 images per batch, or 32. Setting a lower value (and considering that my dataset already has 10.000 images) is usually a *bad practice* and can cause instability.
-* --lr: I set the learning rate to 0.01 by default.
-* --img (image size): this parameter was probably the one that gave me the most trouble. I initially thought that all images, if trained with a specific image size, must always follow this size; however, you don't need to worry about this due to image subsampling and other techniques that are implemented to avoid this issue. This value needs to be the maximum value between the height and width of the pictures, averaged across the dataset.
-* --save_period: specifies how often the model should save a copy of the state. For example, if I set this to 25, it will create a YOLOv5 checkpoint that I can use every 25 trained epochs.
+    {:.notice}
+* `--batch`: the batch size. I set this to either 16 images per batch, or 32. Setting a lower value (and considering that my dataset already has 10.000 images) is usually a *bad practice* and can cause instability.
+* `--lr`: I set the learning rate to 0.01 by default.
+* `--img` (image size): this parameter was probably the one that gave me the most trouble. I initially thought that all images -- if trained with a specific image size -- must always follow this size; however, you don't need to worry about this due to image subsampling and other techniques that are implemented to avoid this issue. This value needs to be the maximum value between the height and width of the pictures, averaged across the dataset.
+* `--save_period`: specifies how often the model should save a copy of the state. For example, if I set this to 25, it will create a YOLOv5 checkpoint that I can use every 25 trained epochs.
+
 > **Note**: if I have 1000 images with an average width of 1920 and height of 1080, I'll probably create a model of image size = 640, and subsample my images. If I have issues with detections, perhaps I'll create a model with a higher image size value, but training time will ramp up, and inference will also require more computing power.
+{:.notice}
 
 ### Which YOLOv5 checkpoint to choose from?
 
-The second and last decision we need to make is which YOLOv5 checkpoint we're going to start from. It's **highly recommended** to start training from one of the five possible checkpoints:
+The second and last decision we need to make is which YOLOv5 checkpoint we're going to start from. It's **highly recommended** that you start training from one of the five possible checkpoints:
 
-![yolov5 checkpoints](./images/yolov5_performance.PNG)
+{% imgx images/yolov5_performance.jpg "yolov5 checkpoints" %}
 
-> **Note**: you can also start training 100% from scratch, but you should only do this if what you're trying to detect has never been reproduced before, e.g. astrophotography. The upside of using a checkpoint is that YOLOv5 has already been trained up to a point, with real-world data. So, anything that resembles the real world can easily be trained from a checkpoint, which will help you reduce training time (therefore, less $$$).
+> **Note**: you can also start training 100% from scratch, but you should only do this if what you're trying to detect has never been reproduced before, e.g. astrophotography. The upside of using a checkpoint is that YOLOv5 has already been trained up to a point, with real-world data. So, anything that resembles the real world can easily be trained from a checkpoint, which will help you reduce training time (and therefore expense).
+{:.notice}
 
 The higher the accuracy from each checkpoint, the more parameters it contains. Here's a detailed comparison with all available pre-trained checkpoints:
 
@@ -120,17 +141,18 @@ The higher the accuracy from each checkpoint, the more parameters it contains. H
 | [YOLOv5l6](https://github.com/ultralytics/yolov5/releases/download/v6.2/yolov5l6.pt) | 1280 | 53.7 | 71.3 | 1784 | 15.8 | 10.5 | 76.8 | 111.4 |
 | [YOLOv5x6](https://github.com/ultralytics/yolov5/releases/download/v6.2/yolov5x6.pt)<br>+[TTA](https://github.com/ultralytics/yolov5/issues/303) | 1280<br>1536 | 55.0<br>**55.8** | 72.7<br>**72.7** | 3136<br>- | 26.2<br>- | 19.4<br>- | 140.7<br>- | 209.8<br>- |
 
-> **Note**: all checkpoints have been trained for 300 epochs with the default settings (find all of them [in the official docs](https://docs.ultralytics.com/config/)). The nano and small version use [these hyperparameters](https://github.com/ultralytics/yolov5/blob/master/data/hyps/hyp.scratch-low.yaml) hyps, all others use [these ones](https://github.com/ultralytics/yolov5/blob/master/data/hyps/hyp.scratch-high.yaml).
+> **Note**: all checkpoints have been trained for 300 epochs with the default settings (find all of them [in the official docs](https://docs.ultralytics.com/config/)). The nano and small version use [these hyperparameters](https://github.com/ultralytics/yolov5/blob/master/data/hyps/hyp.scratch-low.yaml) hyps, all others use [these](https://github.com/ultralytics/yolov5/blob/master/data/hyps/hyp.scratch-high.yaml).
+{:.notice}
 
-Also note that, if we want to create a model with an image size > 640, we should select the corresponding YOLOv5 checkpoints (those that end in the number `6`).
+Also note that -- if we want to create a model with an image size > 640 -- we should select the corresponding YOLOv5 checkpoints (those that end in the number `6`).
 
 So, for this model, since I will use 640 pixels, I'll just create a first version using **YOLOv5s**, and another one with **YOLOv5x**. You only need to train one, but I was curious and wanted to see how each model differs in the end when applying it to the same video.
 
 ### Training
 
-Now, we just need to run the following command:
+Now, we just need to run the following commands...
 
-```
+```console
  # for yolov5s
 python train.py --img 640 --data ./datasets/y5_mask_model_v1/data.yaml --weights yolov5s.pt --name y5_mask_detection  --save-period 25 --device 0,1 --batch 16 --epochs 3000
 
@@ -138,47 +160,53 @@ python train.py --img 640 --data ./datasets/y5_mask_model_v1/data.yaml --weights
 python train.py --img 640 --data ./datasets/y5_mask_model_v1/data.yaml --weights yolov5x.pt --name y5_mask_detection  --save-period 25 --device 0,1 --batch 16 --epochs 3000
 ```
 
-And the model will start training. Depending on the size of the dataset, each epoch will take more or less time. In my case, with 10.000 images, each epoch took about 2 minutes to train and 20 seconds to validate.
-> **Note**: training from scratch (no checkpoints) **hugely** decreases training
+...and the model will start training. Depending on the size of the dataset, each epoch will take more or less time. In my case, with 10.000 images, each epoch took about 2 minutes to train and 20 seconds to validate.
 
-![Training GIF](./images/training.gif)
+> **Note**: training from scratch (no checkpoints) **hugely** decreases training
+{:.notice
+
+}
+{% imgx images/training.gif "Training GIF" %}
 
 For each epoch, we will have broken-down information about epoch training time and mAP for the model, so we can see how our model progresses over time. 
 
-After training is done, we can have a look at the results. The visualizations are provided automatically, and they are pretty similar to what I found using RoboFlow Train in the last article. I looked at the most promising graphs:
+After the training is done, we can have a look at the results. The visualizations are provided automatically, and they are pretty similar to what I found using RoboFlow Train in the last article. I looked at the most promising graphs:
 
-![Number of instances per class](./images/num_instances.PNG)
+{% imgx images/num_instances.jpg "Number of instances per class" %}
+
 > **Note**: this means that both the `incorrect` and `no mask` classes are underrepresented if we compare them to the `mask` class. An idea for the future is to increase the number of examples for both these classes.
+{:.notice}
 
-And the confusion matrix, which tells us how many predictions from images in the validation set were correct, and how many weren't:
+The confusion matrix tells us how many predictions from images in the validation set were correct, and how many weren't:
 
-![confusion matrix](./images/confusion_matrix.PNG)
+{% imgx images/confusion_matrix.jpg "confusion matrix" %}
 
-
-As I've previously specified my model to autosave every 25 epochs, the resulting directory is about 1GB. I just care about the best-performing model out of all the checkpoints, so I keep _`best.pt`_ (the model with the highest mAP of all checkpoints) and delete all others.
-
+As I've previously specified my model to autosave every 25 epochs, the resulting directory is about 1GB. I only care about the best-performing model out of all the checkpoints, so I keep _`best.pt`_ (the model with the highest mAP of all checkpoints) and delete all others.
 
 The model took **168** epochs to finish (early stopping happened, so it found the best model at the 68th epoch), with an average of **2 minutes and 34 seconds** per epoch.
 
-![results](./images/results.PNG)
+{% imgx images/results.jpg "results" %}
 
 
 ## YOLOv5 Inference
 
-And now that we have the model, it's time to use it. In this article, we're only going to cover how to use the model using the YOLOv5 interface; and I will prepare a custom PyTorch inference detector for the next article.
+Now that we have the model, it's time to use it. In this article, we're only going to cover how to use the model via the YOLOv5 interface; I will prepare a custom PyTorch inference detector for the next article.
 
-To run inference on our already-generated model, we save the path of the _`best.pt`_ PyTorch model and execute:
+To run inference on our already-generated model, we save the path of the `best.pt` PyTorch model and execute:
 
-```
+```console
 # for a youtube video
 python detect.py --weights="H:/Downloads/trained_mask_model/weights/best.pt" --source="<YT_URL>" --line-thickness 1 --hide-conf --data=data.yaml"
 
 # for a local video
 python detect.py --weights=""H:/Downloads/trained_mask_model/weights/best.pt" --source="example_video.mp4" --line-thickness 1 --hide-conf --data=data.yaml"
 ```
+
 > **Note**: it's important to specify the data.yaml file (containing the dataset's metadata) and the pre-trained weights we have obtained from our model training. Also, you can change the default line width provided by YOLO using the --line-thickness option.
+{:.notice}
 
 The source of the model can be any of the following:
+
 - A YouTube video
 - Local MP4 / MKV file 
 - Directory containing individual images
@@ -190,22 +218,22 @@ The source of the model can be any of the following:
 
 I prepared this YouTube video to check the difference in detection (against the same video) from the two models I've trained:
 
-[![YouTube Video](./images/thumbnail.PNG)](https://www.youtube.com/watch?v=LPRrbPiZ2X8)
+{% youtube LPRrbPiZ2X8 %}
 
 ## Conclusions
 
-The accuracy of both models is pretty good. I'm happy with the results. The model performs a bit worse when you give it media where there are several people in the video/image but still performs well.
+The accuracy of both models is pretty good, and I'm happy with the results. The model performs a bit worse when you give it media where there are several people in the video/image, but still performs well.
 
-In the next article, I'll create a custom PyTorch inference detector (and explain the code) which will let us personalize everything we see - something that the standard YOLO framework doesn't give us - and also explain how to get started with distributed model training.
+In the next article, I'll create a custom PyTorch inference detector (and explain the code) which will let us personalize everything we see -- something that the standard YOLO framework doesn't give us -- and also explain how to get started with distributed model training.
 
-If you'd like to see any special use case or feature to implement in the future, let me know in the comments!
+If you'd like to see any special use cases or features implemented in the future, let me know in the comments!
 
 
-If you’re curious about the goings-on of Oracle Developers in their natural habitat like me, come join us [on our public Slack channel!](https://bit.ly/odevrel_slack) We don’t mind being your fish bowl :tropical\_fish:
+If you’re curious about the goings-on of Oracle Developers in their natural habitat like me, come join us [on our public Slack channel!](https://bit.ly/odevrel_slack) We don’t mind being your fish bowl 🐠.
 
 Stay tuned...
 
 ## Acknowledgments
 
 * **Author** - Nacho Martinez, Data Science Advocate @ Oracle Developer Relations
-* **Last Updated By/Date** - January 17th, 2023
+
