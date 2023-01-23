@@ -163,9 +163,7 @@ python train.py --img 640 --data ./datasets/y5_mask_model_v1/data.yaml --weights
 ...and the model will start training. Depending on the size of the dataset, each epoch will take more or less time. In my case, with 10.000 images, each epoch took about 2 minutes to train and 20 seconds to validate.
 
 > **Note**: training from scratch (no checkpoints) **hugely** decreases training
-{:.notice
-
-}
+{:.notice}
 {% imgx images/training.gif "Training GIF" %}
 
 For each epoch, we will have broken-down information about epoch training time and mAP for the model, so we can see how our model progresses over time. 
