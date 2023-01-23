@@ -1,5 +1,15 @@
-## Use Data Streaming on OCI to provide actionable public health information - Part One: Setting Up
-
+---
+title: "Use Data Streaming on OCI to provide actionable public health info, Part 1: Setting Up"
+parent:
+- tutorials
+tags: []
+categories: []
+date: 2022-10-22 11:00
+description: Setting up to use Data Streaming on OCI to provide actionable public health info
+toc: true
+author: victor-agreda
+slug: oci-public-health-part-1
+---
 In the arena of public health, there's a lot of "free data" available for us to consume, but getting to it and putting it all in one place so that it's meaningful can be a challenge. Sure, we have weather apps with air quality (if you can find it!), we have government data tracking things like COVID and flu rates, but can we triangulate these numbers in a way that will help someone who may be immune-compromised? Absolutely! It's just data, and we can take it and use it and then display it, just as with any data. This project will be a journey into such an idea -- using public health data and air quality measurements to provide possibly actionable information for people who might not be tech-savvy, and who might have pre-existing conditions that would be hazardous should case rates go up or air quality go down.
 
 Of course, to do all this we'll be using Oracle Cloud Infrastructure (OCI) as our platform of choice. We'll look at where we can tap into data streams, how to pull what we need when we need it, how to put it into a database for transformation, and then how we might extend this with data from smartwatches, personal medical devices, or self-reporting mechanisms. We can then take the backend and plug it into a different front-end (we'll start with a simple web page) to further simplify the process for those who may lack the tech skills or possibly not even have access to a computer or smartphone.
@@ -44,37 +54,37 @@ Once we have our compartment set up, we'll stand up a Compute instance.
 
 2. Click Create Instance:
 
-    ![](assets/00-instancesincompartment2022-12-20-devrel.png)
+    ![](assets/oci-public-health-00-instancesincompartment2022-12-20-devrel.jpg)
 
 3. Let's get some computing power and an OS to steer it. Oracle provides an excellent flavor of Linux, which is the default image. Here I'm selecting an [availability domain](https://docs.oracle.com/en-us/iaas/Content/General/Concepts/regions.htm), and as you can see, I've chosen the dbtests compartment I created earlier.
 
-    ![](assets/01-createcompute2022-12-20-devrel.png)
+    ![](assets/oci-public-health-01-createcompute2022-12-20-devrel.jpg)
 
 4. While there is a developer version of Oracle Linux, I'm choosing the "stock" version, but I'm changing our CPU (shape) to a Free Tier-compatible Ampere processor. 
 
-    ![](assets/02-computeimageshape2022-12-20-devrel.png)
+    ![](assets/oci-public-health-02-computeimageshape2022-12-20-devrel.jpg)
 
-    ![](assets/03-combrowseall2022-12-20-devrel.png)
+    ![](assets/oci-public-health-03-combrowseall2022-12-20-devrel.jpg)
 
 5. Some detail on my shape, which should be adequate for our testing needs:
 
-    ![](assets/04-comshapedetail2022-12-20-devrel.png)
+    ![](assets/oci-public-health-04-comshapedetail2022-12-20-devrel.jpg)
 
 6. Click select shape.
 
-    ![](assets/04b-comselectshape-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-04b-comselectshape-2022-12-20-devrel.jpg)
 
 7. We'll use the VNC I set up using a wizard before. By default, we get one private IP and one public one, which is what we need to access Functions, import data, and display our results later. 
 
-    ![](assets/05-comnetwork2022-12-20-devrel.png)
+    ![](assets/oci-public-health-05-comnetwork2022-12-20-devrel.jpg)
 
 8. I'll also go ahead and generate SSH keys at this point and store them somewhere handy, as we'll use that to get into our compute instance and thrash around.
 
-    ![](assets/06-comsshkeygen2022-12-20-devrel.png)
+    ![](assets/oci-public-health-06-comsshkeygen2022-12-20-devrel.jpg)
 
 We're basically done for now, click to begin creation (it takes a minute or two), and note that you can save these configurations as stacks so you can easily deploy them later!
 
-![](assets/07-comcreatesavestack2022-12-20devrel.png)
+![](assets/oci-public-health-07-comcreatesavestack2022-12-20devrel.jpg)
 
 
 #### Stream Pool Policies
@@ -85,11 +95,11 @@ I'm going to try and use the Console as much as possible to do these things, eve
 
 First we'll go back to Identity & Security, and go to Policies. We have a nifty Create Policy button, so click that.
 
-![](assets/08-createpolicy2022-12-20-devrel.png)
+![](assets/oci-public-health-08-createpolicy2022-12-20-devrel.jpg)
 
 Here we can either use a sort of WYSIWYG tool, or input our policy statement directly. These are suprisingly easy to build, and ours is quite simple for this project.
 
-![](assets/09-createpolicy2022-12-20-devrel.png)
+![](assets/oci-public-health-09-createpolicy2022-12-20-devrel.jpg)
 
 Policy:
 
@@ -99,7 +109,7 @@ Allow group StreamAdmins to manage stream-family in compartment [name]
 
 As you can see, I've added my own compartment in there for specificity. 
 
-![](assets/10-policybldrcorrect2022-12-20-devrel.png)
+![](assets/oci-public-health-10-policybldrcorrect2022-12-20-devrel.jpg)
 
 Finish the policy and you'll see a page with details! Now we're going to create a stream pool with the Console. 
 
@@ -107,28 +117,28 @@ Finish the policy and you'll see a page with details! Now we're going to create 
 
 1. In The OCI Console, go to Analytics & AI > Messaging > Streaming.
 
-    ![](assets/11-consolestreaming-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-11-consolestreaming-2022-12-20-devrel.jpg)
 2. Now click on Stream Pools, as we'll create a pool with a public endpoint (as we'll need to grab external weather data, etc. later).
 
-    ![](assets/12-streampools-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-12-streampools-2022-12-20-devrel.jpg)
 3. Click Create Stream Pool, and create a name, select the proper compartment.
     
     ![](assets/13-createpool-2022-12-20-devrel)
 4. In the Configure Stream Pool panel, you'll create a public endpoint and use Oracle-managed keys. Later, we'll use a Vault to manage access so our streams work reliably.
 
-    ![](assets/14-pubendpointpool-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-14-pubendpointpool-2022-12-20-devrel.jpg)
 
-    ![](assets/15-poolsetupkeys-2022-12-20-devrel.png) 
+    ![](assets/oci-public-health-15-poolsetupkeys-2022-12-20-devrel.jpg) 
 
-    ![](assets/16-pooladvsetoci-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-16-pooladvsetoci-2022-12-20-devrel.jpg)
 
 5. I'm also clicking Advanced Settings to access the checkbox for Kafka settings, which we'll configure later (note that Kafka is optional, OCI's own streaming tools would likely suffice for this project).
     
-    ![](assets/17-kafkasetdialo-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-17-kafkasetdialo-2022-12-20-devrel.jpg)
 
 6. For now, we'll create a stream pool named weatherdata01, with a public endpoint.
 
-    ![](assets/18-strpoldone-2022-12-20-devrel.png)
+    ![](assets/oci-public-health-18-strpoldone-2022-12-20-devrel.jpg)
 
 ### Step Three: Finishing setup
 
@@ -145,10 +155,10 @@ For full documentation on using SSH to connect to a running instance, you can [f
 
 I'll use that same info (like setting permissions for my private key to read-only), but use the Console's Cloud Shell to connect. We access cloud shell in the upper right corner:
 
-![](assets/cloudshell-2022-12-20-devrel.png)
+![](assets/oci-public-health-cloudshell-2022-12-20-devrel.jpg)
 
 Once it starts up, you'll copy the IP address from your Linux instance (found in **Compute > Instances > Instance Details**) to log in. 
-![](assets/instancecompart-12-20-devrel.png)
+![](assets/oci-public-health-instancecompart-12-20-devrel.jpg)
 
 You can drop the read-only private key directly into the CLI from the Cloud Shell, then log in with:
 
@@ -166,7 +176,7 @@ python --version
 
 This should result in Python 3.x.x (those x's will be version iterations, of course).
 
-![](assets/clipythoncheck-2022-12-20-devrel.png)
+![](assets/oci-public-health-clipythoncheck-2022-12-20-devrel.jpg)
 
 That's all for now, you can close the Cloud Shell and it'll save the private key for you to log in later (you'll only need the public key, of course).
 
