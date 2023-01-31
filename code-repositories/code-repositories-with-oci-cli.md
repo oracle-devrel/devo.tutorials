@@ -49,15 +49,23 @@ Once you have a Project created, you can use the `oci` command line tool to gene
 
 To create a repository, we'll use [`oci create`](https://docs.oracle.com/iaas/tools/oci-cli/latest/oci_cli_docs/cmdref/devops/repository/create.html).
 
-	oci devops repository create --name "NAME-OF-PROJECT" --project-id "OCID_FOR_PROJECT" --repository-type HOSTED
+	oci devops repository create --name "NAME-OF-PROJECT" --project-id "OCID_FOR_PROJECT" --repository-type HOSTED --query 'data.["http-url","ssh-url"]'
 
-`--name` is the name of the project for which you're creating the new repo. `--project-id` needs to be the OCID for the project, which you can copy from the project overview in the console. The `--repository-type` should be HOSTED to create a repository you can remotely access with SSH.
+`--name` is the name of the project for which you're creating the new repo. `--project-id` needs to be the OCID for the project, which you can copy from the project overview in the console. The `--repository-type` should be HOSTED to create a repository you can remotely access with SSH. Adding the `--query` to the end will return the HTTP and SSH urls for the new repository.
 
-You can now retrive the SSH URL for your repository using the `list` command:
+You can also retrive the SSH URL for all repositories using the `list` command:
 
 	oci devops repository list --project-id "OCID_FOR_PROJECT"
 
 You'll see an entry for `ssh-url` in the response.
+
+Alternatively, you can grab the new ID for your repo at the time of creation and then use `repository get` to retrive the urls:
+
+	repoId=$(oci devops repository create --name "NAME-OF-PROJECT" --project-id OCID_FOR_PROJECT --repository-type HOSTED --query 'data.id' | sed s'/[\[",]//g')
+
+Then use `repository get`:
+
+	oci devops repository get --repository-id $repoId --query 'data.["http-url","ssh-url"]'
 
 ### Using the repository
 
