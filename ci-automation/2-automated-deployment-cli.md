@@ -178,6 +178,7 @@ This will create a JSON file with all of the paramaters available (optional and 
     ]
 
 2. **vnics.json**
+
     [
       {
         "displayName": "ContainerInstance-Demo",
@@ -191,6 +192,7 @@ This will create a JSON file with all of the paramaters available (optional and 
     ]
 
 3. **shape-config.json**
+
     {
         "memoryInGBs": 16.0,
         "ocpus": 4.0
