@@ -1,5 +1,5 @@
 ---
-title: Automation Basics
+title: Automated deployment with CLI
 parent:
 - tutorials
 - ci-automation
@@ -20,7 +20,7 @@ author: eli-schilling
 redirect_from: "/collections/tutorials/1-automation-basics/"
 mrm: 
 xredirect: https://developer.oracle.com/tutorials/ci-automation/1-automation-basics/
-slug: 1-automation-basics
+slug: 2-automated-deployment-cli
 ---
 {% imgx aligncenter assets/ci-automation.png 400 400 "Automating Container Instances" "Container Instances Automation Tutorial Series" %}
 
@@ -129,6 +129,81 @@ Copy that and use it to run one more command:
 
 The output of the command will have the details of the VNIC, including the Public IP address. Copy that, navigate to it in a web browser and you should see the WordPress setup page.
 
+![Screenshot of: Wordpress setup page][9]
+
+### Leveraging Command Parameter JSON for complex input
+
+As you can see in the **CREATE** command that was just run, several of the command parameters require complex JSON input. While it is possible to pass directly into the CLI, a preferred approach is to leverage JSON command parameter input. Generating the outline is simple enough and can be done for each of the more complex parameters. It looks like this:
+
+    oci container-instances container-instance create --generate-param-json-input containers >> containers.json
+
+This will create a JSON file with all of the paramaters available (optional and required) when defining one or more containers for your resource.  You can do the same for *shape-config* and *vnics*, resulting in 3 JSON files to pass through the CLI command. The following examples illustrate the minimum configuration required within each file to complete this tutorial. You can, of course, experiment with additional parameter input once you get the hang of this.
+
+1. **containers.json**
+
+    [
+      {
+        "displayName": "appContainer",
+        "environmentVariables": {
+          "WORDPRESS_DB_HOST": "127.0.0.1",
+          "WORDPRESS_DB_USER": "wordpress",
+          "WORDPRESS_DB_PASSWORD": "wordpress",
+          "WORDPRESS_DB_NAME": "wordpress"
+        },
+        "imageUrl": "docker.io/library/wordpress:latest",
+        "isResourcePrincipalDisabled": true,
+        "resourceConfig": {
+        "memoryLimitInGBs": 4.0,
+        "vcpusLimit": 1.0
+        }
+      },
+      {
+        "arguments": [
+          "--default-authentication-plugin=mysql_native_password"
+        ],
+        "displayName": "dbContainer",
+        "environmentVariables": {
+          "MYSQL_ROOT_PASSWORD": "wordpressonmysql",
+          "MYSQL_DATABASE": "wordpress",
+          "MYSQL_USER": "wordpress",
+          "MYSQL_PASSWORD": "wordpress"
+        },
+        "imageUrl": "docker.io/library/mysql:8.0.31",
+        "isResourcePrincipalDisabled": true,
+        "resourceConfig": {
+          "memoryLimitInGBs": 4.0,
+          "vcpusLimit": 1.0
+        }
+      }
+    ]
+
+2. **vnics.json**
+    [
+      {
+        "displayName": "ContainerInstance-Demo",
+        "freeformTags": {
+          "Details": "Resource created using CLI"
+        },
+        "isPublicIpAssigned": true,
+        "skipSourceDestCheck": true,
+        "subnetId": "ocid1.subnet.oc1.phx.<the rest of your subnet OCID here>"
+      }
+    ]
+
+3. **shape-config.json**
+    {
+        "memoryInGBs": 16.0,
+        "ocpus": 4.0
+    }
+
+Once you have created and populated the three files, you can simply pass the JSON file as input to your command parameters, resulting in a much cleaner command.
+
+    oci container-instances container-instance create --display-name CLI-ContainerInstance-Demo --availability-domain $adName --compartment-id $compOcid --containers file://containers.json --shape-config file://shape-config.json --vnics file://vnics.json --shape CI.Standard.E4.Flex
+
+### Conclusion
+
+There you have it, and well done! You've just completely provisioned OCI Container Instances with related network resources, all from the command line interface! When you're ready to try something a little different, check out the next article on automating Container Instances using Terraform.  
+
 
 
 [1]: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm
@@ -139,3 +214,4 @@ The output of the command will have the details of the VNIC, including the Publi
 [6]: assets/ci-automation-cli-04.png
 [7]: assets/ci-automation-cli-05.png
 [8]: assets/ci-automation-cli-06.png
+[9]: assets/ci-automation-cli-07.png
