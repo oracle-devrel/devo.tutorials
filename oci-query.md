@@ -33,4 +33,4 @@ This will locate the key `ssh-url` in the `data` object, which `oci` responses a
 
 > Note that to reference a key containing a hyphen, you need to surround the entire expression with single quotes, then surround the hyphenated key with double quotes, e.g. `'data."ssh-url"'`.
 
-The basic [JMSEPath tutorial][tutorial] provides the tools you'll need to work with `oci`'s JSON responses. However, the `--query` flag doesn't provide perfect parity with the JMSEPath spec. The next article in this series will detail some of the differences, how to do more complex queries with `--query`, and also how to use an alternative, [jq], to parse as part of a piped command.
+The basic [JMSEPath tutorial][tutorial] provides the tools you'll need to work with `oci`'s JSON responses. However, the `--query` flag doesn't provide perfect parity with the JMSEPath spec. The next article in this series will detail some of the differences you'll run into with more complex queries, and also how to use an alternative, [jq], to parse as part of a piped command.
