@@ -9,6 +9,7 @@ parent: [tutorials]
 [install]: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm#Quickstart
 [JMSEPath]: https://jmespath.org/
 [tutorial]: https://jmespath.org/tutorial.html
+[jq]: https://stedolan.github.io/jq/
 
 The [OCI Command Line Interface][cli] tool, or `oci`, is a way to perform almost any OCI operation from the command line. It's included and configured in [Cloud Shell] instances automatically, and can be [installed on most platforms][install] for local usage. The OCI CLI is a great tool for automating repetitive processes.
 
@@ -32,4 +33,4 @@ This will locate the key `ssh-url` in the `data` object, which `oci` responses a
 
 > Note that to reference a key containing a hyphen, you need to surround the entire expression with single quotes, then surround the hyphenated key with double quotes, e.g. `'data."ssh-url"'`.
 
-The basic [JMSEPath tutorial][tutorial] provides all the tools you'll need to work with `oci`'s JSON responses.
+The basic [JMSEPath tutorial][tutorial] provides the tools you'll need to work with `oci`'s JSON responses. However, the `--query` flag doesn't provide perfect parity with the JMSEPath spec. The next article in this series will detail some of the differences, how to do more complex queries with `--query`, and also how to use an alternative, [jq], to parse as part of a piped command.
