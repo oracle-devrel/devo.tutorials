@@ -1,9 +1,11 @@
 ---
-title: "Creating Oracle Code Repositories using the oci CLI"
+title: "Creating Oracle DevOps Code Repositories using the oci CLI"
 description: "Fast track repository creation using the oci command line tool."
 date: 2023-01-26 12:00
 parent: [tutorials]
 ---
+Oracle DevOps offers a range of services to developers. One of these services is Code Repositories, which allows you to use Git version control to maintain your source code, with as many repositories as you need for your operations.
+
 The first thing you need to do to start using Code Repositories is to create a Project to host your new repository. If you already have a project, you'll just need its OCID and you can skip to the next section.
 
 1. Navigate to [cloud.oracle.com][1]
