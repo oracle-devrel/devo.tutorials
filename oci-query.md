@@ -1,6 +1,6 @@
 ---
 title: Working with OCI CLI responses using the query flag
-date: 02-21-2023 12:00
+date: 2023-02-21 12:00
 parent: [tutorials]
 ---
 

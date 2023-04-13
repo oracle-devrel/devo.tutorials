@@ -19,6 +19,14 @@ The  `--query` flag always assumes a string value. To do numeric comparisons, be
 
 There are several functions available in JMESPath, including `max_by` to return the result with the highest value for a given key, or `min_by` to return the lowest result. See the [JMESPath documentation](https://jmespath.org/specification.html) for more details.
 
+### Piping and Negating
+
+You can combine multiple criteria using pipes (`|`), and you can invert a function by using `?!FUNCTION`. For example, if you wanted to search first for a container name, and then remove a set of matches, you could use:
+
+	oci compute image list --compartment-id ocid1.tenancy.xxx --query 'data[?contains("display-name",'Oracle-Linux')] | [?!contains("display-name",'arch64')]|[0:1].["display-name",id]' --all
+
+Note the pipe in the middle of the query, which causes the results of the first `?contains` search to be "piped" into a negative `?!contains` search to remove all images with `arch64` in the display name.
+
 ### Shaping
 
 You can control what information is output as well. To output a specific key path, you can separate each element in the path with a dot, being sure to quote any keys that have a dash in them. For example, to output all of the CreatedBy tags for an OCI compartment listing, you could use:
