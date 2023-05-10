@@ -11,7 +11,7 @@ date: 2023-05-10 12:00
 description: Learn how to set up and work with a Git repository inside of Oracle Code Editor
 author: brett-terpstra
 ---
-Code Editor is a fantastic tool provided as part of your Oracle Cloud interface. It's a slimmed down version of VS Code, right in your browser, directly connected to Oracle Resource Manager and all of the files and projects in your cloud account.
+Code Editor is a fantastic tool provided as part of your Oracle Cloud interface, and available in [OCI Free Tier]({{site.urls.always_free}}). It's a slimmed down version of VS Code, right in your browser, directly connected to Oracle Resource Manager and all of the files and projects in your cloud account.
 
 Code Editor is available from the Developer Tools menu on the right side of the menu bar.
 
@@ -56,7 +56,7 @@ Once the repo is cloned, Code Editor will ask you if you want to open it in its 
 
 {% imgx assets/code-editor-open-or-workspace-1024.jpg "Open or Open in Workspace" %}
 
-Switch back to the Files view in the Workspace and click any file to edit it. As you make changes, you can make regular commits by going back to the SCM panel, selecting which files to stage (hover and click the plus button to stage), enter a brief commit message, and click the checkmark at the top to add the commit. If you don't stage any files, Code Editor will offer to stage all changes at the time of the commit.
+Switch back to the Explorer view in the Workspace and click any file to edit it. As you make changes, you can make regular commits by going back to the SCM panel, selecting which files to stage (hover and click the plus button to stage), enter a brief commit message, and click the checkmark at the top to add the commit. If you don't stage any files, Code Editor will offer to stage all changes at the time of the commit.
 
 {% imgx assets/code-editor-stage-changes-1024.jpg "Stage Changes" %}
 
@@ -67,3 +67,5 @@ Once you're ready to push your commits, use the `...` menu to select **Push/Pull
 That's just an overview. Code Editor provides very complete Git capabilities, including branching, multiple remotes, stashes, and tags. See the `...` menu of the SCM panel for more options.
 
 {% imgx assets/code-editor-more-actions-1024.jpg "More actions" %}
+
+One side note: if you leave a tab with code editor open long enough to time out, "continuing the session" will leave your SCM repositories in limbo. The best solution is to close Code Editor and log back into Oracle Cloud, then launch Code Editor again.
