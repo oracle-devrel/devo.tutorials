@@ -11,7 +11,7 @@ date: 2023-05-10 12:00
 description: Learn how to set up and work with a Git repository inside of Oracle Code Editor, included in your Oracle Cloud account
 author: brett-terpstra
 ---
-Code Editor is a fantastic tool provided as part of your Oracle Cloud interface, and available in [OCI Free Tier]({{site.urls.always_free}}). It's a slimmed down version of VS Code, right in your browser, directly connected to Oracle Resource Manager and all of the files and projects in your cloud account.
+Code Editor is a fantastic tool provided as part of your Oracle Cloud interface, and available in [all OCI account types]({{site.urls.always_free}}). It's a complete editor, similar to VS Code (and based on [Theia IDE](https://theia-ide.org/)), right in your browser, directly connected to Oracle Resource Manager. It has access to all of the files in your Cloud Shell and can detect `.git` files and enable source control tasks via the UI.
 
 Code Editor is available from the Developer Tools menu on the right side of the menu bar.
 
