@@ -26,7 +26,7 @@ slug: 2-automated-deployment-cli
 
 In this tutorial we are going to build a simple virtual network environment and deploy an OCI Container Instance resource. The Container Instance will run two containers; WordPress in one, and MySQL in the other. All of the work is done at the command prompt and when you're finished, you could easily create a bash script for one-click deployment in the future.
 
-If you do not yet have the CLI installed, [Click Here][1] to follow the instructions. WHen you're ready to go, dive right in!
+This tutorial is designed for use in the OCI Cloud Shell [OCI Cloud Shell][1]. The Cloud Shell is an easy-to-use terminal built right into the OCI Console, with integrated authorization. If your preference is to install the OCI CLI elsewhere, that is also a cinch, just [Click Here][2] to follow the instructions. When you're ready to go, dive right in!
 
 ### Gather Required Information
 The prep work involves identifying your preferred availability domain and working compartment. It is recommended you do not use the *root* compartment in your tenancy, however, the instructions will accommodate use of *root* if you so choose.
@@ -41,24 +41,24 @@ The command output is JSON so there are a few tricks we can use to easily captur
 
 One more example before we move on. The following will query for the availability domain that includes "AD-1" in the name. If you'd like to use a different AD, just change the number. 
 
-    oci iam availability-domain list --query 'data[?contains ("name",`AD-1`)]|[0].[id,name]' | sed 's/"//g'
+    oci iam availability-domain list --query 'data[?contains ("name",`AD-1`)]|[0].[id,name]' --raw-output'
 
 Capture the availability domain id and name in environment variables.
 
-    adId=($(oci iam availability-domain list --query 'data[?contains ("name",`AD-1`)]|[0].id' | sed 's/"//g'))
+    adId=($(oci iam availability-domain list --query 'data[?contains ("name",`AD-1`)]|[0].id' --raw-output))
 
-    adName=($(oci iam availability-domain list --query 'data[?contains ("name",`AD-1`)]|[0].name' | sed 's/"//g'))
+    adName=($(oci iam availability-domain list --query 'data[?contains ("name",`AD-1`)]|[0].name' --raw-output))
 
 You can quickly echo the values to confirm they both loaded properly:
 ![Screenshot of: echo command output][4]
 
 The final piece of information required before creating resources is the Compartment OCID. In this example, our compartment name is **Training**. 
 
-    compOcid=($(oci iam compartment list --query 'data[?name==`Training`]|[0].id' | sed 's/"//g'))
+    compOcid=($(oci iam compartment list --query 'data[?name==`Training`]|[0].id' --raw-output))
 
 If you prefer to use the root compartment, the query looks a little different:
 
-    compOcid=($(oci iam compartment list --query 'data[0]."compartment-id"' | sed 's/"//g'))
+    compOcid=($(oci iam compartment list --query 'data[0]."compartment-id"' --raw-output))
 
 ### Create the network resources
 We are going to create a Virtual Cloud Network (VCN) with a single public subnet, a security list that allows ingress traffic on port 80 (to access the WordPress server), an Internet Gateway, and add a route for the Internet Gateway to the default route table.  Let's do this!
@@ -66,11 +66,11 @@ We are going to create a Virtual Cloud Network (VCN) with a single public subnet
 Create the VCN! Here we are using 10.0.0.0/16 as the network CIDR. You may opt for a different range...if you do, just make sure you change it accordingly in subsequent steps.
 **Note** Because we are loading specific output directly to an environment variable, the command will return nothing to the screen unless there is an error.
 
-    vcnOcid=($(oci network vcn create --cidr-block 10.0.0.0/16 -c $compOcid --display-name ContainerInstance-VCN --dns-label cidemovcn --query 'data.id' | sed 's/"/g'))
+    vcnOcid=($(oci network vcn create --cidr-block 10.0.0.0/16 -c $compOcid --display-name ContainerInstance-VCN --dns-label cidemovcn --query 'data.id' --raw-output))
 
 Create the security list. When we create the subnet it expects an array of security list IDs, so we'll go ahead and store the array in the variable.
 
-    seclistOcid=('["'$(oci network security-list create --display-name PubSub1 --compartment-id $compOcid --vcn-id $vcnOcid --egress-security-rules  '[{"destination": "0.0.0.0/0", "destination-type": "CIDR_BLOCK", "protocol": "all", "isStateless": false}]' --ingress-security-rules '[{"source": "0.0.0.0/0", "source-type": "CIDR_BLOCK", "protocol": 6, "isStateless": false, "tcp-options": {"destination-port-range": {"max": 80, "min": 80}}}]' --query 'data.id'  | sed 's/"//g')'"]')
+    seclistOcid=('["'$(oci network security-list create --display-name PubSub1 --compartment-id $compOcid --vcn-id $vcnOcid --egress-security-rules  '[{"destination": "0.0.0.0/0", "destination-type": "CIDR_BLOCK", "protocol": "all", "isStateless": false}]' --ingress-security-rules '[{"source": "0.0.0.0/0", "source-type": "CIDR_BLOCK", "protocol": 6, "isStateless": false, "tcp-options": {"destination-port-range": {"max": 80, "min": 80}}}]' --query 'data.id'  --raw-output)'"]')
 
 Create the internet gateway, obtain the id of the default VCN route table, and add a new route to the default route to said route table.
 
@@ -85,7 +85,7 @@ The final command will output the results of the action:
 
 Now just create the subnet where the Container Instance will be deployed...easy as that!
 
-    pubsubId=($(oci network subnet create --cidr-block 10.0.10.0/24 -c $compOcid --vcn-id $vcnOcid --security-list-ids $seclistOcid --query 'data.id' | sed 's/"//g'))
+    pubsubId=($(oci network subnet create --cidr-block 10.0.10.0/24 -c $compOcid --vcn-id $vcnOcid --security-list-ids $seclistOcid --query 'data.id' --raw-output))
 
 ### Container Instance Resources
 
@@ -118,7 +118,7 @@ If you look near the end of the output you'll find a section for the *vnics* - a
 
 In the JSON output from the command above, locate the **id** for the container instance and copy it (or store it in an environment variable). Then run:
 
-    oci container-instances --container-instance get --container-instance-id <the id you coiped above>
+    oci container-instances --container-instance get --container-instance-id <the id you coieed above>
 
 Now in the output you'll see an **id** for the vnic.
 ![Screenshot of: Valid vnic id value][8] 
@@ -208,12 +208,13 @@ There you have it, and well done! You've just completely provisioned OCI Contain
 
 
 
-[1]: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm
-[2]: assets/ci-automation-cli-01.png
-[3]: https://jmespath.org/
-[4]: assets/ci-automation-cli-02.png
-[5]: assets/ci-automation-cli-03.png
-[6]: assets/ci-automation-cli-04.png
-[7]: assets/ci-automation-cli-05.png
-[8]: assets/ci-automation-cli-06.png
-[9]: assets/ci-automation-cli-07.png
+[1]: https://docs.oracle.com/en-us/iaas/Content/API/Concepts/cloudshellintro.htm
+[2]: https://docs.oracle.com/en-us/iaas/Content/API/SDKDocs/cliinstall.htm
+[3]: assets/ci-automation-cli-01.png
+[4]: https://jmespath.org/
+[5]: assets/ci-automation-cli-02.png
+[6]: assets/ci-automation-cli-03.png
+[7]: assets/ci-automation-cli-04.png
+[8]: assets/ci-automation-cli-05.png
+[9]: assets/ci-automation-cli-06.png
+[10]: assets/ci-automation-cli-07.png

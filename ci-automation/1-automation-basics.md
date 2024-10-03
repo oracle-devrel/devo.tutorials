@@ -48,13 +48,13 @@ This tutorial assumes you already have some Terraform and/or OCI CLI experience.
 
 ### CLIs
 
-CLIs are a little bit better than GUIs for helping you manage critical issues. Instead of pointing-and-clicking, commands are directly issued into the application. When you get down to it, CLIs are really just a text user interface. Most CLIs allow for running "headless", meaning they don't require continuous user input (all input can be provided at runtime). One benefit is that it's easier to use CLIs with automated workflows, so it's definitely a step in the right direction. By themselves though, it's impossible to embed any sort of logic when using CLIs, unless there's some sort of scripting (shell scripts, Ruby, Python, etc.) involved. This means that it's great to send a single command (or even a series of commands), but it can be difficult to maintain a high level of assurance without more involved scripting logic being used with the CLI.
+CLIs are a little bit better than GUIs for helping you manage critical issues. Instead of pointing-and-clicking, commands are directly issued into the application. When you get down to it, CLIs are really just a text user interface. Most CLIs allow for running "headless", meaning they don't require continuous user input (all input can be provided at runtime). One benefit is that it's easier to use CLIs with automated workflows, so it's definitely a step in the right direction. By themselves though, it's impossible to embed any sort of logic when using CLIs, this is where some sort of scripting (shell scripts, Ruby, Python, etc.) can add significant benefit. After determining the set of CLI commands to run, you can utilize the scripting tool of choice to implement logic and create repeatable automation activities.
 
 ### IaC tools
 
 When you really need to tailor your environment and maximize control over how it performs, IaC tools are what you need. IaC tools are designed from the ground-up to manage infrastructure resources using code. Resources are defined within the code, with the tool itself providing the necessary structure and logic to quickly and easily build a definition of what you need or want an environment to be. The basic "scaffolding" (logic elements, API interactions, etc.) are all abstracted, allowing you to focus on describing the resources you need or want to exist in the environment.
 
-By far, this is one of the easiest and fastest ways to build and maintain cloud environments. But this isn't just limited to the cloud, on-premesis resources can often be managed with IaC tools as well. Are you using multiple cloud providers? Even more reason to utilize IaC in managing your IT infrastructure.
+By far, this is one of the easiest and fastest ways to build and maintain cloud environments. But this isn't just limited to the cloud; on-premesis resources can often be managed with IaC tools as well. Are you using multiple cloud providers? Even more reason to utilize IaC in managing your IT infrastructure.
 
 With IaC, it's common to use Git on the back-end. Git allows you to get a deep history of changes and its robust version control system enables easy and rapid rollbacks. Additionally, if you use Git for storing the code definitions, you're able to use standard processes and tools to monitor/approve/manage changes before they're made. Whether using policy-as-code (such as [Open Policy Agent](https://www.openpolicyagent.org), with implementations such as [Policy-as-Code on OCI using Open Policy Agent](https://github.com/oracle-devrel/oci-pac-opa)) or a manual pull request (PR)/merge request (MR) review process, you can have a really solid review/approval/compliance mechanism (not to mention yet another audit trail that's separate from the cloud/platform itself).
 
@@ -66,15 +66,15 @@ One of the most common and popular IaC tools is [HashiCorp Terraform](https://ww
 
 Sometimes infrastructure isn't your major concern and what you really need are tools that predominantly operate in the realm of configuration management, such as [Ansible](https://www.ansible.com) or [Chef](https://www.chef.io)/[Cinc](https://cinc.sh). These are all options for managing infrastructure as well, but you may be better off with tools that focus exclusively on *infrastructure management*. For OCI's part, it's certainly no exception in supporting many of these different platforms.
 
-## IaC and Terraform
+## CLI and IaC (Terraform)
 
-In the rest of this series, we're going to target using Terraform to manage OCI infrastructure. Why Terraform? It's fairly mature at this point, widely adopted, and has support for a wide variety of cloud platforms, including OCI. Additionally, there are plenty of resources available and Terraform enjoys strong user support, making it an ideal tool. Terraform is mainly targeted at managing infrastructure and not so much the configuration management side of things. But it's super powerful when combined with a traditional configuration management tool like Ansible.
+For the remainder of this series we are going to explore the capabilities of CLI and IaC for deploying and managing infrastructure. We'll compare the pros and cons of each so you can ultimately make the decision regarding which fits best for your particular situation.
 
 ## What's Next
 
-By now, you should be a little more familiar with IaC and ready to get started with Terraform!
+By now, you should have a basic understanding of how to configure the tools (Command Line Interface and Terraform) illustrated in this tutorial. You're ready to dive right in and start automating.
 
-Until your next lesson, happy coding! Take a look at the [next lesson](2-experiencing-terraform) in the Terraform 101 series and go through a very quick experience in using Terraform. From there, you'll dive into several aspects of how Terraform works.
+Until your next lesson, happy coding! Take a look at the [next lesson](2-automated-deployment-cli) in the Container Instances Automation 101 series, and go through the process of deploying resources using the OCI CLI. After that, you'll experiment with Terraform before moving on to some more advanced use cases.
 
 To explore more information about development with Oracle products:
 
