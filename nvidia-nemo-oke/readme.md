@@ -54,13 +54,11 @@
     * Click the very last **Show advanced options**, found just above the **`[Add]`** button. Under **Initialization script** choose **Paste Cloud-Init Script and enter the following:
 
     ```bash
-    <copy>
     #!/bin/bash
     curl --fail -H "Authorization: Bearer Oracle" -L0 http://169.254.169.254/opc/v2/instance/metadata/oke_init_script | base64 --decode >/var/run/oke-init.sh
     bash /var/run/oke-init.sh
     bash /usr/libexec/oci-growfs -y
     systemctl restart kubelet.service
-    </copy>
     ```
 
     >Note: This deployment requires 3 GPUs to function properly. You can either deploy 3 separate single-GPU nodes, or a single node with 4+ GPUs.
