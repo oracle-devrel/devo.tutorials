@@ -74,10 +74,8 @@
 13. The command you just executed will create your Kube config file. To test it, run the following: 
 
     ```bash
-    <copy>
     kubectl cluster-info
     kubectl get nodes -o wide
-    </copy>
     ```
 
     >Note: The GPU nodes may still be provisioning and might not show up just yet. The node name is its private IP address. 
@@ -96,7 +94,6 @@
 1. Return to Cloud Shell. Create a new file called **jh-values.yaml** and paste the following:
 
     ```
-    <copy>
     # default configuration
     singleuser:
     cloudMetadata:
@@ -108,7 +105,6 @@
     #    kubespawner_override:
     #      extra_resource_limits:
     #        nvidia.com/gpu: "1"
-    </copy>
     ```
 
     >Note: In this tutorial we use Jupyter notebooks to interact with the GPU-driven NVIDIA microservices. You will not need to enable GPU-based user notebooks to complete the tasks herein.
@@ -116,25 +112,19 @@
 2. Add the Helm repo.
 
     ```bash
-    <copy>
     helm repo add jupyterhub https://hub.jupyter.org/helm-chart/ && helm repo update
-    </copy>
     ```
 
 3. Perform the install using Helm, and reference the values file created in step 1.
 
     ```bash
-    <copy>
     helm upgrade --cleanup-on-fail –install jupyter-hub jupyterhub/jupyterhub --namespace k8s-jupyter --create-namespace --values jh-values.yaml
-    </copy>
     ```
 
 4. Once the deployment is complete, the Kubernetes service that gets created will provision an OCI Load Balancer for public access. Locate the public IP address of the load balancer and store it for later.
 
     ```bash
-    <copy>
     kubectl get svc -n k8s-jupyter
-    </copy>
     ```
 
     Output:
@@ -150,7 +140,6 @@
 1. Before creating the database, you'll need to create role-based access control (RBAC) for the node. Create a file called **node-rbac.yaml** and paste the following:
 
     ```
-    <copy>
     ---
     apiVersion: rbac.authorization.k8s.io/v1
     kind: ClusterRole
@@ -178,13 +167,11 @@
     name: default
     namespace: oracle-database-operator-system
     ---
-    </copy>
     ```
 
 2. Create a file called **db-admin-secret.yaml** that will be used to set the DB password upon deployment. Paste the follwing:
 
     ```
-    <copy>
     apiVersion: v1
     kind: Secret
     metadata:
@@ -193,7 +180,6 @@
     type: Opaque
     stringData:
     oracle_pwd:  YOURPASSWORDHERE
-    </copy>
     ```
 
     >Note: Be sure to replace the **YOURPASSWORDHERE** above with a value of your own choosing. At least 15 characters, 2 upper case, 2 lower case, 2 numbers, and 2 special characters.
@@ -201,7 +187,6 @@
 3. Create a file called **db23ai-instance.yaml** and paste the following:
 
     ```
-    <copy>
     apiVersion: database.oracle.com/v1alpha1
     kind: SingleInstanceDatabase
     metadata:
@@ -224,23 +209,18 @@
 
     replicas: 1
     ---
-    </copy>
     ```
 
 4. Apply the manifests using the following command; this creates the RBAC, the password, and the DB pod.
 
     ```bash
-    <copy>
     kubectl apply -n oracle23ai -f node-rbac.yaml,db-admin-secret.yaml,db23ai-instance.yaml
-    </copy>
     ```
 
 5. After the command completes, it may take 3-5 minutes for the DB instance to come online. You can check the status with the following command. Do not proceed until the status is **Healthy**
 
     ```bash
-    <copy>
     kubectl get singleinstancedatabase -n oracle23ai
-    </copy>
     ```
 
     Output:
@@ -250,15 +230,15 @@
     nemo-23ai   Free      Healthy   PRIMARY   23.4.0.24.05   10.0.10.246:31452/FREE   Unavailable        Unavailable
     ```
 
+    >Note: Be sure to write down the connection string for later. You'll need the IP address and port number.
+
 6. Run the following command to gather details about the DB instance and set them to environment variables.
 
     ```bash
-    <copy>
     export ORA_PASS=$(kubectl get secret/freedb-admin-secret -n oracle23ai -o jsonpath='{.data.oracle_pwd}' | base64 -d)
     export ORACLE_SID=$(kubectl get singleinstancedatabase -n oracle23ai -o 'jsonpath={.items[0].metadata.name}')
     export ORA_POD=$(kubectl get pods -n oracle23ai -o jsonpath='{.items[0].metadata.name}')
     export ORA_CONN=$(kubectl get singleinstancedatabase ${ORACLE_SID} -n oracle23ai -o "jsonpath={.status.connectString}")
-    </copy>
     ```
 
     >Note: If you leave Cloud Shell and return later, you'll need to run the above commands again if you wish to connect to the DB instance directly. That said, after this section, all DB access should be done via Jupyter Notebooks.
@@ -266,9 +246,7 @@
 7. Connect to the DB instance.
 
     ```bash
-    <copy>
     kubectl exec -it pods/${ORA_POD} -n oracle23ai -- sqlplus sys/${ORA_PASS}@${ORACLE_SID} as sysdba
-    </copy>
     ```
 
 8. Create a vector DB user that will enable your Python code to access the vector data store.
@@ -283,35 +261,61 @@
 9. Type *exit* to leave the container. 
 
 ## Task 4: Prepare the NeMo deployment
-**TODO:** Clean up this section.
 
-23.	Now to prep for the NeMo deployment. Create a new Kubernetes namespace.
+1. Now to prep for the NeMo deployment. Create a new Kubernetes namespace.
 
-kubectl create ns embedding-nim
+    ```bash
+    kubectl create ns embedding-nim
+    ```
 
-24.	Add your NGC API Key to an environment variable.
+2.	Add your NGC API Key to an environment variable.
 
-export NGC_API_KEY=<your api key here>
+    ```
+    export NGC_API_KEY=<your api key here>
+    ```
 
-25.	Confirm that your key gets you access to the NVCR container registry:
+    >Note: Paste your own API key in place of `<your api key here>`; remove the <> brackets and encapsulate within double quotes "".
 
-echo "$NGC_API_KEY" | docker login nvcr.io --username '$oauthtoken' --password-stdin
+3.	Confirm that your key gets you access to the NVCR container registry:
 
-You should get Login Succeeded
+    ```
+    echo "$NGC_API_KEY" | docker login nvcr.io --username '$oauthtoken' --password-stdin
+    ```
 
-26.	Create a docker-registry secret in Kubernetes. The kubelet will use this secret to download the container images needed to run pods.
+    You should get Login Succeeded:
 
-kubectl -n embedding-nim create secret docker-registry registry-secret --docker-server=nvcr.io --docker-username='$oauthtoken' --docker-password=$NGC_API_KEY
+    ```bash
+    echo "$NGC_API_KEY" | docker login nvcr.io --username '$oauthtoken' --password-stdin
+    WARNING! Your password will be stored unencrypted in /home/username/.docker/config.json.
+    Configure a credential helper to remove this warning. See
+    https://docs.docker.com/engine/reference/commandline/login/#credentials-store
 
-27.	Create a secret for your NGC API KEY that will be passed to your pod via environment variable later.
+    Login Succeeded
+    ```
 
-kubectl -n embedding-nim create secret generic ngc-api-key --from-literal=ngc-api-key=”$NGC_API_KEY”
-28.	You can check the value with the following command.
+    >Note: If you do not see the Login Succeeded message, you'll need to troubleshoot your API key on the NVIDIA website.
 
-kubectl -n embedding-nim get secret/ngc-api-key -o jsonpath='{.data.ngc-api-key}' | base64 -d
+4.	Create a docker-registry secret in Kubernetes. The kubelet will use this secret to download the container images needed to run pods.
 
-29.	Next, you’ll create three separate files to deploy the NeMo retriever microservices.
-    a.	llama3-8b-instruct.yaml
+    ```
+    kubectl -n embedding-nim create secret docker-registry registry-secret --docker-server=nvcr.io --docker-username='$oauthtoken' --docker-password=$NGC_API_KEY
+    ```
+
+5.	Create a secret for your NGC API KEY that will be passed to your pod via environment variable later.
+
+    ```
+    kubectl -n embedding-nim create secret generic ngc-api-key --from-literal=ngc-api-key=”$NGC_API_KEY”
+    ```
+
+6.	You can check the value with the following command.
+
+    ```
+    kubectl -n embedding-nim get secret/ngc-api-key -o jsonpath='{.data.ngc-api-key}' | base64 -d
+    ```
+
+7.	Next, you’ll create three separate files to deploy the NeMo retriever microservices.
+
+    a.	**llama3-8b-instruct.yaml**
 
         ```
         <copy>
@@ -346,7 +350,7 @@ kubectl -n embedding-nim get secret/ngc-api-key -o jsonpath='{.data.ngc-api-key}
         </copy>
         ```
 
-    b.	nv-embedqa-e5-v5.yaml
+    b.	**nv-embedqa-e5-v5.yaml**
 
         ```
         <copy>
@@ -381,7 +385,7 @@ kubectl -n embedding-nim get secret/ngc-api-key -o jsonpath='{.data.ngc-api-key}
         </copy>
         ```
 
-    c.	nv-rerankqa-mistral-4b-v3.yaml
+    c.	**nv-rerankqa-mistral-4b-v3.yaml**
 
         ```
         <copy>
@@ -416,20 +420,16 @@ kubectl -n embedding-nim get secret/ngc-api-key -o jsonpath='{.data.ngc-api-key}
         </copy>
         ```
 
-30.	Apply the 3 manifest files to your Kubernetes cluster.
+8.	Apply the 3 manifest files to your Kubernetes cluster.
 
     ```bash
-    <copy>
     kubectl -n embedding-nim apply -f llama3-8b-instruct.yaml,nv-embedqa-e5-v5.yaml,nv-rerankqa-mistral-4b-v3.yaml
-    </copy>
     ```
 
-31.	View the pods to ensure they are all running.
+9.	View the pods to ensure they are all running.
 
     ```bash
-    <copy>
     kubectl -n embedding-nim get pods -o wide
-    </copy>
     ```
 
     Output:
@@ -442,12 +442,62 @@ kubectl -n embedding-nim get secret/ngc-api-key -o jsonpath='{.data.ngc-api-key}
     ```
 
 
-32.	Now that everything is up and running, you can return to your Jupyter-hub web page and launch a new notebook.
+10.	Now that everything is up and running, you can return to your JupyterHub web page and launch a new notebook. If you need to double-check the IP address of your JupyterHub instance, run the following command:
 
-33.	Within the notebood, install the oracledb libraries
+    ```
+    kubectl get svc -n k8s-jupyter
+    ```
 
-pip install oracledb
+    >Note: make sure to access via HTTP and not HTTPS as we did not configure TLS in this exercise.
 
+11.	Within the notebook, install the oracledb libraries:
+
+    ```
+    pip install oracledb
+    ```
+
+    ![Install Oracledb binaries](images/jupyter-install-oracledb.png)
+
+12. Test connectivity to the Oracle Database. Add a second entry into the notebook and paste the following:
+
+    ```
+    import oracledb
+    #from dotenv import load_dotenv
+    import os
+    # Load environment variables
+    #load_dotenv()
+    username = "c##vector"
+    password = "<your password here>"
+    host="<your db pod IP here>"
+    port="<your db port here>"
+    service_name="FREE"
+    dsn=host+":"+port+"/"+service_name
+    #dsn = "10.0.0.124:1521/DB0601_nvz_fra.subnet04021055.vcn04021055.oraclevcn.com"
+    #COMPARTMENT_OCID = "ocid1.compartment.oc1..aaaaaaaamveskuaejui5qx3ohucymgnbnfidzh5kqw4ued5uv5rhi3mif4ta"
+    print("The database user name is:", username)
+    print("Database connection information is:", dsn)
+    # Connect to the database
+    try:
+        conn23c = oracledb.connect(user=username, password=password, dsn=dsn)
+        print("Connection successful!")
+    except oracledb.DatabaseError as e:
+        error, = e.args
+        print(f"Connection failed. Error code: {error.code}")
+        print(f"Error message: {error.message}")
+    ```
+
+    >Note: Be sure to enter the password you created, along with the pod IP and port number from task 3 step 5.
+
+13. Run the notebook task:
+
+    ```
+    The database user name is: c##vector
+    Database connection information is: 10.0.10.246:31452/FREE
+    Connection successful!
+
+## Task 5: Working with sample reranking and embedding notebooks
+
+1. 
 
 
 
