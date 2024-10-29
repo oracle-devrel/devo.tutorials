@@ -497,13 +497,40 @@
 
 ## Task 5: Working with sample reranking and embedding notebooks
 
-1. 
+1. Locate the two sample notebooks: [reranking](sample-notebooks/reranking_23ai_clean.ipynb) and [text embedding](sample-notebooks/text_embedding_23ai_clean.ipynb in the **`sample-notebooks`** directory. Download to your computer.
+
+2. Upload the notebooks to JupyterHub.
+
+    ![Upload files to Jupyter](images/jupyter-upload-files.png)
+
+3. Start with the **text embedding** notebook. In the second cell you'll need to paste your NGC API Key. Run cells 1 and 2 to import libraries and validate your NGC API key.
+
+    ![Input your API key](images/jupyter-input-api-key.png)
+
+4. Next, locate the 10th cell where you'll need to input the Database connection information you gathered / tested earlier.
+
+    ![DB connection setup](images/jupyter-db-connection-setup.png)
+
+5. After updating the fields, run this cell to confirm DB connectivity. A successful connection should look like this:
+
+    ![DB connection success](images/jupyter-db-connection-success.png)
+
+6. Now head back up to the top of the notebook and run all cells.
+
+    ![Text Embedding notebook](images/jupyter-run-all-cells.png)
+
+7. Scrolling through you should see several different questions. Note cell 9 which asks about the NVIDIA H200. At this time, the LLM has no data on this product. Cell 15 performs text embedding on the product page for the H200. You'll then see in Cell 27 after the entire notebook completes, that RAG is able to provide an answer to the question about the H200.
+
+8. Moving to the **Reranking** notebook, be sure to repeat steps 3-5 above. Then run the entire notebook. Reranking will orient the data in a more efficient manner, yielding faster and more accurate results with a lower degree of hullicinations.
+
+9. And now, you've completed the tutorial on deploying NVIDIA NeMo microservices to Oracle Kubernetes Engine (OKE). If you'd like to experiment, you can upload different PDF files to see how embedding and reranking will function with additional data.
 
 
+## Acknowledgements
 
-
-
-
+* **Author(s)** - Eli Schilling - Technical Architect, Sadra Fardhosseini - Data Scientist 
+* **Contributors** -
+* **Last Updated By/Date** - October, 2024
 
 
 
