@@ -51,7 +51,11 @@ Demo Application
     chmod +x orclMongoMigration.sh
     ```
 
-3. Run the script without arguments to display a user-friendly menu with the following sections:
+3. Set the global variables within the script file.
+
+    >NOTE: See [the step by step guide](step-by-step-guide.md) for details on setting global variables.
+
+4. Run the script without arguments to display a user-friendly menu with the following sections:
 
     ```bash
     ./orclMongoMigration.sh
@@ -62,7 +66,7 @@ Demo Application
     * **MongoDB Operations:** - Start MongoDB instance - mongosh to ORDS or MongoDB
     * **Application & Migration:** - Run registration demo app - Add demo data - Migrate data from MongoDB to Oracle
 
-4. For additional details, please visit the [step-by-step guide](step-by-step-guide.md).
+5. For a comprehensive walkthru, please visit the [step-by-step guide](step-by-step-guide.md).
 
 ## Available Commandline Arguments
 
