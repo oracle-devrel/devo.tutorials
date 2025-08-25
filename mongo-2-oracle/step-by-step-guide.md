@@ -26,12 +26,30 @@ Before you begin, ensure your system meets these requirements:
     ```bash
  	chmod +x orclMongoMigration.sh
     ```
-### Step 2: Understanding the Script’s Interface
+### Step 2: Understanding the Script’s Interface and global variables
 There are two ways to interact with the script:
 1.	**Interactive Menu**: Run the script without arguments
 2.	**Command Line Arguments**: Run specific commands directly
 
-For this runbook, we’ll primarily use the interactive menu for clarity, with command examples where helpful.
+    >NOTE: For this runbook, we’ll primarily use the interactive menu for clarity, with command examples where helpful.
+
+3. Before running the script, it is important to update the global variables to match your environment. Edit the following items:
+
+    ```bash
+    # Global variables
+    ORACLE_USER="<your user in quotes>"
+    ORACLE_PASS="<your password in quotes>"
+    ORACLE_SYS_PASS="<oracle SYS password in quotes>"
+    ORACLE_CONTAINER="<name for your container in quotes>"
+    ORACLE_PDB="FREEPDB1"
+    NETWORK_NAME="demonet" #set network
+    // Do not change the settings below this line
+    CONTAINER_PORT_MAP="-p 1521:1521 -p 3000:3000 -p 5902:5902 -p 5500:5500 -p 8000:8000 -p 8080:8080 -p 8443:8443 -p 27017:27017 -p 23456:23456"
+    MAX_INVALID=3
+    INVALID_COUNT=0
+    ```
+
+4. Save the script and mvoe to the next step.
 
 ## Container Management
 
